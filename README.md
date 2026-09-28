@@ -7,9 +7,7 @@ Grâce à son système de fichiers et de templates, il est possible d'étendre l
 > ⚠️ Il n'est actuellement pas possible d'utiliser plusieurs ensembles de règles simultanément. Cette évolution n'est pas prévue pour le moment.
 
 ## Documentation
-
-- [Data](./readme/DATA.md) — fonctionnement et organisation des données
-- [Localisation](./readme/LOCALIZATION.md) — système de localisation
+Une documentation plus détaillée sur le fonctionnement du projet ainsi que sur certains concepts est disponible sur le [wiki](https://github.com/cyril-fl/solopg/wiki).
 
 ## Installation et utilisation
 
