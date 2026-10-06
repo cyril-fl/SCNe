@@ -2,7 +2,7 @@ package field
 
 import (
 	"fmt"
-	"solopg/app/cmdrun/components/form"
+	"solopg/app/shared/components/form"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
