@@ -1,10 +1,10 @@
 package codexmenu
 
 import (
-	"solopg/app/cmdrun/components/form"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
+	"solopg/app/shared/components/form"
 	sharedtui "solopg/app/shared/tui"
 
 	"solopg/app/cmdrun/types/direction"

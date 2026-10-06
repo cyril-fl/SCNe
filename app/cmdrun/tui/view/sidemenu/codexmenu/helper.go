@@ -1,8 +1,6 @@
 package codexmenu
 
 import (
-	"solopg/app/cmdrun/components/form"
-	"solopg/app/cmdrun/components/form/field"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
@@ -10,6 +8,8 @@ import (
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
+	"solopg/app/shared/components/form"
+	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/config"

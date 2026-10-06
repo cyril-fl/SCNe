@@ -1,10 +1,10 @@
 package codexmenu
 
 import (
-	"solopg/app/cmdrun/components/form"
-	"solopg/app/cmdrun/components/form/field"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/tui/models"
+	"solopg/app/shared/components/form"
+	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/services/i19n"
 )
 
