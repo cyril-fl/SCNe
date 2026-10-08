@@ -87,7 +87,6 @@ func getWelcomeMessage(m *model) strings.Builder {
 	welcomemsg := strings.Builder{}
 
 	if len(m.chat) == 0 {
-		welcomemsg.WriteString("\n\n")
 		welcomemsg.WriteString(i19n.Localize("chat.msg:welcome"))
 		welcomemsg.WriteString("\n\n")
 	}
@@ -102,8 +101,11 @@ func getJournalMessage(m *model) strings.Builder {
 		journalmsg.WriteString(entry)
 		journalmsg.WriteString("\n")
 	}
-	// journalmsg.WriteString("\n")
-	journalmsg.WriteString(strings.Repeat("_", m.viewport.Width()))
+
+	if len(m.adventurejournal) > 0 {
+		journalmsg.WriteString(strings.Repeat("_", m.viewport.Width()))
+		journalmsg.WriteString("\n")
+	}
 
 	return journalmsg
 }

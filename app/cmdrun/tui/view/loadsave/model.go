@@ -42,6 +42,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		return m.handKeyMsg(msg)
 	default:
-		return m.handleDefault(msg)
+		return m, nil
 	}
 }

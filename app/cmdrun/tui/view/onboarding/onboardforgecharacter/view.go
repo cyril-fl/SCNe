@@ -8,6 +8,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// TODO Ui ici bug !
 func (m model) View() tea.View {
 	// content := strings.Builder{}
 
@@ -27,7 +28,7 @@ func (m model) View() tea.View {
 	// return tea.NewView(content.String())
 
 	// page := page.NewPage(page.Template{
-	// 	Title:    "onboarding:create_character",
+	// 	Title:    "onboarding.character:create",
 	// 	Subtitle: "stats",
 	// 	Body:     m.makeBody(),
 	// })

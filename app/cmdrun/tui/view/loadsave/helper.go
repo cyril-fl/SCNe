@@ -33,10 +33,7 @@ func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		// case sharedtui.KEY_ESC:
 		// TODO Implementer si besoin
 	}
-	return m, nil
-}
 
-func (m *model) handleDefault(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
 	return m, cmd

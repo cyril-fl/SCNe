@@ -28,8 +28,8 @@ func NewModel() model {
 
 	return model{
 		page: page.NewPage(page.Template{
-			Title:    "onboarding:create_character",
-			Subtitle: "onboarding:enter_name",
+			Title:    "onboarding.character:create",
+			Subtitle: "onboarding.character:name",
 		}),
 
 		input: input,

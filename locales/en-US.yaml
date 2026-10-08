@@ -42,10 +42,12 @@ filter:
   other: "filter"
 
 # System
-onboarding:create_character:
+onboarding.character:create:
   other: "Create character"
 onboarding.selected:
   other: "{{.Value}} was selected for \"{{.Subject}}\""
+onboarding.character:name:
+  other: "Enter a name for your character:"
 
 system.msg:init:
   other: "Game engine initialized. Welcome to SoloPG!"
