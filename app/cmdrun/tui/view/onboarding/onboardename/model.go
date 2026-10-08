@@ -2,6 +2,7 @@ package onboardename
 
 import (
 	cmdruntui "solopg/app/cmdrun/tui"
+	"solopg/app/shared/components/page"
 	sharedtui "solopg/app/shared/tui"
 	"strings"
 
@@ -10,9 +11,15 @@ import (
 )
 
 type model struct {
-	Input     textinput.Model
-	Name      string
-	Cancelled bool
+	cache
+	page *page.Page
+
+	input textinput.Model
+	name  string
+}
+
+type cache struct {
+	size *tea.WindowSizeMsg
 }
 
 func NewModel() model {
@@ -20,9 +27,13 @@ func NewModel() model {
 	input.Focus()
 
 	return model{
-		Input:     input,
-		Name:      "",
-		Cancelled: false,
+		page: page.NewPage(page.Template{
+			Title:    "onboarding:create_character",
+			Subtitle: "onboarding:enter_name",
+		}),
+
+		input: input,
+		name:  "",
 	}
 }
 
@@ -33,26 +44,26 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.Input.SetWidth(msg.Width - 2)
+		m.input.SetWidth(msg.Width - 2)
 		return m, nil
 	}
 
-	newInput, cmd := m.Input.Update(msg)
+	newInput, cmd := m.input.Update(msg)
 
-	m.Input = newInput
-	m.Name = newInput.Value()
+	m.input = newInput
+	m.name = newInput.Value()
 
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
-		name := strings.TrimSpace(m.Name)
+		name := strings.TrimSpace(m.name)
 		if name == sharedtui.KEY_EMPTY {
 			return m, nil
 		}
 
-		m.Name = name
+		m.name = name
 
 		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
 			Completed: true,
-			Value:     m.Name,
+			Value:     m.name,
 		})
 	}
 

@@ -3,17 +3,30 @@ package onboardforgecharacter
 import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/tui/models"
+	"solopg/app/shared/components/page"
 	sharedtui "solopg/app/shared/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
+	cache
+	page *page.Page
+
 	reroll models.RerollModel[[]stats.Modifier]
 }
 
-func NewModel() tea.Model {
+type cache struct {
+	size *tea.WindowSizeMsg
+}
+
+func NewModel() model {
 	return model{
+		page: page.NewPage(page.Template{
+			Title:    "onboarding:create_character",
+			Subtitle: "onboarding:enter_name",
+		}),
+
 		reroll: models.NewRerollModel(
 			models.NewOptionsModel(models.DefaultRerollOptions),
 			drowBuild,

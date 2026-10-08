@@ -5,5 +5,14 @@ import (
 )
 
 func (m model) View() tea.View {
-	return tea.NewView(m.list.View())
+	bodySize := m.page.GetAvailableSize()
+	m.list.SetSize(bodySize.Width, bodySize.Height)
+
+	m.page.SetBody(m.list.View())
+
+	return m.page.GetView()
+}
+
+func (m model) SetPageSize(size *tea.WindowSizeMsg) {
+	m.page.SetSize(size)
 }

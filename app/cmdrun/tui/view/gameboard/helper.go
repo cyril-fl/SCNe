@@ -59,9 +59,9 @@ func (m *model) handleEnterInput() {
 }
 
 func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
-	m.err = msg.Err
+	m.SetErr(msg.Err)
 
-	if m.err != nil {
+	if m.HasErr() {
 		err := logs.Error("error.unexpected:save", map[string]any{
 			"Error": msg.Err,
 		})
@@ -117,7 +117,7 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleError(msg cmdruntui.ErrorMsg) (*model, tea.Cmd) {
-	m.err = msg.Err
+	m.SetErr(msg.Err)
 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
@@ -288,10 +288,10 @@ func initJournal(engine *game.Engine) []string {
 }
 
 func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
-	size := size.Size{
+	size := size.New(size.Template{
 		Width:  PANEL_WHIDTH - 4,
 		Height: ORACLE_HEIGHT + 5,
-	}
+	})
 
 	codex := engine.State.Codex
 	codex.EnsureInitialized()

@@ -42,7 +42,7 @@ filter:
   other: "filter"
 
 # System
-onboarding:
+onboarding:create_character:
   other: "Create character"
 onboarding.selected:
   other: "{{.Value}} was selected for \"{{.Subject}}\""

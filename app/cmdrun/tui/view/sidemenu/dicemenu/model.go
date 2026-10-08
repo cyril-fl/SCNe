@@ -25,7 +25,7 @@ func NewSideMenu(size size.Size, focused bool) *DiceMenu {
 		items = append(items, models.NewItem(i19n.Localize(option.GetName()), "", option))
 	}
 
-	model := list.New(items, list.NewDefaultDelegate(), size.Width-4, size.Height)
+	model := list.New(items, list.NewDefaultDelegate(), size.GetWidth()-4, size.GetHeight())
 	models.ConfigureList(&model)
 	models.SetListFocus(&model, focused)
 

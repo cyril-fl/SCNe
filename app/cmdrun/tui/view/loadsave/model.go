@@ -2,54 +2,46 @@ package loadsave
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
-	cmdruntui "solopg/app/cmdrun/tui"
-	"solopg/app/cmdrun/tui/models"
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/components/page"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	list      list.Model
-	selected  *campaign.Campaign
-	cancelled bool
+	cache
+
+	list     list.Model
+	selected *campaign.Campaign
+
+	page *page.Page
+}
+type cache struct {
+	size *tea.WindowSizeMsg
 }
 
-func NewModel(saves []campaign.Campaign) model {
-	return model{list: makeModel(saves)}
+func NewModel(saves []campaign.Campaign) *model {
+	return &model{
+		page: page.NewPage(page.Template{
+			Title:    "Load/Save Game",
+			Subtitle: "Load or save your game progress",
+		}),
+
+		list: makeModel(saves),
+	}
 }
 
 func (m model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		/*
-			TODO LOW Standardizer les tea.WindowSizeMsg et tea.KeyMsg ainsi que leur retour
-		*/
-		m.list.SetSize(msg.Width, max(0, msg.Height-3))
-		return m, nil
-
+		return m.handleWindowSizeMsg(msg)
 	case tea.KeyMsg:
-		switch msg.String() {
-		case sharedtui.KEY_ENTER:
-			if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
-				m.selected = selected.Value()
-			}
-			return m, func() tea.Msg {
-				return cmdruntui.ResolutionMsg{
-					Completed: true,
-					Value:     m.selected,
-				}
-			}
-		}
+		return m.handKeyMsg(msg)
+	default:
+		return m.handleDefault(msg)
 	}
-
-	var cmd tea.Cmd
-	m.list, cmd = m.list.Update(msg)
-
-	return m, cmd
 }

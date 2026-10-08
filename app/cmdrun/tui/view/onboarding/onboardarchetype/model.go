@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
+	"solopg/app/shared/components/page"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
@@ -20,11 +21,19 @@ const (
 )
 
 type model struct {
-	Step step
+	cache
+	page *page.Page
+
+	name string
+	step step
 	list list.Model
 }
 
-func NewModel[T archetypes.Archetype](data []T) model {
+type cache struct {
+	size *tea.WindowSizeMsg
+}
+
+func NewModel[T archetypes.Archetype](name string, data []T) model {
 	items := make([]list.Item, 0, len(data))
 
 	for _, i := range data {
@@ -40,7 +49,13 @@ func NewModel[T archetypes.Archetype](data []T) model {
 	models.ConfigureList(&listModel)
 
 	return model{
-		Step: CHOICE_STEP,
+		page: page.NewPage(page.Template{
+			Title:    "onboarding:create_character",
+			Subtitle: name,
+		}),
+
+		name: name,
+		step: CHOICE_STEP,
 		list: listModel,
 	}
 }
@@ -58,7 +73,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	switch m.Step {
+	switch m.step {
 	case CHOICE_STEP:
 		return m.updateList(msg)
 	case CONFIRM_STEP:
