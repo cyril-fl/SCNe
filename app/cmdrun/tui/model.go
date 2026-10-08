@@ -6,16 +6,23 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
+	"solopg/app/shared/components/mainview"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
+	cache
+	mainview mainview.MainView
+
 	steps   *contextStepList
 	context Context
-	size    *tea.WindowSizeMsg
 	err     error
+}
+
+type cache struct {
+	size *tea.WindowSizeMsg
 }
 
 // TODO LOW rendre ça generique
@@ -33,7 +40,8 @@ type Step = step.Step[Context]
 
 func NewModel(steps *contextStepList) model {
 	return model{
-		steps: steps,
+		mainview: mainview.New(),
+		steps:    steps,
 	}
 }
 

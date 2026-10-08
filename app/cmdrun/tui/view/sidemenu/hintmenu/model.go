@@ -25,7 +25,7 @@ func NewSideMenu(size size.Size, focused bool) *HintMenu {
 		items = append(items, models.NewItem(name, "", hint))
 	}
 
-	model := list.New(items, list.NewDefaultDelegate(), size.Width-4, size.Height)
+	model := list.New(items, list.NewDefaultDelegate(), size.GetWidth()-4, size.GetHeight())
 	models.ConfigureList(&model)
 	models.SetListFocus(&model, focused)
 

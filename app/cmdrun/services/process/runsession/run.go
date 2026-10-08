@@ -171,7 +171,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			},
 		},
 		{
-			Submodel: onboardarchetype.NewModel(races.List()),
+			Submodel: onboardarchetype.NewModel("races", races.List()),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[races.Race])
 				if !ok {
@@ -193,7 +193,7 @@ func makeOnboardingSteps() []cmdruntui.Step {
 			},
 		},
 		{
-			Submodel: onboardarchetype.NewModel(classes.List()),
+			Submodel: onboardarchetype.NewModel("classes", classes.List()),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				selected, ok := value.(models.Item[classes.Class])
 				if !ok {

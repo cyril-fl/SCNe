@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/hintmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
+	"solopg/app/shared/types/primitive"
 
 	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
@@ -17,20 +18,24 @@ import (
 
 // - Model - //
 type model struct {
+	cache
+	primitive.Fallible
+
+	textarea         textarea.Model
+	viewport         viewport.Model
 	author           string
 	chat             []string
 	adventurejournal []string
 
-	textarea textarea.Model
-	viewport viewport.Model
-
-	menu            []sidemenu.MenuItem
-	activeMenuIndex int
-
 	engine *game.Engine
 	save   func() error
 
-	err error
+	menu            []sidemenu.MenuItem
+	activeMenuIndex int
+}
+
+type cache struct {
+	size *tea.WindowSizeMsg
 }
 
 type UiParams struct {
@@ -51,8 +56,6 @@ func NewModel(params UiParams) model {
 
 		menu:            initSideMenu(params.Engine),
 		activeMenuIndex: 0,
-
-		err: nil,
 	}
 }
 
@@ -105,7 +108,7 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // HandlesEscape lets the global router forward Escape while a Codex page is open.
-func (m model) HandlesEscape() bool {
-	// return m.codexMenu.HandlesEscape()
-	return true
-}
+// func (m model) HandlesEscape() bool {
+// 	// return m.codexMenu.HandlesEscape()
+// 	return true
+// }

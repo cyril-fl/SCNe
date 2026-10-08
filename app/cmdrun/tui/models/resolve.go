@@ -6,13 +6,19 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-type resolveModel struct{}
-
-func Resolve() tea.Model {
-	return resolveModel{}
+type model struct {
+	cache
 }
 
-func (resolveModel) Init() tea.Cmd {
+type cache struct {
+	size *tea.WindowSizeMsg
+}
+
+func Resolve() model {
+	return model{}
+}
+
+func (m model) Init() tea.Cmd {
 	return func() tea.Msg {
 		return cmdruntui.ResolutionMsg{
 			Completed: true,
@@ -20,10 +26,10 @@ func (resolveModel) Init() tea.Cmd {
 	}
 }
 
-func (resolveModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	return resolveModel{}, nil
+func (model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	return model{}, nil
 }
 
-func (resolveModel) View() tea.View {
+func (m model) View() tea.View {
 	return tea.NewView("")
 }

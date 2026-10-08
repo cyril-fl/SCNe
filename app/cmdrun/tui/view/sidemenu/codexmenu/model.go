@@ -18,7 +18,7 @@ import (
 // Menu
 func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
 	items := makeCodexList(params)
-	menu := list.New(items, list.NewDefaultDelegate(), params.Size.Width, params.Size.Height)
+	menu := list.New(items, list.NewDefaultDelegate(), params.Size.GetWidth(), params.Size.GetHeight())
 	models.ConfigureList(&menu)
 	models.SetListFocus(&menu, focused)
 

@@ -3,10 +3,8 @@ package cmdruntui
 import (
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 // Handlers
@@ -30,10 +28,10 @@ func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-	if current := m.steps.GetCurrentSubmodel(); current != nil {
-		footerHeight := lipgloss.Height(strings.Join(mergeFooter(current), ""))
-		msg.Height = max(0, msg.Height-footerHeight)
-	}
+	// if current := m.steps.GetCurrentSubmodel(); current != nil {
+	// 	footerHeight := lipgloss.Height(strings.Join(mergeFooter(current), ""))
+	// 	msg.Height = max(0, msg.Height-footerHeight)
+	// }
 
 	return m.handleSubmodelUpdate(msg)
 }
