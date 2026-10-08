@@ -42,10 +42,12 @@ filter:
   other: "filtre"
 
 # System
-onboarding:create_character:
+onboarding.character:create:
   other: "Creer un personnage"
 onboarding.selected:
   other: "{{.Value}} a été sélectionné pour \"{{.Subject}}\""
+onboarding.character:name:
+  other: "Entrez un nom pour votre personnage :"
 
 system.msg:init:
   other: "Moteur de jeu initialisé. Bienvenue dans SoloPG !"

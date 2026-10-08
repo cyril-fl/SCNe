@@ -25,7 +25,7 @@ func (m model) View() tea.View {
 	// )
 
 	// page := page.NewPage(page.Template{
-	// 	Title:    "onboarding:create_character",
+	// 	Title:    "onboarding.character:create",
 	// 	Subtitle: "name",
 	// 	Body:     m.input.View(),
 	// })

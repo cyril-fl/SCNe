@@ -9,6 +9,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// TODO Ui ici bug !
 func (m model) View() tea.View {
 	// content := strings.Builder{}
 
@@ -30,7 +31,7 @@ func (m model) View() tea.View {
 	// le probleme avec dans un rerol, deha ic avec le build
 
 	// page := page.NewPage(page.Template{
-	// 	Title:    "onboarding:create_character",
+	// 	Title:    "onboarding.character:create",
 	// 	Subtitle: "location",
 	// 	Body:     m.makeBody(),
 	// })
