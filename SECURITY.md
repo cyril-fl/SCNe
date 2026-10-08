@@ -1,21 +1,22 @@
 # Security Policy
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability in SoloPG, please report it privately rather than opening a public GitHub issue.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+You can report a vulnerability by opening a [private security advisory](../../security/advisories/new).
+
+Please provide as much information as possible to help reproduce and investigate the issue, including:
+
+- A description of the vulnerability
+- The affected version
+- Steps to reproduce the issue
+- Any relevant logs, screenshots, or proof of concept
+
+Please allow some time for the issue to be reviewed before making it public.
+
+## Supported Versions
+
+SoloPG does not currently maintain a formal security-support policy for specific versions.
+
+Security fixes will be applied to the current development/release version when appropriate.
