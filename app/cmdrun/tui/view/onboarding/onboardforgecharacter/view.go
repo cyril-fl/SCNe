@@ -3,6 +3,7 @@ package onboardforgecharacter
 import (
 	"fmt"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/utils/transform"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -36,9 +37,10 @@ func (m *model) makeInformationView(v *strings.Builder) {
 	}
 
 	v.WriteString(strings.Join(buildsChoiceStr, ", "))
-	v.WriteString(strings.Join([]string{" ", i19n.Localize("attempt"), ": "}, ""))
+	v.WriteString(strings.Join([]string{"\n", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
 	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 }
+
 func (m *model) makeOptionsView(v *strings.Builder) {
 	v.WriteString("\n\n")
 	v.WriteString(m.reroll.Options.View())
@@ -49,7 +51,7 @@ func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
 
 	bodySize := m.page.GetAvailableSize()
 	// TODO try to improve
-	offsetInfoViewSize := 1
+	offsetInfoViewSize := 2
 	offetAlinea := 1
 	offset := offsetInfoViewSize + offetAlinea
 

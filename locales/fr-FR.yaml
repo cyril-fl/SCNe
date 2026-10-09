@@ -46,8 +46,21 @@ onboarding.character:create:
   other: "Creer un personnage"
 onboarding.selected:
   other: "{{.Value}} a été sélectionné pour \"{{.Subject}}\""
-onboarding.character:name:
-  other: "Entrez un nom pour votre personnage :"
+
+onboarding:select.save.title:
+  other: "Load/Save Game"
+onboarding:select.save.subtitle:
+  other: "Charger ou sauvegarder votre progression"
+onboarding:select.character.name:
+  other: "Entrez un nom pour votre personnage"
+onboarding:select.character.build:
+  other: "Choisissez quelques (de)bufs pour votre personnage"
+onboarding:select.location:
+  other: "Choisissez où vous voulez commencer"
+onboarding:select.classes:
+  other: "Sélectionnez votre classe"
+onboarding:select.races:
+  other: "Sélectionnez votre race"
 
 system.msg:init:
   other: "Moteur de jeu initialisé. Bienvenue dans SoloPG !"

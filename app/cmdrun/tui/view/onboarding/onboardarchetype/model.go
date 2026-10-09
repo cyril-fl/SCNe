@@ -52,7 +52,7 @@ func NewModel[T archetypes.Archetype](name string, data []T) model {
 	return model{
 		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
-			Subtitle: name,
+			Subtitle: "onboarding:select."+name,
 		}),
 
 		name: name,

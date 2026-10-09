@@ -24,8 +24,8 @@ type cache struct {
 func NewModel(saves []campaign.Campaign) *model {
 	return &model{
 		page: page.New(page.Template{
-			Title:    "Load/Save Game",
-			Subtitle: "Load or save your game progress",
+			Title:    "onboarding:select.save.title",
+			Subtitle: "onboarding:select.save.subtitle",
 		}),
 
 		list: makeModel(saves),
