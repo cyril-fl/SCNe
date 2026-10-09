@@ -66,7 +66,9 @@ func (v *Layout) SetFooter(parts ...string) {
 }
 
 func (v *Layout) getHeightWithinBorder() int {
+	// offsetBecauseBorder := 2
 	offsetBecauseBorder := 0
+
 	return max(0, v.size.GetHeight()-offsetBecauseBorder)
 }
 
@@ -110,6 +112,7 @@ func (v *Layout) makeBodyView(view *strings.Builder) {
 	}
 	// NOTE Explicit boody \n footer
 	if v.footer != nil {
+		// view.WriteString(fmt.Sprintf("\navH : %d | bH: %d. ", v.getHeightAvailable(), v.getBodyHeight()))
 		view.WriteString("\n")
 	}
 }

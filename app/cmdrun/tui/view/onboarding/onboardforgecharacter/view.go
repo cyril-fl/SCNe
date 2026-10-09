@@ -6,41 +6,27 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // TODO Ui ici bug !
 func (m model) View() tea.View {
-	// content := strings.Builder{}
-
-	// fmt.Fprintf(&content, "%s: ", transform.Capitalize(i19n.Localize("stats")))
-
-	// for _, modifier := range m.reroll.Value {
-	// 	label := i19n.Localize("stat." + string(modifier.Stat))
-	// 	fmt.Fprintf(&content, "%s: %d ", label, modifier.Value)
-	// }
-
-	// content.WriteString(" | ")
-	// fmt.Fprintf(&content, "%s: %d ", transform.Capitalize(i19n.Localize("attempt")), m.reroll.Attempt)
-
-	// content.WriteString("\n\n")
-	// content.WriteString(m.reroll.Options.View())
-
-	// return tea.NewView(content.String())
-
-	// page := page.NewPage(page.Template{
-	// 	Title:    "onboarding.character:create",
-	// 	Subtitle: "stats",
-	// 	Body:     m.makeBody(),
-	// })
-
 	m.page.SetBody(m.makeBody())
-
 	return m.page.GetView()
 }
 
 func (m model) makeBody() string {
-	content := strings.Builder{}
+	v := strings.Builder{}
 
+	m.makeInformationView(&v)
+	m.makeOptionsView(&v)
+
+	return lipgloss.NewStyle().
+		// Background(lipgloss.Color("2")).
+		Render(v.String())
+}
+
+func (m *model) makeInformationView(v *strings.Builder) {
 	buildsChoiceStr := make([]string, len(m.reroll.Value))
 
 	for i, modifier := range m.reroll.Value {
@@ -49,20 +35,24 @@ func (m model) makeBody() string {
 		buildsChoiceStr[i] = fmt.Sprintf("%s: %d", label, modifier.Value)
 	}
 
-	content.WriteString(strings.Join(buildsChoiceStr, ", "))
-	content.WriteString(strings.Join([]string{" ", i19n.Localize("attempt"), ": "}, ""))
-	content.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
-
-	content.WriteString("\n\n")
-	content.WriteString(m.reroll.Options.View())
-
-	return content.String()
+	v.WriteString(strings.Join(buildsChoiceStr, ", "))
+	v.WriteString(strings.Join([]string{" ", i19n.Localize("attempt"), ": "}, ""))
+	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
+}
+func (m *model) makeOptionsView(v *strings.Builder) {
+	v.WriteString("\n\n")
+	v.WriteString(m.reroll.Options.View())
 }
 
-func (m model) GetSize() *tea.WindowSizeMsg {
-	return m.size
-}
+func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
+	m.page.SetSize(size)
 
-func (m model) SetSize(size *tea.WindowSizeMsg) {
-	m.size = size
+	bodySize := m.page.GetAvailableSize()
+	// TODO try to improve
+	offsetInfoViewSize := 1
+	offetAlinea := 1
+	offset := offsetInfoViewSize + offetAlinea
+
+	m.reroll.Options.SetSize(bodySize.Width, bodySize.Height- offset)
+
 }

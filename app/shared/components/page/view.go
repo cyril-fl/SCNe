@@ -48,8 +48,8 @@ func (p Page) GetView() tea.View {
 	return tea.NewView(
 		lipgloss.NewStyle().
 			Foreground(lipgloss.Color("5")).
-			Background(lipgloss.Color("2")).
-			Render(v.String()),
+			// Background(lipgloss.Color("2")).	
+			Render(p.handleFlex(&v)),
 	)
 }
 
@@ -65,7 +65,10 @@ func (p *Page) GetSize() *tea.WindowSizeMsg {
 	if p.size != nil {
 		return p.size
 	}
-	return &tea.WindowSizeMsg{}
+	return &tea.WindowSizeMsg{
+		Height: 0,
+		Width:  0,
+	}
 }
 
 func (p *Page) GetAvailableSize() *tea.WindowSizeMsg {
@@ -112,4 +115,16 @@ func (p *Page) makeBody(v *strings.Builder) {
 	if p.body != "" {
 		v.WriteString(p.body)
 	}
+}
+
+func (p *Page) handleFlex(v *strings.Builder) string {
+	viewwidth := p.GetSize().Width
+	if viewwidth <= 0 {
+		return v.String()
+	}
+
+	return lipgloss.NewStyle().
+		Width(viewwidth).
+		// Background(lipgloss.Color("2")).
+		Render(v.String())
 }

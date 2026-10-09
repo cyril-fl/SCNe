@@ -11,8 +11,8 @@ import (
 )
 
 func (m model) View() tea.View {
-	m.mainview.SetSize(size.NewFromWindow(m.size))
-	m.mainview.SetFooter(i19n.Localize("cmd.ctrl+q:quit"))
+	m.layout.SetSize(size.NewFromWindow(m.size))
+	m.layout.SetFooter(i19n.Localize("cmd.ctrl+q:quit"))
 
 	if m.err != nil {
 		cwd, cwderr := os.Getwd()
@@ -23,9 +23,9 @@ func (m model) View() tea.View {
 
 		// m.mainview.SetBody(newErrorModel(err))
 	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
-		m.mainview.MergeFooter(current)
-		m.mainview.SetBody(current)
+		m.layout.MergeFooter(current)
+		m.layout.SetBody(current)
 	}
 
-	return m.mainview.GetView()
+	return m.layout.GetView()
 }

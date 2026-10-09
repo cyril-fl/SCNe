@@ -14,7 +14,7 @@ import (
 
 type model struct {
 	cache
-	mainview layout.Layout
+	layout layout.Layout
 
 	steps   *contextStepList
 	context Context
@@ -40,7 +40,7 @@ type Step = step.Step[Context]
 
 func NewModel(steps *contextStepList) model {
 	return model{
-		mainview: layout.New(),
+		layout: layout.New(),
 		steps:    steps,
 	}
 }
