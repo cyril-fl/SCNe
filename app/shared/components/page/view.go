@@ -48,7 +48,7 @@ func (p Page) GetView() tea.View {
 	return tea.NewView(
 		lipgloss.NewStyle().
 			Foreground(lipgloss.Color("5")).
-			// Background(lipgloss.Color("2")).
+			Background(lipgloss.Color("2")).
 			Render(v.String()),
 	)
 }

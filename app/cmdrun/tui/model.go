@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/shared/components/mainview"
+	"solopg/app/shared/components/layout"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -14,7 +14,7 @@ import (
 
 type model struct {
 	cache
-	mainview mainview.MainView
+	mainview layout.Layout
 
 	steps   *contextStepList
 	context Context
@@ -40,7 +40,7 @@ type Step = step.Step[Context]
 
 func NewModel(steps *contextStepList) model {
 	return model{
-		mainview: mainview.New(),
+		mainview: layout.New(),
 		steps:    steps,
 	}
 }
