@@ -1,4 +1,4 @@
-package mainview
+package layout
 
 import (
 	"solopg/app/cmdrun/types/size"
@@ -10,24 +10,24 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-type MainView struct {
+type Layout struct {
 	size   size.Size
 	body   tea.Model
 	footer footer.Footer
 }
 
-func New() MainView {
-	return MainView{}
+func New() Layout {
+	return Layout{}
 }
 
-func NewWithSize(size size.Size) MainView {
-	return MainView{
+func NewWithSize(size size.Size) Layout {
+	return Layout{
 		size: size,
 	}
 }
 
 // Getters & Setters
-func (v *MainView) GetView() tea.View {
+func (v *Layout) GetView() tea.View {
 	// TODO le bord rose c'est la main view
 	// Peu etre faire un factory avec ca du genre color, border, etc
 	return tea.NewView(
@@ -40,16 +40,16 @@ func (v *MainView) GetView() tea.View {
 	)
 }
 
-func (v *MainView) SetSize(size size.Size) {
+func (v *Layout) SetSize(size size.Size) {
 	v.size = size
 }
 
-func (v *MainView) SetBody(content tea.Model) {
+func (v *Layout) SetBody(content tea.Model) {
 	v.body = content
 	v.setBodyHeight(content)
 }
 
-func (v *MainView) setBodyHeight(model tea.Model) {
+func (v *Layout) setBodyHeight(model tea.Model) {
 	if view, ok := model.(page.Pagineable); ok {
 		b := trimPadding(v.body.View().Content)
 		bodyBaseHeight := max(0, lipgloss.Height(b))
@@ -61,21 +61,21 @@ func (v *MainView) setBodyHeight(model tea.Model) {
 	}
 }
 
-func (v *MainView) SetFooter(parts ...string) {
+func (v *Layout) SetFooter(parts ...string) {
 	v.footer = footer.New(parts...)
 }
 
-func (v *MainView) getHeightWithinBorder() int {
+func (v *Layout) getHeightWithinBorder() int {
 	offsetBecauseBorder := 0
 	return max(0, v.size.GetHeight()-offsetBecauseBorder)
 }
 
-func (v *MainView) getHeightAvailable() int {
+func (v *Layout) getHeightAvailable() int {
 	occupied := v.getFooterHight() + v.getBodyHeight()
 	return max(0, v.getHeightWithinBorder()-occupied)
 }
 
-func (v *MainView) getBodyHeight() int {
+func (v *Layout) getBodyHeight() int {
 	if v.body != nil {
 		b := trimPadding(v.body.View().Content)
 		return max(0, lipgloss.Height(b))
@@ -83,7 +83,7 @@ func (v *MainView) getBodyHeight() int {
 	return 0
 }
 
-func (v *MainView) getFooterHight() int {
+func (v *Layout) getFooterHight() int {
 	if v.footer != nil {
 		return v.footer.GetHeight()
 	}
@@ -91,20 +91,20 @@ func (v *MainView) getFooterHight() int {
 }
 
 // Methods
-func (v *MainView) MergeFooter(other tea.Model) {
+func (v *Layout) MergeFooter(other tea.Model) {
 	if v.footer != nil {
 		v.footer.Merge(other)
 	}
 }
 
-func (v *MainView) makeView() string {
+func (v *Layout) makeView() string {
 	view := strings.Builder{}
 	v.makeBodyView(&view)
 	v.makeFooterView(&view)
 	return view.String()
 }
 
-func (v *MainView) makeBodyView(view *strings.Builder) {
+func (v *Layout) makeBodyView(view *strings.Builder) {
 	if v.body != nil {
 		view.WriteString(trimPadding(v.body.View().Content))
 	}
@@ -114,14 +114,14 @@ func (v *MainView) makeBodyView(view *strings.Builder) {
 	}
 }
 
-func (v *MainView) makeFooterView(view *strings.Builder) {
+func (v *Layout) makeFooterView(view *strings.Builder) {
 	if v.footer != nil {
 		view.WriteString(v.spaceFooter())
 		view.WriteString(trimPadding(v.footer.View()))
 	}
 }
 
-func (v *MainView) spaceFooter() string {
+func (v *Layout) spaceFooter() string {
 	maxHeight := v.getHeightAvailable()
 	return strings.Repeat("\n", max(0, maxHeight))
 }
