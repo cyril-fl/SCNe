@@ -16,7 +16,9 @@ services:
     image: mongo:latest
     container_name: solopg-mongo
     hostname: solopg-mongo
-    restart: unless-stopped
+    # Si c'est le comportement attendu, retierer ça en DEV mais mettre en PROD ?
+    # A voir si justifier pour un CLI?
+    # restart: unless-stopped
     ports:
       - "${PORT:-27017}:27017"
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
