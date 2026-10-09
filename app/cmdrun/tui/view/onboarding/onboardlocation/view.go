@@ -51,7 +51,5 @@ func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
 	offetAlinea := 1
 	offset := offsetInfoViewSize + offetAlinea
 
-	m.reroll.Options.SetSize(bodySize.Width, bodySize.Height- offset)
+	m.reroll.Options.SetSize(bodySize.GetWidth(), bodySize.GetHeight()-offset)
 }
-
-

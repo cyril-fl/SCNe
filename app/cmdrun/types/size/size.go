@@ -29,6 +29,13 @@ func NewFromWindow(msg *tea.WindowSizeMsg) Size {
 	}
 }
 
+func Nil() Size {
+	return Size{
+		width:  0,
+		height: 0,
+	}
+}
+
 // Getters & Setters
 func (s Size) GetWidth() int {
 	return max(0, s.width)

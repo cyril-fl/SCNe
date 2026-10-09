@@ -41,7 +41,7 @@ type Step = step.Step[Context]
 func NewModel(steps *contextStepList) model {
 	return model{
 		layout: layout.New(),
-		steps:    steps,
+		steps:  steps,
 	}
 }
 

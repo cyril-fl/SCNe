@@ -6,13 +6,14 @@ import (
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/components/page"
 	sharedtui "solopg/app/shared/tui"
+	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
 	cache
-	page *page.Page
+	page interfass.Page
 
 	reroll models.RerollModel[*locations.Location]
 }
@@ -23,7 +24,7 @@ type cache struct {
 
 func NewModel() *model {
 	return &model{
-		page: page.NewPage(page.Template{
+		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
 			Subtitle: "onboarding.character:name",
 		}),

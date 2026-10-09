@@ -3,6 +3,7 @@ package loadsave
 import (
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/shared/components/page"
+	interfass "solopg/app/shared/types/interface"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -14,7 +15,7 @@ type model struct {
 	list     list.Model
 	selected *campaign.Campaign
 
-	page *page.Page
+	page interfass.Page
 }
 type cache struct {
 	size *tea.WindowSizeMsg
@@ -22,7 +23,7 @@ type cache struct {
 
 func NewModel(saves []campaign.Campaign) *model {
 	return &model{
-		page: page.NewPage(page.Template{
+		page: page.New(page.Template{
 			Title:    "Load/Save Game",
 			Subtitle: "Load or save your game progress",
 		}),
