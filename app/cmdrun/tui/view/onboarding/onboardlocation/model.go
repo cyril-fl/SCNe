@@ -4,7 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/portal"
 	"solopg/app/cmdrun/tui/models"
-	"solopg/app/shared/components/page"
+	"solopg/app/shared/components/layout/page"
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 
