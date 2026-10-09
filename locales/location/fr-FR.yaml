@@ -1,35 +1,43 @@
 # Forest
 location.forest:
-  other: Forêt
+  other: "Forêt"
 location.forest.description:
-  other: Une forêt dense remplie d'arbres anciens, de sentiers cachés et de créatures tapies dans l'ombre.
+  other: "Une forêt dense remplie d'arbres anciens, de sentiers cachés et de créatures tapies dans l'ombre."
 
 # Harbor
 location.harbor:
-  other: Port
+  other: "Port"
 location.harbor.description:
-  other: Un port animé où marchands, marins et aventuriers arrivent de terres l
+  other: "Un port animé où marchands, marins et aventuriers arrivent de terres l"
 
 # Mountain
 location.mountain:
-  other: Col de montagne
+  other: "Col de montagne"
 location.mountain.description:
-  other: Un chemin étroit à travers des montagnes imposantes où chaque pas met votre endurance à l'épreuve. 
+  other: "Un chemin étroit à travers des montagnes imposantes où chaque pas met votre endurance à l'épreuve. "
 
 # Ruins
 location.ruins:
-  other: Ruines anciennes
+  other: "Ruines anciennes"
 location.ruins.description:
-  other: Des ruines oubliées cachant des reliques, des pièges dangereux et des connaissances anciennes.
+  other: "Des ruines oubliées cachant des reliques, des pièges dangereux et des connaissances anciennes."
 
 # Tavern
 location.tavern:
-  other: Taverne
+  other: "Taverne"
 location.tavern.description:
-  other: Une taverne chaleureuse où les aventuriers se rassemblent pour partager des histoires et profiter d'un repas chaud.
+  other: "Une taverne chaleureuse où les aventuriers se rassemblent pour partager des histoires et profiter d'un repas chaud."
+
+# Temple
+location.temple:
+  other: "Temple"
+location.temple.description: 
+  other: "Un temple sacrée, perdu au mileu de nulle part."
+
+
 
 # Village
 location.village:
-  other: Village
+  other: "Village"
 location.village.description:
-  other: Un village paisible où les voyageurs peuvent se reposer, commercer et recue
+  other: "Un village paisible où les voyageurs peuvent se reposer, commercer et recue"

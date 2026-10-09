@@ -1,35 +1,42 @@
 # Forest
 location.forest:
-  other: Forest
+  other: "Forest"
 location.forest.description:
-  other: A dense forest filled with ancient trees, hidden paths, and lurking creatures.
+  other: "A dense forest filled with ancient trees, hidden paths, and lurking creatures."
 
 # Harbor
 location.harbor:
-  other: Harbor
+  other: "Harbor"
 location.harbor.description:
-  other: A bustling harbor where merchants, sailors, and adventurers arrive from distant lands.
+  other: "A bustling harbor where merchants, sailors, and adventurers arrive from distant lands."
 
 # Mountain
 location.mountain:
-  other: Mountain Pass
+  other: "Mountain Pass"
 location.mountain.description:
-  other: A narrow path through towering mountains where every step tests your endurance.
+  other: "A narrow path through towering mountains where every step tests your endurance."
 
 # Ruins
 location.ruins:
-  other: Ancient Ruins
+  other: "Ancient Ruins"
 location.ruins.description:
-  other: Forgotten ruins hiding relics, dangerous traps, and ancient knowledge.
+  other: "Forgotten ruins hiding relics, dangerous traps, and ancient knowledge."
 
 # Tavern
 location.tavern:
-  other: Tavern
+  other: "Tavern"
 location.tavern.description:
-  other: A cozy tavern where adventurers gather to share stories and enjoy a warm meal.
+  other: "A cozy tavern where adventurers gather to share stories and enjoy a warm meal."
+
+# Temple
+location.temple:
+  other: "Temple"
+location.temple.description: 
+  other: "A sacred temple out of nowhere"
+
 
 # Village
 location.village:
-  other: Village
+  other: "Village"
 location.village.description:
-  other:  A peaceful village where travelers can rest, trade, and gather information.
+  other: " A peaceful village where travelers can rest, trade, and gather information."

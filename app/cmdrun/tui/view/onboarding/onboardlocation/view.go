@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/utils/transform"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -28,13 +29,14 @@ func (m model) makeBody() string {
 }
 
 func (m *model) makeInformationView(v *strings.Builder) {
-	v.WriteString(strings.Join([]string{"", i19n.Localize("attempt"), ": "}, ""))
-	v.WriteString(fmt.Sprintf("%d\n", m.reroll.Attempt))
-
 	v.WriteString(fmt.Sprintf("%s : ", i19n.Localize(m.reroll.Value.Name)))
+
 	if m.reroll.Value.Description.Description != sharedtui.KEY_EMPTY {
 		v.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
 	}
+	
+	v.WriteString(strings.Join([]string{"\n", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
+	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 }
 
 func (m *model) makeOptionsView(v *strings.Builder) {

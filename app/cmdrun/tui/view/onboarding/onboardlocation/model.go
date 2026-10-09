@@ -26,7 +26,7 @@ func NewModel() *model {
 	return &model{
 		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
-			Subtitle: "onboarding.character:name",
+			Subtitle: "onboarding:select.location",
 		}),
 
 		reroll: models.NewRerollModel(
