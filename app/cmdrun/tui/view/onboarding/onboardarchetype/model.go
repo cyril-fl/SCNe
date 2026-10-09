@@ -4,7 +4,8 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
-	"solopg/app/shared/components/page"
+	"solopg/app/shared/components/layout/page"
+
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"

@@ -1,8 +1,8 @@
 package loadsave
 
 import (
+	"solopg/app/shared/components/layout/page"
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/shared/components/page"
 	interfass "solopg/app/shared/types/interface"
 
 	"charm.land/bubbles/v2/list"

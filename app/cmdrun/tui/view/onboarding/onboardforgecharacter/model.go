@@ -3,7 +3,8 @@ package onboardforgecharacter
 import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/tui/models"
-	"solopg/app/shared/components/page"
+	"solopg/app/shared/components/layout/page"
+
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 
