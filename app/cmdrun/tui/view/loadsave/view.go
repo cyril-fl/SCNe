@@ -15,3 +15,4 @@ func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
 	bodySize := m.page.GetAvailableSize()
 	m.list.SetSize(bodySize.Width, bodySize.Height)
 }
+

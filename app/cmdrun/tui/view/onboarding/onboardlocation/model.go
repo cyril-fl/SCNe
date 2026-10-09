@@ -21,8 +21,8 @@ type cache struct {
 	size *tea.WindowSizeMsg
 }
 
-func NewModel() model {
-	return model{
+func NewModel() *model {
+	return &model{
 		page: page.NewPage(page.Template{
 			Title:    "onboarding.character:create",
 			Subtitle: "onboarding.character:name",
@@ -42,8 +42,8 @@ func (m model) Init() tea.Cmd {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		handleWindowResize(&m, msg)
+	// case tea.WindowSizeMsg:
+	// 	handleWindowResize(&m, msg)
 
 	case tea.KeyMsg:
 		switch msg.String() {
