@@ -42,7 +42,7 @@ func NewPage(params Template) *Page {
 func (p Page) GetView() tea.View {
 	v := strings.Builder{}
 
-	p.makeHeader(&v)
+	p.makeTitleGroup(&v)
 	p.makeBody(&v)
 
 	return tea.NewView(
@@ -53,12 +53,12 @@ func (p Page) GetView() tea.View {
 	)
 }
 
-func (p *Page) SetBody(body string) {
-	p.body = body
-}
-
 func (p *Page) SetSize(size *tea.WindowSizeMsg) {
 	p.size = size
+}
+
+func (p *Page) SetBody(body string) {
+	p.body = body
 }
 
 func (p *Page) GetSize() *tea.WindowSizeMsg {
@@ -72,11 +72,11 @@ func (p *Page) GetAvailableSize() *tea.WindowSizeMsg {
 	size := size.NewFromWindow(p.size)
 	return &tea.WindowSizeMsg{
 		Width:  size.GetWidth(),
-		Height: max(0, size.GetHeight()-p.getTitleHeight()),
+		Height: max(0, size.GetHeight()-p.getTitleGroupHeight()),
 	}
 }
 
-func (p Page) getHeader() string {
+func (p Page) getTitleGroup() string {
 	if p.title == "" {
 		return ""
 	}
@@ -93,17 +93,17 @@ func (p Page) getHeader() string {
 		Render(view)
 }
 
-func (p *Page) getTitleHeight() int {
+func (p *Page) getTitleGroupHeight() int {
 	if p.title == "" {
 		return 0
 	}
-	return lipgloss.Height(p.getHeader())
+	return lipgloss.Height(p.getTitleGroup())
 }
 
 // Methods
-func (p *Page) makeHeader(v *strings.Builder) {
+func (p *Page) makeTitleGroup(v *strings.Builder) {
 	if p.title != "" {
-		v.WriteString(p.getHeader())
+		v.WriteString(p.getTitleGroup())
 		v.WriteString("\n")
 	}
 }
