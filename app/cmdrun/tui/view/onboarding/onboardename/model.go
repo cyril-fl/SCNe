@@ -4,6 +4,7 @@ import (
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/components/page"
 	sharedtui "solopg/app/shared/tui"
+	interfass "solopg/app/shared/types/interface"
 	"strings"
 
 	"charm.land/bubbles/v2/textinput"
@@ -12,7 +13,7 @@ import (
 
 type model struct {
 	cache
-	page *page.Page
+	page interfass.Page
 
 	input textinput.Model
 	name  string
@@ -27,7 +28,7 @@ func NewModel() model {
 	input.Focus()
 
 	return model{
-		page: page.NewPage(page.Template{
+		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
 			Subtitle: "onboarding.character:name",
 		}),

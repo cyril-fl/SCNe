@@ -5,13 +5,14 @@ import (
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/components/page"
 	sharedtui "solopg/app/shared/tui"
+	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
 	cache
-	page *page.Page
+	page interfass.Page
 
 	reroll models.RerollModel[[]stats.Modifier]
 }
@@ -22,7 +23,7 @@ type cache struct {
 
 func NewModel() *model {
 	return &model{
-		page: page.NewPage(page.Template{
+		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
 			Subtitle: "onboarding.character:name",
 		}),
@@ -42,7 +43,7 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	// case tea.WindowSizeMsg:
-		// handleWindowResize(&m, msg)
+	// handleWindowResize(&m, msg)
 
 	case tea.KeyMsg:
 		switch msg.String() {

@@ -3,17 +3,15 @@ package page
 import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
+	interfass "solopg/app/shared/types/interface"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
 
-type Pagineable interface {
-	SetPageSize(size *tea.WindowSizeMsg)
-}
-
-type Page struct {
+type page struct {
 	title    string
 	subtitle string
 	body     string
@@ -30,8 +28,8 @@ type Template struct {
 	Body     string
 }
 
-func NewPage(params Template) *Page {
-	return &Page{
+func New(params Template) interfass.Page {
+	return &page{
 		title:    params.Title,
 		subtitle: params.Subtitle,
 		body:     params.Body,
@@ -39,7 +37,7 @@ func NewPage(params Template) *Page {
 }
 
 // Getters & Setters
-func (p Page) GetView() tea.View {
+func (p page) GetView() tea.View {
 	v := strings.Builder{}
 
 	p.makeTitleGroup(&v)
@@ -48,38 +46,44 @@ func (p Page) GetView() tea.View {
 	return tea.NewView(
 		lipgloss.NewStyle().
 			Foreground(lipgloss.Color("5")).
-			// Background(lipgloss.Color("2")).	
+			// Background(lipgloss.Color("2")).
 			Render(p.handleFlex(&v)),
 	)
 }
 
-func (p *Page) SetSize(size *tea.WindowSizeMsg) {
-	p.size = size
-}
-
-func (p *Page) SetBody(body string) {
+func (p *page) SetBody(body string) {
 	p.body = body
 }
 
-func (p *Page) GetSize() *tea.WindowSizeMsg {
+func (p *page) SetFooter(footer string) {
+	logs.SilentWarning("error:not_implemented", map[string]any{
+		"Function": "SetFooter",
+		"Subject":  "page",
+	})
+}
+
+func (p *page) GetSize() size.Size {
 	if p.size != nil {
-		return p.size
+		return size.NewFromWindow(p.size)
 	}
-	return &tea.WindowSizeMsg{
-		Height: 0,
-		Width:  0,
-	}
+	return size.Nil()
 }
 
-func (p *Page) GetAvailableSize() *tea.WindowSizeMsg {
-	size := size.NewFromWindow(p.size)
-	return &tea.WindowSizeMsg{
-		Width:  size.GetWidth(),
-		Height: max(0, size.GetHeight()-p.getTitleGroupHeight()),
-	}
+func (p *page) SetSize(size *tea.WindowSizeMsg) {
+	p.size = size
 }
 
-func (p Page) getTitleGroup() string {
+func (p *page) GetAvailableSize() size.Size {
+	if p.size == nil {
+		return size.Nil()
+	}
+	return size.New(size.Template{
+		Width:  p.size.Width,
+		Height: max(0, p.size.Height-p.getTitleGroupHeight()),
+	})
+}
+
+func (p page) getTitleGroup() string {
 	if p.title == "" {
 		return ""
 	}
@@ -96,7 +100,7 @@ func (p Page) getTitleGroup() string {
 		Render(view)
 }
 
-func (p *Page) getTitleGroupHeight() int {
+func (p *page) getTitleGroupHeight() int {
 	if p.title == "" {
 		return 0
 	}
@@ -104,27 +108,28 @@ func (p *Page) getTitleGroupHeight() int {
 }
 
 // Methods
-func (p *Page) makeTitleGroup(v *strings.Builder) {
+func (p *page) makeTitleGroup(v *strings.Builder) {
 	if p.title != "" {
 		v.WriteString(p.getTitleGroup())
 		v.WriteString("\n")
 	}
 }
 
-func (p *Page) makeBody(v *strings.Builder) {
+func (p *page) makeBody(v *strings.Builder) {
 	if p.body != "" {
 		v.WriteString(p.body)
 	}
 }
 
-func (p *Page) handleFlex(v *strings.Builder) string {
-	viewwidth := p.GetSize().Width
-	if viewwidth <= 0 {
+func (p *page) handleFlex(v *strings.Builder) string {
+	size := p.GetSize()
+	w := size.GetWidth()
+	if w <= 0 {
 		return v.String()
 	}
 
 	return lipgloss.NewStyle().
-		Width(viewwidth).
+		Width(w).
 		// Background(lipgloss.Color("2")).
 		Render(v.String())
 }

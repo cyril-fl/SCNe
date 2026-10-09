@@ -7,6 +7,7 @@ import (
 	"solopg/app/shared/components/page"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
+	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -22,7 +23,7 @@ const (
 
 type model struct {
 	cache
-	page *page.Page
+	page interfass.Page
 
 	name string
 	step step
@@ -49,7 +50,7 @@ func NewModel[T archetypes.Archetype](name string, data []T) model {
 	models.ConfigureList(&listModel)
 
 	return model{
-		page: page.NewPage(page.Template{
+		page: page.New(page.Template{
 			Title:    "onboarding.character:create",
 			Subtitle: name,
 		}),

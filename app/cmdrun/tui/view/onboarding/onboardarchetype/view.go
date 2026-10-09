@@ -6,7 +6,7 @@ import (
 
 func (m model) View() tea.View {
 	bodySize := m.page.GetAvailableSize()
-	m.list.SetSize(bodySize.Width, bodySize.Height)
+	m.list.SetSize(bodySize.GetWidth(), bodySize.GetHeight())
 
 	m.page.SetBody(m.list.View())
 

@@ -13,6 +13,5 @@ func (m model) View() tea.View {
 func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
 	m.page.SetSize(size)
 	bodySize := m.page.GetAvailableSize()
-	m.list.SetSize(bodySize.Width, bodySize.Height)
+	m.list.SetSize(bodySize.GetWidth(), bodySize.GetHeight())
 }
-
