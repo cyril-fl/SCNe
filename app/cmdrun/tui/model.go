@@ -14,7 +14,7 @@ import (
 )
 
 type model struct {
-	layout layout.Layout
+	layout  layout.Layout
 	steps   models.StepModel[Context]
 	context Context
 }
@@ -59,7 +59,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 }
 
-// TODO voitr si c'est vraiment a la bonne place ici 
+// TODO voitr si c'est vraiment a la bonne place ici
 type DelegateUpdateFunc func(msg tea.Msg) (tea.Model, tea.Cmd)
 
 type EscapeSupport interface {

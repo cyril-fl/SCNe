@@ -7,11 +7,11 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func (v *Layout) getHeaderHeight() int { 
+func (v *Layout) getHeaderHeight() int {
 	if v.header == nil {
 		return 0
 	}
-	
+
 	return v.header.GetHeight()
 }
 func (v *Layout) SetHeader(other tea.Model) {
@@ -22,7 +22,7 @@ func (v *Layout) SetHeader(other tea.Model) {
 	v.header.SetHeader(other)
 }
 
-func (v *Layout) makeHeaderView()string {
+func (v *Layout) makeHeaderView() string {
 	if v.header == nil {
 		return ""
 	}

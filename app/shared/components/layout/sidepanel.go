@@ -19,7 +19,7 @@ func (v *Layout) getSidepanelHeight() int {
 	if v.sidepanel == nil {
 		return 0
 	}
-	
+
 	return v.sidepanel.GetHeight()
 }
 
@@ -30,7 +30,6 @@ func (v *Layout) MergeSidepanel(other tea.Model) {
 
 	v.sidepanel.Merge(other)
 }
-
 
 func (v *Layout) makeSidepanelView() string {
 	if v.sidepanel == nil {

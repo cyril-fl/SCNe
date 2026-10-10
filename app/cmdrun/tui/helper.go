@@ -33,6 +33,5 @@ func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 // 	// 	msg.Height = max(0, msg.Height-footerHeight)
 // 	// }
 
-// 	return 
+// 	return
 // }
-

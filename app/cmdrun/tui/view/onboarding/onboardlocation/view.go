@@ -34,7 +34,7 @@ func (m *model) makeInformationView(v *strings.Builder) {
 	if m.reroll.Value.Description.Description != sharedtui.KEY_EMPTY {
 		v.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
 	}
-	
+
 	v.WriteString(strings.Join([]string{"\n", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
 	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 }
