@@ -14,7 +14,7 @@ func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 		logs.SilentInfo("system.msg:quit")
 		return m, tea.Quit
 	case sharedtui.KEY_ESC:
-		current := m.steps.Steps.GetCurrentSubmodel()
+		current := m.steps.GetCurrentSubmodel()
 		if current == nil {
 			logs.SilentInfo("system.msg:quit")
 			return m, tea.Quit
@@ -37,7 +37,7 @@ func (m *model) handleResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleSubmodelUpdate(msg tea.Msg) (*model, tea.Cmd) {
-	current := m.steps.Steps.GetCurrentSubmodel()
+	current := m.steps.GetCurrentSubmodel()
 	if current == nil {
 		return m, nil
 	}
@@ -45,7 +45,7 @@ func (m *model) handleSubmodelUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	var cmd tea.Cmd
 	current, cmd = current.Update(msg)
 
-	m.steps.Steps.SetCurrentSubmodel(current)
+	m.steps.SetCurrentSubmodel(current)
 
 	return m, cmd
 }

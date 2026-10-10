@@ -44,7 +44,7 @@ func NewModel(steps *models.ContextStepList[Context]) model {
 }
 
 func (m *model) resolveCurrentStep(value any) error {
-	if current := m.steps.Steps.CurrentStep(); current != nil && current.Resolve != nil {
+	if current := m.steps.CurrentStep(); current != nil && current.Resolve != nil {
 		return current.Resolve(&m.context, value)
 	}
 
@@ -53,7 +53,7 @@ func (m *model) resolveCurrentStep(value any) error {
 
 func (m *model) selectNextStep() bool {
 	for {
-		next := m.steps.Steps.NextStep()
+		next := m.steps.NextStep()
 		if next == nil {
 			return false
 		}
@@ -69,7 +69,7 @@ func (m *model) forwardNextStep() (*model, tea.Cmd) {
 		return m, tea.Quit
 	}
 
-	submodel := m.steps.Steps.GetCurrentSubmodel()
+	submodel := m.steps.GetCurrentSubmodel()
 	if submodel == nil {
 		return m, tea.Quit
 	}
@@ -85,7 +85,7 @@ func (m *model) forwardNextStep() (*model, tea.Cmd) {
 }
 
 func (m model) Init() tea.Cmd {
-	if submodel := m.steps.Steps.GetCurrentSubmodel(); submodel != nil {
+	if submodel := m.steps.GetCurrentSubmodel(); submodel != nil {
 		return submodel.Init()
 	}
 
