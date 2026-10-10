@@ -1,17 +1,36 @@
 package loadsave
 
 import (
+	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/components/layout/header"
+
 	tea "charm.land/bubbletea/v2"
 )
 
 func (m model) View() tea.View {
-	m.page.SetBody(m.list.View())
-
-	return m.page.GetView()
+	msg := "404 - Not Found"
+	return tea.NewView(msg)
 }
 
-func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
-	m.page.SetSize(size)
-	bodySize := m.page.GetAvailableSize()
-	m.list.SetSize(bodySize.GetWidth(), bodySize.GetHeight())
+func (m *model) GetHeader() header.Template {
+	return header.Template{
+		Title:    "onboarding:select.save.title",
+		Subtitle: "onboarding:select.save.subtitle",
+	}
+}
+
+func (m *model) GetSection() []string {
+	return []string{
+		m.list.View(),
+	}
+}
+
+func (m *model) SetSectionSize(size size.Size) {
+	m.list.SetSize(size.GetWidth(), size.GetHeight())
+}
+
+func (m *model) GetSidepanel() []string {
+	return []string{
+		"Sidepanel content",
+	}
 }

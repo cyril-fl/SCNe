@@ -7,30 +7,38 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func (v *Layout) SetHeader(parts ...string) {
-	v.header = header.New(parts...)
+func (v *Layout) getHeaderHeight() int { 
+	if v.header == nil {
+		return 0
+	}
+	
+	return v.header.GetHeight()
+}
+func (v *Layout) SetHeader(other tea.Model) {
+	if v.header == nil {
+		v.header = header.Nil()
+	}
+
+	v.header.SetHeader(other)
 }
 
-func (v *Layout) getHeaderHight() int {
-	if v.header != nil {
-		return v.header.GetHeight()
+func (v *Layout) makeHeaderView()string {
+	if v.header == nil {
+		return ""
 	}
-	return 0
-}
-func (v *Layout) MergeHeader(other tea.Model) {
-	if v.header != nil {
-		v.header.Merge(other)
-	}
-}
 
-func (v *Layout) makeHeaderView(view *strings.Builder) {
-	if v.header != nil {
-		view.WriteString(v.spaceHeader())
-		view.WriteString(trimParagraphPadding(v.header.View()))
-	}
+	view := strings.Builder{}
+	view.WriteString(trimParagraphPadding(v.header.View()))
+	// view.WriteString(v.spaceHeader())
+
+	return view.String()
 }
 
 func (v *Layout) spaceHeader() string {
+	if v.header == nil {
+		return ""
+	}
+
 	maxHeight := v.getHeightAvailable()
 	return strings.Repeat("\n", max(0, maxHeight))
 }
