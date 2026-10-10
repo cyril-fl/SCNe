@@ -7,9 +7,9 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/components/layout"
+	"solopg/app/shared/components/models"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
-	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -19,7 +19,7 @@ type model struct {
 	primitive.Fallible
 	layout layout.Layout
 
-	steps   *contextStepList
+	steps models.StepModel[Context]
 	context Context
 }
 
@@ -27,7 +27,6 @@ type cache struct {
 	size *tea.WindowSizeMsg
 }
 
-// TODO LOW rendre ça generique
 type Context struct {
 	SelectedSave     *campaign.Campaign
 	SelectedName     string
@@ -37,18 +36,15 @@ type Context struct {
 	SelectedLocation *locations.Location
 }
 
-type contextStepList = step.List[Context]
-type Step = step.Step[Context]
-
-func NewModel(steps *contextStepList) model {
+func NewModel(steps *models.ContextStepList[Context]) model {
 	return model{
 		layout: layout.New(),
-		steps:  steps,
+		steps:  models.NewStepModel[Context](steps),
 	}
 }
 
 func (m *model) resolveCurrentStep(value any) error {
-	if current := m.steps.CurrentStep(); current != nil && current.Resolve != nil {
+	if current := m.steps.Steps.CurrentStep(); current != nil && current.Resolve != nil {
 		return current.Resolve(&m.context, value)
 	}
 
@@ -57,7 +53,7 @@ func (m *model) resolveCurrentStep(value any) error {
 
 func (m *model) selectNextStep() bool {
 	for {
-		next := m.steps.NextStep()
+		next := m.steps.Steps.NextStep()
 		if next == nil {
 			return false
 		}
@@ -73,7 +69,7 @@ func (m *model) forwardNextStep() (*model, tea.Cmd) {
 		return m, tea.Quit
 	}
 
-	submodel := m.steps.GetCurrentSubmodel()
+	submodel := m.steps.Steps.GetCurrentSubmodel()
 	if submodel == nil {
 		return m, tea.Quit
 	}
@@ -89,7 +85,7 @@ func (m *model) forwardNextStep() (*model, tea.Cmd) {
 }
 
 func (m model) Init() tea.Cmd {
-	if submodel := m.steps.GetCurrentSubmodel(); submodel != nil {
+	if submodel := m.steps.Steps.GetCurrentSubmodel(); submodel != nil {
 		return submodel.Init()
 	}
 

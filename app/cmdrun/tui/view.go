@@ -22,7 +22,7 @@ func (m model) View() tea.View {
 		})
 
 		// m.mainview.SetBody(newErrorModel(err))
-	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
+	} else if current := m.steps.Steps.GetCurrentSubmodel(); current != nil {
 		m.layout.MergeFooter(current)
 		// m.layout.SetBody(current) 
 	}

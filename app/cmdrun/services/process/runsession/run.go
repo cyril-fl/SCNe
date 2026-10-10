@@ -81,7 +81,7 @@ func (p *run) makeSelectsaveStep() {
 	}
 
 	p.cache.view.Add(
-		cmdruntui.Step{
+		models.Step[cmdruntui.Context]{
 			Submodel: loadsave.NewModel(campaigns),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 
@@ -111,7 +111,7 @@ func (p *run) makeResolveStep() {
 	}
 
 	p.cache.view.Add(
-		cmdruntui.Step{
+		models.Step[cmdruntui.Context]{
 			Submodel: models.Resolve(),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
 				process := generatengine.Process(p.db, ctx)
@@ -124,7 +124,7 @@ func (p *run) makeResolveStep() {
 					})
 				}
 
-				p.cache.view.Insert(cmdruntui.Step{
+				p.cache.view.Insert(models.Step[cmdruntui.Context]{
 					Submodel: gameboard.NewModel(gameboard.UiParams{
 						Engine: process.GetResult(),
 						OnSave: savestate.Save(p.db, process.GetResult()),
@@ -147,8 +147,8 @@ func (p *run) runTuiView() {
 }
 
 // Helpers
-func makeOnboardingSteps() []cmdruntui.Step {
-	return []cmdruntui.Step{
+func makeOnboardingSteps() []models.Step[cmdruntui.Context] {
+	return []models.Step[cmdruntui.Context]{
 		{
 			Submodel: onboardename.NewModel(),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
