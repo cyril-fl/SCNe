@@ -3,7 +3,6 @@ package oraclemenu
 import (
 	"fmt"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/types/direction"
@@ -93,7 +92,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
+			return sharedtui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
 				"Subject": "oracle",
 				"Value":   selected,
 			}))
@@ -106,7 +105,7 @@ func (m *OracleMenu) handleKeyShiftEnter() tea.Cmd {
 	if err != nil {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.Error("error.unexpected:action:oracle", map[string]any{
+			return sharedtui.SendErrorMsg(logs.Error("error.unexpected:action:oracle", map[string]any{
 				"Action": "unexpected:action.roll",
 				"Error":  err,
 			}))

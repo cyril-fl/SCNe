@@ -5,13 +5,13 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	sharedtui "solopg/app/shared/tui"
 	"solopg/config"
 
 	"charm.land/bubbles/v2/list"
@@ -296,7 +296,7 @@ func (m *codexMenu) handleFormScroll(params sidemenu.UpdateParams) (tea.Model, t
 	viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
 	viewHight += lipgloss.Height(pageHeader)
 
-	return params.Model, cmdruntui.SendScrollMsg(viewTop, viewHight)
+	return params.Model, sharedtui.SendScrollMsg(viewTop, viewHight)
 }
 
 func (m *codexMenu) handleFormError(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {

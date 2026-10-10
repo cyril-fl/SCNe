@@ -50,7 +50,7 @@ func (m *model) handleSubmodelUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m *model) handleResolution(resolution ResolutionMsg) (*model, tea.Cmd) {
+func (m *model) handleResolution(resolution sharedtui.ResolutionMsg) (*model, tea.Cmd) {
 	if resolution.Err != nil {
 		m.err = resolution.Err
 		return m, tea.Quit

@@ -2,7 +2,6 @@ package onboardarchetype
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/components/layout/page"
 
@@ -95,7 +94,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 
-		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
+		return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
 			Completed: true,
 			Value:     selectedItem,
 		})

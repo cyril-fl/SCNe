@@ -1,4 +1,4 @@
-package cmdruntui
+package sharedtui
 
 import (
 	"solopg/app/cmdrun/types/viewoptions"

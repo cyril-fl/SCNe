@@ -1,7 +1,7 @@
 package models
 
 import (
-	cmdruntui "solopg/app/cmdrun/tui"
+	sharedtui "solopg/app/shared/tui"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -20,7 +20,7 @@ func Resolve() model {
 
 func (m model) Init() tea.Cmd {
 	return func() tea.Msg {
-		return cmdruntui.ResolutionMsg{
+		return sharedtui.ResolutionMsg{
 			Completed: true,
 		}
 	}
