@@ -1,36 +1,36 @@
 package onboardename
 
 import (
+	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/components/layout/header"
+
 	tea "charm.land/bubbletea/v2"
 )
 
 func (m model) View() tea.View {
-	// title := lipgloss.NewStyle().
-	// 	Bold(true).
-	// 	Render(i19n.Localize("onboarding"))
+	msg := "404 - Not Found"
+	return tea.NewView(msg)
+}
 
-	// input := m.Input.View()
+func (m *model) GetHeader() header.Template {
+	return header.Template{
+		Title:    "onboarding.character:create",
+		Subtitle: "onboarding:select.character.name",
+	}
+}
 
-	// return tea.NewView(
-	// 	lipgloss.JoinVertical(
-	// 		lipgloss.Left,
-	// 		/*
-	// 			TODO LOW Verrifier pourquoi CREATE CHARACTER apparais pas sur les autre view
-	// 		*/
-	// 		title,
-	// 		"",
-	// 		transform.Capitalize(i19n.Localize("field.name")),
-	// 		input,
-	// 	),
-	// )
+func (m *model) GetSection() []string {
+	return []string{
+		m.input.View(),
+	}
+}
 
-	// page := page.NewPage(page.Template{
-	// 	Title:    "onboarding.character:create",
-	// 	Subtitle: "name",
-	// 	Body:     m.input.View(),
-	// })
+func (m *model) SetSectionSize(size size.Size) {
+	m.input.SetWidth(size.GetWidth())
+}
 
-	m.page.SetBody(m.input.View())
-
-	return m.page.GetView()
+func (m *model) GetFooter() []string {
+	return []string{
+		"TEST",
+	}
 }
