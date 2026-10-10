@@ -1,8 +1,6 @@
 package onboardename
 
 import (
-	"solopg/app/shared/components/layout/page"
-
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 	"strings"
@@ -23,16 +21,11 @@ type cache struct {
 	size *tea.WindowSizeMsg
 }
 
-func NewModel() model {
+func NewModel() *model {
 	input := textinput.New()
 	input.Focus()
 
-	return model{
-		page: page.New(page.Template{
-			Title:    "onboarding.character:create",
-			Subtitle: "onboarding:select.character.name",
-		}),
-
+	return &model{
 		input: input,
 		name:  "",
 	}
@@ -42,31 +35,25 @@ func (m model) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		m.input.SetWidth(msg.Width - 2)
-		return m, nil
-	}
+	case tea.KeyMsg:
+		switch msg.String() {
+				case sharedtui.KEY_ENTER:
+				name := strings.TrimSpace(m.name)
+				if name == sharedtui.KEY_EMPTY {
+					return m, nil
+				}
+				m.name = name
 
-	newInput, cmd := m.input.Update(msg)
-
-	m.input = newInput
-	m.name = newInput.Value()
-
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
-		name := strings.TrimSpace(m.name)
-		if name == sharedtui.KEY_EMPTY {
-			return m, nil
+				return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
+					Completed: true,
+					Value:     m.name,
+				})
+			default:
+				return m.handleDefaultInput(msg)
+			}
 		}
-
-		m.name = name
-
-		return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
-			Completed: true,
-			Value:     m.name,
-		})
-	}
-
-	return m, cmd
+	return m, nil
 }
+
