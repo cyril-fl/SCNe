@@ -2,12 +2,12 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/services/game"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/hintmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
+	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 
 	"charm.land/bubbles/v2/cursor"
@@ -92,13 +92,13 @@ func (m model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case oraclemenu.Msg:
 		return m.handleOracleRolled(msg)
 
-	case cmdruntui.SaveMsg:
+	case sharedtui.SaveMsg:
 		return m.handleSaveInput(msg)
-	case cmdruntui.ScrollMsg:
+	case sharedtui.ScrollMsg:
 		return m.handleViewportScroll(msg)
-	case cmdruntui.Refresh:
+	case sharedtui.Refresh:
 		return m.handleViewRefresh(msg)
-	case cmdruntui.ErrorMsg:
+	case sharedtui.ErrorMsg:
 		return m.handleError(msg)
 
 	case cursor.BlinkMsg:

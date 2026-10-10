@@ -1,9 +1,9 @@
 package models
 
 import (
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -72,7 +72,7 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	}
 
 	if isSelected.Value() || s.IsOutOfLimit() {
-		return cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{Completed: true, Value: s.Value})
+		return sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{Completed: true, Value: s.Value})
 	}
 
 	s.Reroll()

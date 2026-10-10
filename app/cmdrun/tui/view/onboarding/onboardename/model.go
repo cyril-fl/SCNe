@@ -1,7 +1,6 @@
 package onboardename
 
 import (
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/components/layout/page"
 
 	sharedtui "solopg/app/shared/tui"
@@ -63,7 +62,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		m.name = name
 
-		return m, cmdruntui.SendResolutionMsg(cmdruntui.ResolutionMsg{
+		return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
 			Completed: true,
 			Value:     m.name,
 		})

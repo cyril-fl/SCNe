@@ -2,7 +2,6 @@ package dicemenu
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/types/direction"
@@ -88,7 +87,7 @@ func (m *DiceMenu) handleKeyShiftEnter() tea.Cmd {
 	if !ok {
 		return func() tea.Msg {
 
-			return cmdruntui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
+			return sharedtui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
 				"Subject": i19n.Localize("dice"),
 				"Value":   selected,
 			}))

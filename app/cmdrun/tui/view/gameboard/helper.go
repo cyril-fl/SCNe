@@ -2,7 +2,6 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/services/game"
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
@@ -58,7 +57,7 @@ func (m *model) handleEnterInput() {
 	refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
-func (m *model) handleSaveInput(msg cmdruntui.SaveMsg) (*model, tea.Cmd) {
+func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
 
 	if m.HasErr() {
@@ -110,13 +109,13 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch msg.String() {
 	case sharedtui.CMD_CTRL_S:
-		return m, cmdruntui.SendSaveMsg(m.save)
+		return m, sharedtui.SendSaveMsg(m.save)
 	}
 
 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
 
-func (m *model) handleError(msg cmdruntui.ErrorMsg) (*model, tea.Cmd) {
+func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
 }
@@ -216,7 +215,7 @@ func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
-	scrollMsg, ok := msg.(cmdruntui.ScrollMsg)
+	scrollMsg, ok := msg.(sharedtui.ScrollMsg)
 	if !ok {
 		return m, nil
 	}
@@ -240,7 +239,7 @@ func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
 	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
 }
 
-func (m model) handleViewRefresh(msg cmdruntui.Refresh) (tea.Model, tea.Cmd) {
+func (m model) handleViewRefresh(msg sharedtui.Refresh) (tea.Model, tea.Cmd) {
 	return refreshViewport(&m, msg.Option)
 }
 
