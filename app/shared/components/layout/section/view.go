@@ -17,8 +17,6 @@ type HasSection interface {
 	SetSectionSize(size size.Size)
 }
 
-
-
 func New(parts ...string) *Section {
 	return &Section{
 		parts: parts,
@@ -32,10 +30,9 @@ func Nil() *Section {
 	}
 }
 
-
 func (s *Section) View() string {
 
-	v:= append(s.parts, s.plugins...)
+	v := append(s.parts, s.plugins...)
 
 	return lipgloss.JoinVertical(lipgloss.Left, v...)
 	// return strings.Join(sectionparts, " | ")
@@ -70,6 +67,5 @@ func (s *Section) SetSize(model tea.Model, size size.Size) {
 		view.SetSectionSize(size)
 	}
 }
-
 
 // Helpers

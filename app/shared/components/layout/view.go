@@ -13,11 +13,11 @@ import (
 )
 
 type Layout struct {
-	size   size.Size
-	header *header.Header
+	size      size.Size
+	header    *header.Header
 	sidepanel *sidepanel.Sidepanel
-	section *section.Section
-	footer *footer.Footer
+	section   *section.Section
+	footer    *footer.Footer
 }
 
 const (
@@ -26,8 +26,7 @@ const (
 )
 
 func New() Layout {
-	return Layout{
-	}
+	return Layout{}
 }
 
 // Getters & Setters
@@ -62,8 +61,6 @@ func (v *Layout) GetAvailableSize() size.Size {
 func (v *Layout) getHeightAvailable() int {
 	return max(0, v.getHeightWithinBorder()-v.getHeightOccupied())
 }
-
-
 
 func (v *Layout) getHeightOccupied() int {
 	occupied := []int{
@@ -107,7 +104,6 @@ func (v *Layout) makeVstack() string {
 func (v *Layout) makeHstack() string {
 	return v.makeSidepanelView()
 }
-
 
 func (v *Layout) makeView() string {
 	vstack := v.makeVstack()
