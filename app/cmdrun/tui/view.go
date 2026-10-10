@@ -11,20 +11,20 @@ import (
 )
 
 func (m model) View() tea.View {
-	m.layout.SetSize(size.NewFromWindow(m.size))
+	m.layout.SetSize(size.NewFromWindow(m.steps.GetSize()))
 	m.layout.SetFooter(i19n.Localize("cmd.ctrl+q:quit"))
 
-	if m.HasErr() {
+	if m.steps.HasErr() {
 		cwd, cwderr := os.Getwd()
 		_ = logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
-			"Error": errors.Join(cwderr, m.GetErr()),
+			"Error": errors.Join(cwderr, m.steps.GetErr()),
 		})
 
 		// m.mainview.SetBody(newErrorModel(err))
 	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
 		m.layout.MergeFooter(current)
-		// m.layout.SetBody(current) 
+		// m.layout.SetBody(current)
 	}
 
 	return m.layout.GetView()

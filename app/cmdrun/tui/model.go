@@ -9,22 +9,14 @@ import (
 	"solopg/app/shared/components/layout"
 	"solopg/app/shared/components/models"
 	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	cache
-	primitive.Fallible
 	layout layout.Layout
-
-	steps models.StepModel[Context]
+	steps   models.StepModel[Context]
 	context Context
-}
-
-type cache struct {
-	size *tea.WindowSizeMsg
 }
 
 type Context struct {
@@ -39,49 +31,8 @@ type Context struct {
 func NewModel(steps *models.ContextStepList[Context]) model {
 	return model{
 		layout: layout.New(),
-		steps:  models.NewStepModel[Context](steps),
+		steps:  models.NewStepModel(steps),
 	}
-}
-
-func (m *model) resolveCurrentStep(value any) error {
-	if current := m.steps.CurrentStep(); current != nil && current.Resolve != nil {
-		return current.Resolve(&m.context, value)
-	}
-
-	return nil
-}
-
-func (m *model) selectNextStep() bool {
-	for {
-		next := m.steps.NextStep()
-		if next == nil {
-			return false
-		}
-
-		if next.Skip == nil || !next.Skip(&m.context) {
-			return true
-		}
-	}
-}
-
-func (m *model) forwardNextStep() (*model, tea.Cmd) {
-	if !m.selectNextStep() {
-		return m, tea.Quit
-	}
-
-	submodel := m.steps.GetCurrentSubmodel()
-	if submodel == nil {
-		return m, tea.Quit
-	}
-
-	initCmd := submodel.Init()
-	if m.size == nil {
-		return m, initCmd
-	}
-
-	return m, tea.Sequence(initCmd, func() tea.Msg {
-		return *m.size
-	})
 }
 
 func (m model) Init() tea.Cmd {
@@ -95,19 +46,20 @@ func (m model) Init() tea.Cmd {
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.size = &msg
-		return m.handleResize(msg)
+		m.steps.SetSize(&msg)
+		return m, m.steps.UpdateSubmodel(msg)
 	case tea.KeyMsg:
 		return m.handleEvent(msg)
 
 	case sharedtui.ResolutionMsg:
-		return m.handleResolution(msg)
+		return m, m.steps.ResolveSubmodel(msg)
 
 	default:
-		return m.handleSubmodelUpdate(msg)
+		return m, m.steps.UpdateSubmodel(msg)
 	}
 }
 
+// TODO voitr si c'est vraiment a la bonne place ici 
 type DelegateUpdateFunc func(msg tea.Msg) (tea.Model, tea.Cmd)
 
 type EscapeSupport interface {
