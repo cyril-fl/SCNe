@@ -2,10 +2,10 @@ package hintmenu
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/hint"
-	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"

@@ -15,13 +15,13 @@ import (
 	"solopg/app/shared/services/process/generatesteplist"
 
 	"solopg/app/cmdrun/services/process/savestate"
-	"solopg/app/cmdrun/tui/models"
 	"solopg/app/cmdrun/tui/view/gameboard"
 	"solopg/app/cmdrun/tui/view/loadsave"
 	"solopg/app/cmdrun/tui/view/onboarding/onboardarchetype"
 	"solopg/app/cmdrun/tui/view/onboarding/onboardename"
 	"solopg/app/cmdrun/tui/view/onboarding/onboardforgecharacter"
 	"solopg/app/cmdrun/tui/view/onboarding/onboardlocation"
+	"solopg/app/shared/components/models"
 )
 
 type run struct {
