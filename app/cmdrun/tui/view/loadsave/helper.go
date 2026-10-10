@@ -2,7 +2,7 @@ package loadsave
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/tui/models"
+	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"

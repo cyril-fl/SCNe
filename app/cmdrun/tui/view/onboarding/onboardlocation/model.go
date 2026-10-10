@@ -3,8 +3,8 @@ package onboardlocation
 import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/portal"
-	"solopg/app/cmdrun/tui/models"
 	"solopg/app/shared/components/layout/page"
+	"solopg/app/shared/components/models"
 	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 
