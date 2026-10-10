@@ -14,11 +14,11 @@ func (m model) View() tea.View {
 	m.layout.SetSize(size.NewFromWindow(m.size))
 	m.layout.SetFooter(i19n.Localize("cmd.ctrl+q:quit"))
 
-	if m.err != nil {
+	if m.HasErr() {
 		cwd, cwderr := os.Getwd()
 		_ = logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
-			"Error": errors.Join(cwderr, m.err),
+			"Error": errors.Join(cwderr, m.GetErr()),
 		})
 
 		// m.mainview.SetBody(newErrorModel(err))

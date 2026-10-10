@@ -8,6 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/components/layout"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/types/primitive"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -15,11 +16,11 @@ import (
 
 type model struct {
 	cache
+	primitive.Fallible
 	layout layout.Layout
 
 	steps   *contextStepList
 	context Context
-	err     error
 }
 
 type cache struct {

@@ -52,7 +52,7 @@ func (m *model) handleSubmodelUpdate(msg tea.Msg) (*model, tea.Cmd) {
 
 func (m *model) handleResolution(resolution sharedtui.ResolutionMsg) (*model, tea.Cmd) {
 	if resolution.Err != nil {
-		m.err = resolution.Err
+		 m.SetErr(resolution.Err)
 		return m, tea.Quit
 	}
 
@@ -61,7 +61,7 @@ func (m *model) handleResolution(resolution sharedtui.ResolutionMsg) (*model, te
 	}
 
 	if err := m.resolveCurrentStep(resolution.Value); err != nil {
-		m.err = err
+		m.SetErr(err)
 		return m, tea.Quit
 	}
 
