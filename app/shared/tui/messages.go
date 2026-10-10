@@ -65,6 +65,12 @@ type ScrollMsg struct {
 	height int
 }
 
+func SendSizeMsg(size *tea.WindowSizeMsg) tea.Cmd {
+	return func() tea.Msg {
+		return *size
+	}
+}
+
 func SendScrollMsg(top, height int) tea.Cmd {
 	return func() tea.Msg {
 		return ScrollMsg{
