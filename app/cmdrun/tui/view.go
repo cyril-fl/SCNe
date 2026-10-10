@@ -23,8 +23,10 @@ func (m model) View() tea.View {
 
 		// m.mainview.SetBody(newErrorModel(err))
 	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
+		m.layout.SetHeader(current)
 		m.layout.MergeFooter(current)
-		// m.layout.SetBody(current)
+		m.layout.MergeSection(current)
+		m.layout.MergeSidepanel(current)
 	}
 
 	return m.layout.GetView()

@@ -2,32 +2,19 @@ package loadsave
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/shared/components/layout/page"
-	interfass "solopg/app/shared/types/interface"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
 
+// TODO check si j'ai besoin de garder la structure "tea model" mais je pense que oui
 type model struct {
-	cache
-
 	list     list.Model
 	selected *campaign.Campaign
-
-	page interfass.Page
-}
-type cache struct {
-	size *tea.WindowSizeMsg
 }
 
 func NewModel(saves []campaign.Campaign) *model {
 	return &model{
-		page: page.New(page.Template{
-			Title:    "onboarding:select.save.title",
-			Subtitle: "onboarding:select.save.subtitle",
-		}),
-
 		list: makeModel(saves),
 	}
 }
@@ -38,8 +25,6 @@ func (m model) Init() tea.Cmd {
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		return m.handleWindowSizeMsg(msg)
 	case tea.KeyMsg:
 		return m.handKeyMsg(msg)
 	default:

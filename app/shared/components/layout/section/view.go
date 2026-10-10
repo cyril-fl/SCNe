@@ -2,58 +2,74 @@ package section
 
 import (
 	"solopg/app/cmdrun/types/size"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
 
-type Section interface {
-	View() string
-	Merge(model tea.Model) Section
-	GetHeight() int
-	GetWidth() int
-	GetSize() size.Size
-}
-
-type section struct {
+type Section struct {
 	parts   []string
 	plugins []string
 }
 
 type HasSection interface {
 	GetSection() []string
+	SetSectionSize(size size.Size)
 }
 
-func New(parts ...string) Section {
-	return &section{
+
+
+func New(parts ...string) *Section {
+	return &Section{
 		parts: parts,
 	}
 }
 
-func (f *section) Merge(model tea.Model) Section {
-	if view, ok := model.(HasSection); ok {
-		f.plugins = append(f.plugins, view.GetSection()...)
+func Nil() *Section {
+	return &Section{
+		parts:   []string{},
+		plugins: []string{},
 	}
-	return f
 }
 
-func (f *section) View() string {
-	sectionparts := append(f.parts, f.plugins...)
-	return strings.Join(sectionparts, " | ")
+
+func (s *Section) View() string {
+
+	v:= append(s.parts, s.plugins...)
+
+	return lipgloss.JoinVertical(lipgloss.Left, v...)
+	// return strings.Join(sectionparts, " | ")
 }
 
-func (f *section) GetHeight() int {
-	return lipgloss.Height(f.View())
+// Getters & Setters
+func (s *Section) GetHeight() int {
+	return lipgloss.Height(s.View())
 }
 
-func (f *section) GetWidth() int {
-	return lipgloss.Width(f.View())
+func (s *Section) GetWidth() int {
+	return lipgloss.Width(s.View())
 }
 
-func (f *section) GetSize() size.Size {
+func (s *Section) GetSize() size.Size {
 	return size.New(size.Template{
-		Height: f.GetHeight(),
-		Width:  f.GetWidth(),
+		Height: s.GetHeight(),
+		Width:  s.GetWidth(),
 	})
 }
+
+// Methods
+func (s *Section) Merge(model tea.Model) *Section {
+	if view, ok := model.(HasSection); ok {
+		s.plugins = append(s.plugins, view.GetSection()...)
+	}
+	return s
+}
+
+func (s *Section) SetSize(model tea.Model, size size.Size) {
+	if view, ok := model.(HasSection); ok {
+		view.SetSectionSize(size)
+	}
+}
+
+
+// Helpers

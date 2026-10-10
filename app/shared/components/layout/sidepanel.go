@@ -8,29 +8,47 @@ import (
 )
 
 func (v *Layout) SetSidepanel(parts ...string) {
+	if v.sidepanel == nil {
+		v.sidepanel = sidepanel.Nil()
+	}
+
 	v.sidepanel = sidepanel.New(parts...)
 }
 
 func (v *Layout) getSidepanelHeight() int {
-	if v.sidepanel != nil {
-		return v.sidepanel.GetHeight()
+	if v.sidepanel == nil {
+		return 0
 	}
-	return 0
-}
-func (v *Layout) MergeSidepanel(other tea.Model) {
-	if v.sidepanel != nil {
-		v.sidepanel.Merge(other)
-	}
+	
+	return v.sidepanel.GetHeight()
 }
 
-func (v *Layout) makeSidepanelView(view *strings.Builder) {
-	if v.sidepanel != nil {
-		view.WriteString(v.spaceSidepanel())
-		view.WriteString(trimParagraphPadding(v.sidepanel.View()))
+func (v *Layout) MergeSidepanel(other tea.Model) {
+	if v.sidepanel == nil {
+		v.sidepanel = sidepanel.Nil()
 	}
+
+	v.sidepanel.Merge(other)
+}
+
+
+func (v *Layout) makeSidepanelView() string {
+	if v.sidepanel == nil {
+		return ""
+	}
+
+	view := strings.Builder{}
+	view.WriteString(v.spaceSidepanel())
+	view.WriteString(trimParagraphPadding(v.sidepanel.View()))
+
+	return view.String()
 }
 
 func (v *Layout) spaceSidepanel() string {
-	maxHeight := v.getHeightAvailable()
-	return strings.Repeat("\n", max(0, maxHeight))
+	if v.sidepanel == nil {
+		return ""
+	}
+
+	remainingHeight := v.getHeightAvailable() - v.getSidepanelHeight()
+	return strings.Repeat("\n", max(0, remainingHeight))
 }

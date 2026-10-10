@@ -12,11 +12,6 @@ import (
 )
 
 // Methods
-func (m *model) handleWindowSizeMsg(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
-	m.size = &msg
-	return m, nil
-}
-
 func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
 	case sharedtui.KEY_ENTER:

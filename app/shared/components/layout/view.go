@@ -14,22 +14,21 @@ import (
 
 type Layout struct {
 	size   size.Size
-	// body   tea.Model
-	header header.Header
-	sidepanel sidepanel.Sidepanel
-	section section.Section
-	footer footer.Footer
+	header *header.Header
+	sidepanel *sidepanel.Sidepanel
+	section *section.Section
+	footer *footer.Footer
 }
+
+const (
+	// offsetBecauseBorder = 2
+	offsetBecauseBorder = 0
+)
 
 func New() Layout {
-	return Layout{}
+	return Layout{
+	}
 }
-
-// func NewWithSize(size size.Size) Layout {
-// 	return Layout{
-// 		size: size,
-// 	}
-// }
 
 // Getters & Setters
 func (v *Layout) GetView() tea.View {
@@ -61,8 +60,25 @@ func (v *Layout) GetAvailableSize() size.Size {
 }
 
 func (v *Layout) getHeightAvailable() int {
-	occupied := v.getFooterHight() + v.getSectionHeight()
-	return max(0, v.getHeightWithinBorder()-occupied)
+	return max(0, v.getHeightWithinBorder()-v.getHeightOccupied())
+}
+
+
+
+func (v *Layout) getHeightOccupied() int {
+	occupied := []int{
+		v.getFooterHeight(),
+		v.getSectionHeight(),
+		v.getHeaderHeight(),
+	}
+
+	sum := 0
+
+	for _, h := range occupied {
+		sum += h
+	}
+
+	return sum
 }
 
 func (v *Layout) getWidthAvailable() int {
@@ -71,25 +87,41 @@ func (v *Layout) getWidthAvailable() int {
 }
 
 func (v *Layout) getHeightWithinBorder() int {
-	// offsetBecauseBorder := 2
-	offsetBecauseBorder := 0
 	return max(0, v.size.GetHeight()-offsetBecauseBorder)
 }
 
 func (v *Layout) getWidthtWithinBorder() int {
-	// offsetBecauseBorder := 2
-	offsetBecauseBorder := 0
 	return max(0, v.size.GetWidth()-offsetBecauseBorder)
 }
 
 // Methods
+func (v *Layout) makeVstack() string {
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
+		v.makeHeaderView(),
+		v.makeSectionView(),
+		v.makeFooterView(),
+	)
+}
+
+func (v *Layout) makeHstack() string {
+	return v.makeSidepanelView()
+}
+
+
 func (v *Layout) makeView() string {
-	view := strings.Builder{}
-	v.makeHeaderView(&view)
-	v.makeSidepanelView(&view)
-	v.makeSectionView(&view)
-	v.makeFooterView(&view)
-	return view.String()
+	vstack := v.makeVstack()
+	hstack := v.makeHstack()
+
+	mainWidth := max(0, v.getWidthAvailable()-lipgloss.Width(hstack))
+
+	vstack = lipgloss.NewStyle().Width(mainWidth).Render(vstack)
+
+	return lipgloss.JoinHorizontal(
+		lipgloss.Top,
+		vstack,
+		hstack,
+	)
 }
 
 // Helpers
