@@ -29,6 +29,12 @@ func (m *model) SetSectionSize(size size.Size) {
 	m.input.SetWidth(size.GetWidth())
 }
 
+func (m *model) GetSidepanel() []string {
+	return []string{
+		"Sidepanel content",
+	}
+}
+
 func (m *model) GetFooter() []string {
 	return []string{
 		"TEST",

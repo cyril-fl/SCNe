@@ -31,11 +31,8 @@ func Nil() *Section {
 }
 
 func (s *Section) View() string {
-
 	v := append(s.parts, s.plugins...)
-
 	return lipgloss.JoinVertical(lipgloss.Left, v...)
-	// return strings.Join(sectionparts, " | ")
 }
 
 // Getters & Setters

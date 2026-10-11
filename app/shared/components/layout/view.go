@@ -110,8 +110,13 @@ func (v *Layout) makeView() string {
 	hstack := v.makeHstack()
 
 	mainWidth := max(0, v.getWidthAvailable()-lipgloss.Width(hstack))
+	panelHeight := max(0, v.getHeightAvailable()-lipgloss.Height(vstack))
 
 	vstack = lipgloss.NewStyle().Width(mainWidth).Render(vstack)
+	hstack = lipgloss.NewStyle().
+		Height(panelHeight).
+		Background(lipgloss.Color("240")).
+		Render(hstack)
 
 	return lipgloss.JoinHorizontal(
 		lipgloss.Top,

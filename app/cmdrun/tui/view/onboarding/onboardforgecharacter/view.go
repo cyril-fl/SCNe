@@ -2,6 +2,8 @@ package onboardforgecharacter
 
 import (
 	"fmt"
+	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/components/layout/header"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/utils/transform"
 	"strings"
@@ -10,24 +12,58 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// TODO Ui ici bug !
 func (m model) View() tea.View {
-	m.page.SetBody(m.makeBody())
-	return m.page.GetView()
+	msg := "404 - Not Found"
+	return tea.NewView(msg)
+}
+
+func (m *model) GetHeader() header.Template {
+	return header.Template{
+		Title:    "onboarding.character:create",
+		Subtitle: "onboarding:select.character.build",
+	}
+}
+
+func (m *model) GetSection() []string {
+	return []string{
+		m.makeBody(),
+	}
+}
+
+func (m *model) SetSectionSize(size size.Size) {
+	informationHeight := lipgloss.Height(m.makeInformationView())
+	separatorHeight := lipgloss.Height("\n")
+	listHeight := max(0, size.GetHeight()-informationHeight-separatorHeight)
+
+	m.reroll.Choice.SetSize(size.GetWidth(), listHeight)
+}
+
+func (m *model) GetSidepanel() []string {
+	return []string{
+		"Sidepanel content",
+	}
+}
+
+func (m *model) GetFooter() []string {
+	return []string{
+		"Enter: select",
+	}
 }
 
 func (m model) makeBody() string {
-	v := strings.Builder{}
-
-	m.makeInformationView(&v)
-	m.makeOptionsView(&v)
+	v := lipgloss.JoinVertical(
+		lipgloss.Left,
+		m.makeInformationView(),
+		"\n",
+		m.reroll.Choice.View(),
+	)
 
 	return lipgloss.NewStyle().
-		// Background(lipgloss.Color("2")).
-		Render(v.String())
+		Render(v)
 }
 
-func (m *model) makeInformationView(v *strings.Builder) {
+func (m *model) makeInformationView() string {
+	v := strings.Builder{}
 	buildsChoiceStr := make([]string, len(m.reroll.Value))
 
 	for i, modifier := range m.reroll.Value {
@@ -37,24 +73,7 @@ func (m *model) makeInformationView(v *strings.Builder) {
 	}
 
 	v.WriteString(strings.Join(buildsChoiceStr, ", "))
-	v.WriteString(strings.Join([]string{"\n", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
+	v.WriteString(strings.Join([]string{"| ", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
 	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
-}
-
-func (m *model) makeOptionsView(v *strings.Builder) {
-	v.WriteString("\n\n")
-	v.WriteString(m.reroll.Options.View())
-}
-
-func (m *model) SetPageSize(size *tea.WindowSizeMsg) {
-	m.page.SetSize(size)
-
-	bodySize := m.page.GetAvailableSize()
-	// TODO try to improve
-	offsetInfoViewSize := 2
-	offetAlinea := 1
-	offset := offsetInfoViewSize + offetAlinea
-
-	m.reroll.Options.SetSize(bodySize.GetWidth(), bodySize.GetHeight()-offset)
-
+	return v.String()
 }

@@ -2,33 +2,19 @@ package onboardforgecharacter
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/shared/components/layout/page"
 	"solopg/app/shared/components/models"
 
 	sharedtui "solopg/app/shared/tui"
-	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type model struct {
-	cache
-	page interfass.Page
-
 	reroll models.RerollModel[[]stats.Modifier]
-}
-
-type cache struct {
-	size *tea.WindowSizeMsg
 }
 
 func NewModel() *model {
 	return &model{
-		page: page.New(page.Template{
-			Title:    "onboarding.character:create",
-			Subtitle: "onboarding:select.character.build",
-		}),
-
 		reroll: models.NewRerollModel(
 			models.NewOptionsModel(models.DefaultRerollOptions),
 			drowBuild,
@@ -37,15 +23,12 @@ func NewModel() *model {
 	}
 }
 
-func (m model) Init() tea.Cmd {
+func (m *model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	// case tea.WindowSizeMsg:
-	// handleWindowResize(&m, msg)
-
 	case tea.KeyMsg:
 		switch msg.String() {
 		case sharedtui.KEY_ENTER:
@@ -54,6 +37,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var cmd tea.Cmd
-	m.reroll.Options, cmd = m.reroll.Options.Update(msg)
+	m.reroll.Choice, cmd = m.reroll.Choice.Update(msg)
 	return m, cmd
 }

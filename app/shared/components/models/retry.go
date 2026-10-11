@@ -13,7 +13,7 @@ import (
 type RerollModel[T any] struct {
 	Attempt int
 	Limit   int
-	Options list.Model
+	Choice list.Model
 	Value   T
 	Roll    func() (T, error)
 }
@@ -31,7 +31,7 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 	return RerollModel[T]{
 		Attempt: 1,
 		Limit:   limit,
-		Options: options,
+		Choice: options,
 		Value:   value,
 		Roll:    handleRoll,
 	}
@@ -58,7 +58,7 @@ func (s *RerollModel[T]) checkAttemptLimit() {
 		return
 	}
 
-	s.Options = makeConfirmationModel(s.Options)
+	s.Choice = makeConfirmationModel(s.Choice)
 }
 
 func (s *RerollModel[T]) IsOutOfLimit() bool {
@@ -66,7 +66,7 @@ func (s *RerollModel[T]) IsOutOfLimit() bool {
 }
 
 func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
-	isSelected, ok := s.Options.SelectedItem().(Item[bool])
+	isSelected, ok := s.Choice.SelectedItem().(Item[bool])
 	if !ok {
 		return nil
 	}
