@@ -34,8 +34,6 @@ func (m model) Init() tea.Cmd {
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case form.NextField, form.PreviousField:
-		return m.delegateInputToForm(msg)
 	case form.Validate:
 		return m.handleFormSubmit()
 	case form.Error:
@@ -79,8 +77,9 @@ func (m *model) handleFormError() (tea.Model, tea.Cmd) {
 
 func makeForm() *form.Form {
 	return form.
-		NewForm(
+		New(
 			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		).
+		SetSendKey(sharedtui.KEY_ENTER).
 		Focus()
 }

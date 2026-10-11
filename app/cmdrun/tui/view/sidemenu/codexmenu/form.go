@@ -12,7 +12,7 @@ import (
 func getNpcForm() *form.Form {
 	statsFields := getFormStatsFields()
 	return form.
-		NewForm(
+		New(
 			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 			field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 			field.SelectField(field.SelectTemplate[string]{ID: "class", Label: "field.class", Options: getFormClassOptions(), Validator: nil, Required: true}),
@@ -27,7 +27,7 @@ func getNpcForm() *form.Form {
 func getBeastiaryForm() *form.Form {
 	statsFields := getFormStatsFields()
 	return form.
-		NewForm(
+		New(
 			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 			field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 			field.SelectField(field.SelectTemplate[string]{ID: "encounter", Label: "field.encounter", Options: getFormOracle(), Validator: nil, Required: true}),
@@ -38,7 +38,7 @@ func getBeastiaryForm() *form.Form {
 
 // - Location Form - //
 func getLocationForm() *form.Form {
-	return form.NewForm(
+	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 	).Focus()
@@ -56,7 +56,7 @@ func getObjectForm() *form.Form {
 		categoryItems = append(categoryItems, models.NewItem(i19n.Localize(i.String()), "", i.String()))
 	}
 
-	return form.NewForm(
+	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "category", Label: "field.category", Options: categoryItems, Validator: nil, Required: true}),
@@ -65,7 +65,7 @@ func getObjectForm() *form.Form {
 
 // - Objectif Form - //
 func getObjectifForm() *form.Form {
-	return form.NewForm(
+	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "title", Label: "field.title", Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Validator: nil, Required: true}),
 	).Focus()
