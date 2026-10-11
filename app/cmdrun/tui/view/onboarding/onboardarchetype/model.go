@@ -2,12 +2,10 @@ package onboardarchetype
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
-	"solopg/app/shared/components/layout/page"
 	"solopg/app/shared/components/models"
 
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
-	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -23,8 +21,6 @@ const (
 
 type model struct {
 	cache
-	page interfass.Page
-
 	name string
 	step step
 	list list.Model
@@ -34,7 +30,7 @@ type cache struct {
 	size *tea.WindowSizeMsg
 }
 
-func NewModel[T archetypes.Archetype](name string, data []T) model {
+func NewModel[T archetypes.Archetype](name string, data []T) *model {
 	items := make([]list.Item, 0, len(data))
 
 	for _, i := range data {
@@ -49,12 +45,7 @@ func NewModel[T archetypes.Archetype](name string, data []T) model {
 	listModel := list.New(items, list.NewDefaultDelegate(), 0, 0)
 	models.ConfigureList(&listModel)
 
-	return model{
-		page: page.New(page.Template{
-			Title:    "onboarding.character:create",
-			Subtitle: "onboarding:select." + name,
-		}),
-
+	return &model{
 		name: name,
 		step: CHOICE_STEP,
 		list: listModel,
@@ -65,15 +56,7 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-
-	case tea.WindowSizeMsg:
-		// The parent adds a three-line footer to the child view.
-		m.list.SetSize(msg.Width, max(0, msg.Height-3))
-		return m, nil
-	}
-
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.step {
 	case CHOICE_STEP:
 		return m.updateList(msg)
@@ -84,7 +67,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 }
 
-func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	updatedList, cmd := m.list.Update(msg)
 	m.list = updatedList
 
@@ -103,7 +86,7 @@ func (m model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
 		return m, tea.Quit
 	}

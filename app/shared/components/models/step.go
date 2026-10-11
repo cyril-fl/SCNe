@@ -26,6 +26,9 @@ func NewStepModel[T any](steps *ContextStepList[T]) StepModel[T] {
 
 // Getters & Setters
 func (m *StepModel[T]) SetSize(size *tea.WindowSizeMsg) {
+	if size == nil {
+		return
+	}
 	m.size = size
 }
 

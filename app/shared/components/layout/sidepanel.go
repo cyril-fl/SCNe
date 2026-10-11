@@ -37,17 +37,7 @@ func (v *Layout) makeSidepanelView() string {
 	}
 
 	view := strings.Builder{}
-	view.WriteString(v.spaceSidepanel())
 	view.WriteString(trimParagraphPadding(v.sidepanel.View()))
 
 	return view.String()
-}
-
-func (v *Layout) spaceSidepanel() string {
-	if v.sidepanel == nil {
-		return ""
-	}
-
-	remainingHeight := v.getHeightAvailable() - v.getSidepanelHeight()
-	return strings.Repeat("\n", max(0, remainingHeight))
 }
