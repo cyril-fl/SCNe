@@ -4,15 +4,16 @@ import (
 	"errors"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 // - Form - //
 type Form struct {
+	primitive.Fallible
 	fields     []Field
 	autoSubmit bool
-	err        []error
 }
 
 // Field represents a typed form field without exposing its concrete type.
@@ -91,7 +92,7 @@ func (m *Form) Validate() *Form {
 	}
 
 	if hasErrors {
-		m.SetError(logs.Error("error.invalid:form", map[string]any{
+		m.SetErr(logs.Error("error.invalid:form", map[string]any{
 			"Error": errors.Join(m.GetFieldsErrors()...),
 		}))
 	}
@@ -99,17 +100,17 @@ func (m *Form) Validate() *Form {
 	return m
 }
 
-func (m *Form) SetError(err error) {
-	m.err = append(m.err, err)
-}
+// func (m *Form) SetError(err error) {
+// 	m.err = append(m.err, err)
+// }
 
-func (m *Form) GetError() error {
-	if len(m.err) > 0 {
-		return errors.Join(m.err...)
-	}
+// func (m *Form) GetError() error {
+// 	if len(m.err) > 0 {
+// 		return errors.Join(m.err...)
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (m *Form) GetFieldsErrors() []error {
 	fieldErrors := make([]error, 0, len(m.fields))
@@ -121,9 +122,9 @@ func (m *Form) GetFieldsErrors() []error {
 	return fieldErrors
 }
 
-func (m *Form) HasErrors() bool {
-	return len(m.err) > 0
-}
+// func (m *Form) HasErrors() bool {
+// 	return len(m.err) > 0
+// }
 
 // Submit
 func (m *Form) Submit() *Form {
@@ -182,7 +183,7 @@ func (m *Form) isLastField() bool {
 }
 
 func (m *Form) resetErrors() {
-	m.err = nil
+	m.ClearErr()
 	for _, f := range m.fields {
 		f.ResetError()
 	}
