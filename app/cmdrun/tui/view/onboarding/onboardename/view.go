@@ -21,12 +21,12 @@ func (m *model) GetHeader() header.Template {
 
 func (m *model) GetSection() []string {
 	return []string{
-		m.input.View(),
+		m.form.View().Content,
 	}
 }
 
 func (m *model) SetSectionSize(size size.Size) {
-	m.input.SetWidth(size.GetWidth())
+	// m.input.SetWidth(size.GetWidth())
 }
 
 func (m *model) GetSidepanel() []string {

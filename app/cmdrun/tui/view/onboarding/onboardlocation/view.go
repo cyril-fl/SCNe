@@ -68,7 +68,7 @@ func (m *model) makeInformationView() string {
 	v := strings.Builder{}
 	v.WriteString(fmt.Sprintf("%s : ", i19n.Localize(m.reroll.Value.Name)))
 
-	if m.reroll.Value.Description.Description != sharedtui.KEY_EMPTY {
+	if sharedtui.EventKey(m.reroll.Value.Description.Description) != sharedtui.KEY_EMPTY {
 		v.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
 	}
 

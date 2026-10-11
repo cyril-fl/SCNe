@@ -72,7 +72,7 @@ func (m *OracleMenu) SetList(list list.Model) {
 func (m *OracleMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
 	switch msg := params.Msg.(type) {
 	case tea.KeyPressMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.CMD_SHIFT_ENTER, sharedtui.CMD_ALT_ENTER:
 			return params.Model, m.handleKeyShiftEnter()
 		default:

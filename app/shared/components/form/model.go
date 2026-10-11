@@ -12,6 +12,7 @@ import (
 // - Form - //
 type Form struct {
 	primitive.Fallible
+	sendKey    sharedtui.EventKey
 	fields     []Field
 	autoSubmit bool
 }
@@ -79,6 +80,16 @@ func (m *Form) GetValuesAsMappedString() map[string]string {
 	return formValues
 }
 
+func (m *Form) GetFieldValue(fieldID string) any {
+	for _, f := range m.fields {
+		if f.ID() == fieldID {
+			return f.Value()
+		}
+	}
+
+	return nil
+}
+
 // Validation
 func (m *Form) Validate() *Form {
 	m.resetErrors()
@@ -100,18 +111,6 @@ func (m *Form) Validate() *Form {
 	return m
 }
 
-// func (m *Form) SetError(err error) {
-// 	m.err = append(m.err, err)
-// }
-
-// func (m *Form) GetError() error {
-// 	if len(m.err) > 0 {
-// 		return errors.Join(m.err...)
-// 	}
-
-// 	return nil
-// }
-
 func (m *Form) GetFieldsErrors() []error {
 	fieldErrors := make([]error, 0, len(m.fields))
 	for _, f := range m.fields {
@@ -121,10 +120,6 @@ func (m *Form) GetFieldsErrors() []error {
 	}
 	return fieldErrors
 }
-
-// func (m *Form) HasErrors() bool {
-// 	return len(m.err) > 0
-// }
 
 // Submit
 func (m *Form) Submit() *Form {
@@ -219,7 +214,7 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m.updateFocusedField(msg)
 }
 func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
-	switch msg.String() {
+	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.KEY_TAB:
 		return m, SendMsg[NextField]()
 	case sharedtui.KEY_SHIFT_TAB:

@@ -89,7 +89,7 @@ func (m *textField[T]) Init() tea.Cmd {
 func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_ENTER:
 			return m, tea.Sequence(
 				form.SendMsg[form.NextField](),

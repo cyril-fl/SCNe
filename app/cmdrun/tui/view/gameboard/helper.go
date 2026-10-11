@@ -95,7 +95,7 @@ func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
-	switch msg.String() {
+	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.KEY_ENTER:
 		m.handleEnterInput()
 	case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
@@ -107,7 +107,7 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
-	switch msg.String() {
+	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.CMD_CTRL_S:
 		return m, sharedtui.SendSaveMsg(m.save)
 	}

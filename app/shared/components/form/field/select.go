@@ -107,7 +107,7 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.options.SetSize(msg.Width, msg.Height)
 	case tea.KeyPressMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
 			return m.handleDirection(msg)
 		case sharedtui.KEY_ENTER:

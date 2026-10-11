@@ -68,21 +68,9 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
-	// 	selectedItem := m.list.SelectedItem()
-	// 	if selectedItem == nil {
-	// 		return m, nil
-	// 	}
-
-	// 	return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
-	// 		Completed: true,
-	// 		Value:     selectedItem,
-	// 	})
-	// }
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_ENTER:
 			selectedItem := m.list.SelectedItem()
 			if selectedItem == nil {
@@ -106,8 +94,15 @@ func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
-		return m, tea.Quit
+	// if keyMsg, ok := msg.(tea.KeyMsg); ok && sharedtui.EventKey(keyMsg.String()) == sharedtui.KEY_ENTER {
+	// 	return m, tea.Quit
+	// }
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch sharedtui.EventKey(msg.String()) {
+			case sharedtui.KEY_ENTER:
+				return m, tea.Quit
+		}
 	}
 
 	return m, nil

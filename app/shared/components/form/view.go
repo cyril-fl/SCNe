@@ -38,7 +38,7 @@ func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 			continue
 		}
 
-			if m.HasErr() {
+		if m.HasErr() {
 			err := lipgloss.NewStyle().
 				Width(viewport.Width()).
 				Foreground(lipgloss.Color("1")).

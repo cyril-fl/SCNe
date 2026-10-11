@@ -15,7 +15,7 @@ func (m *model) GetSidepanel() []string {
 	}
 
 	panel := makePanel(m.engine, sidemenu...)
-	rendered:= renderPanel(panel)
+	rendered := renderPanel(panel)
 
 	return []string{
 		rendered,
