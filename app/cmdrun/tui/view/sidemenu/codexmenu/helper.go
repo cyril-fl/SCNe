@@ -245,8 +245,8 @@ func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, t
 
 	currentForm.Submit()
 
-	if currentForm.HasErrors() {
-		return params.Model, form.SendErrorMsg(currentForm.GetError())
+	if currentForm.HasErr() {
+		return params.Model, form.SendErrorMsg(currentForm.GetErr())
 	}
 
 	logs.SilentInfo("form.submitted", map[string]any{
@@ -269,7 +269,7 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 
 	err := currentPage.table.AddFromMappedValues(currentForm.GetValuesAsMappedString())
 	if err != nil {
-		currentPage.form.SetError(err)
+		currentPage.form.SetErr(err)
 		return form.SendErrorMsg(err)
 	}
 

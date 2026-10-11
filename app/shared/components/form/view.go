@@ -13,10 +13,10 @@ func (m *Form) View() tea.View {
 		contents = append(contents, f.View().Content)
 	}
 
-	if m.GetError() != nil {
+	if m.HasErr() {
 		err := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("1")).
-			Render("\n" + m.GetError().Error())
+			Render("\n" + m.GetErr().Error())
 
 		contents = append(contents, "\n"+err)
 	}
@@ -38,11 +38,11 @@ func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 			continue
 		}
 
-		if m.GetError() != nil {
+			if m.HasErr() {
 			err := lipgloss.NewStyle().
 				Width(viewport.Width()).
 				Foreground(lipgloss.Color("1")).
-				Render("\n" + m.GetError().Error())
+				Render("\n" + m.GetErr().Error())
 
 			height += lipgloss.Height(err)
 		}
