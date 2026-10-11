@@ -24,8 +24,9 @@ func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				Value:     m.selected,
 			}
 		}
-		// case sharedtui.KEY_ESC:
-		// TODO Implementer si besoin
+	case sharedtui.KEY_ESC:
+		// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
+		return m, nil
 	}
 
 	var cmd tea.Cmd

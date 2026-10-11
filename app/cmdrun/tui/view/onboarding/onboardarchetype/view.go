@@ -3,7 +3,6 @@ package onboardarchetype
 import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/header"
-	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -31,7 +30,6 @@ func (m *model) SetSectionSize(size size.Size) {
 }
 
 func (m *model) GetSidepanel() []string {
-	logs.Error("onboardarchetype, GetSidepanel")
 	return []string{
 		"Sidepanel content",
 	}

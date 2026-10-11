@@ -33,10 +33,17 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case sharedtui.KEY_ENTER:
 			return m, m.reroll.HandleEnterInput()
+		case sharedtui.KEY_ESC:
+			// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
+			return m, nil
 		}
 	}
 
 	var cmd tea.Cmd
 	m.reroll.Choice, cmd = m.reroll.Choice.Update(msg)
 	return m, cmd
+}
+
+func (m model) HandlesEscape() bool {
+	return true
 }

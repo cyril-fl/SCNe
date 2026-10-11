@@ -31,3 +31,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 }
+
+// HandlesEscape lets the global router forward Escape while a Codex page is open.
+func (m model) HandlesEscape() bool {
+	return true
+}

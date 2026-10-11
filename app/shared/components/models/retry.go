@@ -13,7 +13,7 @@ import (
 type RerollModel[T any] struct {
 	Attempt int
 	Limit   int
-	Choice list.Model
+	Choice  list.Model
 	Value   T
 	Roll    func() (T, error)
 }
@@ -31,7 +31,7 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 	return RerollModel[T]{
 		Attempt: 1,
 		Limit:   limit,
-		Choice: options,
+		Choice:  options,
 		Value:   value,
 		Roll:    handleRoll,
 	}

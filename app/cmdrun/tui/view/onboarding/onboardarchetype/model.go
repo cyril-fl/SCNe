@@ -68,21 +68,40 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
-	updatedList, cmd := m.list.Update(msg)
-	m.list = updatedList
+	// if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
+	// 	selectedItem := m.list.SelectedItem()
+	// 	if selectedItem == nil {
+	// 		return m, nil
+	// 	}
 
-	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == sharedtui.KEY_ENTER {
-		selectedItem := m.list.SelectedItem()
-		if selectedItem == nil {
+	// 	return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
+	// 		Completed: true,
+	// 		Value:     selectedItem,
+	// 	})
+	// }
+
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case sharedtui.KEY_ENTER:
+			selectedItem := m.list.SelectedItem()
+			if selectedItem == nil {
+				return m, nil
+			}
+
+			return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
+				Completed: true,
+				Value:     selectedItem,
+			})
+		case sharedtui.KEY_ESC:
+			// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
 			return m, nil
-		}
 
-		return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
-			Completed: true,
-			Value:     selectedItem,
-		})
+		}
 	}
 
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
 	return m, cmd
 }
 
@@ -92,4 +111,8 @@ func (m *model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, nil
+}
+
+func (m model) HandlesEscape() bool {
+	return true
 }

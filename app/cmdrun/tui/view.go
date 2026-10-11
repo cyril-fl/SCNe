@@ -16,12 +16,10 @@ func (m model) View() tea.View {
 
 	if m.steps.HasErr() {
 		cwd, cwderr := os.Getwd()
-		_ = logs.Error("error.unexpected", map[string]any{
+		logs.SilentError("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, m.steps.GetErr()),
 		})
-
-		// m.mainview.SetBody(newErrorModel(err))
 	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
 		m.layout.SetHeader(current)
 		m.layout.MergeFooter(current)
