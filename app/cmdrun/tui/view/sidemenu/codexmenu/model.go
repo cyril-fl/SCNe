@@ -108,7 +108,7 @@ func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.C
 		return m.handleFormScroll(params)
 
 	case tea.KeyPressMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_ESC:
 			return m.handleKeyEsc(params)
 		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:

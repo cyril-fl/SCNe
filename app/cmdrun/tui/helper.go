@@ -9,7 +9,7 @@ import (
 
 // Handlers
 func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
-	switch msg.String() {
+	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.SHORT_CTRL_Q:
 		logs.SilentInfo("system.msg:quit")
 		return m, tea.Quit

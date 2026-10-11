@@ -13,7 +13,7 @@ import (
 
 // Methods
 func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
-	switch msg.String() {
+	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.KEY_ENTER:
 		if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
 			m.selected = selected.Value()

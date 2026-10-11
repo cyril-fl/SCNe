@@ -23,7 +23,7 @@ func GetListDirection(list *list.Model, key tea.KeyPressMsg) (list.Model, Direct
 	updatedList, _ := list.Update(key)
 	currentIndex := list.Index()
 
-	switch key.String() {
+	switch sharedtui.EventKey(key.String()) {
 	case sharedtui.KEY_UP:
 		if isFirstEl := currentIndex == 0; isFirstEl && previousIndex == 0 {
 			direction = PREVIOUS

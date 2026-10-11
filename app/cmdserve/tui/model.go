@@ -75,7 +75,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.size = &msg
 		return m, nil
 	case tea.KeyMsg:
-		switch msg.String() {
+		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.SHORT_CTRL_C, sharedtui.SHORT_CTRL_Q:
 			return m, tea.Quit
 		}
