@@ -32,7 +32,7 @@ func Nil() *Sidepanel {
 
 func (f *Sidepanel) Merge(model tea.Model) *Sidepanel {
 	if view, ok := model.(HasSidepanel); ok {
-		f.plugins = append(f.plugins, view.GetSidepanel()...)
+		f.plugins = append(f.plugins, strings.Join(view.GetSidepanel(), "\n"))
 	}
 	return f
 }
