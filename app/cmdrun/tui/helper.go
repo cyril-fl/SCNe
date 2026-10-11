@@ -26,12 +26,3 @@ func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
 	}
 	return m, m.steps.UpdateSubmodel(msg)
 }
-
-// func (m *model) handleResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-// 	// if current := m.steps.GetCurrentSubmodel(); current != nil {
-// 	// 	footerHeight := lipgloss.Height(strings.Join(mergeFooter(current), ""))
-// 	// 	msg.Height = max(0, msg.Height-footerHeight)
-// 	// }
-
-// 	return
-// }

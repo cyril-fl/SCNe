@@ -34,9 +34,3 @@ func (m *model) GetSidepanel() []string {
 		"Sidepanel content",
 	}
 }
-
-func (m *model) GetFooter() []string {
-	return []string{
-		"TEST",
-	}
-}

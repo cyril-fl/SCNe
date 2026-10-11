@@ -56,3 +56,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	return m, nil
 }
+
+func (m model) HandlesEscape() bool {
+	return true
+}
