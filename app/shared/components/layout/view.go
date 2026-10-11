@@ -115,7 +115,7 @@ func (v *Layout) makeView() string {
 	vstack = lipgloss.NewStyle().Width(mainWidth).Render(vstack)
 	hstack = lipgloss.NewStyle().
 		Height(panelHeight).
-		Background(lipgloss.Color("240")).
+		// Background(lipgloss.Color("240")).
 		Render(hstack)
 
 	return lipgloss.JoinHorizontal(

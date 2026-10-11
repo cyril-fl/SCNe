@@ -1,8 +1,7 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/sidemenu/metadatamenu"
+	"solopg/app/cmdrun/types/size"
 	"solopg/app/cmdrun/types/viewoptions"
 	"solopg/app/shared/services/i19n"
 	"strings"
@@ -23,30 +22,21 @@ const (
 )
 
 func (m model) View() tea.View {
-	base := m.viewport.View()
-
-	if !m.isMenuActiveElementOpen() {
-		base += "\n" + m.textarea.View()
-	}
-
-	var sidemenu = []string{}
-	for _, item := range m.menu {
-		sidemenu = append(sidemenu, item.GetMenuView())
-	}
-
-	composedView := lipgloss.JoinHorizontal(
-		lipgloss.Top,
-		base,
-		strings.Repeat(" ", PANEL_GAP),
-		renderSidePanel(m.engine, lipgloss.Height(base), sidemenu...),
-	)
-
-	view := tea.NewView(composedView)
-	view.Cursor = getCursor(m)
-	view.AltScreen = true
-
-	return view
+	msg := "404 - Not Found"
+	return tea.NewView(msg)
 }
+
+func (m *model) GetSection() []string {
+	return []string{
+		"Section content",
+	}
+}
+
+func (m *model) SetSectionSize(size size.Size) {
+}
+
+
+
 
 func (m model) GetFooter() []string {
 	footer := []string{i19n.Localize("cmd.ctrl+s:save")}
@@ -143,49 +133,6 @@ func refreshLayout(m *model, msg tea.WindowSizeMsg) (*model, tea.Cmd) {
 }
 
 // Render
-func renderSidePanel(engine *game.Engine, height int, views ...string) string {
-	panel := makePanel(engine, views...)
-	return renderPanel(panel, height)
-}
-
-func makePanel(engine *game.Engine, views ...string) string {
-	statsview := makeStatView(engine)
-	menuview := makeMenuView(views...)
-
-	return lipgloss.JoinVertical(
-		lipgloss.Left,
-		statsview,
-		menuview,
-	)
-}
-
-func makeStatView(engine *game.Engine) string {
-	var content strings.Builder
-	metadatamenu.GetCharacterInfo(&content, engine)
-	metadatamenu.GetLocationInfo(&content, engine)
-	metadatamenu.GetStatInfo(&content, engine)
-
-	return strings.TrimRight(content.String(), "\n")
-}
-
-func makeMenuView(views ...string) string {
-	menuview := []string{}
-	for _, view := range views {
-		menuview = append(menuview, view)
-	}
-	return strings.Join(menuview, "\n")
-}
-
-func renderPanel(content string, height int) string {
-	return lipgloss.NewStyle().
-		Width(PANEL_WHIDTH-4).
-		Height(max(0, height-2)).
-		Padding(0, 1).
-		Border(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("5")).
-		Render(content)
-}
-
 func getCursor(m model) *tea.Cursor {
 	cursor := m.textarea.Cursor()
 	cursor.Y += lipgloss.Height(m.viewport.View())
