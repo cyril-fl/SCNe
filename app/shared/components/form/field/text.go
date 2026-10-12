@@ -22,65 +22,81 @@ type textField[T stringOrInt] struct {
 }
 
 type TextTemplate[T stringOrInt] struct {
-	ID           string
-	Label        string
+	Template[T]
 	Input        textinput.Model
-	Defaultvalue T
-	Validator    func(T) error
-	Required     bool
+	Placeholder string
 }
 
 func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
-	input := textinput.New()
+	input := makeInput(template.Placeholder)
 	setValue(&input, template.Defaultvalue)
 
 	return &textField[T]{
-		field: newField(template.ID, template.Label, INPUT, template.Defaultvalue, template.Validator, template.Required),
+		field: newField(
+			template.ID,
+			template.Label,
+			INPUT,
+			template.Defaultvalue,
+			template.Validator,
+			template.Required,
+			template.NoLabel,
+		),
 		input: input,
 	}
 }
 
-// - Field Implementation - //
-func (f *textField[T]) Focus() tea.Cmd {
-	f.focus = true
-	return f.input.Focus()
+func (m *textField[T]) View() tea.View {
+	err := ""
+	if m.GetError() != nil {
+		err = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("1")).
+			Render(m.GetError().Error())
+	}
+
+	if m.nolabel {
+		return m.getNoLabelView(m.input.View(), err)
+	} else {
+		return m.getLabelView(m.input.View(), err)
+
+	}
 }
 
-func (f *textField[T]) Blur() {
-	f.focus = false
-	f.input.Blur()
-}
 
-func (f *textField[T]) Value() any {
-	return f.input.Value()
-}
-
+// Getters & Setters
 func (f *textField[T]) GetValueAsString() string {
 	return transform.ParseAsString(f.Value())
 }
 
-func (f *textField[T]) Reset() {
-	f.ResetError()
-	f.Blur()
-	setValue(&f.input, f.defaultvalue)
+func (m *textField[T]) getNoLabelView(input, err string) tea.View {
+	return tea.NewView(
+		lipgloss.JoinVertical(
+			lipgloss.Left,
+			err,
+			input,
+		),
+	)
 }
 
-func (f *textField[T]) Validate() error {
-	if err := f.testRequireness(); err != nil {
-		return err
-	}
+func (m *textField[T]) getLabelView(input, err string) tea.View {
+	title := lipgloss.NewStyle().
+		Bold(true).
+		Render(m.Label())
 
-	if v, ok := f.Value().(T); ok {
-		return f.validate(v)
-	}
-
-	return logs.Error("error.unexpected:value", map[string]any{
-		"Subject":  f.Label(),
-		"Expected": fmt.Sprintf("%T", f.defaultvalue),
-		"Value":    f.Value(),
-	})
+	return tea.NewView(
+		lipgloss.JoinVertical(
+			lipgloss.Left,
+			title,
+			err,
+			input,
+		),
+	)
 }
 
+func (m *textField[T]) SetWidth(size int) {
+	m.input.SetWidth(size)
+}
+
+// Methods
 // - Tea Model Implementation - //
 func (m *textField[T]) Init() tea.Cmd {
 	return textinput.Blink
@@ -115,42 +131,41 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *textField[T]) View() tea.View {
-	title := lipgloss.NewStyle().
-		Bold(true).
-		Render(m.Label())
-
-	input := m.input.View()
-
-	err := ""
-	if m.GetError() != nil {
-		err = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("1")).
-			Render(m.GetError().Error())
-	}
-
-	return tea.NewView(
-		lipgloss.JoinVertical(
-			lipgloss.Left,
-			title,
-			err,
-			input,
-		),
-	)
+// - Field Implementation - //
+func (f *textField[T]) Focus() tea.Cmd {
+	f.focus = true
+	return f.input.Focus()
 }
 
-// - Helper - //
-type stringOrInt interface {
-	~string | ~int
+func (f *textField[T]) Blur() {
+	f.focus = false
+	f.input.Blur()
 }
 
-func setValue[T stringOrInt](input *textinput.Model, value T) {
-	switch v := any(value).(type) {
-	case string:
-		input.SetValue(v)
-	case int:
-		input.SetValue(strconv.Itoa(v))
+func (f *textField[T]) Value() any {
+	return f.input.Value()
+}
+
+func (f *textField[T]) Reset() {
+	f.ResetError()
+	f.Blur()
+	setValue(&f.input, f.defaultvalue)
+}
+
+func (f *textField[T]) Validate() error {
+	if err := f.testRequireness(); err != nil {
+		return err
 	}
+
+	if v, ok := f.Value().(T); ok {
+		return f.validate(v)
+	}
+
+	return logs.Error("error.unexpected:value", map[string]any{
+		"Subject":  f.Label(),
+		"Expected": fmt.Sprintf("%T", f.defaultvalue),
+		"Value":    f.Value(),
+	})
 }
 
 func (f *textField[T]) testRequireness() error {
@@ -161,4 +176,26 @@ func (f *textField[T]) testRequireness() error {
 		})
 	}
 	return nil
+}
+
+// - Helper - //
+type stringOrInt interface {
+	~string | ~int
+}
+
+func makeInput(placeholder string) textinput.Model {
+	input := textinput.New()
+	input.Placeholder = placeholder
+	w := lipgloss.Width(placeholder)
+	input.SetWidth(w)
+	return input
+}
+
+func setValue[T stringOrInt](input *textinput.Model, value T) {
+	switch v := any(value).(type) {
+	case string:
+		input.SetValue(v)
+	case int:
+		input.SetValue(strconv.Itoa(v))
+	}
 }

@@ -15,10 +15,20 @@ type field[T any] struct {
 	defaultvalue T
 	validator    func(T) error
 	required     bool
+	nolabel      bool
 	err          []error
 }
 
 type kind string
+
+type Template[T any] struct {
+	ID           string
+	Label        string
+	Defaultvalue T
+	Validator    func(T) error
+	Required     bool
+	NoLabel      bool
+}
 
 const (
 	// FieldTypeInput represents a text input field.
@@ -28,7 +38,7 @@ const (
 )
 
 // newField creates a form field with an automatically generated identifier.
-func newField[T any](id, label string, kind kind, value T, validator func(T) error, required bool) field[T] {
+func newField[T any](id, label string, kind kind, value T, validator func(T) error, required, nolabel bool) field[T] {
 	return field[T]{
 		id:           id,
 		kind:         kind,
@@ -36,6 +46,7 @@ func newField[T any](id, label string, kind kind, value T, validator func(T) err
 		defaultvalue: value,
 		validator:    validator,
 		required:     required,
+		nolabel:      nolabel,
 	}
 }
 
@@ -45,7 +56,14 @@ func (f *field[T]) ID() string {
 }
 
 func (f *field[T]) Label() string {
-	return transform.Capitalize(i19n.Localize(f.label))
+	label := i19n.Localize(f.label)
+	if label == "" {
+		label = f.label
+	}
+	if label == "" {
+		label = f.id
+	}
+	return transform.Capitalize(label)
 }
 
 func (f *field[T]) SetError(err error) {

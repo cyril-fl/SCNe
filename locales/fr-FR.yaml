@@ -62,6 +62,9 @@ onboarding:select.classes:
 onboarding:select.races:
   other: "Sélectionnez votre race"
 
+gameboard.chat.placeholder:
+  other: "Decrivez votre action ici..."
+
 system.msg:init:
   other: "Moteur de jeu initialisé. Bienvenue dans SoloPG !"
 system.msg:quit:

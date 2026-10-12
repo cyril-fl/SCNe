@@ -11,6 +11,9 @@ func Capitalize(s string) string {
 	// if true {
 	// 	return fmt.Sprintf("** %s **", s)
 	// }
+	if s == "" {
+		return s
+	}
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
