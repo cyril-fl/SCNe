@@ -15,6 +15,13 @@ func (v *Layout) SetSidepanel(parts ...string) {
 	v.sidepanel = sidepanel.New(parts...)
 }
 
+func (v *Layout) getSidepanelWidth() int {
+	if v.sidepanel == nil {
+		return 0
+	}
+	return v.sidepanel.GetWidth()
+} 
+
 func (v *Layout) getSidepanelHeight() int {
 	if v.sidepanel == nil {
 		return 0

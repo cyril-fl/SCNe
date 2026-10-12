@@ -9,11 +9,9 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
-	"solopg/app/cmdrun/types/viewoptions"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
-	"strings"
 	"time"
 
 	"charm.land/bubbles/v2/cursor"
@@ -23,39 +21,6 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// - Getters & Setters - //
-func (m *model) getMenuActiveElement() sidemenu.MenuItem {
-	return m.menu[m.activeMenuIndex]
-}
-
-func (m *model) isLastMenuElement() bool {
-	return m.activeMenuIndex == len(m.menu)-1
-}
-
-func (m *model) isFirstMenuElement() bool {
-	return m.activeMenuIndex == 0
-}
-
-func (m *model) isMenuActiveElementOpen() bool {
-	return m.getMenuActiveElement().IsOpen()
-}
-
-// - Handlers - //
-// Input
-func (m *model) handleEnterInput() {
-	if m.isMenuActiveElementOpen() {
-		return
-	}
-	input := m.textarea.Value()
-	if input == "" {
-		return
-	}
-
-	amendChat(m, m.author, input)
-
-	m.textarea.Reset()
-	refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
-}
 
 func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
@@ -65,45 +30,81 @@ func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
 			"Error": msg.Err,
 		})
 
-		m.chat = append(m.chat, err.Error())
-
+		m.state.Amend(err.Error())
 	} else {
-		log := logs.Success("campaign:success", map[string]any{
-			"Time": time.Now().Format("2006-01-02 15:04:05")})
-
-		m.chat = append(m.chat, log)
+		logs.SilentSuccess("campaign:success", map[string]any{
+			"Time": time.Now().Format("2006-01-02 15:04:05"),
+		})
 	}
 
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+	return m, nil
 }
 
-func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
-	var cmd tea.Cmd
 
-	if m.isMenuActiveElementOpen() {
-		return m, nil
-	}
+// - Getters & Setters - //
+// func (m *model) getMenuActiveElement() sidemenu.MenuItem {
+// 	return m.menu[m.activeMenuIndex]
+// }
 
-	m.textarea, cmd = m.textarea.Update(msg)
-	return m, cmd
-}
+// func (m *model) isLastMenuElement() bool {
+// 	return m.activeMenuIndex == len(m.menu)-1
+// }
+
+// func (m *model) isFirstMenuElement() bool {
+// 	return m.activeMenuIndex == 0
+// }
+
+// func (m *model) isMenuActiveElementOpen() bool {
+// 	return m.getMenuActiveElement().IsOpen()
+// }
+
+// - Handlers - //
+// Input
+// func (m *model) handleEnterInput() {
+// 	// if m.isMenuActiveElementOpen() {
+// 	// 	return
+// 	// }
+// 	// input := m.textarea.Value()
+// 	// if input == "" {
+// 	// 	return
+// 	// }
+
+// 	// amendChat(m, m.author, input)
+
+// 	// m.textarea.Reset()
+// 	refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// }
+
+// func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
+// 	// var cmd tea.Cmd
+
+// 	// if m.isMenuActiveElementOpen() {
+// 	// 	return m, nil
+// 	// }
+
+// 	return m, m.chatbox.Update(msg)
+
+// 	// m.textarea, cmd = m.textarea.Update(msg)
+// 	// return m, cmd
+// }
 
 func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
 	var cmd tea.Cmd
-	m.viewport, cmd = m.viewport.Update(msg)
+	// m.viewport, cmd = m.viewport.Update(msg)
 	return m, cmd
 }
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.KEY_ENTER:
-		m.handleEnterInput()
-	case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
-		m.handleDirectionInput(msg)
-	default:
-		handleDefaultInput(m, msg)
+	// case sharedtui.KEY_ENTER:
+	// m.handleEnterInput()
+	// case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
+	// 	m.handleDirectionInput(msg)
+	// default:
+	// 	handleDefaultInput(m, msg)
 	}
 	return m.handleCommand(msg)
+	// TODO ajouter les autre tyes mes et sourtout gerer qui gere ca avec un tag comme current page
 }
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
@@ -112,78 +113,78 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 		return m, sharedtui.SendSaveMsg(m.save)
 	}
 
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+	return m, nil
 }
 
 func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+	return m, nil
 }
 
 // - Side Menu - //
 // Codex Action
-func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
-	_ = msg
+// func (m *model) handleCodexAction(msg codexmenu.Msg) (*model, tea.Cmd) {
+// 	_ = msg
 
-	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
-}
+// 	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
+// }
 
 // Dice Rolled
-func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
-	message := i19n.Localize("dice.roll:result", map[string]any{
-		"Dice":  msg.Dice,
-		"Value": msg.Value,
-	})
+// func (m *model) handleDiceRolled(msg dicemenu.Msg) (*model, tea.Cmd) {
+// 	message := i19n.Localize("dice.roll:result", map[string]any{
+// 		"Dice":  msg.Dice,
+// 		"Value": msg.Value,
+// 	})
 
-	// -- Advent journal
-	amendChat(m, "Dice", message)
+// 	// -- Advent journal
+// 	amendChat(m, "Dice", message)
 
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
-}
+// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// }
 
 // Hint Rolled
-func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
-	localized := make([]string, 0, len(msg.Result))
-	for _, hint := range msg.Result {
-		localized = append(localized, i19n.Localize(hint))
-	}
+// func (m *model) handleHintRolled(msg hintmenu.Msg) (*model, tea.Cmd) {
+// 	localized := make([]string, 0, len(msg.Result))
+// 	for _, hint := range msg.Result {
+// 		localized = append(localized, i19n.Localize(hint))
+// 	}
 
-	message := i19n.Localize("hint.roll:result", map[string]any{
-		"Value": strings.Join(localized, ", "),
-	})
+// 	message := i19n.Localize("hint.roll:result", map[string]any{
+// 		"Value": strings.Join(localized, ", "),
+// 	})
 
-	amendChat(m, "Hint", message)
+// 	amendChat(m, "Hint", message)
 
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
-}
+// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// }
 
 // Oracle Rolled
-func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
-	message := i19n.Localize("oracle.roll:result", map[string]any{
-		"Roll":     msg.Result.Roll,
-		"Value":    msg.Result.Result,
-		"Critical": msg.Result.Critical,
-	})
+// func (m *model) handleOracleRolled(msg oraclemenu.Msg) (*model, tea.Cmd) {
+// 	message := i19n.Localize("oracle.roll:result", map[string]any{
+// 		"Roll":     msg.Result.Roll,
+// 		"Value":    msg.Result.Result,
+// 		"Critical": msg.Result.Critical,
+// 	})
 
-	amendChat(m, "Oracle", message)
+// 	amendChat(m, "Oracle", message)
 
-	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
-}
+// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// }
 
 // Side Menu Direction
-func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
-	currentMenu := m.getMenuActiveElement()
+// func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
+// 	currentMenu := m.getMenuActiveElement()
 
-	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
-		Menu:             currentMenu,
-		CurrentMenuIndex: m.activeMenuIndex,
-		SibblingCount:    len(m.menu),
-	}, key)
+// 	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
+// 		Menu:             currentMenu,
+// 		CurrentMenuIndex: m.activeMenuIndex,
+// 		SibblingCount:    len(m.menu),
+// 	}, key)
 
-	m.updateMenuDirection(direction)
+// 	m.updateMenuDirection(direction)
 
-	currentMenu.HandleDirectionInput(direction)
-}
+// 	currentMenu.HandleDirectionInput(direction)
+// }
 
 func (m *model) updateMenuDirection(msg direction.Direction) {
 	previousMenuIndex := m.activeMenuIndex
@@ -207,41 +208,41 @@ func (m *model) updateMenuDirection(msg direction.Direction) {
 }
 
 // - Window - //
-func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-	refreshLayout(m, msg)
-	refreshMenuElement(m, msg)
+// func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
+// 	// refreshLayout(m, msg)
+// 	// refreshMenuElement(m, msg)
 
-	return m, nil
-}
+// 	return m, nil
+// }
 
-func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
-	scrollMsg, ok := msg.(sharedtui.ScrollMsg)
-	if !ok {
-		return m, nil
-	}
+// func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
+// scrollMsg, ok := msg.(sharedtui.ScrollMsg)
+// if !ok {
+// 	return m, nil
+// }
 
-	top := scrollMsg.GetTop()
-	hight := scrollMsg.GetHeight()
-	bottom := scrollMsg.GetBottom()
+// top := scrollMsg.GetTop()
+// hight := scrollMsg.GetHeight()
+// bottom := scrollMsg.GetBottom()
 
-	v := &m.viewport
-	vHeight := v.Height()
-	vOffset := v.YOffset()
+// v := &m.viewport
+// vHeight := v.Height()
+// vOffset := v.YOffset()
 
-	if rendered := vHeight > 0; !rendered {
-		return m, nil
-	} else if scrollUp := top < vOffset; scrollUp {
-		v.SetYOffset(top)
-	} else if scrollDown := bottom > vOffset+vHeight; scrollDown {
-		v.SetYOffset(top + hight - vHeight)
-	}
+// if rendered := vHeight > 0; !rendered {
+// 	return m, nil
+// } else if scrollUp := top < vOffset; scrollUp {
+// 	v.SetYOffset(top)
+// } else if scrollDown := bottom > vOffset+vHeight; scrollDown {
+// 	v.SetYOffset(top + hight - vHeight)
+// }
 
-	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
-}
+// 	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
+// }
 
-func (m model) handleViewRefresh(msg sharedtui.Refresh) (tea.Model, tea.Cmd) {
-	return refreshViewport(&m, msg.Option)
-}
+// func (m model) handleViewRefresh(msg sharedtui.Refresh) (tea.Model, tea.Cmd) {
+// 	return refreshViewport(&m, msg.Option)
+// }
 
 // - Helper - //
 // Init
@@ -276,16 +277,6 @@ func initViewport() viewport.Model {
 	return vp
 }
 
-func initJournal(engine *game.Engine) []string {
-	raw := make([]string, 0, len(engine.State.AdventureLog.Entries))
-
-	for _, entry := range engine.State.AdventureLog.Entries {
-		raw = append(raw, entry.String())
-	}
-
-	return raw
-}
-
 func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
 	size := size.New(size.Template{
 		Width:  PANEL_WHIDTH - 4,
@@ -306,28 +297,8 @@ func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
 	}
 }
 
-func initAuthor(engine *game.Engine) string {
-	author := "System"
-	if engine.State.Player != nil {
-		author = engine.State.Player.Name
-	}
-	return author
-}
-
 // Refresh
-func refreshMenuElement(m *model, msg tea.WindowSizeMsg) {
-	activeEl := m.getMenuActiveElement()
-	activeEl.HandleWindowResize(msg)
-}
-
-func amendChat(m *model, author, message string) {
-	adventureJournal := m.engine.GetAdventureJournal()
-	adventureJournal.AddEntry(author, message)
-
-	authorstyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("5")).
-		Render(m.author + ": ")
-
-	cloredmsg := authorstyle + message
-	m.chat = append(m.chat, cloredmsg)
-}
+// func refreshMenuElement(m *model, msg tea.WindowSizeMsg) {
+// 	// activeEl := m.getMenuActiveElement()
+// 	// activeEl.HandleWindowResize(msg)
+// }

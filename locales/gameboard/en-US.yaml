@@ -1,0 +1,32 @@
+# System
+onboarding.character:create:
+  other: "Create character"
+onboarding.selected:
+  other: "{{.Value}} was selected for \"{{.Subject}}\""
+onboarding:select.save.title:
+  other: "Load/Save Game"
+onboarding:select.save.subtitle:
+  other: "Load or save your game progress"
+onboarding:select.character.name:
+  other: "Enter a name for your character"
+onboarding:select.character.build:
+  other: "Choose some (de)bufs for your character"
+onboarding:select.location:
+  other: "Choose where you want to start"
+onboarding:select.classes:
+  other: "Select your class"
+onboarding:select.races:
+  other: "Select your races"
+
+
+# Chat
+# chat.input:placeholder:
+#   other: "Send a message..."
+chat.msg:saving:
+  other: "Saving..."
+chat.msg:welcome:
+  other: "Welcome to the chat room!\nType a message and press Enter to send."
+chat.placeholder:
+  other: "Describe your action here..."
+chat.footer:
+  other: "Enter: send"
