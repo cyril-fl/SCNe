@@ -14,6 +14,9 @@ type Section struct {
 
 type HasSection interface {
 	GetSection() []string
+}
+
+type HasSectionSize interface {
 	SetSectionSize(size size.Size)
 }
 
@@ -54,13 +57,13 @@ func (s *Section) GetSize() size.Size {
 // Methods
 func (s *Section) Merge(model tea.Model) *Section {
 	if view, ok := model.(HasSection); ok {
-		s.plugins = append(s.plugins, view.GetSection()...)
+		s.plugins = view.GetSection()
 	}
 	return s
 }
 
 func (s *Section) SetSize(model tea.Model, size size.Size) {
-	if view, ok := model.(HasSection); ok {
+	if view, ok := model.(HasSectionSize); ok {
 		view.SetSectionSize(size)
 	}
 }

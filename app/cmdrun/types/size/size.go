@@ -1,6 +1,8 @@
 package size
 
-import tea "charm.land/bubbletea/v2"
+import (
+	tea "charm.land/bubbletea/v2"
+)
 
 type Size struct {
 	width  int
@@ -43,6 +45,14 @@ func (s Size) GetWidth() int {
 
 func (s Size) GetHeight() int {
 	return max(0, s.height)
+}
+
+func (s *Size) SetWidth(width int) {
+	s.width = width
+}
+
+func (s *Size) SetHeight(height int) {
+	s.height = height
 }
 
 // Methods

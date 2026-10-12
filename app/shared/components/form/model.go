@@ -104,7 +104,7 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.focusOnIndex(currentIndex + 1), nil
 	case PreviousField:
 		return m.focusOnIndex(currentIndex - 1), nil
-	
+
 	}
 
 	return m.updateFocusedField(msg)

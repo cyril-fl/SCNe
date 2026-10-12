@@ -21,12 +21,8 @@ type selectField[T any] struct {
 }
 
 type SelectTemplate[T any] struct {
-	ID           string
-	Label        string
+	Template[T]
 	Options      []models.Item[T]
-	Defaultvalue T
-	Validator    func(T) error
-	Required     bool
 }
 
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
@@ -40,7 +36,7 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	models.SetListFocus(&options, false)
 
 	return &selectField[T]{
-		field:   newField(template.ID, template.Label, SELECT, template.Defaultvalue, template.Validator, template.Required),
+		field:   newField(template.ID, template.Label, SELECT, template.Defaultvalue, template.Validator, template.Required, template.NoLabel),
 		options: options,
 	}
 }

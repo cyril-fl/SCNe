@@ -100,8 +100,8 @@ func (m *model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch sharedtui.EventKey(msg.String()) {
-			case sharedtui.KEY_ENTER:
-				return m, tea.Quit
+		case sharedtui.KEY_ENTER:
+			return m, tea.Quit
 		}
 	}
 
