@@ -1,26 +1,12 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/sidemenu"
-	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
-	"solopg/app/cmdrun/tui/view/sidemenu/dicemenu"
-	"solopg/app/cmdrun/tui/view/sidemenu/hintmenu"
-	"solopg/app/cmdrun/tui/view/sidemenu/oraclemenu"
-	"solopg/app/cmdrun/types/direction"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 	"time"
 
-	"charm.land/bubbles/v2/cursor"
-	"charm.land/bubbles/v2/textarea"
-	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
-
 
 func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
@@ -40,68 +26,17 @@ func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
 	return m, nil
 }
 
-
-// - Getters & Setters - //
-// func (m *model) getMenuActiveElement() sidemenu.MenuItem {
-// 	return m.menu[m.activeMenuIndex]
-// }
-
-// func (m *model) isLastMenuElement() bool {
-// 	return m.activeMenuIndex == len(m.menu)-1
-// }
-
-// func (m *model) isFirstMenuElement() bool {
-// 	return m.activeMenuIndex == 0
-// }
-
-// func (m *model) isMenuActiveElementOpen() bool {
-// 	return m.getMenuActiveElement().IsOpen()
-// }
-
 // - Handlers - //
 // Input
-// func (m *model) handleEnterInput() {
-// 	// if m.isMenuActiveElementOpen() {
-// 	// 	return
-// 	// }
-// 	// input := m.textarea.Value()
-// 	// if input == "" {
-// 	// 	return
-// 	// }
-
-// 	// amendChat(m, m.author, input)
-
-// 	// m.textarea.Reset()
-// 	refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
-// }
-
-// func handleDefaultInput(m *model, msg tea.Msg) (*model, tea.Cmd) {
-// 	// var cmd tea.Cmd
-
-// 	// if m.isMenuActiveElementOpen() {
-// 	// 	return m, nil
-// 	// }
-
-// 	return m, m.chatbox.Update(msg)
-
-// 	// m.textarea, cmd = m.textarea.Update(msg)
-// 	// return m, cmd
-// }
-
-func (m *model) handleCursorBlink(msg cursor.BlinkMsg) (*model, tea.Cmd) {
-	var cmd tea.Cmd
-	// m.viewport, cmd = m.viewport.Update(msg)
-	return m, cmd
-}
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch sharedtui.EventKey(msg.String()) {
 	// case sharedtui.KEY_ENTER:
 	// m.handleEnterInput()
-	// case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
-	// 	m.handleDirectionInput(msg)
-	// default:
-	// 	handleDefaultInput(m, msg)
+	case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
+		// m.handleDirectionInput(msg)
+		// default:
+		// 	handleDefaultInput(m, msg)
 	}
 	return m.handleCommand(msg)
 	// TODO ajouter les autre tyes mes et sourtout gerer qui gere ca avec un tag comme current page
@@ -136,10 +71,12 @@ func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
 // 		"Value": msg.Value,
 // 	})
 
+// 	_ = message
 // 	// -- Advent journal
-// 	amendChat(m, "Dice", message)
+// 	// TODO  Set l'aureut dans le messahe
+// 	// m.state.Amend("Dice", message))
 
-// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// 	return m, nil
 // }
 
 // Hint Rolled
@@ -153,9 +90,11 @@ func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
 // 		"Value": strings.Join(localized, ", "),
 // 	})
 
-// 	amendChat(m, "Hint", message)
+// 	_ = message
 
-// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// 	// m.state.Amend("Hint", message))
+
+// 	return m, nil
 // }
 
 // Oracle Rolled
@@ -166,139 +105,11 @@ func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
 // 		"Critical": msg.Result.Critical,
 // 	})
 
-// 	amendChat(m, "Oracle", message)
+// 	_ = message
 
-// 	return refreshViewport(m, viewoptions.RefreshOption{ScrollBottom: true})
+// 	// m.state.Amend("Oracle", message))
+
+// 	return m, nil
 // }
 
 // Side Menu Direction
-// func (m *model) handleDirectionInput(key tea.KeyPressMsg) {
-// 	currentMenu := m.getMenuActiveElement()
-
-// 	direction := sidemenu.HandleKeyArrow(sidemenu.Context{
-// 		Menu:             currentMenu,
-// 		CurrentMenuIndex: m.activeMenuIndex,
-// 		SibblingCount:    len(m.menu),
-// 	}, key)
-
-// 	m.updateMenuDirection(direction)
-
-// 	currentMenu.HandleDirectionInput(direction)
-// }
-
-func (m *model) updateMenuDirection(msg direction.Direction) {
-	previousMenuIndex := m.activeMenuIndex
-	menuLength := len(m.menu)
-
-	switch msg {
-	case direction.PREVIOUS:
-		if m.activeMenuIndex > 0 {
-			m.activeMenuIndex--
-		}
-	case direction.NEXT:
-		if m.activeMenuIndex < menuLength-1 {
-			m.activeMenuIndex++
-		}
-	}
-
-	if previousMenuIndex != m.activeMenuIndex {
-		m.menu[previousMenuIndex].SetFocus(false)
-		m.menu[m.activeMenuIndex].SetFocus(true)
-	}
-}
-
-// - Window - //
-// func (m *model) handleWindowResize(msg tea.WindowSizeMsg) (*model, tea.Cmd) {
-// 	// refreshLayout(m, msg)
-// 	// refreshMenuElement(m, msg)
-
-// 	return m, nil
-// }
-
-// func (m *model) handleViewportScroll(msg tea.Msg) (*model, tea.Cmd) {
-// scrollMsg, ok := msg.(sharedtui.ScrollMsg)
-// if !ok {
-// 	return m, nil
-// }
-
-// top := scrollMsg.GetTop()
-// hight := scrollMsg.GetHeight()
-// bottom := scrollMsg.GetBottom()
-
-// v := &m.viewport
-// vHeight := v.Height()
-// vOffset := v.YOffset()
-
-// if rendered := vHeight > 0; !rendered {
-// 	return m, nil
-// } else if scrollUp := top < vOffset; scrollUp {
-// 	v.SetYOffset(top)
-// } else if scrollDown := bottom > vOffset+vHeight; scrollDown {
-// 	v.SetYOffset(top + hight - vHeight)
-// }
-
-// 	return refreshViewport(m, viewoptions.RefreshOption{Positionreset: false})
-// }
-
-// func (m model) handleViewRefresh(msg sharedtui.Refresh) (tea.Model, tea.Cmd) {
-// 	return refreshViewport(&m, msg.Option)
-// }
-
-// - Helper - //
-// Init
-func initTextarea() textarea.Model {
-	ta := textarea.New()
-	ta.Placeholder = i19n.Localize("chat.input:placeholder")
-	ta.SetVirtualCursor(false)
-	ta.Focus()
-
-	ta.Prompt = "┃ "
-	ta.CharLimit = 280
-
-	ta.SetWidth(30)
-	ta.SetHeight(3)
-
-	// Remove cursor line styling
-	s := ta.Styles()
-	s.Focused.CursorLine = lipgloss.NewStyle()
-	ta.SetStyles(s)
-
-	ta.ShowLineNumbers = false
-	ta.KeyMap.InsertNewline.SetEnabled(false)
-
-	return ta
-}
-
-func initViewport() viewport.Model {
-	vp := viewport.New(viewport.WithWidth(30), viewport.WithHeight(5))
-	vp.KeyMap.Left.SetEnabled(false)
-	vp.KeyMap.Right.SetEnabled(false)
-
-	return vp
-}
-
-func initSideMenu(engine *game.Engine) []sidemenu.MenuItem {
-	size := size.New(size.Template{
-		Width:  PANEL_WHIDTH - 4,
-		Height: ORACLE_HEIGHT + 5,
-	})
-
-	codex := engine.State.Codex
-	codex.EnsureInitialized()
-
-	return []sidemenu.MenuItem{
-		oraclemenu.NewSideMenu(size, true),
-		dicemenu.NewSideMenu(size, false),
-		hintmenu.NewSideMenu(size, false),
-		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
-			Size:  size,
-			Codex: codex,
-		}, false),
-	}
-}
-
-// Refresh
-// func refreshMenuElement(m *model, msg tea.WindowSizeMsg) {
-// 	// activeEl := m.getMenuActiveElement()
-// 	// activeEl.HandleWindowResize(msg)
-// }

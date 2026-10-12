@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/sidepanel"
 	"strings"
 
@@ -20,7 +21,7 @@ func (v *Layout) getSidepanelWidth() int {
 		return 0
 	}
 	return v.sidepanel.GetWidth()
-} 
+}
 
 func (v *Layout) getSidepanelHeight() int {
 	if v.sidepanel == nil {
@@ -30,11 +31,20 @@ func (v *Layout) getSidepanelHeight() int {
 	return v.sidepanel.GetHeight()
 }
 
+func (v *Layout) getAvailablePanelSize() size.Size {
+	panelsize := 34
+	return size.New(size.Template{
+		Width:  panelsize,
+		Height: v.getHeightWithinBorder(),
+	})
+}
+
 func (v *Layout) MergeSidepanel(other tea.Model) {
 	if v.sidepanel == nil {
 		v.sidepanel = sidepanel.Nil()
 	}
 
+	v.sidepanel.SetSize(other, v.getAvailablePanelSize())
 	v.sidepanel.Merge(other)
 }
 

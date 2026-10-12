@@ -1,33 +1,27 @@
 package gameboard
 
 import (
+	"solopg/app/cmdrun/services/factory/roll"
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/sidemenu"
+	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
+	"solopg/app/shared/components/navigation"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 
-	"charm.land/bubbles/v2/cursor"
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
 )
 
 // - Model - //
 type model struct {
-	cache
 	primitive.Fallible
 
-	state statemachine
-
+	state  statemachine
+	menu   *navigation.Navigation
 	engine *game.Engine
 	save   func() error
-
-	menu            []sidemenu.MenuItem
-	activeMenuIndex int
-}
-
-type cache struct {
-	size *tea.WindowSizeMsg
+	size   size.Size
 }
 
 type UiParams struct {
@@ -38,12 +32,12 @@ type UiParams struct {
 func NewModel(params UiParams) *model {
 	return &model{
 		state: newstate(params),
-
+		menu: navigation.New(navigation.Template{
+			Static: []string{makeStatView(params.Engine)},
+			Parts:  makePanelPart(params.Engine),
+		}),
 		engine: params.Engine,
 		save:   params.OnSave,
-
-		menu:            initSideMenu(params.Engine),
-		activeMenuIndex: 0,
 	}
 }
 
@@ -55,23 +49,20 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// menu := m.getMenuActiveElement()
-	// return menu.HandleUpdate(sidemenu.UpdateParams{
-	// 	Model:    m,
-	// 	Msg:      msg,
-	// 	Delegate: m.handleUpdate,
-	// 	// Viewport: m.viewport,
-	// })
 	statecmd := m.state.Update(msg)
+	menucmd := m.menu.HandleUpdate(msg)
 	next, cmd := m.handleUpdate(msg)
 
-	return next, tea.Sequence(statecmd, cmd)
+	return next, tea.Sequence(menucmd, statecmd, cmd)
 }
 
 func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
+	case roll.RollResultMsg:
+		m.state.Amend(msg.Content)
+		return m, nil
 
 	// Cmd messages
 	// case codexmenu.Msg:
@@ -92,8 +83,6 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	case sharedtui.ErrorMsg:
 		return m.handleError(msg)
 
-	case cursor.BlinkMsg:
-		return m.handleCursorBlink(msg)
 	}
 
 	return m, nil
@@ -102,9 +91,9 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 // Helpers
 func makeChat(engine *game.Engine) *chat.Chat {
 	return chat.New(chat.Template{
-		Author: initAuthor(engine),
+		Author:  initAuthor(engine),
 		History: initJournal(engine),
-		Register: func (author, message string) {
+		Register: func(author, message string) {
 			engine.GetAdventureJournal().AddEntry(author, message)
 		},
 	})

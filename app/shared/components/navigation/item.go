@@ -1,38 +1,36 @@
-package sidemenu
+package navigation
 
 import (
-	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/cmdrun/types/direction"
+	"solopg/app/cmdrun/types/size"
 
 	"charm.land/bubbles/v2/list"
-	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 )
 
 // - Contract - //
-type MenuItem interface {
+// TODO verrifier ce qui est vraiment utilise et commain
+// Remplacer le reste pas d'autre interface
+type Item interface {
 	ID() string
-	IsOpen() bool
-	SetOpen(bool)
 
 	SetFocus(bool)
 
 	GetList() *list.Model
-	SetList(list.Model)
+	SetList(*list.Model)
+
+	SetSize(size size.Size)
 
 	GetMenuView() string
 	GetView() string
 	GetFooter() []string
 
-	HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd
-	HandleUpdate(params UpdateParams) (tea.Model, tea.Cmd)
-
-	HandleDirectionInput(direction direction.Direction)
+	HandleUpdate(tea.Msg) tea.Cmd
 }
 
 // - Context - //
 type Context struct {
-	Menu             MenuItem
+	Menu             Item
 	CurrentMenuIndex int
 	SibblingCount    int
 }
@@ -46,25 +44,21 @@ func (m *Context) IsFirstMenuElement() bool {
 }
 
 // - Update - //
-type UpdateParams struct {
-	Model    tea.Model
-	Msg      tea.Msg
-	Delegate cmdruntui.DelegateUpdateFunc
-	Viewport viewport.Model
-}
 
 // - Helper - //
 func HandleKeyArrow(metadata Context, key tea.KeyPressMsg) direction.Direction {
 	list, newdirection := direction.GetListDirection(metadata.Menu.GetList(), key)
 
-	metadata.Menu.SetList(list)
+	metadata.Menu.SetList(&list)
 
 	isFirstElementToNext := metadata.IsFirstMenuElement() && newdirection == direction.NEXT
 	isLastElementToPrevious := metadata.IsLastMenuElement() && newdirection == direction.PREVIOUS
 	isBetweenElements := !(metadata.IsFirstMenuElement() || metadata.IsLastMenuElement())
 
 	if isFirstElementToNext || isBetweenElements || isLastElementToPrevious {
-		metadata.Menu.SetOpen(false)
+		if menu, ok := metadata.Menu.(Openable); ok {
+			menu.SetOpen(false)
+		}
 	}
 
 	return newdirection

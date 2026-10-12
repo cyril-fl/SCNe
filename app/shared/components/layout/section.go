@@ -35,8 +35,8 @@ func (v *Layout) MergeSection(other tea.Model) {
 
 func (v *Layout) getAvailableSectionSize() size.Size {
 	return size.New(size.Template{
-		Width:  v.size.GetWidth() - v.getSidepanelWidth(),
-		Height: v.size.GetHeight() - v.getHeaderHeight() - v.getFooterHeight(),
+		Width:  v.size.GetWidth()  - v.getSidepanelWidth(),
+		Height: v.getHeightWithinBorder() - v.getHeaderHeight() - v.getFooterHeight(),
 	})
 }
 
@@ -46,16 +46,7 @@ func (v *Layout) makeSectionView() string {
 	}
 
 	view := strings.Builder{}
-	// view.WriteString(v.spaceSection())
 	view.WriteString(trimParagraphPadding(v.section.View()))
 
 	return view.String()
-}
-
-func (v *Layout) spaceSection() string {
-	if v.section == nil {
-		return ""
-	}
-	maxHeight := v.getHeightAvailable()
-	return strings.Repeat("\n", max(0, maxHeight))
 }

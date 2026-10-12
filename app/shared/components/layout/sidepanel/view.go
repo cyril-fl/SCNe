@@ -17,6 +17,10 @@ type HasSidepanel interface {
 	GetSidepanel() []string
 }
 
+type HasPanelSize interface {
+	SetPanelSize(size size.Size)
+}
+
 func New(parts ...string) *Sidepanel {
 	return &Sidepanel{
 		parts: parts,
@@ -30,29 +34,35 @@ func Nil() *Sidepanel {
 	}
 }
 
-func (f *Sidepanel) Merge(model tea.Model) *Sidepanel {
+func (s *Sidepanel) Merge(model tea.Model) *Sidepanel {
 	if view, ok := model.(HasSidepanel); ok {
-		f.plugins = append(f.plugins, strings.Join(view.GetSidepanel(), "\n"))
+		s.plugins = []string{strings.Join(view.GetSidepanel(), "\n")}
 	}
-	return f
+	return s
 }
 
-func (f *Sidepanel) View() string {
-	footerparts := append(f.parts, f.plugins...)
+func (s *Sidepanel) View() string {
+	footerparts := append(s.parts, s.plugins...)
 	return strings.Join(footerparts, " | ")
 }
 
-func (f *Sidepanel) GetHeight() int {
-	return lipgloss.Height(f.View())
+func (s *Sidepanel) GetHeight() int {
+	return lipgloss.Height(s.View())
 }
 
-func (f *Sidepanel) GetWidth() int {
-	return lipgloss.Width(f.View())
+func (s *Sidepanel) GetWidth() int {
+	return lipgloss.Width(s.View())
 }
 
-func (f *Sidepanel) GetSize() size.Size {
+func (s *Sidepanel) GetSize() size.Size {
 	return size.New(size.Template{
-		Height: f.GetHeight(),
-		Width:  f.GetWidth(),
+		Height: s.GetHeight(),
+		Width:  s.GetWidth(),
 	})
+}
+
+func (s *Sidepanel) SetSize(model tea.Model, size size.Size) {
+	if view, ok := model.(HasPanelSize); ok {
+		view.SetPanelSize(size)
+	}
 }

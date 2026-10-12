@@ -99,7 +99,7 @@ func GetByName(name string) (*Hint, error) {
 	})
 }
 
-func (o Hint) Name() string {
+func (o Hint) GetName() string {
 	return o.name
 }
 func (o Hint) Values() []string {

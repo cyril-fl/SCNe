@@ -2,30 +2,26 @@ package codexmenu
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/components/navigation"
 	sharedtui "solopg/app/shared/tui"
 
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 
-	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 )
 
 // - CodexMenu - //
 // Menu
 func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
-	items := makeCodexList(params)
-	menu := list.New(items, list.NewDefaultDelegate(), params.Size.GetWidth(), params.Size.GetHeight())
-	models.ConfigureList(&menu)
-	models.SetListFocus(&menu, focused)
-
 	return &codexMenu{
-		id:      "codex",
-		focused: focused,
-		list:    menu,
+		Menu: navigation.NewMenu(navigation.TemplateMenu[*codexMenuItem]{
+			ID:      "codex",
+			Options: makeCodexList(params),
+			Focused: focused,
+		}),
 	}
 }
 
@@ -35,18 +31,12 @@ type CodexMenuParams struct {
 }
 
 type codexMenu struct {
-	id      string
-	focused bool
-	list    list.Model
+	*navigation.Menu
 }
 
 // / Getters and Setters
-func (m *codexMenu) ID() string {
-	return m.id
-}
-
 func (m *codexMenu) IsOpen() bool {
-	for _, item := range m.list.Items() {
+	for _, item := range m.GetList().Items() {
 		if page, ok := item.(models.Item[*codexMenuItem]); !ok {
 			continue
 		} else if page.Value().isOpen {
@@ -61,25 +51,12 @@ func (m *codexMenu) SetOpen(open bool) {
 		return
 	}
 
-	for _, item := range m.list.Items() {
+	for _, item := range m.GetList().Items() {
 		item, ok := item.(models.Item[*codexMenuItem])
 		if page := item.Value(); ok {
 			page.setOpen(false)
 		}
 	}
-}
-
-func (m *codexMenu) SetFocus(focused bool) {
-	m.focused = focused
-	models.SetListFocus(&m.list, focused)
-}
-
-func (m *codexMenu) GetList() *list.Model {
-	return &m.list
-}
-
-func (m *codexMenu) SetList(list list.Model) {
-	m.list = list
 }
 
 func (menu *codexMenu) GetFormFromCurrentPage() *form.Form {
@@ -96,46 +73,39 @@ func (menu *codexMenu) SetFormOnCurrentPage(form form.Form) {
 }
 
 // / Handlers
-func (m *codexMenu) HandleUpdate(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	switch msg := params.Msg.(type) {
+func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
+	switch msg := msg.(type) {
 	case form.NextField, form.PreviousField:
-		return m.delegateInputToForm(params)
+		return m.delegateInputToForm(msg)
 	case form.Validate:
-		return m.handleFormSubmit(params)
+		return m.handleFormSubmit(msg)
 	case form.Error:
-		return m.handleFormError(params)
-	case form.Scroll:
-		return m.handleFormScroll(params)
+		return m.handleFormError(msg)
+	// case form.Scroll:
+	// 	return m.handleFormScroll(msg)
 
 	case tea.KeyPressMsg:
 		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_ESC:
-			return m.handleKeyEsc(params)
+			return m.handleKeyEsc(msg)
 		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
-			return m.delegateInputToForm(params)
+			return m.delegateInputToForm(msg)
 		case sharedtui.KEY_ENTER:
-			return m.delegateInputToForm(params)
+			return m.delegateInputToForm(msg)
 		case sharedtui.CMD_SHIFT_ENTER, sharedtui.CMD_ALT_ENTER:
-			return m.handleKeyShiftEnter(params)
+			return m.handleKeyShiftEnter(msg)
 		default:
-			return m.delegateInputToForm(params)
+			return m.delegateInputToForm(msg)
 		}
 	}
 
-	return params.Delegate(params.Msg)
+	return nil
 }
 
 func (m *codexMenu) HandleDirectionInput(direction direction.Direction) {
 	_ = direction
 	m.updatePageOnRedirection()
 }
-
-/*
-NOT-IMPLEMENTED-YET
-func (m *codexMenu) HandleScrollInput(viewport viewport.Model) viewport.Model {
- 	return m.handleFormScrollInput(viewport)
-}
-*/
 
 // Items
 type codexMenuItem struct {
@@ -146,6 +116,10 @@ type codexMenuItem struct {
 	form     *form.Form
 	newForm  func() *form.Form
 	showForm bool
+}
+
+func (m *codexMenuItem) GetName() string {
+	return m.id
 }
 
 type sideMenuItemsParams struct {

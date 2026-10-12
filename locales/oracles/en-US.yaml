@@ -1,17 +1,17 @@
-oracle.roll:result:
+oracles.roll:result:
   other: "Oracle rolled: {{.Roll}}, Result: {{.Value}}, Critical: {{.Critical}}"
 
 # --- Name ---
 # Base
 oracle.likely:
   other: "Likely"
-oracle.unlikely:
+oracles.unlikely:
   other: "Unlikely"
-oracle.neutral:
+oracles.neutral:
   other: "Neutral"
-oracle.very_likely:
+oracles.very_likely:
   other: "Very likely"
-oracle.very_unlikly:
+oracles.very_unlikly:
   other: "Very unlikely"
 
 # Encouter

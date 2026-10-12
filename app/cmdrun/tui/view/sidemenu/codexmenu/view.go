@@ -7,20 +7,19 @@ import (
 	"solopg/app/shared/utils/transform"
 	"strings"
 
-	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
 
 // - View - //
 func (m *codexMenu) GetMenuView() string {
-	title := transform.Uppercase(i19n.Localize(m.id))
+	title := transform.Uppercase(i19n.Localize(m.ID()))
 	title = lipgloss.NewStyle().Bold(true).Render(title)
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		title,
 		"",
-		m.list.View(),
+		m.GetList().View(),
 	)
 }
 
@@ -65,10 +64,10 @@ func (m *codexMenu) GetFooter() []string {
 }
 
 // - Handlers - //
-func (m *codexMenu) HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd {
-	if form := m.GetFormFromCurrentPage(); form != nil {
-		form.Update(msg)
-	}
+// func (m *codexMenu) HandleWindowResize(msg tea.WindowSizeMsg) tea.Cmd {
+// 	if form := m.GetFormFromCurrentPage(); form != nil {
+// 		form.Update(msg)
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
