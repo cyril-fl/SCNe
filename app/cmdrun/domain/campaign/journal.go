@@ -46,5 +46,5 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 
 // String format for the entry in the journal, shown in gamebord view
 func (e *Entry) String() string {
-	return e.Timestamp.Format(time.RFC3339) + " - " + e.Author + ": " + e.Message
+	return e.Timestamp.Format("Jan 02 15:04") + " - (" + e.Author + ") " + e.Message
 }

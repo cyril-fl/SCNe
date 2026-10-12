@@ -14,6 +14,7 @@ func (v *Layout) getHeaderHeight() int {
 
 	return v.header.GetHeight()
 }
+
 func (v *Layout) SetHeader(other tea.Model) {
 	if v.header == nil {
 		v.header = header.Nil()

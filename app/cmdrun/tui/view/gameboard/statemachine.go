@@ -5,12 +5,14 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/footer"
 	"solopg/app/shared/services/logs"
+	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type state = string
+
 var (
 	CHAT_SECTION state = "chat"
 	FORM state = "form"
@@ -52,14 +54,23 @@ func (s *statemachine) HandleTransition(from, to state) {
 	err := logs.MildError("Transition pas autorise")
 	s.SetErr(err)
 }
+
 func (s statemachine) GetView() string {
 	return s.view[s.curent].GetView()
 }
+
 func (s statemachine) Update (msg tea.Msg) tea.Cmd {
 	return s.view[s.curent].Update(msg)
 }
+
 func (s statemachine) SetSize(size size.Size) {
 	s.view[s.curent].SetSize(size)
+}
+
+func (s statemachine) Amend(content string) {
+	if view, ok := s.view[s.curent].(interfass.Amandable); ok {
+		view.Amend(content)
+	}
 }
 
 func (s statemachine) getFooter() []string {
