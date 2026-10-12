@@ -60,7 +60,7 @@ func (c *Chat) GetView() string {
 		c.spaceInput(),
 		c.makeSavingNotification(),
 		c.form.View().Content,
-		"\n",
+		"",
 	)
 }
 
@@ -89,7 +89,9 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 
 	case spinner.TickMsg:
 		return c.handleSpinnerTick(msg)
-
+	// case cursor.BlinkMsg:
+	// 		return c.handleCursorBlink(msg)
+	
 	case tea.KeyMsg:
 		return c.handleInput(msg)
 	}
@@ -208,3 +210,20 @@ func amendChat(c *Chat, message string) {
 	c.session = append(c.session, cloredmsg)
 	c.form.Reset()
 }
+
+// func (c *Chat) handleCursorBlink(msg cursor.BlinkMsg) tea.Cmd {
+// 	var cmd tea.Cmd
+// 	_, cmd = c.view.Update(msg)
+// 	return cmd
+// }
+
+// func getCursor(m model) *tea.Cursor {
+// 	// cursor := m.textarea.Cursor()
+// 	// cursor.Y += lipgloss.Height(m.viewport.View())
+
+// 	if item := m.getMenuActiveElement(); item != nil && item.IsOpen() {
+// 		// cursor = nil
+// 	}
+
+// 	return cursor
+// }

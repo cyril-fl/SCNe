@@ -5,22 +5,18 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/tui/view/sidemenu"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 	"solopg/config"
 
-	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 )
 
 // - Side panel - //
-func makeCodexList(params CodexMenuParams) []list.Item {
+func makeCodexList(params CodexMenuParams) []*codexMenuItem {
 	pages := []*codexMenuItem{
 		newMenuItem(sideMenuItemsParams{
 			id:    "codex.locations",
@@ -49,19 +45,13 @@ func makeCodexList(params CodexMenuParams) []list.Item {
 		}),
 	}
 
-	items := make([]list.Item, 0, len(pages))
-
-	for _, page := range pages {
-		items = append(items, models.NewItem(i19n.Localize(page.id), "", page))
-	}
-
-	return items
+	return pages
 }
 
 // - Getters & Setters - //
 // Codex menu
 func (m *codexMenu) getCurrentPage() *codexMenuItem {
-	for _, item := range m.list.Items() {
+	for _, item := range m.GetList().Items() {
 
 		if page, ok := item.(models.Item[*codexMenuItem]); !ok {
 			continue
@@ -73,7 +63,7 @@ func (m *codexMenu) getCurrentPage() *codexMenuItem {
 }
 
 func (m *codexMenu) getSelectedPage() *codexMenuItem {
-	if item, ok := m.list.SelectedItem().(models.Item[*codexMenuItem]); ok {
+	if item, ok := m.GetList().SelectedItem().(models.Item[*codexMenuItem]); ok {
 		return item.Value()
 	}
 	return nil
@@ -96,7 +86,7 @@ func (m *codexMenuItem) setShowForm(show bool) {
 		state = "opened"
 	}
 
-	logs.SilentInfo("sidemenu."+state, map[string]any{
+	logs.SilentInfo("navigation."+state, map[string]any{
 		"Subject": "form",
 		"Value":   m.id,
 	})
@@ -110,54 +100,54 @@ func (m *codexMenuItem) toggleShowForm() {
 
 // - Helper - //
 // Input
-func (m *codexMenu) handleKeyEsc(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+func (m *codexMenu) handleKeyEsc(msg tea.KeyPressMsg) tea.Cmd {
 	currentPage := m.getCurrentPage()
 
 	if currentPage == nil {
-		return params.Delegate(params.Msg)
+		return nil
 	}
 
 	if currentPage.showForm {
 		currentPage.toggleShowForm()
-		return params.Model, sendMsg()
+		return sendMsg()
 	}
 
 	if currentPage.isOpen {
 		currentPage.isOpen = false
-		return params.Model, sendMsg()
+		return sendMsg()
 	}
 
-	return params.Model, sendMsg()
+	return sendMsg()
 }
 
-func (m *codexMenu) handleKeyShiftEnter(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+func (m *codexMenu) handleKeyShiftEnter(msg tea.KeyPressMsg) tea.Cmd {
 	currentPage := m.getCurrentPage()
 
 	if currentPage != nil && m.IsOpen() {
 		if currentPage.showForm {
-			return params.Model, form.SendMsg[form.Validate]()
+			return form.SendMsg[form.Validate]()
 		}
 
 		currentPage.form = currentPage.newForm()
 		currentPage.setShowForm(true)
-		return params.Model, sendMsg()
+		return sendMsg()
 	}
 
 	if selectedPage := m.getSelectedPage(); selectedPage != nil {
 		m.handleOpenPage(selectedPage)
 	}
 
-	return params.Model, sendMsg()
+	return sendMsg()
 }
 
 // Page
 func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
-	for _, item := range m.list.Items() {
+	for _, item := range m.GetList().Items() {
 		item, ok := item.(models.Item[*codexMenuItem])
 
 		if page := item.Value(); ok && page != selected {
 
-			logs.SilentInfo("sidemenu.closed", map[string]any{
+			logs.SilentInfo("navigation.closed", map[string]any{
 				"Subject": "page",
 				"Value":   page.id,
 			})
@@ -166,7 +156,7 @@ func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
 		}
 	}
 
-	logs.SilentInfo("sidemenu.open", map[string]any{
+	logs.SilentInfo("navigation.open", map[string]any{
 		"Subject": "page",
 		"Value":   selected.id,
 	})
@@ -232,28 +222,28 @@ func getFormStatsFields() []form.Field {
 	return fields
 }
 
-func (m *codexMenu) handleFormSubmit(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+func (m *codexMenu) handleFormSubmit(msg tea.Msg) tea.Cmd {
 	currentPage := m.getCurrentPage()
 	if currentPage == nil {
-		return params.Model, nil
+		return nil
 	}
 
 	currentForm := currentPage.form
 	if currentForm == nil {
-		return params.Model, nil
+		return nil
 	}
 
 	currentForm.Submit()
 
 	if currentForm.HasErr() {
-		return params.Model, form.SendErrorMsg(currentForm.GetErr())
+		return form.SendErrorMsg(currentForm.GetErr())
 	}
 
 	logs.SilentInfo("form.submitted", map[string]any{
 		"Form": currentPage.id,
 	})
 
-	return params.Model, m.handleFormPost()
+	return m.handleFormPost()
 }
 
 func (m *codexMenu) handleFormPost() tea.Cmd {
@@ -282,41 +272,41 @@ func (m *codexMenu) handleFormPost() tea.Cmd {
 	return sendMsg()
 }
 
-func (m *codexMenu) handleFormScroll(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	form := m.GetFormFromCurrentPage()
-	if form == nil {
-		return params.Model, nil
-	}
+// func (m *codexMenu) handleFormScroll(msg tea.KeyPressMsg) tea.Cmd {
+// 	form := m.GetFormFromCurrentPage()
+// 	if form == nil {
+// 		return  nil
+// 	}
 
-	currentPage := m.getCurrentPage()
-	pageHeader := lipgloss.NewStyle().
-		Width(params.Viewport.Width()).
-		Render(currentPage.GetPageHeader())
+// 	currentPage := m.getCurrentPage()
+// 	pageHeader := lipgloss.NewStyle().
+// 		// Width(params.Viewport.Width()).
+// 		Render(currentPage.GetPageHeader())
 
-	viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
-	viewHight += lipgloss.Height(pageHeader)
+// 	// viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
+// 	// viewHight += lipgloss.Height(pageHeader) ;
 
-	return params.Model, sharedtui.SendScrollMsg(viewTop, viewHight)
+// 	return  sharedtui.SendScrollMsg(viewTop, viewHight)
+// }
+
+func (m *codexMenu) handleFormError(msg tea.Msg) tea.Cmd {
+	return sendMsg()
 }
 
-func (m *codexMenu) handleFormError(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
-	return params.Model, sendMsg()
-}
-
-func (m *codexMenu) delegateInputToForm(params sidemenu.UpdateParams) (tea.Model, tea.Cmd) {
+func (m *codexMenu) delegateInputToForm(msg tea.Msg) tea.Cmd {
 	currentPage := m.getCurrentPage()
 
 	if currentPage == nil {
-		return params.Delegate(params.Msg)
+		return nil
 	}
 
 	if !currentPage.showForm {
-		return params.Delegate(params.Msg)
+		return nil
 	}
 
-	_, cmd := currentPage.form.Update(params.Msg)
+	_, cmd := currentPage.form.Update(msg)
 
-	return params.Model, tea.Batch(
+	return tea.Batch(
 		cmd,
 		sendMsg(),
 	)

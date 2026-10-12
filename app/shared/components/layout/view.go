@@ -34,11 +34,9 @@ func (v *Layout) GetView() tea.View {
 	return tea.NewView(
 		lipgloss.NewStyle().
 			Height(v.getHeightWithinBorder()).
-			Width(v.getWidthtWithinBorder()).
-			// TODO le bord rose c'est la main view
-			// Peu etre faire un factory avec ca du genre color, border, etc
+			Width(v.size.GetWidth()).
 			// Border(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("5")).
+			// BorderForeground(lipgloss.Color("5")).
 			Render(v.makeView()),
 	)
 }
@@ -79,7 +77,6 @@ func (v *Layout) getHeightOccupied() int {
 }
 
 func (v *Layout) getWidthAvailable() int {
-	// occupied := v.getFooterHight() + v.getBodyHeight()
 	return max(0, v.getWidthtWithinBorder())
 }
 
@@ -120,8 +117,8 @@ func (v *Layout) makeView() string {
 	vstack := v.makeVstack()
 	hstack := v.makeHstack()
 
-	mainWidth := max(0, v.getWidthAvailable()-lipgloss.Width(hstack))
-	panelHeight := max(0, v.getHeightAvailable()-lipgloss.Height(vstack))
+	mainWidth := max(0, v.getWidthAvailable()-lipgloss.Width(hstack)-offsetBecauseBorder)
+	panelHeight := max(0, v.getHeightWithinBorder())
 
 	vstack = lipgloss.NewStyle().Width(mainWidth).Render(vstack)
 	hstack = lipgloss.NewStyle().

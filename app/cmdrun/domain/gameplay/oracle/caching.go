@@ -140,8 +140,10 @@ func GetByName(name string) (*Oracle, error) {
 	})
 }
 
-func (o Oracle) Name() string {
-	return o.name
+func (o Oracle) GetName() string {
+	// return o.name
+	// TODO Si ca merde implment un autre methode pour les list dans le menu
+	return fmt.Sprintf("oracles.%s", o.name)
 }
 
 func (o Oracle) IsVisible() bool {
@@ -162,6 +164,18 @@ func List() []Oracle {
 	}
 
 	return makeSet(cachedConfig)
+}	
+
+func ListVisible() []Oracle {
+	oracles := List()
+	visibleOracles := make([]Oracle, 0)
+
+	for _, oracle := range oracles {
+		if oracle.IsVisible() {
+			visibleOracles = append(visibleOracles, oracle)
+		}
+	}
+	return visibleOracles
 }
 
 func ListFromFolder(path string) ([]string, error) {

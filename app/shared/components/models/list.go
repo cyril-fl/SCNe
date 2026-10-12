@@ -47,3 +47,14 @@ func SetListFocus(menu *list.Model, focused bool) {
 
 	menu.SetDelegate(delegate)
 }
+
+func ListContentHeight(menu *list.Model) int {
+	delegate := list.NewDefaultDelegate()
+	itemCount := len(menu.VisibleItems())
+
+	if itemCount == 0 {
+		return delegate.Height()
+	}
+
+	return itemCount * (delegate.Height() + delegate.Spacing())
+}
