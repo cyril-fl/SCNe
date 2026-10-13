@@ -115,7 +115,9 @@ func (n *Navigation) HandleUpdate(msg tea.Msg) tea.Cmd {
 	case tea.KeyPressMsg:
 		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
-			n.handleDirectionInput(msg)
+			if openable, ok := current.(Openable); !ok || !openable.IsOpen() {
+				n.handleDirectionInput(msg)
+			}
 		}
 	}
 
@@ -166,6 +168,11 @@ func (n *Navigation) makeContent() (string, []int) {
 	for i, item := range n.part {
 		partStarts[i] = offset
 		block := item.GetMenuView()
+		if i == n.cache.active {
+			if view := item.GetView(); view != "" {
+				block = view
+			}
+		}
 		blocks = append(blocks, block)
 		offset += max(1, lipgloss.Height(block))
 	}

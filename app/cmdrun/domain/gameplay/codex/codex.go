@@ -51,10 +51,18 @@ func (c *Codex) EnsureInitialized() {
 
 // - Codex table - //
 type Table interface {
-	// TODO LOW Verrifier si [] String obligatoire
 	Summaries() []string
 	AddFromMappedValues(values map[string]string) error
+	SaveFromMappedValues(index int, values map[string]string) error
+	FormEntries() []Entry
 	Ensure()
+}
+
+type Entry struct {
+	Title       string
+	Description string
+	Values      map[string]string
+	Locked      bool
 }
 
 type TableData[E any] struct {

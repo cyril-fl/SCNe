@@ -32,8 +32,10 @@ type yamlConfig struct {
 var folderConfigPath = config.Current.Documents.Folders.Characters
 
 var cachedConfig []yamlConfig
+var lockedNames map[string]struct{}
 
 func loadFromSource() error {
+	lockedNames = make(map[string]struct{})
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
 		return logs.Error("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
@@ -79,6 +81,7 @@ func loadFromFile(fileAddress string) error {
 	variety.MakeDefault(params.Variety)
 
 	cachedConfig = append(cachedConfig, *params)
+	lockedNames[params.Name] = struct{}{}
 
 	return nil
 }
@@ -96,6 +99,15 @@ func List() []Character {
 	}
 
 	return makeSet(cachedConfig)
+}
+
+// IsLocked reports whether a character comes from the initial template cache.
+func IsLocked(name string) bool {
+	if cachedConfig == nil {
+		List()
+	}
+	_, ok := lockedNames[name]
+	return ok
 }
 
 func makeSet(configs []yamlConfig) []Character {

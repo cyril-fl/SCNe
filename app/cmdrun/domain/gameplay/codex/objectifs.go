@@ -90,6 +90,31 @@ func (o *ObjectivesTable) Summaries() []string {
 	// return summaries
 }
 
+func (o *ObjectivesTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(o.Entries))
+	for _, entry := range o.Entries {
+		entries = append(entries, Entry{Title: entry.Title, Description: entry.Description, Values: map[string]string{
+			"title": entry.Title, "description": entry.Description,
+		}})
+	}
+	return entries
+}
+
+func (o *ObjectivesTable) SaveFromMappedValues(index int, values map[string]string) error {
+	if index < 0 {
+		return o.AddFromMappedValues(values)
+	}
+	oldLen := len(o.Entries)
+	if err := o.AddFromMappedValues(values); err != nil {
+		return err
+	}
+	if index < oldLen {
+		o.Entries[index] = o.Entries[oldLen]
+		o.Entries = o.Entries[:oldLen]
+	}
+	return nil
+}
+
 // - Helper --//
 func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 	var err []error

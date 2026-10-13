@@ -3,8 +3,10 @@ package gameboard
 import (
 	"solopg/app/cmdrun/services/factory/roll"
 	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
+	"solopg/app/shared/components/formpage"
 	"solopg/app/shared/components/navigation"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
@@ -50,7 +52,10 @@ func (m model) Init() tea.Cmd {
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	statecmd := m.state.Update(msg)
-	menucmd := m.menu.HandleUpdate(msg)
+	var menucmd tea.Cmd
+	if m.state.Current() == CHAT_SECTION {
+		menucmd = m.menu.HandleUpdate(msg)
+	}
 	next, cmd := m.handleUpdate(msg)
 
 	return next, tea.Sequence(menucmd, statecmd, cmd)
@@ -58,6 +63,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case codexmenu.OpenPageMsg:
+		m.state.HandleTransition(CHAT_SECTION, state(msg.ID))
+		return m, nil
+	case formpage.CloseMsg:
+		m.state.HandleTransition(m.state.Current(), CHAT_SECTION)
+		return m, nil
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
 	case roll.RollResultMsg:

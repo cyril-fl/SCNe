@@ -19,6 +19,7 @@ type yamlConfig struct {
 var fileConfigPath = config.Current.Documents.Files.Races
 
 var cachedConfig []yamlConfig
+var lockedNames map[string]struct{}
 
 func loadFromFile() error {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
@@ -31,6 +32,10 @@ func loadFromFile() error {
 	}
 
 	cachedConfig = params
+	lockedNames = make(map[string]struct{}, len(params))
+	for _, value := range params {
+		lockedNames[value.Name] = struct{}{}
+	}
 
 	return nil
 }
@@ -104,6 +109,16 @@ func ListNames() []string {
 		list = append(list, i.GetName())
 	}
 	return list
+}
+
+// IsLocked reports whether a race comes from the initial template cache.
+// Races added later with AddInConfig are intentionally not locked.
+func IsLocked(name string) bool {
+	if cachedConfig == nil {
+		List()
+	}
+	_, ok := lockedNames[name]
+	return ok
 }
 
 func FindByName(name string) *Race {

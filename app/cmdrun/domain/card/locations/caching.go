@@ -23,8 +23,10 @@ type yamlConfig struct {
 var folderConfigPath = config.Current.Documents.Folders.Locations
 
 var cachedConfig []yamlConfig
+var lockedNames map[string]struct{}
 
 func load() error {
+	lockedNames = make(map[string]struct{})
 	folderContents, err := loadFromFolder()
 	if err != nil {
 		return err
@@ -88,6 +90,7 @@ func loadFromFile(fileAddress string) error {
 	variety.MakeDefault(params.Variety)
 
 	cachedConfig = append(cachedConfig, *params)
+	lockedNames[params.Name] = struct{}{}
 
 	return nil
 }
@@ -106,6 +109,15 @@ func List() []Location {
 	}
 
 	return makeSet(cachedConfig)
+}
+
+// IsLocked reports whether a location comes from the initial template cache.
+func IsLocked(name string) bool {
+	if cachedConfig == nil {
+		List()
+	}
+	_, ok := lockedNames[name]
+	return ok
 }
 
 func makeSet(configs []yamlConfig) []Location {

@@ -10,6 +10,12 @@ cmd.shift+enter:open:
   other: "Shift+Enter: Open"
 cmd.shift+enter:roll:
   other: "Shift+Enter: Roll"
+cmd.ctrl+n:new:
+  other: "Ctrl+N: New"
+cmd.alt+enter:validate:
+  other: "Alt+Enter: Validate"
+cmd.alt+enter:open:
+  other: "Alt+Enter: Open"
 
 # Options
 accept:

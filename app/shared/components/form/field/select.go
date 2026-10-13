@@ -2,6 +2,7 @@ package field
 
 import (
 	"fmt"
+	"reflect"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
@@ -22,7 +23,7 @@ type selectField[T any] struct {
 
 type SelectTemplate[T any] struct {
 	Template[T]
-	Options      []models.Item[T]
+	Options []models.Item[T]
 }
 
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
@@ -34,6 +35,12 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	options := list.New(items, list.NewDefaultDelegate(), 15, 10)
 	models.ConfigureList(&options)
 	models.SetListFocus(&options, false)
+	for i, option := range template.Options {
+		if reflect.DeepEqual(option.Value(), template.Defaultvalue) {
+			options.Select(i)
+			break
+		}
+	}
 
 	return &selectField[T]{
 		field:   newField(template.ID, template.Label, SELECT, template.Defaultvalue, template.Validator, template.Required, template.NoLabel),

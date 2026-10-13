@@ -91,6 +91,35 @@ func (tb *ObjectsTable) Summaries() []string {
 	return []string{content.String()}
 }
 
+func (tb *ObjectsTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
+		if entry.Object == nil {
+			continue
+		}
+		name, description := entry.Object.GetName(), entry.Object.GetDescription()
+		entries = append(entries, Entry{Title: name, Description: description, Values: map[string]string{
+			"name": name, "description": description, "category": entry.Object.Category.String(),
+		}})
+	}
+	return entries
+}
+
+func (tb *ObjectsTable) SaveFromMappedValues(index int, values map[string]string) error {
+	if index < 0 {
+		return tb.AddFromMappedValues(values)
+	}
+	oldLen := len(tb.Entries)
+	if err := tb.AddFromMappedValues(values); err != nil {
+		return err
+	}
+	if index < oldLen {
+		tb.Entries[index] = tb.Entries[oldLen]
+		tb.Entries = tb.Entries[:oldLen]
+	}
+	return nil
+}
+
 // - Helper --//
 func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error

@@ -118,6 +118,45 @@ func (tb *NpcsTable) Summaries() []string {
 	return []string{content.String()}
 }
 
+func (tb *NpcsTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
+		if entry.Character == nil {
+			continue
+		}
+		character := entry.Character
+		values := map[string]string{
+			"name": character.Name, "description": character.Description.Description,
+			"class": character.Class, "race": character.Race,
+		}
+		for stat, value := range character.Stats.MappedString() {
+			values[stat] = transform.ParseAsString(value)
+		}
+		entries = append(entries, Entry{
+			Title:       character.Name,
+			Description: character.Race,
+			Values:      values,
+			Locked:      characters.IsLocked(character.Name),
+		})
+	}
+	return entries
+}
+
+func (tb *NpcsTable) SaveFromMappedValues(index int, values map[string]string) error {
+	if index < 0 {
+		return tb.AddFromMappedValues(values)
+	}
+	oldLen := len(tb.Entries)
+	if err := tb.AddFromMappedValues(values); err != nil {
+		return err
+	}
+	if index < oldLen {
+		tb.Entries[index] = tb.Entries[oldLen]
+		tb.Entries = tb.Entries[:oldLen]
+	}
+	return nil
+}
+
 // - Helper --//
 func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error

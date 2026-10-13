@@ -4,310 +4,94 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
+	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
+	"solopg/app/shared/components/formpage"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
 	"solopg/config"
-
-	tea "charm.land/bubbletea/v2"
 )
 
-// - Side panel - //
 func makeCodexList(params CodexMenuParams) []*codexMenuItem {
-	pages := []*codexMenuItem{
-		newMenuItem(sideMenuItemsParams{
-			id:    "codex.locations",
-			table: params.Codex.LocationsTable,
-			form:  getLocationForm,
-		}),
-		newMenuItem(sideMenuItemsParams{
-			id:    "codex.npcs",
-			table: params.Codex.NpcsTable,
-			form:  getNpcForm,
-		}),
-		newMenuItem(sideMenuItemsParams{
-			id:    "codex.beastiary",
-			table: params.Codex.BeastiaryTable,
-			form:  getBeastiaryForm,
-		}),
-		newMenuItem(sideMenuItemsParams{
-			id:    "codex.objects",
-			table: params.Codex.ObjectsTable,
-			form:  getObjectForm,
-		}),
-		newMenuItem(sideMenuItemsParams{
-			id:    "codex.objectives",
-			table: params.Codex.ObjectifsTable,
-			form:  getObjectifForm,
-		}),
+	return []*codexMenuItem{
+		{id: "codex.locations"},
+		{id: "codex.npcs"},
+		{id: "codex.beastiary"},
+		{id: "codex.objects"},
+		{id: "codex.objectives"},
 	}
-
-	return pages
 }
 
-// - Getters & Setters - //
-// Codex menu
-func (m *codexMenu) getCurrentPage() *codexMenuItem {
-	for _, item := range m.GetList().Items() {
-
-		if page, ok := item.(models.Item[*codexMenuItem]); !ok {
-			continue
-		} else if page.Value().isOpen {
-			return page.Value()
-		}
+// NewFormPages creates the pages owned by the gameboard state machine. The
+// side menu only selects one of these page IDs.
+func NewFormPages(c *codex.Codex) map[string]*formpage.FormPage {
+	return map[string]*formpage.FormPage{
+		"codex.locations":  newFormPage(c.LocationsTable, getLocationForm),
+		"codex.npcs":       newFormPage(c.NpcsTable, getNpcForm),
+		"codex.beastiary":  newFormPage(c.BeastiaryTable, getBeastiaryForm),
+		"codex.objects":    newFormPage(c.ObjectsTable, getObjectForm),
+		"codex.objectives": newFormPage(c.ObjectifsTable, getObjectifForm),
 	}
-	return nil
 }
 
-func (m *codexMenu) getSelectedPage() *codexMenuItem {
-	if item, ok := m.GetList().SelectedItem().(models.Item[*codexMenuItem]); ok {
-		return item.Value()
-	}
-	return nil
-}
-
-// Codex menu iteme
-func (m *codexMenuItem) setOpen(open bool) {
-	if open {
-		m.isOpen = true
-		return
-	}
-
-	m.isOpen = false
-	m.showForm = false
-}
-
-func (m *codexMenuItem) setShowForm(show bool) {
-	state := "closed"
-	if show {
-		state = "opened"
-	}
-
-	logs.SilentInfo("navigation."+state, map[string]any{
-		"Subject": "form",
-		"Value":   m.id,
+func newFormPage(table codex.Table, makeForm func(map[string]string) *form.Form) *formpage.FormPage {
+	return formpage.New(formpage.Template{
+		Items: func() []formpage.Item {
+			entries := table.FormEntries()
+			items := make([]formpage.Item, 0, len(entries))
+			for _, entry := range entries {
+				items = append(items, formpage.Item{
+					Title:       i19n.Localize(entry.Title),
+					Description: i19n.Localize(entry.Description),
+					Values:      entry.Values,
+					Locked:      entry.Locked,
+				})
+			}
+			return items
+		},
+		NewForm: makeForm,
+		Save:    table.SaveFromMappedValues,
 	})
-
-	m.showForm = show
 }
 
-func (m *codexMenuItem) toggleShowForm() {
-	m.showForm = !m.showForm
-}
-
-// - Helper - //
-// Input
-func (m *codexMenu) handleKeyEsc(msg tea.KeyPressMsg) tea.Cmd {
-	currentPage := m.getCurrentPage()
-
-	if currentPage == nil {
-		return nil
-	}
-
-	if currentPage.showForm {
-		currentPage.toggleShowForm()
-		return sendMsg()
-	}
-
-	if currentPage.isOpen {
-		currentPage.isOpen = false
-		return sendMsg()
-	}
-
-	return sendMsg()
-}
-
-func (m *codexMenu) handleKeyShiftEnter(msg tea.KeyPressMsg) tea.Cmd {
-	currentPage := m.getCurrentPage()
-
-	if currentPage != nil && m.IsOpen() {
-		if currentPage.showForm {
-			return form.SendMsg[form.Validate]()
-		}
-
-		currentPage.form = currentPage.newForm()
-		currentPage.setShowForm(true)
-		return sendMsg()
-	}
-
-	if selectedPage := m.getSelectedPage(); selectedPage != nil {
-		m.handleOpenPage(selectedPage)
-	}
-
-	return sendMsg()
-}
-
-// Page
-func (m *codexMenu) handleOpenPage(selected *codexMenuItem) {
-	for _, item := range m.GetList().Items() {
-		item, ok := item.(models.Item[*codexMenuItem])
-
-		if page := item.Value(); ok && page != selected {
-
-			logs.SilentInfo("navigation.closed", map[string]any{
-				"Subject": "page",
-				"Value":   page.id,
-			})
-
-			page.setOpen(false)
-		}
-	}
-
-	logs.SilentInfo("navigation.open", map[string]any{
-		"Subject": "page",
-		"Value":   selected.id,
-	})
-
-	selected.setOpen(true)
-}
-
-func (m *codexMenu) updatePageOnRedirection() {
-	currentPage := m.getCurrentPage()
-
-	if currentPage != nil && m.IsOpen() {
-		selected := m.getSelectedPage()
-		m.handleOpenPage(selected)
-	}
-}
-
-// Form
 func getFormRaceOptions() []models.Item[string] {
-	var raceItems []models.Item[string]
-	for _, i := range races.List() {
-		raceItems = append(raceItems, models.NewItem(i19n.Localize(i.GetName()), "", i.GetName()))
+	items := make([]models.Item[string], 0)
+	for _, value := range races.List() {
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
 	}
-	return raceItems
+	return items
 }
 
 func getFormClassOptions() []models.Item[string] {
-	var classItems []models.Item[string]
-	for _, i := range classes.List() {
-		classItems = append(classItems, models.NewItem(i19n.Localize(i.GetName()), "", i.GetName()))
+	items := make([]models.Item[string], 0)
+	for _, value := range classes.List() {
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
 	}
-	classItems = append(classItems, models.NewItem("None", "", ""))
-	return classItems
+	return append(items, models.NewItem("None", "", ""))
 }
 
 func getFormOracle() []models.Item[string] {
-	list, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
+	values, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
 	if err != nil {
 		return nil
 	}
-
-	var oracleItems []models.Item[string]
-	for _, i := range list {
-		oracleItems = append(oracleItems, models.NewItem(i19n.Localize("oracles."+i), "", i))
+	items := make([]models.Item[string], 0, len(values))
+	for _, value := range values {
+		items = append(items, models.NewItem(i19n.Localize("oracles."+value), "", value))
 	}
-
-	return oracleItems
+	return items
 }
 
-func getFormStatsFields() []form.Field {
-	fields := []form.Field{}
-
-	for _, i := range stats.List() {
-		f := field.TextField(field.TextTemplate[string]{
-			ID:           i.String(),
-			Label:        i19n.Localize(i.String()),
-			Validator:    nil,
-			Required:     false,
-			Defaultvalue: "",
-		})
-		fields = append(fields, f)
+func getFormStatsFields(values map[string]string) []form.Field {
+	fields := make([]form.Field, 0)
+	for _, value := range stats.List() {
+		fields = append(fields, field.TextField(field.TextTemplate[string]{
+			ID:           value.String(),
+			Label:        i19n.Localize(value.String()),
+			Defaultvalue: values[value.String()],
+		}))
 	}
-
 	return fields
-}
-
-func (m *codexMenu) handleFormSubmit(msg tea.Msg) tea.Cmd {
-	currentPage := m.getCurrentPage()
-	if currentPage == nil {
-		return nil
-	}
-
-	currentForm := currentPage.form
-	if currentForm == nil {
-		return nil
-	}
-
-	currentForm.Submit()
-
-	if currentForm.HasErr() {
-		return form.SendErrorMsg(currentForm.GetErr())
-	}
-
-	logs.SilentInfo("form.submitted", map[string]any{
-		"Form": currentPage.id,
-	})
-
-	return m.handleFormPost()
-}
-
-func (m *codexMenu) handleFormPost() tea.Cmd {
-	currentPage := m.getCurrentPage()
-	if currentPage == nil {
-		return nil
-	}
-
-	currentForm := currentPage.form
-	if currentForm == nil {
-		return nil
-	}
-
-	err := currentPage.table.AddFromMappedValues(currentForm.GetValuesAsMappedString())
-	if err != nil {
-		currentPage.form.SetErr(err)
-		return form.SendErrorMsg(err)
-	}
-
-	currentPage.setShowForm(false)
-
-	logs.SilentSuccess("form.post", map[string]any{
-		"Form": currentPage.id,
-	})
-
-	return sendMsg()
-}
-
-// func (m *codexMenu) handleFormScroll(msg tea.KeyPressMsg) tea.Cmd {
-// 	form := m.GetFormFromCurrentPage()
-// 	if form == nil {
-// 		return  nil
-// 	}
-
-// 	currentPage := m.getCurrentPage()
-// 	pageHeader := lipgloss.NewStyle().
-// 		// Width(params.Viewport.Width()).
-// 		Render(currentPage.GetPageHeader())
-
-// 	// viewTop, viewHight := form.GetFieldScrollArea(params.Viewport)
-// 	// viewHight += lipgloss.Height(pageHeader) ;
-
-// 	return  sharedtui.SendScrollMsg(viewTop, viewHight)
-// }
-
-func (m *codexMenu) handleFormError(msg tea.Msg) tea.Cmd {
-	return sendMsg()
-}
-
-func (m *codexMenu) delegateInputToForm(msg tea.Msg) tea.Cmd {
-	currentPage := m.getCurrentPage()
-
-	if currentPage == nil {
-		return nil
-	}
-
-	if !currentPage.showForm {
-		return nil
-	}
-
-	_, cmd := currentPage.form.Update(msg)
-
-	return tea.Batch(
-		cmd,
-		sendMsg(),
-	)
 }
