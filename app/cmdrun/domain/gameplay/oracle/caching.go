@@ -164,7 +164,7 @@ func List() []Oracle {
 	}
 
 	return makeSet(cachedConfig)
-}	
+}
 
 func ListVisible() []Oracle {
 	oracles := List()

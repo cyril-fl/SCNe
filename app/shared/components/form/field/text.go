@@ -23,7 +23,7 @@ type textField[T stringOrInt] struct {
 
 type TextTemplate[T stringOrInt] struct {
 	Template[T]
-	Input        textinput.Model
+	Input       textinput.Model
 	Placeholder string
 }
 
@@ -60,7 +60,6 @@ func (m *textField[T]) View() tea.View {
 
 	}
 }
-
 
 // Getters & Setters
 func (f *textField[T]) GetValueAsString() string {

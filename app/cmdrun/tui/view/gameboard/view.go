@@ -4,20 +4,23 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/services/factory/milldice"
-	"solopg/app/cmdrun/services/factory/millhint"
-	"solopg/app/cmdrun/services/factory/milloracle"
-	"solopg/app/cmdrun/services/factory/roll"
+	"solopg/app/cmdrun/services/factory/millroll"
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/tui/view/sidemenu/metadatamenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/statemachine"
+	interfass "solopg/app/shared/types/interface"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 )
+
+type state = string
+
+const CHAT_SECTION state = "chat"
 
 func (m model) View() tea.View {
 	msg := "404 - Not Found"
@@ -48,10 +51,35 @@ func (m *model) SetSectionSize(size size.Size) {
 
 func (m model) GetFooter() []string {
 	footer := []string{i19n.Localize("cmd.ctrl+s:save")}
-	return append(footer, m.state.getFooter()...)
+	// TODO uniformier les comportement avec seulement alt + , ou shit + pour le side menu, dice, oracle ect on les deuw.
+	footer = append(footer, m.state.GetFooter()...)
+	footer = append(footer, m.menu.GetFooter()...)
+
+	return footer
 }
 
 // Methods
+func makeViewState(params UiParams) statemachine.ViewState[state] {
+	params.Engine.State.Codex.EnsureInitialized()
+
+	pages := codexmenu.NewFormPages(params.Engine.State.Codex)
+	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Engine)}
+
+	transitions := map[state][]state{CHAT_SECTION: {}}
+
+	for id, page := range pages {
+		step := state(id)
+		views[step] = page
+		transitions[CHAT_SECTION] = append(transitions[CHAT_SECTION], step)
+		transitions[step] = []state{CHAT_SECTION}
+	}
+
+	return statemachine.NewView[state](statemachine.TemplateViewState[state]{
+		Base:       CHAT_SECTION,
+		Transition: transitions,
+		Views:      views,
+	})
+}
 
 // Helpers
 func makeStatView(engine *game.Engine) string {
@@ -63,34 +91,34 @@ func makeStatView(engine *game.Engine) string {
 	return strings.TrimRight(content.String(), "\n")
 }
 
-func makePanelPart(engine *game.Engine) []navigation.Item {
+func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 	codex := engine.State.Codex
 	codex.EnsureInitialized()
 
-	list := []navigation.Item{}
-	row := []navigation.Item{
-		navigation.NewMenu(navigation.TemplateMenu[oracle.Oracle]{
+	list := []navigation.SectionInterface{}
+	row := []navigation.SectionInterface{
+		navigation.NewSection(navigation.TemplateSection[oracle.Oracle]{
 			ID:      "oracles",
 			Options: oracle.ListVisible(),
 			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
 			HandleEnterInput: func(value oracle.Oracle) tea.Cmd {
-				return roll.Execute(milloracle.New(value))
+				return millroll.Execute(millroll.Oracles(value))
 			},
 		}),
-		navigation.NewMenu(navigation.TemplateMenu[dice.Dice]{
+		navigation.NewSection(navigation.TemplateSection[dice.Dice]{
 			ID:      "dice",
 			Options: dice.List(),
 			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
 			HandleEnterInput: func(value dice.Dice) tea.Cmd {
-				return roll.Execute(milldice.New(value))
+				return millroll.Execute(millroll.Dice(value))
 			},
 		}),
-		navigation.NewMenu(navigation.TemplateMenu[hint.Hint]{
+		navigation.NewSection(navigation.TemplateSection[hint.Hint]{
 			ID:      "hint",
 			Options: hint.List(),
 			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
 			HandleEnterInput: func(value hint.Hint) tea.Cmd {
-				return roll.Execute(millhint.New(value))
+				return millroll.Execute(millroll.Hint(value))
 			},
 		}),
 		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{

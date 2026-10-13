@@ -1,13 +1,14 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/services/factory/roll"
+	"solopg/app/cmdrun/services/factory/millroll"
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/formpage"
 	"solopg/app/shared/components/navigation"
+	"solopg/app/shared/services/statemachine"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 
@@ -19,7 +20,7 @@ import (
 type model struct {
 	primitive.Fallible
 
-	state  statemachine
+	state  statemachine.ViewState[state]
 	menu   *navigation.Navigation
 	engine *game.Engine
 	save   func() error
@@ -33,10 +34,10 @@ type UiParams struct {
 
 func NewModel(params UiParams) *model {
 	return &model{
-		state: newstate(params),
+		state: makeViewState(params),
 		menu: navigation.New(navigation.Template{
-			Static: []string{makeStatView(params.Engine)},
-			Parts:  makePanelPart(params.Engine),
+			Static:     []string{makeStatView(params.Engine)},
+			Scrollable: makePanelPart(params.Engine),
 		}),
 		engine: params.Engine,
 		save:   params.OnSave,
@@ -64,42 +65,22 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case codexmenu.OpenPageMsg:
-		m.state.HandleTransition(CHAT_SECTION, state(msg.ID))
-		return m, nil
+		m.state.HandleTransition(state(msg.ID))
 	case formpage.CloseMsg:
-		m.state.HandleTransition(m.state.Current(), CHAT_SECTION)
-		return m, nil
+		m.state.HandleTransition(CHAT_SECTION)
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
-	case roll.RollResultMsg:
+	case millroll.ResultMsg:
 		m.state.Amend(msg.Content)
-		return m, nil
-
-	// Cmd messages
-	// case codexmenu.Msg:
-	// 	return m.handleCodexAction(msg)
-	// case dicemenu.Msg:
-	// 	return m.handleDiceRolled(msg)
-	// case hintmenu.Msg:
-	// 	return m.handleHintRolled(msg)
-	// case oraclemenu.Msg:
-	// 	return m.handleOracleRolled(msg)
-
 	case sharedtui.SaveMsg:
 		return m.handleSaveInput(msg)
-	// case sharedtui.ScrollMsg:
-	// 	return m.handleViewportScroll(msg)
-	// case sharedtui.Refresh:
-	// 	return m.handleViewRefresh(msg)
 	case sharedtui.ErrorMsg:
 		return m.handleError(msg)
-
 	}
 
 	return m, nil
 }
 
-// Helpers
 func makeChat(engine *game.Engine) *chat.Chat {
 	return chat.New(chat.Template{
 		Author:  initAuthor(engine),
@@ -120,11 +101,9 @@ func initAuthor(engine *game.Engine) string {
 
 func initJournal(engine *game.Engine) []string {
 	raw := make([]string, 0, len(engine.State.AdventureLog.Entries))
-
 	for _, entry := range engine.State.AdventureLog.Entries {
 		raw = append(raw, entry.String())
 	}
-
 	return raw
 }
 
@@ -132,3 +111,5 @@ func initJournal(engine *game.Engine) []string {
 func (m model) HandlesEscape() bool {
 	return true
 }
+
+// Helpers

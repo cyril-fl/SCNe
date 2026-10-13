@@ -35,7 +35,7 @@ func (v *Layout) MergeSection(other tea.Model) {
 
 func (v *Layout) getAvailableSectionSize() size.Size {
 	return size.New(size.Template{
-		Width:  v.size.GetWidth()  - v.getSidepanelWidth(),
+		Width:  v.size.GetWidth() - v.getSidepanelWidth(),
 		Height: v.getHeightWithinBorder() - v.getHeaderHeight() - v.getFooterHeight(),
 	})
 }

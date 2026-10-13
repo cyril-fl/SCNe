@@ -17,7 +17,7 @@ type Navigation struct {
 	cache
 
 	static []string
-	part   []Item
+	scroll []SectionInterface
 	size   size.Size
 	view   viewport.Model
 }
@@ -27,51 +27,51 @@ type cache struct {
 }
 
 type Template struct {
-	Static []string
-	Parts  []Item
-}
-
-type ItemTemplate struct {
-	Focused bool
+	Static     []string
+	Scrollable []SectionInterface
 }
 
 func New(template Template) *Navigation {
 	return &Navigation{
 		static: template.Static,
-		part:   template.Parts,
+		scroll: template.Scrollable,
 		view:   viewport.New(),
 	}
 }
 
 // Getters & Setters
 func (n *Navigation) GetView() string {
-	content, partStarts := n.makeContent()
+	content, contentoffsets := makeNavigationContent(n.scroll)
+
 	n.view.SetContent(content)
-
-	if n.getActiveItem() != nil {
-		n.view.EnsureVisible(partStarts[n.cache.active], 0, 0)
-	}
-
-	body := n.makeBody()
+	n.setOffset(contentoffsets)
 
 	return panelStyle().
 		Width(n.size.GetWidth()).
 		Height(n.size.GetHeight()).
-		Render(body)
+		Render(n.makeBody())
+}
+
+func (n *Navigation) GetFooter() []string {
+	footer := []string{}
+	if current := n.getActiveItem(); current != nil {
+		footer = append(footer, current.GetFooter()...)
+	}
+	return footer
 }
 
 func (n *Navigation) getStaticView() string {
 	return strings.Join(n.static, "\n")
 }
 
-func (n *Navigation) SetSize(panelSize size.Size) {
-	n.size = panelSize
+func (n *Navigation) SetSize(newsize size.Size) {
+	n.size = newsize
 	style := panelStyle()
 
 	w := max(0, n.size.GetWidth()-style.GetHorizontalFrameSize())
 	h := max(0, n.size.GetHeight()-style.GetVerticalFrameSize())
 
-	if static := n.getStaticView(); static != "" && len(n.part) > 0 {
+	if static := n.getStaticView(); static != "" && len(n.scroll) > 0 {
 		h -= lipgloss.Height(static) + 1
 	}
 
@@ -80,7 +80,7 @@ func (n *Navigation) SetSize(panelSize size.Size) {
 	n.view.SetWidth(w)
 	n.view.SetHeight(h)
 
-	for _, item := range n.part {
+	for _, item := range n.scroll {
 		item.SetSize(size.New(size.Template{
 			Width:  w,
 			Height: h,
@@ -88,21 +88,27 @@ func (n *Navigation) SetSize(panelSize size.Size) {
 	}
 }
 
-func (n *Navigation) getActiveItem() Item {
-	if len(n.part) == 0 {
+func (n *Navigation) setOffset(offsets []int) {
+	if n.getActiveItem() != nil {
+		n.view.EnsureVisible(offsets[n.cache.active], 0, 0)
+	}
+}
+
+func (n *Navigation) getActiveItem() SectionInterface {
+	if len(n.scroll) == 0 {
 		return nil
 	}
-	return n.part[n.cache.active]
+	return n.scroll[n.cache.active]
 }
 
 // Methods
-func (n *Navigation) Merge(items ...Item) *Navigation {
-	n.part = append(n.part, items...)
+func (n *Navigation) Merge(items ...SectionInterface) *Navigation {
+	n.scroll = append(n.scroll, items...)
 	return n
 }
 
-func (n *Navigation) Add(item Item) *Navigation {
-	n.part = append(n.part, item)
+func (n *Navigation) Add(item SectionInterface) *Navigation {
+	n.scroll = append(n.scroll, item)
 	return n
 }
 
@@ -111,13 +117,12 @@ func (n *Navigation) HandleUpdate(msg tea.Msg) tea.Cmd {
 	if current == nil {
 		return nil
 	}
+
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
-			if openable, ok := current.(Openable); !ok || !openable.IsOpen() {
-				n.handleDirectionInput(msg)
-			}
+			n.handleDirectionInput(msg)
 		}
 	}
 
@@ -128,20 +133,16 @@ func (n *Navigation) HandleUpdate(msg tea.Msg) tea.Cmd {
 func (n *Navigation) handleDirectionInput(key tea.KeyPressMsg) {
 	currentMenu := n.getActiveItem()
 
-	direction := HandleKeyArrow(Context{
-		Menu:             currentMenu,
-		CurrentMenuIndex: n.cache.active,
-		SibblingCount:    len(n.part),
+	direction := handleKeyArrow(context{
+		section: currentMenu,
 	}, key)
 
 	n.updateMenuDirection(direction)
-
-	// currentMenu.HandleDirectionInput(direction)
 }
 
 func (n *Navigation) updateMenuDirection(msg direction.Direction) {
 	previousMenuIndex := n.cache.active
-	menuLength := len(n.part)
+	menuLength := len(n.scroll)
 
 	switch msg {
 	case direction.PREVIOUS:
@@ -155,45 +156,32 @@ func (n *Navigation) updateMenuDirection(msg direction.Direction) {
 	}
 
 	if previousMenuIndex != n.cache.active {
-		n.part[previousMenuIndex].SetFocus(false)
-		n.part[n.cache.active].SetFocus(true)
+		n.scroll[previousMenuIndex].SetFocus(false)
+		n.scroll[n.cache.active].SetFocus(true)
 	}
-}
-
-func (n *Navigation) makeContent() (string, []int) {
-	blocks := make([]string, 0, len(n.part))
-	partStarts := make([]int, len(n.part))
-	offset := 0
-
-	for i, item := range n.part {
-		partStarts[i] = offset
-		block := item.GetMenuView()
-		if i == n.cache.active {
-			if view := item.GetView(); view != "" {
-				block = view
-			}
-		}
-		blocks = append(blocks, block)
-		offset += max(1, lipgloss.Height(block))
-	}
-
-	return strings.Join(blocks, "\n"), partStarts
 }
 
 func (n *Navigation) makeBody() string {
+	static := n.getStaticView()
 	body := n.view.View()
-	if static := n.getStaticView(); static != "" {
-		if body != "" {
-			body = static + "\n" + body
-		} else {
-			body = static
-		}
+
+	if static == "" {
+		return body
 	}
-	return body
+
+	if body == "" {
+		return static
+	}
+
+	return static + "\n" + body
 }
 
 // Helpers
+type context struct {
+	section SectionInterface
+}
 
+// TODO LOW deplacer ça dans un factory qui gerer les style
 func panelStyle() lipgloss.Style {
 	return lipgloss.NewStyle().
 		Padding(0, 1).

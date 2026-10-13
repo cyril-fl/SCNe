@@ -32,8 +32,6 @@ func (i *testItem) SetList(value *list.Model) { i.list = *value }
 
 func (i *testItem) SetSize(size.Size) {}
 
-func (i *testItem) GetMenuView() string { return i.content }
-
 func (i *testItem) GetView() string { return i.content }
 
 func (i *testItem) GetFooter() []string { return nil }
@@ -41,14 +39,14 @@ func (i *testItem) GetFooter() []string { return nil }
 func (i *testItem) HandleUpdate(tea.Msg) tea.Cmd { return nil }
 
 func newTestNavigation(contents []string, viewportHeight int) *Navigation {
-	parts := make([]Item, 0, len(contents))
+	parts := make([]SectionInterface, 0, len(contents))
 	for _, content := range contents {
 		parts = append(parts, newTestItem(content))
 	}
 
 	navigation := New(Template{
-		Static: []string{"static"},
-		Parts:  parts,
+		Static:     []string{"static"},
+		Scrollable: parts,
 	})
 	navigation.SetSize(size.New(size.Template{
 		Width:  24,

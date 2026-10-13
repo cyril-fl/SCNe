@@ -90,8 +90,8 @@ func (v *Layout) getWidthtWithinBorder() int {
 
 // Methods
 func (v *Layout) makeVstack() string {
-	tojoin := []string {}
-	raw := []string {
+	tojoin := []string{}
+	raw := []string{
 		v.makeHeaderView(),
 		v.makeSectionView(),
 		v.makeFooterView(),
@@ -105,7 +105,7 @@ func (v *Layout) makeVstack() string {
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		tojoin...
+		tojoin...,
 	)
 }
 

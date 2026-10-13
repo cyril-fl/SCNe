@@ -91,7 +91,7 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 		return c.handleSpinnerTick(msg)
 	// case cursor.BlinkMsg:
 	// 		return c.handleCursorBlink(msg)
-	
+
 	case tea.KeyMsg:
 		return c.handleInput(msg)
 	}
@@ -145,7 +145,7 @@ func (c *Chat) makeSavingNotification() string {
 			Foreground(lipgloss.Color("2")).
 			Render(c.spinner.View())
 
-		 m := lipgloss.NewStyle().
+		m := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("240")).
 			Render(i19n.Localize("chat.msg:saving"))
 

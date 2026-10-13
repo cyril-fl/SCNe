@@ -12,7 +12,7 @@ func (v testNamed) GetName() string { return string(v) }
 
 func TestMenuEnterCallbackReceivesSelectedValue(t *testing.T) {
 	var selected testNamed
-	menu := NewMenu(TemplateMenu[testNamed]{
+	menu := NewSection(TemplateSection[testNamed]{
 		ID:      "test",
 		Options: []testNamed{"first", "second"},
 		HandleEnterInput: func(value testNamed) tea.Cmd {

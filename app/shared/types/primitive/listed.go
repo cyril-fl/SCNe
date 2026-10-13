@@ -2,20 +2,20 @@ package primitive
 
 import "charm.land/bubbles/v2/list"
 
-type Listed struct {
-	list    list.Model
+type List struct {
+	list list.Model
 }
 
-func NewListed(listModel list.Model) Listed {
-	return Listed{
+func Listed(listModel list.Model) List {
+	return List{
 		list: listModel,
 	}
 }
 
-func (m *Listed) GetList() *list.Model {
+func (m *List) GetList() *list.Model {
 	return &m.list
 }
 
-func (m *Listed) SetList(list *list.Model) {
+func (m *List) SetList(list *list.Model) {
 	m.list = *list
 }
