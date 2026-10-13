@@ -128,6 +128,42 @@ func (tb *BeastiaryTable) Summaries() []string {
 	return []string{content.String()}
 }
 
+func (tb *BeastiaryTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
+		if entry.Race == nil {
+			continue
+		}
+		name, description := entry.Race.GetName(), entry.Race.GetDescription()
+		values := map[string]string{"name": name, "description": description}
+		for _, modifier := range entry.Race.GetBonus() {
+			values[modifier.Stat.String()] = transform.ParseAsString(modifier.Value)
+		}
+		entries = append(entries, Entry{
+			Title:       name,
+			Description: description,
+			Values:      values,
+			Locked:      races.IsLocked(name),
+		})
+	}
+	return entries
+}
+
+func (tb *BeastiaryTable) SaveFromMappedValues(index int, values map[string]string) error {
+	if index < 0 {
+		return tb.AddFromMappedValues(values)
+	}
+	oldLen := len(tb.Entries)
+	if err := tb.AddFromMappedValues(values); err != nil {
+		return err
+	}
+	if index < oldLen {
+		tb.Entries[index] = tb.Entries[oldLen]
+		tb.Entries = tb.Entries[:oldLen]
+	}
+	return nil
+}
+
 // - Helper --//
 func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 	var err []error

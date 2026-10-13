@@ -82,6 +82,35 @@ func (tb *LocationsTable) Summaries() []string {
 	return []string{content.String()}
 }
 
+func (tb *LocationsTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(tb.Entries))
+	for _, entry := range tb.Entries {
+		if entry.Location == nil {
+			continue
+		}
+		name, description := entry.Location.GetName(), entry.Location.GetDescription()
+		entries = append(entries, Entry{Title: name, Description: description, Values: map[string]string{
+			"name": name, "description": description,
+		}, Locked: locations.IsLocked(name)})
+	}
+	return entries
+}
+
+func (tb *LocationsTable) SaveFromMappedValues(index int, values map[string]string) error {
+	if index < 0 {
+		return tb.AddFromMappedValues(values)
+	}
+	oldLen := len(tb.Entries)
+	if err := tb.AddFromMappedValues(values); err != nil {
+		return err
+	}
+	if index < oldLen {
+		tb.Entries[index] = tb.Entries[oldLen]
+		tb.Entries = tb.Entries[:oldLen]
+	}
+	return nil
+}
+
 func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
 	for i, entry := range tb.Entries {
 		if entry.Location != nil && entry.Location.Name == name {
