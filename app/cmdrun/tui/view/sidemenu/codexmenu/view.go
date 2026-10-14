@@ -13,8 +13,9 @@ func (m *codexMenu) GetMenuView() string {
 	return lipgloss.JoinVertical(lipgloss.Left, title, "", m.GetList().View())
 }
 
-// Content is rendered by the gameboard state machine in the main section.
-func (m *codexMenu) GetView() string { return "" }
+// The Codex selector remains visible in the side panel; the selected page is
+// rendered separately by the gameboard state machine.
+func (m *codexMenu) GetView() string { return m.Section.GetView() }
 
 func (m *codexMenu) GetFooter() []string {
 	return []string{i19n.Localize("cmd.alt+enter:open")}
