@@ -2,6 +2,13 @@ package primitive
 
 import "errors"
 
+type FallibleInterface interface {
+	// ClearErr()
+	GetErr() error
+	SetErr(err error)
+	HasErr() bool
+}
+
 type Fallible struct {
 	errs []error
 }

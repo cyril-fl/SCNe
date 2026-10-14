@@ -3,12 +3,11 @@ package process
 import "solopg/app/shared/types/primitive"
 
 // Interface
-type Processable interface {
-	Run()
 
-	GetErr() error
-	SetErr(err error)
-	HasErr() bool
+
+type Processable interface {
+	primitive.FallibleInterface
+	primitive.Runnable
 }
 
 type ProcessableResult[T any] interface {
