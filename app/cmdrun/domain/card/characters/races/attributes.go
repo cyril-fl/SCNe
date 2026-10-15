@@ -30,8 +30,8 @@ func New(params Template) Race {
 			Name:        params.Name,
 			Description: params.Description,
 		}),
-		Playable:    params.Playable,
-		Bonus:       params.Bonus,
+		Playable: params.Playable,
+		Bonus:    params.Bonus,
 	}
 }
 

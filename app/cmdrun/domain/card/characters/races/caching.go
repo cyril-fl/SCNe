@@ -101,8 +101,8 @@ func newFromYaml(config yamlConfig) Race {
 			Name:        config.Name,
 			Description: config.Description,
 		}),
-		Playable:    config.Playable,
-		Bonus:       config.Bonus,
+		Playable: config.Playable,
+		Bonus:    config.Bonus,
 	}
 }
 

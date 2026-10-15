@@ -44,7 +44,7 @@ type Modifier struct {
 
 type Effect struct {
 	primitive.Descriptible `yaml:"description"`
-	Modifier                Modifier `yaml:"modifier"`
+	Modifier               Modifier `yaml:"modifier"`
 }
 
 func New(mods []Modifier) Stats {

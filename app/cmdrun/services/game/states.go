@@ -37,8 +37,8 @@ func NewState(data CampaignData) *State {
 		TimeHistory:     data.Campaign.TimeHistory,
 		Timer:           timer.New(),
 		Metadata: Metadata{
-			Archive: primitive.Dated(),
-			Campaign: primitive.Dated(),
+			Archive:  data.Archives.GetAge(),
+			Campaign: data.Campaign.GetAge(),
 		},
 	}
 }

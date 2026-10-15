@@ -27,7 +27,7 @@ type ArchivesTemplate struct {
 
 func NewArchives(params ArchivesTemplate) *Archives {
 	return &Archives{
-		Datable:    primitive.Dated(),
+		Datable: primitive.Dated(),
 
 		CampaignID: params.CampaignID,
 		Codex:      params.Codex,

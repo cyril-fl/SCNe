@@ -57,7 +57,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 			Name:        params.Name,
 			Description: params.Description,
 		}),
-		Rarity:      params.Rarity,
-		Variety:     params.Variety,
+		Rarity:  params.Rarity,
+		Variety: params.Variety,
 	}, nil
 }

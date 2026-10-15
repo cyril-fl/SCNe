@@ -1,12 +1,10 @@
 package primitive
 
-import "gopkg.in/yaml.v3"
-
 // TEST
 
 type Descriptible struct {
-	name        string
-	description string
+	Name        string `bson:"name" json:"name" yaml:"name"`
+	Description string `bson:"description" json:"description" yaml:"description"`
 }
 
 type TemplateDescriptible struct {
@@ -16,35 +14,24 @@ type TemplateDescriptible struct {
 
 func Describe(params TemplateDescriptible) Descriptible {
 	return Descriptible{
-		name:        params.Name,
-		description: params.Description,
+		Name:        params.Name,
+		Description: params.Description,
 	}
 }
 
 // Getters & Setters
 func (d Descriptible) GetName() string {
-	return d.name
+	return d.Name
 }
 
 func (d Descriptible) GetDescription() string {
-	return d.description
+	return d.Description
 }
 
 func (d *Descriptible) SetName(name string) {
-	d.name = name
+	d.Name = name
 }
 
 func (d *Descriptible) SetDescription(description string) {
-	d.description = description
-}
-
-func (d *Descriptible) UnmarshalYAML(value *yaml.Node) error {
-	var template TemplateDescriptible
-	if err := value.Decode(&template); err != nil {
-		return err
-	}
-
-	d.name = template.Name
-	d.description = template.Description
-	return nil
+	d.Description = description
 }
