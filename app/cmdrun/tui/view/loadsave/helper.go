@@ -3,6 +3,7 @@ package loadsave
 import (
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
@@ -19,7 +20,7 @@ func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.selected = selected.Value()
 		}
 		return m, func() tea.Msg {
-			return sharedtui.ResolutionMsg{
+			return messages.Resolved{
 				Completed: true,
 				Value:     m.selected,
 			}

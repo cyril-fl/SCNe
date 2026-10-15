@@ -115,8 +115,8 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.handleDirection(msg)
 		case sharedtui.KEY_ENTER:
 			return m, tea.Sequence(
-				form.SendMsg[form.NextField](),
-				form.SendMsg[form.Scroll](),
+				form.Send[form.NextField](),
+				form.Send[form.Scroll](),
 			)
 		}
 	default:
@@ -158,13 +158,13 @@ func (m *selectField[T]) handleDirection(msg tea.KeyPressMsg) (tea.Model, tea.Cm
 	switch newdirection {
 	case direction.NEXT:
 		return m, tea.Sequence(
-			form.SendMsg[form.NextField](),
-			form.SendMsg[form.Scroll](),
+			form.Send[form.NextField](),
+			form.Send[form.Scroll](),
 		)
 	case direction.PREVIOUS:
 		return m, tea.Sequence(
-			form.SendMsg[form.PreviousField](),
-			form.SendMsg[form.Scroll](),
+			form.Send[form.PreviousField](),
+			form.Send[form.Scroll](),
 		)
 	}
 	return m, nil

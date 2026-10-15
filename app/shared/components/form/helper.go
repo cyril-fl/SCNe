@@ -9,11 +9,11 @@ import (
 func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.KEY_TAB:
-		return m, SendMsg[NextField]()
+		return m, Send[NextField]()
 	case sharedtui.KEY_SHIFT_TAB:
-		return m, SendMsg[PreviousField]()
+		return m, Send[PreviousField]()
 	case m.sendKey:
-		return m, SendMsg[Validate]()
+		return m, Send[Validate]()
 	}
 	return m.updateFocusedField(msg)
 }

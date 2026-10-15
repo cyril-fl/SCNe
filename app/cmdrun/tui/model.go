@@ -8,7 +8,7 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/components/layout"
 	"solopg/app/shared/components/models"
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -51,7 +51,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		return m.handleEvent(msg)
 
-	case sharedtui.ResolutionMsg:
+	case messages.Resolved:
 		return m, m.steps.ResolveSubmodel(msg)
 
 	default:

@@ -7,9 +7,8 @@ import (
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/formpage"
 	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/services/factory/millroll"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/statemachine"
-	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 	"time"
 
@@ -26,10 +25,6 @@ type model struct {
 	engine *game.Engine
 	save   func() error
 	size   size.Size
-}
-
-type delayedResultMsg struct {
-	Content string
 }
 
 type UiParams struct {
@@ -75,15 +70,15 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 		m.state.HandleTransition(CHAT_SECTION)
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
-	case millroll.ResultMsg:
+	case messages.Result:
 		return m, tea.Tick(1500*time.Millisecond, func(time.Time) tea.Msg {
-			return delayedResultMsg{Content: msg.Content}
+			return messages.Delayed{Content: msg.Content}
 		})
-	case delayedResultMsg:
+	case messages.Delayed:
 		m.state.Amend(msg.Content)
-	case sharedtui.SaveMsg:
+	case messages.Saved:
 		return m.handleSaveInput(msg)
-	case sharedtui.ErrorMsg:
+	case messages.Failed:
 		return m.handleError(msg)
 	}
 

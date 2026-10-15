@@ -9,6 +9,7 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/metadatamenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/factory/millroll"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/statemachine"
@@ -104,7 +105,7 @@ func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 			HandleEnterInput: func(value oracle.Oracle) tea.Cmd {
 				return millroll.Execute(millroll.Oracles(value))
 			},
-			Msg: millroll.RollMsg{},
+			Msg: messages.Rolled{},
 		}),
 		navigation.NewSection(navigation.TemplateSection[dice.Dice]{
 			ID:      "dice",
@@ -113,7 +114,7 @@ func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 			HandleEnterInput: func(value dice.Dice) tea.Cmd {
 				return millroll.Execute(millroll.Dice(value))
 			},
-			Msg: millroll.RollMsg{},
+			Msg: messages.Rolled{},
 		}),
 		navigation.NewSection(navigation.TemplateSection[hint.Hint]{
 			ID:      "hint",
@@ -122,7 +123,7 @@ func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 			HandleEnterInput: func(value hint.Hint) tea.Cmd {
 				return millroll.Execute(millroll.Hint(value))
 			},
-			Msg: millroll.RollMsg{},
+			Msg: messages.Rolled{},
 		}),
 		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
 			Size:  size.Nil(),

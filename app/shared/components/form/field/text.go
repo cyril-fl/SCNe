@@ -107,18 +107,18 @@ func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.KEY_ENTER:
 			return m, tea.Sequence(
-				form.SendMsg[form.NextField](),
-				form.SendMsg[form.Scroll](),
+				form.Send[form.NextField](),
+				form.Send[form.Scroll](),
 			)
 		case sharedtui.KEY_UP:
 			return m, tea.Sequence(
-				form.SendMsg[form.PreviousField](),
-				form.SendMsg[form.Scroll](),
+				form.Send[form.PreviousField](),
+				form.Send[form.Scroll](),
 			)
 		case sharedtui.KEY_DOWN:
 			return m, tea.Sequence(
-				form.SendMsg[form.NextField](),
-				form.SendMsg[form.Scroll](),
+				form.Send[form.NextField](),
+				form.Send[form.Scroll](),
 			)
 		default:
 			newInput, cmd := m.input.Update(msg)

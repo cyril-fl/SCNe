@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
-	"solopg/app/shared/services/factory/millroll"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
@@ -82,13 +82,12 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 		return c.handleInput(msg)
 	case form.Validate:
 		return c.handleSubmit()
-	case form.Error:
+
+	case messages.Failed:
 		return c.handleError(msg)
-
-	case sharedtui.SaveMsg:
+	case messages.Saved:
 		return c.handleNotification()
-
-	case millroll.RollMsg:
+	case messages.Rolled:
 		return c.handleNotification()
 
 	case spinner.TickMsg:

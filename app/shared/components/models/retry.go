@@ -1,9 +1,9 @@
 package models
 
 import (
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
@@ -72,7 +72,7 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	}
 
 	if isSelected.Value() || s.IsOutOfLimit() {
-		return sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{Completed: true, Value: s.Value})
+		return messages.Resolve(messages.Resolved{Completed: true, Value: s.Value})
 	}
 
 	s.Reroll()

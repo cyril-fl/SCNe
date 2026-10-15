@@ -99,7 +99,7 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.handleKeyPressMsg(msg)
 	case NextField:
 		if m.isLastField() && m.autoSubmit {
-			return m, SendMsg[Validate]()
+			return m, Send[Validate]()
 		}
 		return m.focusOnIndex(currentIndex + 1), nil
 	case PreviousField:

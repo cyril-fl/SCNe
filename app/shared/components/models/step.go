@@ -1,7 +1,7 @@
 package models
 
 import (
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/types/primitive"
 	"solopg/app/shared/types/step"
 
@@ -37,7 +37,7 @@ func (m *StepModel[T]) GetSize() *tea.WindowSizeMsg {
 }
 
 // Methods
-func (m *StepModel[T]) ResolveSubmodel(resolution sharedtui.ResolutionMsg) tea.Cmd {
+func (m *StepModel[T]) ResolveSubmodel(resolution messages.Resolved) tea.Cmd {
 	if resolution.Err != nil {
 		m.SetErr(resolution.Err)
 		return tea.Quit
@@ -99,7 +99,7 @@ func (m *StepModel[T]) ForwardNext() tea.Cmd {
 
 	return tea.Sequence(
 		initCmd,
-		sharedtui.SendSizeMsg(m.size),
+		messages.Resize(m.size),
 	)
 }
 

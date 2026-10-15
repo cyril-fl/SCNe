@@ -7,7 +7,7 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/messages"
 )
 
 type testRoller struct {
@@ -22,7 +22,7 @@ func (r testRoller) Roll() (string, error) {
 func TestExecuteRollReturnsResultMessage(t *testing.T) {
 	msg := Execute(testRoller{content: "rolled"})()
 
-	result, ok := msg.(ResultMsg)
+	result, ok := msg.(messages.Result)
 	if !ok || result.Content != "rolled" {
 		t.Fatalf("expected RollResultMsg with %q, got %#v", "rolled", msg)
 	}
@@ -32,7 +32,7 @@ func TestExecuteRollReturnsErrorMessage(t *testing.T) {
 	err := errors.New("roll failed")
 	msg := Execute(testRoller{err: err})()
 
-	result, ok := msg.(sharedtui.ErrorMsg)
+	result, ok := msg.(messages.Failed)
 	if !ok || !errors.Is(result.Err, err) {
 		t.Fatalf("expected ErrorMsg with %v, got %#v", err, msg)
 	}

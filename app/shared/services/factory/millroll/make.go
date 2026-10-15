@@ -5,9 +5,9 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/factory"
 	"solopg/app/shared/services/i19n"
-	sharedtui "solopg/app/shared/tui"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -18,14 +18,7 @@ type Roller interface {
 	Roll() (string, error)
 }
 
-type RollMsg struct {
-
-}
-
 // ResultMsg is a message type that contains the result of a roll operation.
-type ResultMsg struct {
-	Content string
-}
 
 // Oracles returns a Roller that rolls the given oracle and returns a localized message with the result.
 func Oracles(value oracle.Oracle) Roller {
@@ -97,8 +90,8 @@ func Execute(roller Roller) tea.Cmd {
 	return func() tea.Msg {
 		content, err := roller.Roll()
 		if err != nil {
-			return sharedtui.ErrorMsg{Err: err}
+			return messages.Failed{Err: err}
 		}
-		return ResultMsg{Content: content}
+		return messages.Result{Content: content}
 	}
 }

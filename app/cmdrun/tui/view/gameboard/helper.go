@@ -1,6 +1,7 @@
 package gameboard
 
 import (
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 	"time"
@@ -8,7 +9,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func (m *model) handleSaveInput(msg sharedtui.SaveMsg) (*model, tea.Cmd) {
+func (m *model) handleSaveInput(msg messages.Saved) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
 
 	if m.HasErr() {
@@ -45,13 +46,13 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch sharedtui.EventKey(msg.String()) {
 	case sharedtui.CMD_CTRL_S:
-		return m, sharedtui.SendSaveMsg(m.save)
+		return m, messages.Save(m.save)
 	}
 
 	return m, nil
 }
 
-func (m *model) handleError(msg sharedtui.ErrorMsg) (*model, tea.Cmd) {
+func (m *model) handleError(msg messages.Failed) (*model, tea.Cmd) {
 	m.SetErr(msg.Err)
 	return m, nil
 }

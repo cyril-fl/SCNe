@@ -3,6 +3,7 @@ package onboardarchetype
 import (
 	"solopg/app/cmdrun/domain/card/attributes/archetypes"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/messages"
 
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
@@ -77,7 +78,7 @@ func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
+			return m, messages.Resolve(messages.Resolved{
 				Completed: true,
 				Value:     selectedItem,
 			})

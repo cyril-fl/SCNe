@@ -1,7 +1,7 @@
 package chat
 
 import (
-	"solopg/app/shared/components/form"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
 	"strings"
 	"time"
@@ -14,7 +14,7 @@ func (c *Chat) handleSubmit() tea.Cmd {
 	c.form.Submit()
 
 	if c.form.HasErr() {
-		return form.SendErrorMsg(c.form.GetErr())
+		return messages.Fail(c.form.GetErr())
 	}
 
 	logs.SilentInfo("form.submitted", map[string]any{
@@ -23,7 +23,7 @@ func (c *Chat) handleSubmit() tea.Cmd {
 
 	message, ok := c.form.GetFieldValue("message").(string)
 	if !ok {
-		return form.SendErrorMsg(logs.Error("error.unexpected:value", map[string]any{
+		return messages.Fail(logs.Error("error.unexpected:value", map[string]any{
 			"Subject":  "chat.message",
 			"Expected": "string",
 			"Value":    c.form.GetFieldValue("message"),
@@ -34,7 +34,7 @@ func (c *Chat) handleSubmit() tea.Cmd {
 	return nil
 }
 
-func (c *Chat) handleError(err form.Error) tea.Cmd {
+func (c *Chat) handleError(err messages.Failed) tea.Cmd {
 	logs.SilentError("form.error", map[string]any{
 		"Form":  "onboardename",
 		"Error": err,

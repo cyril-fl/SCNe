@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -23,7 +23,7 @@ func TestStepModelResolveAndForward(t *testing.T) {
 		{Submodel: testStepModel{}},
 	}}
 	m := NewStepModel(steps)
-	m.ResolveSubmodel(sharedtui.ResolutionMsg{Completed: true, Value: "ok"})
+	m.ResolveSubmodel(messages.Resolved{Completed: true, Value: "ok"})
 	if !resolved || m.CurrentIndex != 1 {
 		t.Fatal("resolution did not resolve and advance to the next step")
 	}
@@ -31,7 +31,7 @@ func TestStepModelResolveAndForward(t *testing.T) {
 
 func TestStepModelResolutionErrorQuits(t *testing.T) {
 	m := NewStepModel(&step.List[string]{Steps: []step.Step[string]{{}}})
-	cmd := m.ResolveSubmodel(sharedtui.ResolutionMsg{Err: errors.New("failed"), Completed: true})
+	cmd := m.ResolveSubmodel(messages.Resolved{Err: errors.New("failed"), Completed: true})
 	if cmd == nil || !m.HasErr() {
 		t.Fatal("resolution error was not stored")
 	}

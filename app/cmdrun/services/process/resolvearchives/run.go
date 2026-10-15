@@ -10,6 +10,7 @@ import (
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process"
 )
+
 // TEST
 type run struct {
 	process.Process

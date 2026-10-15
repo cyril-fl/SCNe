@@ -3,6 +3,7 @@ package onboardename
 import (
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 
@@ -22,7 +23,7 @@ func (m *model) handleFormSubmit() (tea.Model, tea.Cmd) {
 	m.form.Submit()
 
 	if m.form.HasErr() {
-		return m, form.SendErrorMsg(m.form.GetErr())
+		return m, messages.Fail(m.form.GetErr())
 	}
 
 	logs.SilentInfo("form.submitted", map[string]any{
@@ -34,13 +35,13 @@ func (m *model) handleFormSubmit() (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	return m, sharedtui.SendResolutionMsg(sharedtui.ResolutionMsg{
+	return m, messages.Resolve(messages.Resolved{
 		Completed: true,
 		Value:     name,
 	})
 }
 
-func (m *model) handleFormError(err form.Error) (tea.Model, tea.Cmd) {
+func (m *model) handleFormError(err messages.Failed) (tea.Model, tea.Cmd) {
 	logs.SilentError("form.error", map[string]any{
 		"Form":  "onboardename",
 		"Error": err,

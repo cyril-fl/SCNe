@@ -1,7 +1,7 @@
 package models
 
 import (
-	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -20,7 +20,7 @@ func Resolve() model {
 
 func (m model) Init() tea.Cmd {
 	return func() tea.Msg {
-		return sharedtui.ResolutionMsg{
+		return messages.Resolved{
 			Completed: true,
 		}
 	}

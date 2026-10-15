@@ -4,7 +4,6 @@ import "solopg/app/shared/types/primitive"
 
 // Interface
 
-
 type Processable interface {
 	primitive.FallibleInterface
 	primitive.Runnable

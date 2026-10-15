@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 
@@ -118,11 +119,11 @@ func (p *FormPage) Update(msg tea.Msg) tea.Cmd {
 		case form.Validate:
 			p.form.Submit()
 			if p.form.HasErr() {
-				return form.SendErrorMsg(p.form.GetErr())
+				return messages.Fail(p.form.GetErr())
 			}
 			if err := p.save(p.index, p.form.GetValuesAsMappedString()); err != nil {
 				p.form.SetErr(err)
-				return form.SendErrorMsg(err)
+				return messages.Fail(err)
 			}
 			p.form = nil
 			p.index = -1
@@ -134,7 +135,7 @@ func (p *FormPage) Update(msg tea.Msg) tea.Cmd {
 				p.HandleEscape()
 				return nil
 			case sharedtui.CMD_ALT_ENTER:
-				return form.SendMsg[form.Validate]()
+				return form.Send[form.Validate]()
 			}
 		}
 		_, cmd := p.form.Update(msg)

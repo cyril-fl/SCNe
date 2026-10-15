@@ -1,14 +1,13 @@
 package models
 
 import (
+	"solopg/app/shared/messages"
 	"testing"
-
-	sharedtui "solopg/app/shared/tui"
 )
 
 func TestResolveInitReturnsCompletedResolution(t *testing.T) {
 	msg := Resolve().Init()()
-	resolution, ok := msg.(sharedtui.ResolutionMsg)
+	resolution, ok := msg.(messages.Resolved)
 	if !ok || !resolution.Completed {
 		t.Fatalf("unexpected resolution message: %#v", msg)
 	}

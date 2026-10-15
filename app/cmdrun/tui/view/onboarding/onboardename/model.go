@@ -2,6 +2,7 @@ package onboardename
 
 import (
 	"solopg/app/shared/components/form"
+	"solopg/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -30,7 +31,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case form.Validate:
 		return m.handleFormSubmit()
-	case form.Error:
+
+	case messages.Failed:
 		return m.handleFormError(msg)
 
 	case tea.KeyMsg:

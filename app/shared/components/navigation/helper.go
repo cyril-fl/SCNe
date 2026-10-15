@@ -3,9 +3,9 @@ package navigation
 import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 	interfass "solopg/app/shared/types/interface"
 	"strings"
 
@@ -54,7 +54,7 @@ func makeEnterInputHandler[T interfass.Named](model *list.Model, params Template
 		selected := model.SelectedItem()
 		item, ok := selected.(models.Item[T])
 		if !ok {
-			return sharedtui.SendErrorMsg(logs.Error("error.invalid", map[string]any{
+			return messages.Fail(logs.Error("error.invalid", map[string]any{
 				"Subject": params.ID,
 				"Value":   selected,
 			}))

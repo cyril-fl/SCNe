@@ -19,26 +19,8 @@ type msg interface {
 		Submit
 }
 
-func SendMsg[T msg]() tea.Cmd {
+func Send[T msg]() tea.Cmd {
 	return func() tea.Msg {
 		return T{}
-	}
-}
-
-// Error
-/*
-	TODO HIGH Déplacer dans un truc plus general
-	Faire des erreurs coder cfr le doc dans la branch
-	update readme.
-*/
-type Error struct {
-	err error
-}
-
-func SendErrorMsg(err error) tea.Cmd {
-	return func() tea.Msg {
-		return Error{
-			err: err,
-		}
 	}
 }
