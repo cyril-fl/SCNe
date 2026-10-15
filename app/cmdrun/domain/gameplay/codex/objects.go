@@ -71,7 +71,6 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
-
 func (tb *ObjectsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 	for _, entry := range tb.Entries {
@@ -79,9 +78,9 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 			continue
 		}
 		name, description := entry.Object.GetName(), entry.Object.GetDescription()
-		entries = append(entries, Entry{Title: name, Description: description, Values: map[string]string{
+		entries = append(entries, newEntry(name, description, map[string]string{
 			"name": name, "description": description, "category": entry.Object.Category.String(),
-		}})
+		}, false))
 	}
 	return entries
 }

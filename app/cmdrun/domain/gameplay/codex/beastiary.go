@@ -104,12 +104,7 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 		for _, modifier := range entry.Race.GetBonus() {
 			values[modifier.Stat.String()] = transform.ParseAsString(modifier.Value)
 		}
-		entries = append(entries, Entry{
-			Title:       name,
-			Description: description,
-			Values:      values,
-			Locked:      races.IsLocked(name),
-		})
+		entries = append(entries, newEntry(name, description, values, races.IsLocked(name)))
 	}
 	return entries
 }

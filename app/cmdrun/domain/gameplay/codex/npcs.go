@@ -104,12 +104,10 @@ func (tb *NpcsTable) FormEntries() []Entry {
 		for stat, value := range character.Stats.MappedString() {
 			values[stat] = transform.ParseAsString(value)
 		}
-		entries = append(entries, Entry{
-			Title:       character.GetName(),
-			Description: character.Race,
-			Values:      values,
-			Locked:      characters.IsLocked(character.GetName()),
-		})
+		entries = append(entries, newEntry(
+			character.GetName(), character.Race, values,
+			characters.IsLocked(character.GetName()),
+		))
 	}
 	return entries
 }

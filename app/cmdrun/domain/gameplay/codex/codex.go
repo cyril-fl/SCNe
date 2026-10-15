@@ -3,6 +3,7 @@ package codex
 import (
 	"errors"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/types/primitive"
 )
 
 // - Codex - //
@@ -58,10 +59,21 @@ type Table interface {
 }
 
 type Entry struct {
-	Title       string
-	Description string
-	Values      map[string]string
-	Locked      bool
+	primitive.Descriptible
+
+	Values map[string]string
+	Locked bool
+}
+
+func newEntry(name, description string, values map[string]string, locked bool) Entry {
+	return Entry{
+		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+			Name:        name,
+			Description: description,
+		}),
+		Values: values,
+		Locked: locked,
+	}
 }
 
 type TableData[E any] struct {

@@ -57,13 +57,12 @@ func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 
 // MEDIUM refavtor tout ca en se basant sur object ect
 
-
 func (o *QuestTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(o.Entries))
 	for _, entry := range o.Entries {
-		entries = append(entries, Entry{Title: entry.Title, Description: entry.Description, Values: map[string]string{
+		entries = append(entries, newEntry(entry.Title, entry.Description, map[string]string{
 			"title": entry.Title, "description": entry.Description,
-		}})
+		}, false))
 	}
 	return entries
 }

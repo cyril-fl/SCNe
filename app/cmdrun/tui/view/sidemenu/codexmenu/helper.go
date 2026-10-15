@@ -43,8 +43,8 @@ func newFormPage(table codex.Table, makeForm func(map[string]string) *form.Form)
 			items := make([]formpage.Item, 0, len(entries))
 			for _, entry := range entries {
 				items = append(items, formpage.Item{
-					Title:       i19n.Localize(entry.Title),
-					Description: i19n.Localize(entry.Description),
+					Title:       i19n.Localize(entry.GetName()),
+					Description: i19n.Localize(entry.GetDescription()),
 					Values:      entry.Values,
 					Locked:      entry.Locked,
 				})

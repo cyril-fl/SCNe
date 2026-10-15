@@ -69,9 +69,9 @@ func (tb *LocationsTable) FormEntries() []Entry {
 			continue
 		}
 		name, description := entry.Location.GetName(), entry.Location.GetDescription()
-		entries = append(entries, Entry{Title: name, Description: description, Values: map[string]string{
+		entries = append(entries, newEntry(name, description, map[string]string{
 			"name": name, "description": description,
-		}, Locked: locations.IsLocked(name)})
+		}, locations.IsLocked(name)))
 	}
 	return entries
 }
