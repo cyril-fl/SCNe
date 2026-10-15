@@ -8,6 +8,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// TODO Modifier pour pouvoir unmarshal du JSON, utiliser embeding et injection
 func loadYAMLFromFile(fileAddress string, target any) error {
 	data, err := os.ReadFile(fileAddress)
 	if err != nil {

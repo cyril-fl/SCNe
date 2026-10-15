@@ -21,8 +21,8 @@ onboarding:select.races:
 # Chat
 # chat.input:placeholder:
 #   other: "Envoyer un message..."
-chat.msg:saving:
-  other: "Sauvegarde en cours..."
+chat.msg:processing:
+  other: "Traitement en cours..."
 chat.msg:welcome:
   other: "Bienvenue dans le chat !\nÉcrivez un message puis appuyez sur Entrée pour l'envoyer."
 chat.placeholder:

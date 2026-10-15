@@ -47,23 +47,23 @@ func (c *Chat) handleInput(params tea.Msg) tea.Cmd {
 	return cmd
 }
 
-func (c *Chat) handleSave() tea.Cmd {
-	if c.saving {
+func (c *Chat) handleNotification() tea.Cmd {
+	if c.notify {
 		return nil
 	}
 
-	c.saving = true
+	c.notify = true
 	return tea.Batch(
 		c.spinner.Tick,
 		tea.Tick(1500*time.Millisecond, func(time.Time) tea.Msg {
-			c.saving = false
+			c.notify = false
 			return nil
 		}),
 	)
 }
 
 func (c *Chat) handleSpinnerTick(msg tea.Msg) tea.Cmd {
-	if !c.saving {
+	if !c.notify {
 		return nil
 	}
 
@@ -74,7 +74,7 @@ func (c *Chat) handleSpinnerTick(msg tea.Msg) tea.Cmd {
 
 func (c *Chat) spaceInput() string {
 	padding := 2
-	if c.saving {
+	if c.notify {
 		padding += 1
 	}
 

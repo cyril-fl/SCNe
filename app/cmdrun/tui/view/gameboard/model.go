@@ -1,16 +1,17 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/services/factory/millroll"
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/formpage"
 	"solopg/app/shared/components/navigation"
+	"solopg/app/shared/services/factory/millroll"
 	"solopg/app/shared/services/statemachine"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
+	"time"
 
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
@@ -25,6 +26,10 @@ type model struct {
 	engine *game.Engine
 	save   func() error
 	size   size.Size
+}
+
+type delayedResultMsg struct {
+	Content string
 }
 
 type UiParams struct {
@@ -71,6 +76,10 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
 	case millroll.ResultMsg:
+		return m, tea.Tick(1500*time.Millisecond, func(time.Time) tea.Msg {
+			return delayedResultMsg{Content: msg.Content}
+		})
+	case delayedResultMsg:
 		m.state.Amend(msg.Content)
 	case sharedtui.SaveMsg:
 		return m.handleSaveInput(msg)

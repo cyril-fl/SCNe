@@ -18,6 +18,10 @@ type Roller interface {
 	Roll() (string, error)
 }
 
+type RollMsg struct {
+
+}
+
 // ResultMsg is a message type that contains the result of a roll operation.
 type ResultMsg struct {
 	Content string

@@ -23,6 +23,7 @@ type Section struct {
 	focused           bool
 	footer            []string
 	handlerEnterInput func() tea.Cmd
+	sendMsg           func() tea.Cmd
 }
 
 type TemplateSection[T interfass.Named] struct {
@@ -31,6 +32,7 @@ type TemplateSection[T interfass.Named] struct {
 	Focused          bool
 	Footer           []string
 	HandleEnterInput func(T) tea.Cmd
+	Msg              tea.Msg
 }
 
 func NewSection[T interfass.Named](params TemplateSection[T]) *Section {
@@ -41,6 +43,7 @@ func NewSection[T interfass.Named](params TemplateSection[T]) *Section {
 		focused:           params.Focused,
 		footer:            params.Footer,
 		handlerEnterInput: makeEnterInputHandler(&model, params),
+		sendMsg:           makeSendMsgHandler(params.Msg),
 	}
 }
 
@@ -83,9 +86,14 @@ func (s *Section) HandleUpdate(msg tea.Msg) tea.Cmd {
 	case tea.KeyPressMsg:
 		switch sharedtui.EventKey(msg.String()) {
 		case sharedtui.CMD_SHIFT_ENTER, sharedtui.CMD_ALT_ENTER:
+			cmds := []tea.Cmd{}
 			if s.handlerEnterInput != nil {
-				return s.handlerEnterInput()
+				cmds = append(cmds, s.handlerEnterInput())
 			}
+			if s.sendMsg != nil {
+				cmds = append(cmds, s.sendMsg())
+			}
+			return tea.Batch(cmds...)
 		}
 	}
 	return nil

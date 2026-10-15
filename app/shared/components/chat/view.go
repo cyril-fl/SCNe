@@ -5,6 +5,7 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
+	"solopg/app/shared/services/factory/millroll"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
@@ -32,7 +33,7 @@ type Chat struct {
 type cache struct {
 	history []string
 	session []string
-	saving  bool
+	notify  bool
 }
 
 type Template struct {
@@ -58,7 +59,7 @@ func (c *Chat) GetView() string {
 		lipgloss.Left,
 		c.makeViewport(),
 		c.spaceInput(),
-		c.makeSavingNotification(),
+		c.makeNotification(),
 		c.form.View().Content,
 		"",
 	)
@@ -85,7 +86,10 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 		return c.handleError(msg)
 
 	case sharedtui.SaveMsg:
-		return c.handleSave()
+		return c.handleNotification()
+
+	case millroll.RollMsg:
+		return c.handleNotification()
 
 	case spinner.TickMsg:
 		return c.handleSpinnerTick(msg)
@@ -139,15 +143,15 @@ func (c *Chat) makeViewport() string {
 	return c.view.View()
 }
 
-func (c *Chat) makeSavingNotification() string {
-	if c.saving {
+func (c *Chat) makeNotification() string {
+	if c.notify {
 		s := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("2")).
 			Render(c.spinner.View())
 
 		m := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("240")).
-			Render(i19n.Localize("chat.msg:saving"))
+			Render(i19n.Localize("chat.msg:processing"))
 
 		return lipgloss.JoinHorizontal(
 			lipgloss.Left,

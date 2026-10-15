@@ -14,7 +14,6 @@ import (
 // -- Kind -- //
 type Kind string
 
-// BACKLOG NOTE Regularly review the code to identify any additional logs that may need to be added.
 const (
 	SUCC Kind = "success"
 	ERR  Kind = "error"

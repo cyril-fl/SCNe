@@ -22,8 +22,8 @@ onboarding:select.races:
 # Chat
 # chat.input:placeholder:
 #   other: "Send a message..."
-chat.msg:saving:
-  other: "Saving..."
+chat.msg:processing:
+  other: "Processing..."
 chat.msg:welcome:
   other: "Welcome to the chat room!\nType a message and press Enter to send."
 chat.placeholder:

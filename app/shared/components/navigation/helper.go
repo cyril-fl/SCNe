@@ -71,3 +71,15 @@ func handleKeyArrow(metadata context, key tea.KeyPressMsg) direction.Direction {
 
 	return newdirection
 }
+
+func makeSendMsgHandler(msg tea.Msg) func() tea.Cmd {
+	if msg == nil {
+		return nil
+	}
+
+	return func() tea.Cmd {
+		return func() tea.Msg {
+			return msg
+		}
+	}
+}

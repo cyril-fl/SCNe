@@ -96,12 +96,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
-/*
-TODO LOW Modifier ca que ce soit un peu joli....
-Creer un genre de "page dans codex avec une methode de rendu
-description
-viewport (mettre la liste et prevoir une fonction de la redu pour une enum ou un truc du genre)
-*/
+// TODO HIGH check le code legacy et le code dead avec la nouvelle version
 func (tb *BeastiaryTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
 		return []string{i19n.Localize("codex.entry:empty")}

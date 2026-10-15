@@ -7,30 +7,6 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-/*
-BACKLOG Add Ctrl Z ctrl Y pour s'il y a des fail de et miss click
-- Faire une queue Passed event
-- Faire une stack future event
-le tout = History {
-	Passed
-	Future
-	Curent
-}
-
-faire une evnt undo / redo en en fonction de cmdruntui.CtrlZ / CtrlY
-
-si on entre un nouvelle element utilser une methode dumpFuture()
-
-gere les element en tyant les string
-- Player entry
-- System entry
-
-seul le Player entry sont undoable / redoable, si on tomber sur un System entry on stop la navigation
-(eviter de refaire de jeux de des, d'optimser ect)
-
-le ctrl Z / Y ne concerne que la vue, pas les codex ect .
-
-*/
 
 // Message
 type ResolutionMsg struct {
