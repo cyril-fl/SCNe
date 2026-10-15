@@ -2,15 +2,12 @@ package codex
 
 import (
 	"errors"
-	"fmt"
 	"os"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
-	"strings"
 	"time"
 )
 
@@ -94,33 +91,6 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	return nil
-}
-
-// HIGH check le code legacy et le code dead avec la nouvelle version
-func (tb *BeastiaryTable) Summaries() []string {
-	if len(tb.Entries) == 0 {
-		return []string{i19n.Localize("codex.entry:empty")}
-	}
-
-	content := strings.Builder{}
-	for _, entry := range tb.Entries {
-		if entry.Race == nil {
-			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
-		} else {
-			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.beastiary:entry", map[string]any{
-				"Name":        entry.Race.GetName(),
-				"Description": entry.Race.GetDescription(),
-			}))
-
-			if len(entry.Race.GetBonus()) > 0 {
-				modifiersToStats := stats.New(entry.Race.GetBonus())
-				fmt.Fprintf(&content, "%s\n", i19n.Localize("stats.entry", modifiersToStats.MappedString()))
-			}
-		}
-		content.WriteString("\n\n")
-	}
-
-	return []string{content.String()}
 }
 
 func (tb *BeastiaryTable) FormEntries() []Entry {

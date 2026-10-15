@@ -2,7 +2,6 @@ package codex
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/characters"
@@ -12,7 +11,6 @@ import (
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
-	"strings"
 
 	"time"
 )
@@ -90,32 +88,6 @@ func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	return nil
-}
-
-func (tb *NpcsTable) Summaries() []string {
-	if len(tb.Entries) == 0 {
-		return []string{i19n.Localize("codex.entry:empty")}
-	}
-
-	content := strings.Builder{}
-	for _, entry := range tb.Entries {
-		if entry.Character == nil {
-			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
-			continue
-		} else {
-			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.npcs:entry", map[string]any{
-				"Name":  i19n.Localize(entry.Character.GetName()),
-				"Race":  i19n.Localize(entry.Character.Race),
-				"Class": i19n.Localize(entry.Character.Class),
-			}))
-
-			fmt.Fprintf(&content, "%s\n", i19n.Localize("stats.entry", entry.Character.Stats.MappedString()))
-		}
-
-		content.WriteString("\n\n")
-	}
-
-	return []string{content.String()}
 }
 
 func (tb *NpcsTable) FormEntries() []Entry {

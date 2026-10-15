@@ -11,7 +11,7 @@ type Codex struct {
 	BeastiaryTable *BeastiaryTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
-	ObjectifsTable *ObjectivesTable
+	ObjectifsTable *QuestTable
 }
 
 func New() *Codex {
@@ -20,7 +20,7 @@ func New() *Codex {
 		BeastiaryTable: NewBeastiaryTable([]BeastiaryEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
-		ObjectifsTable: NewObjectivesTable([]ObjectifEntry{}),
+		ObjectifsTable: NewQuestTable([]QuestEntry{}),
 	}
 }
 
@@ -39,7 +39,7 @@ func (c *Codex) EnsureInitialized() {
 		c.ObjectsTable = NewObjectsTable(nil)
 	}
 	if c.ObjectifsTable == nil {
-		c.ObjectifsTable = NewObjectivesTable(nil)
+		c.ObjectifsTable = NewQuestTable(nil)
 	}
 
 	c.NpcsTable.Ensure()
@@ -51,7 +51,6 @@ func (c *Codex) EnsureInitialized() {
 
 // - Codex table - //
 type Table interface {
-	Summaries() []string
 	AddFromMappedValues(values map[string]string) error
 	SaveFromMappedValues(index int, values map[string]string) error
 	FormEntries() []Entry

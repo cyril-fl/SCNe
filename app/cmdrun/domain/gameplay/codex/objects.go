@@ -1,7 +1,6 @@
 package codex
 
 import (
-	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
@@ -9,7 +8,6 @@ import (
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
-	"strings"
 	"time"
 )
 
@@ -73,23 +71,6 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
-func (tb *ObjectsTable) Summaries() []string {
-	if len(tb.Entries) == 0 {
-		return []string{i19n.Localize("codex.entry:empty")}
-	}
-
-	content := strings.Builder{}
-	for _, entry := range tb.Entries {
-		if entry.Object == nil {
-			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
-		} else {
-			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Object.GetName()), i19n.Localize(entry.Object.GetDescription()))
-		}
-		content.WriteString("\n\n")
-	}
-
-	return []string{content.String()}
-}
 
 func (tb *ObjectsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))

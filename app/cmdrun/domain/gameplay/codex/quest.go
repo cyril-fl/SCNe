@@ -2,20 +2,18 @@ package codex
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
-	"strings"
 	"time"
 )
 
 // - Table --//
-type ObjectivesTable struct {
-	*TableData[ObjectifEntry]
+type QuestTable struct {
+	*TableData[QuestEntry]
 }
-type ObjectifEntry struct {
+type QuestEntry struct {
 	Timestamp   time.Time `bson:"timestamp"`
 	Title       string    `bson:"title"`
 	Description string    `bson:"description"`
@@ -23,22 +21,22 @@ type ObjectifEntry struct {
 
 var tableobjectives = "codex.objectives"
 
-func NewObjectivesTable(entries []ObjectifEntry) *ObjectivesTable {
-	return &ObjectivesTable{
+func NewQuestTable(entries []QuestEntry) *QuestTable {
+	return &QuestTable{
 		TableData: newTable(i19n.Localize(tableobjectives), entries),
 	}
 }
 
 // - Methods --//
-func (o *ObjectivesTable) Add(title, description string) {
-	o.Entries = append(o.Entries, ObjectifEntry{
+func (o *QuestTable) Add(title, description string) {
+	o.Entries = append(o.Entries, QuestEntry{
 		Timestamp:   time.Now().UTC(),
 		Title:       title,
 		Description: description,
 	})
 }
 
-func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
+func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 	if err := o.assertEntry(values); err != nil {
 		cwd, cwderr := os.Getwd()
 		return logs.Error("error.unexpected", map[string]any{
@@ -58,39 +56,9 @@ func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 }
 
 // MEDIUM refavtor tout ca en se basant sur object ect
-func (o *ObjectivesTable) Summaries() []string {
-	if len(o.Entries) == 0 {
-		return []string{i19n.Localize("codex.entry:empty")}
-	}
 
-	content := strings.Builder{}
-	for i, entry := range o.Entries {
-		if entry.Title == "" {
-			content.WriteString(i19n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
-		} else {
-			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Title), i19n.Localize(entry.Description))
-		}
-		content.WriteString("\n\n")
-	}
 
-	return []string{content.String()}
-	// summaries := make([]string, 0, len(o.Entries))
-	// for i := range o.Entries {
-	// 	if o.Entries[i].Title == "" {
-	// 		summaries = append(summaries, i18n.Localize("codex.objectives.number", map[string]any{"Number": i + 1}))
-	// 		continue
-	// 	}
-	// 	summaries = append(summaries, fmt.Sprintf("%s — %s", i18n.Localize(o.Entries[i].Title), i18n.Localize(o.Entries[i].Description)))
-	// }
-
-	// if len(summaries) == 0 {
-	// 	summaries = append(summaries, i18n.Localize("codex.no_objectives"))
-	// }
-
-	// return summaries
-}
-
-func (o *ObjectivesTable) FormEntries() []Entry {
+func (o *QuestTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(o.Entries))
 	for _, entry := range o.Entries {
 		entries = append(entries, Entry{Title: entry.Title, Description: entry.Description, Values: map[string]string{
@@ -100,7 +68,7 @@ func (o *ObjectivesTable) FormEntries() []Entry {
 	return entries
 }
 
-func (o *ObjectivesTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (o *QuestTable) SaveFromMappedValues(index int, values map[string]string) error {
 	if index < 0 {
 		return o.AddFromMappedValues(values)
 	}
@@ -116,7 +84,7 @@ func (o *ObjectivesTable) SaveFromMappedValues(index int, values map[string]stri
 }
 
 // - Helper --//
-func (o *ObjectivesTable) assertEntry(values map[string]string) error {
+func (o *QuestTable) assertEntry(values map[string]string) error {
 	var err []error
 
 	if values["title"] == "" {
@@ -141,6 +109,6 @@ func (o *ObjectivesTable) assertEntry(values map[string]string) error {
 	return nil
 }
 
-func (o *ObjectivesTable) Ensure() {
+func (o *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &o.TableData)
 }

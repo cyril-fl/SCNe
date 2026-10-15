@@ -1,14 +1,12 @@
 package codex
 
 import (
-	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
-	"strings"
 	"time"
 )
 
@@ -62,24 +60,6 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 	})
 
 	return nil
-}
-
-func (tb *LocationsTable) Summaries() []string {
-	if len(tb.Entries) == 0 {
-		return []string{i19n.Localize("codex.entry:empty")}
-	}
-
-	content := strings.Builder{}
-	for _, entry := range tb.Entries {
-		if entry.Location == nil {
-			content.WriteString(i19n.Localize("codex.codex.unknown:entry"))
-		} else {
-			fmt.Fprintf(&content, "%s — %s", i19n.Localize(entry.Location.GetName()), i19n.Localize(entry.Location.GetDescription()))
-		}
-		content.WriteString("\n\n")
-	}
-
-	return []string{content.String()}
 }
 
 func (tb *LocationsTable) FormEntries() []Entry {
