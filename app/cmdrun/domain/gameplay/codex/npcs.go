@@ -104,7 +104,7 @@ func (tb *NpcsTable) Summaries() []string {
 			continue
 		} else {
 			fmt.Fprintf(&content, "%s\n", i19n.Localize("codex.npcs:entry", map[string]any{
-				"Name":  i19n.Localize(entry.Character.Name),
+				"Name":  i19n.Localize(entry.Character.GetName()),
 				"Race":  i19n.Localize(entry.Character.Race),
 				"Class": i19n.Localize(entry.Character.Class),
 			}))
@@ -126,17 +126,17 @@ func (tb *NpcsTable) FormEntries() []Entry {
 		}
 		character := entry.Character
 		values := map[string]string{
-			"name": character.Name, "description": character.Description.Description,
+			"name": character.GetName(), "description": character.GetDescription(),
 			"class": character.Class, "race": character.Race,
 		}
 		for stat, value := range character.Stats.MappedString() {
 			values[stat] = transform.ParseAsString(value)
 		}
 		entries = append(entries, Entry{
-			Title:       character.Name,
+			Title:       character.GetName(),
 			Description: character.Race,
 			Values:      values,
-			Locked:      characters.IsLocked(character.Name),
+			Locked:      characters.IsLocked(character.GetName()),
 		})
 	}
 	return entries

@@ -3,10 +3,10 @@ package stats
 import (
 	"fmt"
 	"slices"
-	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 	"strings"
 )
@@ -43,7 +43,7 @@ type Modifier struct {
 }
 
 type Effect struct {
-	description.Description `yaml:"description"`
+	primitive.Descriptible `yaml:"description"`
 	Modifier                Modifier `yaml:"modifier"`
 }
 

@@ -5,13 +5,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"slices"
-	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"solopg/app/shared/types/primitive"
 )
 
 // - Race - //
 type Race struct {
-	description.Description
+	primitive.Descriptible
 
 	Playable bool
 	Bonus    []stats.Modifier
@@ -26,18 +26,13 @@ type Template = struct {
 
 func New(params Template) Race {
 	return Race{
-		Description: description.New(params.Name, params.Description),
+		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+			Name:        params.Name,
+			Description: params.Description,
+		}),
 		Playable:    params.Playable,
 		Bonus:       params.Bonus,
 	}
-}
-
-func (r Race) GetName() string {
-	return r.Description.Name
-}
-
-func (r Race) GetDescription() string {
-	return r.Description.Description
 }
 
 func (r Race) IsPlayable() bool {

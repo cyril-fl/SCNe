@@ -66,10 +66,10 @@ func (m model) makeBody() string {
 
 func (m *model) makeInformationView() string {
 	v := strings.Builder{}
-	v.WriteString(fmt.Sprintf("%s : ", i19n.Localize(m.reroll.Value.Name)))
+	v.WriteString(fmt.Sprintf("%s : ", i19n.Localize(m.reroll.Value.GetName())))
 
-	if sharedtui.EventKey(m.reroll.Value.Description.Description) != sharedtui.KEY_EMPTY {
-		v.WriteString(i19n.Localize(m.reroll.Value.Description.Description))
+	if sharedtui.EventKey(m.reroll.Value.Descriptible.GetDescription()) != sharedtui.KEY_EMPTY {
+		v.WriteString(i19n.Localize(m.reroll.Value.Descriptible.GetDescription()))
 	}
 
 	v.WriteString(strings.Join([]string{"| ", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))

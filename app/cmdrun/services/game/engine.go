@@ -40,14 +40,14 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 
 	key := "campaign.location:move"
 	table := e.State.Codex.LocationsTable
-	entry := table.FindEntryByName(newLocation.Name)
+	entry := table.FindEntryByName(newLocation.GetName())
 
 	if entry == nil {
 		table.Add(newLocation)
 		key = "campaign.location:discover"
 	}
 
-	logs.SilentInfo(key, map[string]any{"Location": newLocation.Name})
+	logs.SilentInfo(key, map[string]any{"Location": newLocation.GetName()})
 }
 
 func (e *Engine) ExportArchives() *campaign.Archives {

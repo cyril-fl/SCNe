@@ -41,7 +41,7 @@ func New(params Template) *Campaign {
 
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
-		c.Player.Name,
+		c.Player.GetName(),
 		transform.Capitalize(i19n.Localize(c.Player.Race)),
 		transform.Capitalize(i19n.Localize(c.Player.Class)),
 	)
@@ -49,7 +49,7 @@ func (c *Campaign) Title() string {
 
 func (c *Campaign) Description() string {
 	return i19n.Localize("campaign.description", map[string]any{
-		"Location": c.CurrentLocation.Name,
+		"Location": c.CurrentLocation.GetName(),
 		"Updated":  c.GetFormattedUpdated("2006-01-02 15:04:05"),
 	})
 }

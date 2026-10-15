@@ -113,7 +113,7 @@ func (tb *LocationsTable) SaveFromMappedValues(index int, values map[string]stri
 
 func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
 	for i, entry := range tb.Entries {
-		if entry.Location != nil && entry.Location.Name == name {
+		if entry.Location != nil && entry.Location.GetName() == name {
 			return &tb.Entries[i]
 		}
 	}

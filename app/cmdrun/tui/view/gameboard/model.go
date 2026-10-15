@@ -98,7 +98,7 @@ func makeChat(engine *game.Engine) *chat.Chat {
 func initAuthor(engine *game.Engine) string {
 	author := "System"
 	if engine.State.Player != nil {
-		author = engine.State.Player.Name
+		author = engine.State.Player.GetName()
 	}
 	return author
 }

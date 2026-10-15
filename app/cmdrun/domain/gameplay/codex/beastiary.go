@@ -224,7 +224,7 @@ func getPreloadBeastiaryEntries() []BeastiaryEntry {
 	m := make(map[string]BeastiaryEntry)
 
 	for _, entry := range races.List() {
-		m[entry.Name] = BeastiaryEntry{
+		m[entry.GetName()] = BeastiaryEntry{
 			Timestamp: time.Now().UTC(),
 			Race:      &entry,
 		}

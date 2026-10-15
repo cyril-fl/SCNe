@@ -1,16 +1,16 @@
 package card
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/types/primitive"
 	"strings"
 )
 
 type Card struct {
-	description.Description
+	primitive.Descriptible
 
 	Rarity  rarity.Rarity
 	Variety variety.Variety
@@ -53,7 +53,10 @@ func NewCard(params NewCardParams) (*Card, error) {
 	}
 
 	return &Card{
-		Description: description.New(params.Name, params.Description),
+		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+			Name:        params.Name,
+			Description: params.Description,
+		}),
 		Rarity:      params.Rarity,
 		Variety:     params.Variety,
 	}, nil

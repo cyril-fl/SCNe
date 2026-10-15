@@ -1,10 +1,10 @@
 package races
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/description"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -97,7 +97,10 @@ func makeSet(configs []yamlConfig) []Race {
 
 func newFromYaml(config yamlConfig) Race {
 	return Race{
-		Description: description.New(config.Name, config.Description),
+		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+			Name:        config.Name,
+			Description: config.Description,
+		}),
 		Playable:    config.Playable,
 		Bonus:       config.Bonus,
 	}

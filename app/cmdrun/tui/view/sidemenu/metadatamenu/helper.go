@@ -18,7 +18,7 @@ func GetCharacterInfo(content *strings.Builder, engine *game.Engine) {
 	if isEngineNil || engine.State.Player == nil {
 		fmt.Fprintf(content, "%s", characterName)
 	} else {
-		fmt.Fprintf(content, "%s %s", characterName, i19n.Localize(engine.State.Player.Name))
+		fmt.Fprintf(content, "%s %s", characterName, i19n.Localize(engine.State.Player.GetName()))
 	}
 
 	content.WriteString("\n")
@@ -32,7 +32,7 @@ func GetLocationInfo(content *strings.Builder, engine *game.Engine) {
 	if isEngineNil || engine.State.CurrentLocation == nil {
 		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize("unknown_place"))
 	} else {
-		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(engine.State.CurrentLocation.Name))
+		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(engine.State.CurrentLocation.GetName()))
 	}
 	content.WriteString("\n")
 }
