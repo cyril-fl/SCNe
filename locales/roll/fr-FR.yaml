@@ -1,0 +1,40 @@
+notification:roll0:
+  other: "On lance les os…"
+notification:roll1:
+  other: "On consulte les dés…"
+notification:roll2:
+  other: "On tente le destin…"
+notification:roll3:
+  other: "On compte sur la chance…"
+notification:roll4:
+  other: "Ça va secouer…"
+notification:roll5:
+  other: "On invoque les probabilités…"
+notification:roll6:
+  other: "On négocie avec le destin…"
+notification:roll7:
+  other: "On réveille les dés…"
+notification:roll8:
+  other: "On fait confiance au processus…"
+notification:roll9:
+  other: "On demande à l’univers…"
+notification:roll10:
+  other: "On calcule tes chances…"
+notification:roll11:
+  other: "On murmure aux dés…"
+notification:roll12:
+  other: "On vérifie ta chance…"
+notification:roll13:
+  other: "On consulte le RNG ancestral…"
+notification:roll14:
+  other: "On prend des décisions discutables…"
+notification:roll15:
+  other: "On laisse le chaos décider…"
+notification:roll16:
+  other: "On essaie de soudoyer les dés…"
+notification:roll17:
+  other: "On aligne les étoiles…"
+notification:roll18:
+  other: "On prépare un petit miracle…"
+notification:roll19:
+  other: "On accepte l’inévitable…"

@@ -1,10 +1,11 @@
 package chat
 
 import (
+	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
+	"strconv"
 	"strings"
-	"time"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -47,34 +48,20 @@ func (c *Chat) handleInput(params tea.Msg) tea.Cmd {
 	return cmd
 }
 
-func (c *Chat) handleNotification() tea.Cmd {
-	if c.notify {
-		return nil
-	}
-
-	c.notify = true
-	return tea.Batch(
-		c.spinner.Tick,
-		tea.Tick(1500*time.Millisecond, func(time.Time) tea.Msg {
-			c.notify = false
-			return nil
-		}),
-	)
+func (c *Chat) handleSaveNotification() tea.Cmd {
+	return c.HandleNotification(1500, "chat.msg:save")
 }
 
-func (c *Chat) handleSpinnerTick(msg tea.Msg) tea.Cmd {
-	if !c.notify {
-		return nil
-	}
+func (c *Chat) handleRollNotification() tea.Cmd {
+	random := dice.Roll(20)
 
-	var cmd tea.Cmd
-	c.spinner, cmd = c.spinner.Update(msg)
-	return cmd
+	return c.HandleNotification(750, "notification:roll"+strconv.Itoa(random))
 }
 
+// todo move
 func (c *Chat) spaceInput() string {
 	padding := 2
-	if c.notify {
+	if c.IsNotifying() {
 		padding += 1
 	}
 

@@ -1,0 +1,40 @@
+notification:roll0:
+  other: "Rolling the bones…"
+notification:roll1:
+  other: "Consulting the dice…"
+notification:roll2:
+  other: "Tempting fate…"
+notification:roll3:
+  other: "Counting on luck…"
+notification:roll4:
+  other: "Shaking things up…"
+notification:roll5:
+  other: "Summoning probability…"
+notification:roll6:
+  other: "Negotiating with fate…"
+notification:roll7:
+  other: "Waking the dice…"
+notification:roll8:
+  other: "Trusting the process…"
+notification:roll9:
+  other: "Asking the universe…"
+notification:roll10:
+  other: "Calculating your chances…"
+notification:roll11:
+  other: "Whispering to the dice…"
+notification:roll12:
+  other: "Checking your luck…"
+notification:roll13:
+  other: "Consulting the ancient RNG…"
+notification:roll14:
+  other: "Making questionable decisions…"
+notification:roll15:
+  other: "Letting chaos decide…"
+notification:roll16:
+  other: "Bribing the dice…"
+notification:roll17:
+  other: "Aligning the stars…"
+notification:roll18:
+  other: "Preparing a small miracle…"
+notification:roll19:
+  other: "Accepting the inevitable…"

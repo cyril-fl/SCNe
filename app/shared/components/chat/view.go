@@ -20,12 +20,12 @@ import (
 
 type Chat struct {
 	primitive.Fallible
+	primitive.Notifier
 	cache
 
 	author   string
 	view     viewport.Model
 	form     *form.Form
-	spinner  spinner.Model
 	size     size.Size
 	register func(author, message string)
 }
@@ -33,7 +33,6 @@ type Chat struct {
 type cache struct {
 	history []string
 	session []string
-	notify  bool
 }
 
 type Template struct {
@@ -44,12 +43,13 @@ type Template struct {
 
 func New(params Template) *Chat {
 	return &Chat{
+		Notifier: primitive.NewNotifier(),
+
 		author:   params.Author,
 		form:     makeForm(),
 		history:  params.History,
 		session:  []string{},
 		register: params.Register,
-		spinner:  spinner.New(spinner.WithSpinner(spinner.Dot)),
 	}
 }
 
@@ -86,12 +86,12 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	case messages.Failed:
 		return c.handleError(msg)
 	case messages.Saved:
-		return c.handleNotification()
+		return c.handleSaveNotification()
 	case messages.Rolled:
-		return c.handleNotification()
+		return c.handleRollNotification()
 
 	case spinner.TickMsg:
-		return c.handleSpinnerTick(msg)
+		return c.HandleSpinnerTick(msg)
 	// case cursor.BlinkMsg:
 	// 		return c.handleCursorBlink(msg)
 
@@ -143,14 +143,14 @@ func (c *Chat) makeViewport() string {
 }
 
 func (c *Chat) makeNotification() string {
-	if c.notify {
+	if c.IsNotifying() {
 		s := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("2")).
-			Render(c.spinner.View())
+			Render(c.GetSpinnerView())
 
 		m := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("240")).
-			Render(i19n.Localize("chat.msg:processing"))
+			Render(i19n.Localize(c.GetNotification()))
 
 		return lipgloss.JoinHorizontal(
 			lipgloss.Left,
