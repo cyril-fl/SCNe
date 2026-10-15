@@ -21,7 +21,7 @@ var folderConfigPath = config.Current.Documents.Folders.Hint
 var cachedConfig []yamlConfig
 
 func loadFromSource() error {
-	// TODO  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement
+	//  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement
 	// Appliquer cette logique la au oracles dice ect...
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {

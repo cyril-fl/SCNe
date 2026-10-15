@@ -15,7 +15,7 @@ import (
 
 // - Table --//
 /*
-TODO LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
+LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
 type ObjectsTable struct {
 	*TableData[ObjectEntry]
@@ -139,7 +139,7 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 		}))
 	}
 	/*
-		TODO HIGH Quand tout sera fix ajouter ces champs dans le form
+		HIGH Quand tout sera fix ajouter ces champs dans le form
 		if entry["rarity"] == "" {
 			err = append(err, fmt.Errorf("rarity is required"))
 		}

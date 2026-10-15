@@ -57,7 +57,7 @@ func (o *ObjectivesTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
-// TODO MEDIUM refavtor tout ca en se basant sur object ect
+// MEDIUM refavtor tout ca en se basant sur object ect
 func (o *ObjectivesTable) Summaries() []string {
 	if len(o.Entries) == 0 {
 		return []string{i19n.Localize("codex.entry:empty")}

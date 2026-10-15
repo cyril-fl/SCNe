@@ -11,7 +11,6 @@ import (
 	"solopg/app/shared/services/process"
 )
 
-// TEST
 type run struct {
 	process.Process
 	cache

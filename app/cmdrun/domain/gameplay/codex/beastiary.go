@@ -96,7 +96,7 @@ func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
-// TODO HIGH check le code legacy et le code dead avec la nouvelle version
+// HIGH check le code legacy et le code dead avec la nouvelle version
 func (tb *BeastiaryTable) Summaries() []string {
 	if len(tb.Entries) == 0 {
 		return []string{i19n.Localize("codex.entry:empty")}

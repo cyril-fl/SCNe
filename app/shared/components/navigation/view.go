@@ -181,7 +181,7 @@ type context struct {
 	section SectionInterface
 }
 
-// TODO LOW deplacer ça dans un factory qui gerer les style
+// LOW deplacer ça dans un factory qui gerer les style
 func panelStyle() lipgloss.Style {
 	return lipgloss.NewStyle().
 		Padding(0, 1).
