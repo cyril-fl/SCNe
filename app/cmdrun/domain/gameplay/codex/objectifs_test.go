@@ -1,8 +1,19 @@
 package codex
 
-import "testing"
+import (
+	"testing"
+
+	"solopg/app/shared/services/logs"
+)
+
+type testLogRegistrar struct{}
+
+func (testLogRegistrar) Register(*logs.Log) error { return nil }
 
 func TestObjectivesFormEntriesAndUpdate(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
 	table := NewObjectivesTable([]ObjectifEntry{{Title: "old", Description: "description"}})
 	entries := table.FormEntries()
 	if len(entries) != 1 || entries[0].Values["title"] != "old" {

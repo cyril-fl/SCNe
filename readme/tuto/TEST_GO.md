@@ -167,6 +167,55 @@ FAIL
 FAIL	monprojet/calc	0.002s
 ```
 
+### Procédure spécifique à SoloPG
+
+Dans ce projet, la configuration est chargée au démarrage des packages via
+`CONFIG_FILE`. Le fichier `config/.config.yaml` contient lui-même des chemins
+relatifs vers `locales/` et `data/`. Les binaires de test Go peuvent toutefois
+être exécutés depuis le dossier de leur package et non depuis la racine du
+projet. Il faut donc conserver la racine comme répertoire courant pendant
+l'exécution de chaque binaire.
+
+Depuis la racine du dépôt, la commande recommandée est :
+
+```bash
+PROJECT_ROOT="$(pwd)"
+CONFIG_FILE="$PROJECT_ROOT/config/.config.yaml" \
+GOCACHE="${GOCACHE:-/tmp/solopg-go-cache}" \
+go test -exec "sh -c 'cd \"$PROJECT_ROOT\" && exec \"\$@\"' sh" ./...
+```
+
+Cette commande :
+
+- exécute les tests de tous les packages avec `./...` ;
+- fournit explicitement le fichier de configuration du projet ;
+- garantit que les chemins `locales/` et `data/` sont résolus depuis la racine ;
+- utilise un cache Go local si le cache système n'est pas accessible.
+
+Pour un package précis, conservez les mêmes variables et remplacez `./...` :
+
+```bash
+PROJECT_ROOT="$(pwd)"
+CONFIG_FILE="$PROJECT_ROOT/config/.config.yaml" \
+GOCACHE="${GOCACHE:-/tmp/solopg-go-cache}" \
+go test -exec "sh -c 'cd \"$PROJECT_ROOT\" && exec \"\$@\"' sh" \
+./app/shared/components/models
+```
+
+Pour éviter toute ambiguïté, la version compacte équivalente est :
+
+```bash
+PROJECT_ROOT="$(pwd)"; CONFIG_FILE="$PROJECT_ROOT/config/.config.yaml" GOCACHE=/tmp/solopg-go-cache go test -exec "sh -c 'cd \"$PROJECT_ROOT\" && exec \"\$@\"' sh" ./...
+```
+
+En fonctionnement normal, après positionnement correct de l'environnement et
+depuis la racine du dépôt, la commande générique suivante reste la forme la
+plus simple :
+
+```bash
+go test ./...
+```
+
 ---
 
 ## 6. Exécuter un test spécifique
@@ -384,6 +433,7 @@ go test -bench . -benchmem -run '^$'
 ```bash
 go test                              # package courant
 go test ./...                        # tout le projet
+# SoloPG : voir la procédure spécifique ci-dessus si la configuration échoue
 go test -v                           # verbeux
 go test -run '^TestAdd$'             # un test précis
 go test -run 'TestAddTable/négatifs' # un sous-test
@@ -401,4 +451,5 @@ go test -bench . -run '^$'           # benchmarks uniquement
 2. Déclarer `func TestXxx(t *testing.T)`.
 3. Préparer les entrées, appeler la fonction, comparer `got` et `want`.
 4. Signaler l'échec avec `t.Errorf` ou `t.Fatalf` et un message clair.
-5. Lancer `go test ./...` puis `go test ./... -race`.
+5. Depuis la racine de SoloPG, lancer la commande spécifique ci-dessus.
+6. Si la suite passe, lancer ensuite `go test ./... -race` avec le même contexte.
