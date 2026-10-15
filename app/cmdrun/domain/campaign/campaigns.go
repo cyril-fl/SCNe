@@ -2,7 +2,6 @@ package campaign
 
 import (
 	"fmt"
-	"time"
 
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
@@ -10,18 +9,19 @@ import (
 
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/types/primitive"
 	"solopg/app/shared/utils/transform"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Campaign struct {
+	primitive.Datable
+
 	ID              id.ID                 `bson:"Id" json:"Id"`
 	Player          *characters.Character `bson:"character" json:"character"`
 	CurrentLocation *locations.Location   `bson:"location" json:"location"`
 	TimeHistory     []timer.Record        `bson:"timeHistory" json:"timeHistory"`
-	CreatedAt       time.Time             `bson:"createdAt" json:"createdAt"`
-	UpdatedAt       time.Time             `bson:"updatedAt" json:"updatedAt"`
 }
 
 type Template struct {
@@ -30,14 +30,12 @@ type Template struct {
 }
 
 func New(params Template) *Campaign {
-	now := time.Now().UTC()
-
 	return &Campaign{
+		Datable: primitive.Dated(),
+
 		ID:              id.New(),
 		Player:          params.Player,
 		CurrentLocation: params.CurrentLocation,
-		CreatedAt:       now,
-		UpdatedAt:       now,
 	}
 }
 
@@ -52,12 +50,8 @@ func (c *Campaign) Title() string {
 func (c *Campaign) Description() string {
 	return i19n.Localize("campaign.description", map[string]any{
 		"Location": c.CurrentLocation.Name,
-		"Updated":  c.UpdatedAt.Format("2006-01-02 15:04:05"),
+		"Updated":  c.GetFormattedUpdated("2006-01-02 15:04:05"),
 	})
-}
-
-func (c *Campaign) SetUpdatedAt(t time.Time) {
-	c.UpdatedAt = t
 }
 
 func (c *Campaign) Filter() bson.M {

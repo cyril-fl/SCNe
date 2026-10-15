@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/services/timer"
-	"time"
+	"solopg/app/shared/types/primitive"
 )
 
 type State struct {
@@ -19,13 +19,10 @@ type State struct {
 	Metadata        Metadata
 }
 type Metadata struct {
-	Archive  Timestamps
-	Campaign Timestamps
+	Archive  primitive.Datable
+	Campaign primitive.Datable
 }
-type Timestamps struct {
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
+
 type CampaignData struct {
 	Campaign *campaign.Campaign
 	Archives *campaign.Archives
@@ -40,14 +37,8 @@ func NewState(data CampaignData) *State {
 		TimeHistory:     data.Campaign.TimeHistory,
 		Timer:           timer.New(),
 		Metadata: Metadata{
-			Archive: Timestamps{
-				CreatedAt: data.Archives.CreatedAt,
-				UpdatedAt: data.Archives.UpdatedAt,
-			},
-			Campaign: Timestamps{
-				CreatedAt: data.Campaign.CreatedAt,
-				UpdatedAt: data.Campaign.UpdatedAt,
-			},
+			Archive: primitive.Dated(),
+			Campaign: primitive.Dated(),
 		},
 	}
 }

@@ -52,21 +52,19 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 
 func (e *Engine) ExportArchives() *campaign.Archives {
 	return &campaign.Archives{
+		Datable:    e.State.Metadata.Archive.GetAge(),
 		CampaignID: e.CampaignID,
 		Codex:      e.State.Codex,
 		Journal:    e.State.AdventureLog,
-		CreatedAt:  e.State.Metadata.Archive.CreatedAt,
-		UpdatedAt:  e.State.Metadata.Archive.UpdatedAt,
 	}
 }
 
 func (e *Engine) ExportCampaign() *campaign.Campaign {
 	return &campaign.Campaign{
+		Datable:         e.State.Metadata.Campaign.GetAge(),
 		ID:              e.CampaignID,
 		Player:          e.State.Player,
 		CurrentLocation: e.State.CurrentLocation,
 		TimeHistory:     append(e.State.TimeHistory, e.State.Timer.GetHistory()...),
-		CreatedAt:       e.State.Metadata.Campaign.CreatedAt,
-		UpdatedAt:       e.State.Metadata.Campaign.UpdatedAt,
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"slices"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/types/primitive"
 	"strings"
 	"time"
 
@@ -33,11 +34,12 @@ func AssertKind(kind Kind) bool {
 
 // -- Log -- //
 type Log struct {
-	ID        id.ID
-	Type      Kind
-	Author    string
-	Message   string
-	CreatedAt time.Time
+	primitive.Datable
+
+	ID      id.ID
+	Type    Kind
+	Author  string
+	Message string
 }
 
 type Template struct {
@@ -52,22 +54,22 @@ func New(params Template) *Log {
 	}
 
 	return &Log{
-		ID:        id.New(),
-		Type:      params.Type,
-		Author:    params.Author,
-		Message:   params.Message,
-		CreatedAt: time.Now().UTC(),
+		Datable: primitive.Steady(),
+
+		ID:      id.New(),
+		Type:    params.Type,
+		Author:  params.Author,
+		Message: params.Message,
 	}
 }
 
 // -- Methods -- //
 func (l Log) String() string {
-	return fmt.Sprintf("%s - [%s] - (%s) : \"%s\"", l.CreatedAt.Format(time.RFC3339), strings.ToUpper(string(l.Type)), l.Author, l.Message)
+	return fmt.Sprintf("%s - [%s] - (%s) : \"%s\"", l.GetFormattedUpdated(time.RFC3339), strings.ToUpper(string(l.Type)), l.Author, l.Message)
 }
 
-// Repository implementation
-func (l *Log) SetUpdatedAt(t time.Time) {
-	// NOTE Log are imutable
+func (l *Log) Touch() {
+	// Logs are immutable and must keep the previous SetUpdatedAt behavior.
 }
 
 func (l *Log) Filter() bson.M {

@@ -16,7 +16,7 @@ import (
 // Document
 type Document interface {
 	Filter() bson.M
-	SetUpdatedAt(time.Time)
+	Touch()
 }
 
 type MongoRepository struct {
@@ -89,7 +89,7 @@ func (r *MongoRepository) toCollection[T Document](data T) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.getTimeout())
 	defer cancel()
 
-	data.SetUpdatedAt(time.Now().UTC())
+	data.Touch()
 
 	_, err := r.db.
 		GetCollection(r.collection).
