@@ -1,5 +1,6 @@
 values:
   - character_card
+  - quest_card
   - equipment_card
   - event_card
   - location_card

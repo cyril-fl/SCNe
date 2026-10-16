@@ -38,10 +38,10 @@ codex.npcs:entry:
   other: "{{.Name}} - {{.Race}} - {{.Class}}"
 
 # Objectives
-codex.objectives:
-  other: "objectifs"
-codex.objectives.number:
-  other: "Objectif n°{{.Number}}"
+codex.quest:
+  other: "quêtes"
+codex.quest.number:
+  other: "quête n°{{.Number}}"
 
 # Objects
 codex.objects:

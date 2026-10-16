@@ -37,7 +37,6 @@ func New(params Template) (*Object, error) {
 	})
 
 	if newCard == nil {
-
 		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "item",
 			"Error":   err,

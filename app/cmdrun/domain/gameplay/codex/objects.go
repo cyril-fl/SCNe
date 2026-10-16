@@ -42,13 +42,13 @@ func (tb *ObjectsTable) Add(object *objects.Object) {
 
 func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	if err := tb.assertEntry(values); err != nil {
-		return err
+		// i18n
+		return err 
 	}
 
 	object, err := objects.New(objects.Template{
 		Name:        values["name"],
 		Description: values["description"],
-
 		Rarity:   rarity.Default(),
 		Variety:  variety.AssertWithDefault(values["variety"]),
 		Category: objectcategory.AssertWithDefault(values["category"]),
@@ -73,11 +73,14 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 
 func (tb *ObjectsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
+
 	for _, entry := range tb.Entries {
 		if entry.Object == nil {
 			continue
 		}
+
 		name, description := entry.Object.GetName(), entry.Object.GetDescription()
+
 		entries = append(entries, newEntry(name, description, map[string]string{
 			"name": name, "description": description, "category": entry.Object.Category.String(),
 		}, false))
@@ -105,17 +108,16 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
 	if entry["name"] == "" {
-
 		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "item",
-			"Property": "name",
+			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
 
 		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "item",
-			"Property": "description",
+			"Property": "property.description",
 		}))
 	}
 	/*

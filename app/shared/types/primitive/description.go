@@ -3,13 +3,13 @@ package primitive
 // TEST
 
 type Descriptible struct {
-	Name        string `bson:"name" json:"name" yaml:"name"`
-	Description string `bson:"description" json:"description" yaml:"description"`
+	Name        string
+	Description string
 }
 
 type TemplateDescriptible struct {
-	Name        string `yaml:"name"`
-	Description string `yaml:"description"`
+	Name        string //`bson:"name" json:"name" yaml:"name"`
+	Description string //`bson:"description" json:"description" yaml:"description"`
 }
 
 func Describe(params TemplateDescriptible) Descriptible {

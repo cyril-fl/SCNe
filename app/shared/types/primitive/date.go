@@ -2,8 +2,7 @@ package primitive
 
 import "time"
 
-// TEST
-
+// LOW Je ne suis pas certain quel eBSONC soit necessaire
 type Datable struct {
 	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
 	UpdatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
