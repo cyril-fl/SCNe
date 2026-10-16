@@ -11,9 +11,9 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-func NewSideMenu(params CodexMenuParams, focused bool) *codexMenu {
+func NewSection(focused bool) *codexMenu {
 	return &codexMenu{Section: navigation.NewSection(navigation.TemplateSection[*codexMenuItem]{
-		ID: "codex", Options: makeCodexList(params), Focused: focused,
+		ID: "codex", Options: makeCodexList(), Focused: focused,
 	})}
 }
 

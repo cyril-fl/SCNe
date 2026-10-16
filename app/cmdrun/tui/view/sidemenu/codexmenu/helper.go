@@ -8,19 +8,20 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
-	"solopg/app/shared/components/formpage"
+	formpage "solopg/app/shared/components/form/page"
+
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
 	"solopg/config"
 )
 
-func makeCodexList(params CodexMenuParams) []*codexMenuItem {
+func makeCodexList() []*codexMenuItem {
 	return []*codexMenuItem{
 		{id: "codex.locations"},
 		{id: "codex.npcs"},
 		{id: "codex.beastiary"},
 		{id: "codex.objects"},
-		{id: "codex.objectives"},
+		{id: "codex.quest"},
 	}
 }
 
@@ -32,7 +33,7 @@ func NewFormPages(c *codex.Codex) map[string]*formpage.FormPage {
 		"codex.npcs":       newFormPage(c.NpcsTable, getNpcForm),
 		"codex.beastiary":  newFormPage(c.BeastiaryTable, getBeastiaryForm),
 		"codex.objects":    newFormPage(c.ObjectsTable, getObjectForm),
-		"codex.objectives": newFormPage(c.ObjectifsTable, getObjectifForm),
+		"codex.quest": newFormPage(c.QuestTable, getObjectifForm),
 	}
 }
 

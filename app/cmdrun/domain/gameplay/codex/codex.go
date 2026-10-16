@@ -12,7 +12,7 @@ type Codex struct {
 	BeastiaryTable *BeastiaryTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
-	ObjectifsTable *QuestTable
+	QuestTable *QuestTable
 }
 
 func New() *Codex {
@@ -21,7 +21,7 @@ func New() *Codex {
 		BeastiaryTable: NewBeastiaryTable([]BeastiaryEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
-		ObjectifsTable: NewQuestTable([]QuestEntry{}),
+		QuestTable: NewQuestTable([]QuestEntry{}),
 	}
 }
 
@@ -39,15 +39,15 @@ func (c *Codex) EnsureInitialized() {
 	if c.ObjectsTable == nil {
 		c.ObjectsTable = NewObjectsTable(nil)
 	}
-	if c.ObjectifsTable == nil {
-		c.ObjectifsTable = NewQuestTable(nil)
+	if c.QuestTable == nil {
+		c.QuestTable = NewQuestTable(nil)
 	}
 
 	c.NpcsTable.Ensure()
 	c.BeastiaryTable.Ensure()
 	c.LocationsTable.Ensure()
 	c.ObjectsTable.Ensure()
-	c.ObjectifsTable.Ensure()
+	c.QuestTable.Ensure()
 }
 
 // - Codex table - //
@@ -65,6 +65,7 @@ type Entry struct {
 	Locked bool
 }
 
+// TODO sceptiqquesur le string map
 func newEntry(name, description string, values map[string]string, locked bool) Entry {
 	return Entry{
 		Descriptible: primitive.Describe(primitive.TemplateDescriptible{

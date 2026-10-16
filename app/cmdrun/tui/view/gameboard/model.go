@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
-	"solopg/app/shared/components/formpage"
+	formpage "solopg/app/shared/components/form/page"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/statemachine"

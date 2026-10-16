@@ -74,7 +74,7 @@ func getObjectForm(values map[string]string) *form.Form {
 // - Objectif Form - //
 func getObjectifForm(values map[string]string) *form.Form {
 	return form.New(
-		field.TextField(field.TextTemplate[string]{ID: "title", Label: "field.title", Defaultvalue: values["title"], Validator: nil, Required: true}),
+		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
 	).Focus()
 }

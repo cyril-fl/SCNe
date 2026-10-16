@@ -3,6 +3,7 @@ package codex
 import (
 	"errors"
 	"os"
+	"solopg/app/cmdrun/domain/card/quest"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
@@ -15,11 +16,10 @@ type QuestTable struct {
 }
 type QuestEntry struct {
 	Timestamp   time.Time `bson:"timestamp"`
-	Title       string    `bson:"title"`
-	Description string    `bson:"description"`
+	Quest *quest.Quest `bson:"quest"`
 }
 
-var tableobjectives = "codex.objectives"
+var tableobjectives = "codex.quest"
 
 func NewQuestTable(entries []QuestEntry) *QuestTable {
 	return &QuestTable{
@@ -28,11 +28,10 @@ func NewQuestTable(entries []QuestEntry) *QuestTable {
 }
 
 // - Methods --//
-func (o *QuestTable) Add(title, description string) {
+func (o *QuestTable) Add(quest *quest.Quest) {
 	o.Entries = append(o.Entries, QuestEntry{
 		Timestamp:   time.Now().UTC(),
-		Title:       title,
-		Description: description,
+		Quest: quest,
 	})
 }
 
@@ -45,7 +44,19 @@ func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 		})
 	}
 
-	o.Add(values["title"], values["description"])
+	quest, err := quest.New(quest.Template{
+		Name:        values["name"],
+		Description: values["description"],
+	})
+
+	if err != nil {
+		return logs.Error("error.invalid:new", map[string]any{
+			"Subject": "objectives",
+			"Error":   err,
+		})
+	}
+
+	o.Add(quest)
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobjectives,
@@ -56,12 +67,18 @@ func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 }
 
 // MEDIUM refavtor tout ca en se basant sur object ect
-
 func (o *QuestTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(o.Entries))
+
 	for _, entry := range o.Entries {
-		entries = append(entries, newEntry(entry.Title, entry.Description, map[string]string{
-			"title": entry.Title, "description": entry.Description,
+		if entry.Quest == nil {
+			continue
+		}
+
+		name, description := entry.Quest.GetName(), entry.Quest.GetDescription()
+
+		entries = append(entries, newEntry(name, description, map[string]string{
+			"name": name, "description": description,
 		}, false))
 	}
 	return entries
@@ -86,11 +103,10 @@ func (o *QuestTable) SaveFromMappedValues(index int, values map[string]string) e
 func (o *QuestTable) assertEntry(values map[string]string) error {
 	var err []error
 
-	if values["title"] == "" {
-
+	if values["name"] == "" {
 		err = append(err, logs.Error("error.required", map[string]any{
 			"Subject":  "objectives",
-			"Property": "property.title",
+			"Property": "property.name",
 		}))
 	}
 	if values["description"] == "" {

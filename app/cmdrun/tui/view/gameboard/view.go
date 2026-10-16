@@ -125,10 +125,7 @@ func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 			},
 			Msg: messages.Rolled{},
 		}),
-		codexmenu.NewSideMenu(codexmenu.CodexMenuParams{
-			Size:  size.Nil(),
-			Codex: codex,
-		}, false),
+		codexmenu.NewSection(false),
 	}
 
 	for i, item := range row {

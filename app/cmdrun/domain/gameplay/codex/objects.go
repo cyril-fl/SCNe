@@ -42,8 +42,7 @@ func (tb *ObjectsTable) Add(object *objects.Object) {
 
 func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	if err := tb.assertEntry(values); err != nil {
-		// i18n
-		return err 
+		return err
 	}
 
 	object, err := objects.New(objects.Template{
