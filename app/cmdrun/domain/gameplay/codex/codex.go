@@ -1,8 +1,8 @@
 package codex
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/codex/service/factory/milltable"
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	"solopg/app/cmdrun/services/factory/milltable"
 )
 
 type Codex struct {
