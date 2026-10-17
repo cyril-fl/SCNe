@@ -67,6 +67,8 @@ documents:
     dice: "data/systems/rules/dices/dice.yaml"
     objects_category: "data/systems/attributes/category.yaml"
     classes: "data/systems/attributes/class.yaml"
+    priorities: "data/systems/attributes/priorities.yaml"
+    ranks: "data/systems/attributes/ranks.yaml"
     races: "data/systems/attributes/races.yaml"
     rarity: "data/systems/attributes/rarirty.yaml"
     slots: "data/systems/attributes/slots.yaml"

@@ -2,11 +2,13 @@ package hint
 
 import (
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -18,57 +20,40 @@ type yamlConfig struct {
 
 var folderConfigPath = config.Current.Documents.Folders.Hint
 
-var cachedConfig []yamlConfig
+var cachedConfig = primitive.NewCache[[]yamlConfig]()
 
-func loadFromSource() error {
+func loadFromSource() ([]yamlConfig, error) {
 	//  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement
 	// Appliquer cette logique la au oracles dice ect...
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return logs.Error("error.loading:folder", map[string]any{
-			"Subject": "hint",
-			"Folder":  folderConfigPath,
-			"Error":   err,
-		})
+		return nil, fmt.Errorf("load hint folder %s: %w", folderConfigPath, err)
 	}
 
-	if errs := handleLoadFromFiles(files); len(errs) > 0 {
-		return errors.Join(errs...)
-	}
-
-	return nil
-}
-
-func handleLoadFromFiles(files []string) []error {
-	errs := []error{}
+	configs := make([]yamlConfig, 0, len(files))
+	errs := make([]error, 0)
 	for _, file := range files {
-		if err := loadFromFile(file); err != nil {
-			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": "hint",
-				"File":    file,
-				"Error":   err,
-			}))
+		config, err := loadFromFile(file)
+		if err != nil {
+			errs = append(errs, err)
 			continue
 		}
+		configs = append(configs, config)
 	}
 
-	return errs
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return configs, nil
 }
 
-func loadFromFile(fileAddress string) error {
+func loadFromFile(fileAddress string) (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-
 	if err != nil {
-		return logs.Error("error.loading:file", map[string]any{
-			"Subject": "hint",
-			"File":    fileAddress,
-			"Error":   err,
-		})
+		return yamlConfig{}, fmt.Errorf("load hint file %s: %w", fileAddress, err)
 	}
-
-	cachedConfig = append(cachedConfig, *params)
-
-	return nil
+	return *params, nil
 }
 
 // - Hint - //
@@ -80,7 +65,7 @@ type Hint struct {
 func newFromYamlConfig(config yamlConfig) Hint {
 	return Hint{
 		name:   config.Name,
-		values: config.Values,
+		values: append([]string(nil), config.Values...),
 	}
 }
 
@@ -103,19 +88,30 @@ func (o Hint) GetName() string {
 	return o.name
 }
 func (o Hint) Values() []string {
-	return o.values
+	return append([]string(nil), o.values...)
 }
 
 // - Collection - //
-func List() []Hint {
-	if len(cachedConfig) == 0 {
-		err := loadFromSource()
-		if err != nil {
-			return nil
-		}
+func ListWithError() ([]Hint, error) {
+	configs, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return nil, err
 	}
+	return makeSet(configs), nil
+}
 
-	return makeSet(cachedConfig)
+func List() []Hint {
+	hints, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.SilentWarning("error.loading", map[string]any{
+				"Subject": "hint",
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+	return hints
 }
 
 func ListFromFolder(path string) ([]string, error) {

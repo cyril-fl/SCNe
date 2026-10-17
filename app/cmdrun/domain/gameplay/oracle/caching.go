@@ -9,6 +9,7 @@ import (
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/app/shared/utils/transform"
 	"solopg/config"
 )
@@ -37,73 +38,47 @@ type Result[T any] struct {
 
 var folderConfigPath = config.Current.Documents.Folders.Oracle
 
-var cachedConfig []yamlConfig
+var cachedConfig = primitive.NewCache[[]yamlConfig]()
 
-func loadFromSource() error {
+func loadFromSource() ([]yamlConfig, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-
-		return logs.Error("error.loading:folder", map[string]any{
-			"Subject": "oracle",
-			"Folder":  folderConfigPath,
-			"Error":   err,
-		})
+		return nil, fmt.Errorf("load oracle folder %s: %w", folderConfigPath, err)
 	}
 
-	if errs := handleLoadFromFiles(files); len(errs) > 0 {
-		return errors.Join(errs...)
-	}
-
-	return nil
-}
-
-func handleLoadFromFiles(files []string) []error {
-	errs := []error{}
+	configs := make([]yamlConfig, 0, len(files))
+	errs := make([]error, 0)
 	for _, file := range files {
-		if err := loadFromFile(file); err != nil {
-
-			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": "oracle",
-				"File":    file,
-				"Error":   err,
-			}))
+		config, err := loadFromFile(file)
+		if err != nil {
+			errs = append(errs, err)
 			continue
 		}
+		configs = append(configs, config)
 	}
 
-	return errs
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return configs, nil
 }
 
-func loadFromFile(fileAddress string) error {
+func loadFromFile(fileAddress string) (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-
 	if err != nil {
-
-		return logs.Error("error.loading", map[string]any{
-			"Subject": transform.Capitalize(i19n.Localize("oracle")),
-			"Error":   err,
-		})
+		return yamlConfig{}, fmt.Errorf("load oracle file %s: %w", fileAddress, err)
 	}
 
 	if params.Dice <= 0 {
-
-		return logs.Error("error.invalid", map[string]any{
-			"Subject": transform.Capitalize(i19n.Localize("oracle")),
-			"Value":   params.Name,
-		})
+		return yamlConfig{}, fmt.Errorf("oracle %s has an invalid dice count", params.Name)
 	}
 
 	if len(params.Intervals) == 0 {
-
-		return logs.Error("error.required", map[string]any{
-			"Subject":  transform.Capitalize(i19n.Localize("oracle")),
-			"Property": "intervals",
-		})
+		return yamlConfig{}, fmt.Errorf("oracle %s has no intervals", params.Name)
 	}
 
-	cachedConfig = append(cachedConfig, *params)
-
-	return nil
+	return *params, nil
 }
 
 // - Oracle - //
@@ -121,7 +96,7 @@ func newFromYamlConfig(config yamlConfig) Oracle {
 		dice:      config.Dice,
 		typ:       config.Type,
 		visible:   config.Visible,
-		intervals: config.Intervals,
+		intervals: append([]interval(nil), config.Intervals...),
 	}
 }
 
@@ -151,19 +126,26 @@ func (o Oracle) IsVisible() bool {
 }
 
 // - Collection - //
-func List() []Oracle {
-	if cachedConfig == nil {
-		if err := loadFromSource(); err != nil {
+func ListWithError() ([]Oracle, error) {
+	configs, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return nil, err
+	}
+	return makeSet(configs), nil
+}
 
+func List() []Oracle {
+	oracles, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
 			logs.Error("error.loading", map[string]any{
 				"Subject": transform.Capitalize(i19n.Localize("oracle")),
 				"Error":   err,
 			})
-			return nil
-		}
+		})
+		return nil
 	}
-
-	return makeSet(cachedConfig)
+	return oracles
 }
 
 func ListVisible() []Oracle {

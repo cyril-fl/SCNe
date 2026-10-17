@@ -1,17 +1,22 @@
 package races
 
-import "testing"
+import (
+	"testing"
+
+	"solopg/app/shared/types/primitive"
+)
 
 func TestIsLockedTracksTemplateEntriesOnly(t *testing.T) {
 	originalConfig := cachedConfig
-	originalLockedNames := lockedNames
 	t.Cleanup(func() {
 		cachedConfig = originalConfig
-		lockedNames = originalLockedNames
 	})
 
-	cachedConfig = []yamlConfig{{Name: "race.template"}}
-	lockedNames = map[string]struct{}{"race.template": {}}
+	cachedConfig = primitive.NewCache[cacheValue]()
+	cachedConfig.Update(func(config *cacheValue) {
+		config.Configs = []yamlConfig{{Name: "race.template"}}
+		config.LockedNames = map[string]struct{}{"race.template": {}}
+	})
 
 	if !IsLocked("race.template") {
 		t.Fatal("expected the template race to be locked")

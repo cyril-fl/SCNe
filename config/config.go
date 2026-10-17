@@ -55,6 +55,8 @@ type structureFiles struct {
 	Classes         string `yaml:"classes"`
 	Dice            string `yaml:"dice"`
 	ObjectsCategory string `yaml:"objects_category"`
+	Priorities      string `yaml:"priorities"`
+	Ranks           string `yaml:"ranks"`
 	Races           string `yaml:"races"`
 	Rarity          string `yaml:"rarity"`
 	Slots           string `yaml:"slots"`

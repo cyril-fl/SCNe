@@ -2,7 +2,9 @@ package objectcategory
 
 import (
 	"slices"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -13,17 +15,15 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.ObjectsCategory
 
-var cachedConfig yamlConfig
+var cachedConfig = primitive.NewCache[yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return err
+		return yamlConfig{}, err
 	}
 
-	cachedConfig = *params
-
-	return nil
+	return *params, nil
 }
 
 func (c *yamlConfig) addValue(value Category) {
@@ -35,15 +35,29 @@ func (c *yamlConfig) addValue(value Category) {
 // - Category - //
 type Category string
 
-func List() []Category {
-	if len(cachedConfig.Values) == 0 {
-		err := loadFromFile()
-		if err != nil {
-			return nil
-		}
+func ListWithError() ([]Category, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
-	return cachedConfig.Values
+	return append([]Category(nil), config.Values...), nil
+}
+
+func List() []Category {
+	values, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.Error("error.loading:file", map[string]any{
+				"Subject": "category",
+				"File":    fileConfigPath,
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return values
 }
 
 /*
@@ -51,8 +65,10 @@ LOW Verrifier ou "MakeDefault" pourrait être utile
 ex: Si la data vien d'une carte loader, c'est valider
 */
 func MakeDefault(defaultValue string) Category {
-	List()
-	cachedConfig.addValue(Category(defaultValue))
+	_, _ = ListWithError()
+	cachedConfig.Update(func(config *yamlConfig) {
+		config.addValue(Category(defaultValue))
+	})
 	return Category(defaultValue)
 }
 

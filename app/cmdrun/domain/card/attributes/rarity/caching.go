@@ -2,7 +2,9 @@ package rarity
 
 import (
 	"slices"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -14,17 +16,15 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Rarity
 
-var cachedConfig yamlConfig
+var cachedConfig = primitive.NewCache[yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return err
+		return yamlConfig{}, err
 	}
 
-	cachedConfig = *params
-
-	return nil
+	return *params, nil
 }
 
 func (c *yamlConfig) addValue(value Rarity) {
@@ -36,25 +36,42 @@ func (c *yamlConfig) addValue(value Rarity) {
 // - Rarity - //
 type Rarity string
 
-func List() []Rarity {
-	if len(cachedConfig.Values) == 0 {
-		err := loadFromFile()
-		if err != nil {
-			return nil
-		}
+func ListWithError() ([]Rarity, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
-	return cachedConfig.Values
+	return append([]Rarity(nil), config.Values...), nil
+}
+
+func List() []Rarity {
+	values, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.Error("error.loading:file", map[string]any{
+				"Subject": "rarity",
+				"File":    fileConfigPath,
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return values
 }
 
 func Default() Rarity {
-	if cachedConfig.Default == "" {
-		if err := loadFromFile(); err != nil || !cachedConfig.Default.Validate() {
-			return MakeDefault("")
-		}
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return MakeDefault("")
 	}
 
-	return cachedConfig.Default
+	if config.Default == "" || !config.Default.Validate() {
+		return MakeDefault("")
+	}
+
+	return config.Default
 }
 
 func (r Rarity) Validate() bool {
@@ -62,8 +79,10 @@ func (r Rarity) Validate() bool {
 }
 
 func MakeDefault(defaultValue string) Rarity {
-	List()
-	cachedConfig.addValue(Rarity(defaultValue))
+	_, _ = ListWithError()
+	cachedConfig.Update(func(config *yamlConfig) {
+		config.addValue(Rarity(defaultValue))
+	})
 	return Rarity(defaultValue)
 }
 

@@ -18,26 +18,20 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Races
 
-var cachedConfig []yamlConfig
-var lockedNames map[string]struct{}
+type cacheValue struct {
+	Configs     []yamlConfig
+	LockedNames map[string]struct{}
+}
 
-func loadFromFile() error {
+var cachedConfig = primitive.NewCache[cacheValue]()
+
+func loadFromFile() ([]yamlConfig, error) {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return logs.Error("error.loading:file", map[string]any{
-			"Subject": "race",
-			"File":    fileConfigPath,
-			"Error":   err,
-		})
+		return nil, err
 	}
 
-	cachedConfig = params
-	lockedNames = make(map[string]struct{}, len(params))
-	for _, value := range params {
-		lockedNames[value.Name] = struct{}{}
-	}
-
-	return nil
+	return params, nil
 }
 
 func Has(value Template) bool {
@@ -52,6 +46,11 @@ func Has(value Template) bool {
 }
 
 func AddInConfig(value Template) error {
+	if _, err := ListWithError(); err != nil {
+		reportLoadError()
+		return err
+	}
+
 	if Has(value) {
 		return logs.MildError("error.invalid:already_exists", map[string]any{
 			"Subject": "race",
@@ -66,23 +65,53 @@ func AddInConfig(value Template) error {
 		Bonus:       value.Bonus,
 	}
 
-	cachedConfig = append(cachedConfig, new)
+	cachedConfig.Update(func(config *cacheValue) {
+		config.Configs = append(config.Configs, new)
+	})
 
 	return nil
 }
 
 // - Collection - //
-func List() []Race {
-	if cachedConfig == nil {
-		if err := loadFromFile(); err != nil {
-			logs.SilentWarning("error.loading", map[string]any{
-				"Subject": "race",
-				"Error":   err,
-			})
-			return nil
+func ListWithError() ([]Race, error) {
+	config, err := cachedConfig.Load(func() (cacheValue, error) {
+		configs, err := loadFromFile()
+		if err != nil {
+			return cacheValue{}, err
 		}
+
+		locked := make(map[string]struct{}, len(configs))
+		for _, value := range configs {
+			locked[value.Name] = struct{}{}
+		}
+
+		return cacheValue{Configs: configs, LockedNames: locked}, nil
+	})
+	if err != nil {
+		return nil, err
 	}
-	return makeSet(cachedConfig)
+
+	return makeSet(config.Configs), nil
+}
+
+func List() []Race {
+	races, err := ListWithError()
+	if err != nil {
+		reportLoadError()
+		return nil
+	}
+
+	return races
+}
+
+func reportLoadError() {
+	cachedConfig.ReportError(func(err error) {
+		logs.SilentWarning("error.loading", map[string]any{
+			"Subject": "race",
+			"File":    fileConfigPath,
+			"Error":   err,
+		})
+	})
 }
 
 func makeSet(configs []yamlConfig) []Race {
@@ -117,10 +146,24 @@ func ListNames() []string {
 // IsLocked reports whether a race comes from the initial template cache.
 // Races added later with AddInConfig are intentionally not locked.
 func IsLocked(name string) bool {
-	if cachedConfig == nil {
-		List()
+	config, err := cachedConfig.Load(func() (cacheValue, error) {
+		configs, err := loadFromFile()
+		if err != nil {
+			return cacheValue{}, err
+		}
+
+		locked := make(map[string]struct{}, len(configs))
+		for _, value := range configs {
+			locked[value.Name] = struct{}{}
+		}
+
+		return cacheValue{Configs: configs, LockedNames: locked}, nil
+	})
+	if err != nil {
+		reportLoadError()
+		return false
 	}
-	_, ok := lockedNames[name]
+	_, ok := config.LockedNames[name]
 	return ok
 }
 

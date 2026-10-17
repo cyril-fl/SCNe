@@ -19,17 +19,15 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Stats
 
-var cachedConfig *yamlConfig
+var cachedConfig = primitive.NewCache[yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return err
+		return yamlConfig{}, err
 	}
 
-	cachedConfig = params
-
-	return nil
+	return *params, nil
 }
 
 // - Stats & Effects - //
@@ -69,25 +67,34 @@ func New(mods []Modifier) Stats {
 	return s
 }
 
-func GetBasic() Stats {
-	if cachedConfig == nil {
-		if err := loadFromFile(); err != nil {
-			logs.SilentWarning("error.loading", map[string]any{
-				"Subject": "stats",
-				"Error":   err,
-			})
-
-			return nil
-		}
+func GetBasicWithError() (Stats, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
 	copy := make(Stats)
 
-	for stat, value := range cachedConfig.BaseStats {
+	for stat, value := range config.BaseStats {
 		copy[stat] = value
 	}
 
-	return copy
+	return copy, nil
+}
+
+func GetBasic() Stats {
+	values, err := GetBasicWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.SilentWarning("error.loading", map[string]any{
+				"Subject": "stats",
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return values
 }
 
 func (s *Stats) ApplyModifier(mod Modifier) {
@@ -151,17 +158,27 @@ func (m Modifier) String() string {
 }
 
 // - Collection - //
+func ListWithError() ([]Stat, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return append([]Stat(nil), config.Names...), nil
+}
+
 func List() []Stat {
-	if cachedConfig == nil {
-		if err := loadFromFile(); err != nil {
+	values, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
 			logs.SilentWarning("error.loading:file", map[string]any{
 				"Subject": "stats",
 				"File":    fileConfigPath,
 				"Error":   err,
 			})
-			return nil
-		}
+		})
+		return nil
 	}
 
-	return cachedConfig.Names
+	return values
 }

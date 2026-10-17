@@ -2,9 +2,11 @@ package dice
 
 import (
 	"math/rand"
+
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -16,22 +18,14 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Dice
 
-var cachedConfig []yamlConfig
+var cachedConfig = primitive.NewCache[[]yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() ([]yamlConfig, error) {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-
-		return logs.Error("error.loading:file", map[string]any{
-			"Subject": "dice",
-			"File":    fileConfigPath,
-			"Error":   err,
-		})
+		return nil, err
 	}
-
-	cachedConfig = params
-
-	return nil
+	return params, nil
 }
 
 // - Dice - //
@@ -65,19 +59,27 @@ func (d Dice) Roll() int {
 }
 
 // - Collection - //
+func ListWithError() ([]Dice, error) {
+	configs, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
+	}
+	return makeSet(configs), nil
+}
+
 func List() []Dice {
-	if cachedConfig == nil {
-		if err := loadFromFile(); err != nil {
+	dice, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
 			logs.SilentWarning("error.loading:file", map[string]any{
 				"Subject": "dice",
 				"File":    fileConfigPath,
 				"Error":   err,
 			})
-			return nil
-		}
+		})
+		return nil
 	}
-
-	return makeSet(cachedConfig)
+	return dice
 }
 
 func makeSet(configs []yamlConfig) []Dice {

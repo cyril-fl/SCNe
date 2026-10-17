@@ -2,6 +2,8 @@ package codexform
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
+	"solopg/app/cmdrun/domain/card/attributes/priority"
+	"solopg/app/cmdrun/domain/card/attributes/rank"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
@@ -78,16 +80,12 @@ func GetObjectForm(values map[string]string) *form.Form {
 
 // - Objectif Form - //
 func GetQuestForm(values map[string]string) *form.Form {
-	priorityItems := getFormPriorityOptions()
-	priority := values["priority"]
-	if priority == "" {
-		priority = "medium"
+	if len(priority.List()) == 0 {
+		priority.MakeDefault("priority.medium")
 	}
 
-	rankItems := getFormRankOptions()
-	rank := values["rank"]
-	if rank == "" {
-		rank = "intermediate"
+	if len(rank.List()) == 0 {
+		rank.MakeDefault("side")
 	}
 
 	return form.New(
@@ -95,9 +93,8 @@ func GetQuestForm(values map[string]string) *form.Form {
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "done", Label: "field.done", Defaultvalue: values["done"], Options: getDoneOptions(), Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "reward", Label: "field.reward", Defaultvalue: values["reward"], Validator: nil, Required: true}),
-		// TODO Implementer les data en file driven
-		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: priorityItems, Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: rankItems, Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: getFormPriorityOptions(), Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: getFormRankOptions(), Validator: nil, Required: true}),
 	).Focus()
 }
 
@@ -109,17 +106,25 @@ func getDoneOptions() []models.Item[string] {
 }
 
 func getFormPriorityOptions() []models.Item[string] {
-	items := make([]models.Item[string], 0)
-	for _, value := range []string{"low", "medium", "high"} {
-		items = append(items, models.NewItem(i19n.Localize(value), "", value))
+	values, err := priority.ListWithError()
+	if err != nil {
+		return nil
+	}
+	items := make([]models.Item[string], 0, len(values))
+	for _, value := range values {
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
 	}
 	return items
 }
 
 func getFormRankOptions() []models.Item[string] {
-	items := make([]models.Item[string], 0)
-	for _, value := range []string{"novice", "intermediate", "expert"} {
-		items = append(items, models.NewItem(i19n.Localize(value), "", value))
+	values, err := rank.ListWithError()
+	if err != nil {
+		return nil
+	}
+	items := make([]models.Item[string], 0, len(values))
+	for _, value := range values {
+		items = append(items, models.NewItem(i19n.Localize(value.String()), "", value.String()))
 	}
 	return items
 }

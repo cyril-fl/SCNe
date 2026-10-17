@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -17,21 +18,15 @@ type yamlConfig struct {
 
 var filePath = config.Current.Documents.Files.Classes
 
-var cachedConfig []yamlConfig
+var cachedConfig = primitive.NewCache[[]yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() ([]yamlConfig, error) {
 	params, err := yaml.LoadListFromFile[yamlConfig](filePath)
 	if err != nil {
-		return logs.Error("error.loading:file", map[string]any{
-			"Subject": "class",
-			"File":    filePath,
-			"Error":   err,
-		})
+		return nil, err
 	}
 
-	cachedConfig = params
-
-	return nil
+	return params, nil
 }
 
 func Has(value Template) bool {
@@ -46,6 +41,11 @@ func Has(value Template) bool {
 }
 
 func AddInConfig(value Template) error {
+	if _, err := ListWithError(); err != nil {
+		reportLoadError()
+		return err
+	}
+
 	if Has(value) {
 		return logs.MildError("error.invalid:already_exists", map[string]any{
 			"Subject": "class",
@@ -60,24 +60,41 @@ func AddInConfig(value Template) error {
 		ArmorSet: value.EquipementName,
 	}
 
-	cachedConfig = append(cachedConfig, new)
+	cachedConfig.Update(func(config *[]yamlConfig) {
+		*config = append(*config, new)
+	})
 
 	return nil
 }
 
 // - Collection - //
-func List() []Class {
-	if cachedConfig == nil {
-		if err := loadFromFile(); err != nil {
-			logs.SilentWarning("error.loading", map[string]any{
-				"Subject": "class",
-				"Error":   err,
-			})
-			return nil
-		}
+func ListWithError() ([]Class, error) {
+	configs, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
-	return makeSet(cachedConfig)
+	return makeSet(configs), nil
+}
+
+func List() []Class {
+	classes, err := ListWithError()
+	if err != nil {
+		reportLoadError()
+		return nil
+	}
+
+	return classes
+}
+
+func reportLoadError() {
+	cachedConfig.ReportError(func(err error) {
+		logs.SilentWarning("error.loading", map[string]any{
+			"Subject": "class",
+			"File":    filePath,
+			"Error":   err,
+		})
+	})
 }
 
 func ListNames() []string {

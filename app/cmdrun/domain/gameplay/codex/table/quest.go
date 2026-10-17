@@ -3,10 +3,13 @@ package codextable
 import (
 	"errors"
 	"os"
+	"solopg/app/cmdrun/domain/card/attributes/priority"
+	"solopg/app/cmdrun/domain/card/attributes/rank"
 	"solopg/app/cmdrun/domain/card/quest"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/utils/transform"
+	"strconv"
 	"time"
 )
 
@@ -54,9 +57,9 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 		Name:        values["name"],
 		Description: values["description"],
 		Done:        transform.StringBool(values["done"]),
-		// Priority:    values["priority"],
-		// Rank:        values["rank"],
-		Reward: values["reward"],
+		Priority:    priority.MakeDefault(values["priority"]),
+		Rank:        rank.AssertWithDefault(values["rank"]),
+		Reward:      values["reward"],
 	})
 
 	if err != nil {
@@ -89,6 +92,10 @@ func (tb *QuestTable) FormEntries() []Entry {
 
 		entries = append(entries, newEntry(name, description, map[string]string{
 			"name": name, "description": description,
+			"done":     strconv.FormatBool(entry.Quest.Done),
+			"priority": entry.Quest.Prioty.GetName(),
+			"rank":     entry.Quest.Rank.String(),
+			"reward":   entry.Quest.Reward,
 		}, false))
 	}
 	return entries

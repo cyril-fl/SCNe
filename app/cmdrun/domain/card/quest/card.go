@@ -2,34 +2,19 @@ package quest
 
 import (
 	"solopg/app/cmdrun/domain/card"
+	"solopg/app/cmdrun/domain/card/attributes/priority"
+	"solopg/app/cmdrun/domain/card/attributes/rank"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/logs"
-)
-
-type Rank string
-
-var (
-	// TODO Rendre ca data driven
-	MainKind Rank = "main"
-	SideKind Rank = "side"
-)
-
-type Priority string
-
-var (
-	// TODO Rendre ca data driven
-	LowPriority    Priority = "low"
-	MediumPriority Priority = "medium"
-	HighPriority   Priority = "high"
 )
 
 type Quest struct {
 	card.Card
 
 	Done   bool
-	Prioty Priority
-	Rank   Rank
+	Prioty priority.Priority
+	Rank   rank.Rank
 	Reward string
 }
 
@@ -39,8 +24,8 @@ type Template struct {
 	Variety     variety.Variety
 
 	Done     bool
-	Priority Priority
-	Rank     Rank
+	Priority priority.Priority
+	Rank     rank.Rank
 	Reward   string
 }
 

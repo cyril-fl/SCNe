@@ -2,6 +2,7 @@ package characters
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
@@ -12,6 +13,7 @@ import (
 	"solopg/app/cmdrun/domain/card/objects/equipment"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -31,47 +33,45 @@ type yamlConfig struct {
 
 var folderConfigPath = config.Current.Documents.Folders.Characters
 
-var cachedConfig []yamlConfig
-var lockedNames map[string]struct{}
+type cacheValue struct {
+	Configs     []yamlConfig
+	LockedNames map[string]struct{}
+}
 
-func loadFromSource() error {
-	lockedNames = make(map[string]struct{})
+var cachedConfig = primitive.NewCache[cacheValue]()
+
+func loadFromSource() (cacheValue, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return logs.Error("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
+		return cacheValue{}, err
 	}
 
-	if errs := handleLoadFromFiles(files); len(errs) > 0 {
-		return errors.Join(errs...)
-	}
-
-	return nil
-}
-
-func handleLoadFromFiles(files []string) []error {
-	errs := []error{}
+	configs := make([]yamlConfig, 0, len(files))
+	locked := make(map[string]struct{}, len(files))
+	var errs []error
 	for _, file := range files {
-		if err := loadFromFile(file); err != nil {
-			errs = append(errs, logs.CeaseError("error.loading:file", map[string]any{
-				"Subject": "character",
-				"File":    file,
-				"Error":   err,
-			}))
+		config, err := loadFromFile(file)
+		if err != nil {
+			errs = append(errs, err)
 			continue
 		}
+
+		configs = append(configs, config)
+		locked[config.Name] = struct{}{}
 	}
 
-	return errs
+	if err := errors.Join(errs...); err != nil {
+		return cacheValue{}, err
+	}
+
+	return cacheValue{Configs: configs, LockedNames: locked}, nil
 }
 
-func loadFromFile(fileAddress string) error {
+func loadFromFile(fileAddress string) (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
 
 	if err != nil {
-		return logs.Error("error.loading", map[string]any{
-			"Subject": "location",
-			"Error":   err,
-		})
+		return yamlConfig{}, fmt.Errorf("load %s: %w", fileAddress, err)
 	}
 
 	/*
@@ -80,33 +80,42 @@ func loadFromFile(fileAddress string) error {
 	*/
 	variety.MakeDefault(params.Variety)
 
-	cachedConfig = append(cachedConfig, *params)
-	lockedNames[params.Name] = struct{}{}
-
-	return nil
+	return *params, nil
 }
 
 // - Collection - //
-func List() []Character {
-	if cachedConfig == nil {
-		if err := loadFromSource(); err != nil {
-			logs.SilentWarning("error.loading", map[string]any{
-				"Subject": ("dice"),
-				"Error":   err,
-			})
-			return nil
-		}
+func ListWithError() ([]Character, error) {
+	config, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return nil, err
 	}
 
-	return makeSet(cachedConfig)
+	return makeSet(config.Configs), nil
+}
+
+func List() []Character {
+	characters, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.SilentWarning("error.loading", map[string]any{
+				"Subject": "character",
+				"Folder":  folderConfigPath,
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return characters
 }
 
 // IsLocked reports whether a character comes from the initial template cache.
 func IsLocked(name string) bool {
-	if cachedConfig == nil {
-		List()
+	config, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return false
 	}
-	_, ok := lockedNames[name]
+	_, ok := config.LockedNames[name]
 	return ok
 }
 

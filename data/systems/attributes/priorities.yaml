@@ -1,0 +1,6 @@
+- name: priority.low
+  weight: 0
+- name: priority.medium
+  weight: 1
+- name: priority.high
+  weight: 2

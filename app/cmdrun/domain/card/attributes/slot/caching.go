@@ -2,7 +2,9 @@ package slot
 
 import (
 	"slices"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -13,17 +15,15 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Slots
 
-var cachedConfig yamlConfig
+var cachedConfig = primitive.NewCache[yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return err
+		return yamlConfig{}, err
 	}
 
-	cachedConfig = *params
-
-	return nil
+	return *params, nil
 }
 
 func (c *yamlConfig) addValue(value Slot) {
@@ -35,14 +35,29 @@ func (c *yamlConfig) addValue(value Slot) {
 // Slot
 type Slot string
 
-func List() []Slot {
-	if len(cachedConfig.Values) == 0 {
-		if err := loadFromFile(); err != nil {
-			return nil
-		}
+func ListWithError() ([]Slot, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
-	return cachedConfig.Values
+	return append([]Slot(nil), config.Values...), nil
+}
+
+func List() []Slot {
+	values, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.Error("error.loading:file", map[string]any{
+				"Subject": "slot",
+				"File":    fileConfigPath,
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return values
 }
 
 func (r Slot) Validate() bool {

@@ -2,14 +2,17 @@ package equipment
 
 import (
 	"errors"
+	"fmt"
+
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/types/potency"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/slot"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
+	"solopg/app/cmdrun/types/potency"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 )
 
 // - Configuration & caching - //
@@ -28,69 +31,61 @@ type yamlConfig struct {
 
 var folderConfigPath = "data/template/armor_sets"
 
-var cachedConfig []yamlConfig
+var cachedConfig = primitive.NewCache[[]yamlConfig]()
 
-func loadFromSource() error {
+func loadFromSource() ([]yamlConfig, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-
-		return logs.Error("error.loading:folder", map[string]any{
-			"Subject": "gear",
-			"Folder":  folderConfigPath,
-			"Error":   err,
-		})
+		return nil, fmt.Errorf("load gear folder %s: %w", folderConfigPath, err)
 	}
 
-	if errs := handleLoadFromFiles(files); len(errs) > 0 {
-		return errors.Join(errs...)
-	}
-
-	return nil
-}
-
-func handleLoadFromFiles(files []string) []error {
-	errs := []error{}
+	configs := make([]yamlConfig, 0, len(files))
+	errs := make([]error, 0)
 	for _, file := range files {
-		if err := loadFromFile(file); err != nil {
-
-			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": "gear",
-				"File":    file,
-				"Error":   err,
-			}))
-
+		config, err := loadFromFile(file)
+		if err != nil {
+			errs = append(errs, err)
 			continue
 		}
+		configs = append(configs, config)
 	}
 
-	return errs
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return configs, nil
 }
 
-func loadFromFile(fileAddress string) error {
+func loadFromFile(fileAddress string) (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-
 	if err != nil {
-		return err
+		return yamlConfig{}, fmt.Errorf("load gear file %s: %w", fileAddress, err)
 	}
-
-	cachedConfig = append(cachedConfig, *params)
-
-	return nil
+	return *params, nil
 }
 
 // - Collection - //
+func ListWithError() ([]Gear, error) {
+	configs, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return nil, err
+	}
+	return makeSet(configs), nil
+}
+
 func List() []Gear {
-	if cachedConfig == nil {
-		if err := loadFromSource(); err != nil {
+	gears, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
 			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "gear",
 				"Error":   err,
 			})
-			return nil
-		}
+		})
+		return nil
 	}
-
-	return makeSet(cachedConfig)
+	return gears
 }
 
 func makeSet(configs []yamlConfig) []Gear {
@@ -130,22 +125,17 @@ func newFromYaml(config yamlConfig) *Gear {
 }
 
 func FindEquipementByName(name string) []Gear {
-	if cachedConfig == nil {
-		if err := loadFromSource(); err != nil {
-			logs.SilentWarning("error.loading", map[string]any{
-				"Subject": "gear",
-				"Error":   err,
-			})
-			return nil
-		}
+	configs, err := cachedConfig.Load(loadFromSource)
+	if err != nil {
+		return nil
 	}
 
-	var serchResults []yamlConfig
-	for _, gear := range cachedConfig {
+	searchResults := make([]yamlConfig, 0)
+	for _, gear := range configs {
 		if gear.Set == name {
-			serchResults = append(serchResults, gear)
+			searchResults = append(searchResults, gear)
 		}
 	}
 
-	return makeSet(serchResults)
+	return makeSet(searchResults)
 }

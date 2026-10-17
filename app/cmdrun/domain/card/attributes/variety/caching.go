@@ -2,7 +2,9 @@ package variety
 
 import (
 	"slices"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
+	"solopg/app/shared/types/primitive"
 	"solopg/config"
 )
 
@@ -13,17 +15,15 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.Variety
 
-var cachedConfig yamlConfig
+var cachedConfig = primitive.NewCache[yamlConfig]()
 
-func loadFromFile() error {
+func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
 	if err != nil {
-		return err
+		return yamlConfig{}, err
 	}
 
-	cachedConfig = *params
-
-	return nil
+	return *params, nil
 }
 
 func (c *yamlConfig) addValue(value Variety) {
@@ -35,14 +35,29 @@ func (c *yamlConfig) addValue(value Variety) {
 // - Variety - //
 type Variety string
 
-func List() []Variety {
-	if len(cachedConfig.Values) == 0 {
-		if err := loadFromFile(); err != nil {
-			return nil
-		}
+func ListWithError() ([]Variety, error) {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
+		return nil, err
 	}
 
-	return cachedConfig.Values
+	return append([]Variety(nil), config.Values...), nil
+}
+
+func List() []Variety {
+	values, err := ListWithError()
+	if err != nil {
+		cachedConfig.ReportError(func(err error) {
+			logs.Error("error.loading:file", map[string]any{
+				"Subject": "variety",
+				"File":    fileConfigPath,
+				"Error":   err,
+			})
+		})
+		return nil
+	}
+
+	return values
 }
 
 func (r Variety) Validate() bool {
@@ -60,8 +75,10 @@ func Default() Variety {
 }
 
 func MakeDefault(defaultValue string) Variety {
-	List()
-	cachedConfig.addValue(Variety(defaultValue))
+	_, _ = ListWithError()
+	cachedConfig.Update(func(config *yamlConfig) {
+		config.addValue(Variety(defaultValue))
+	})
 	return Variety(defaultValue)
 }
 
