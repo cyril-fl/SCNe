@@ -133,4 +133,4 @@ func (o *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &o.TableData)
 }
 
-// 
+//

@@ -5,8 +5,6 @@ import (
 	"solopg/app/cmdrun/services/factory/milltable"
 )
 
-
-
 type Codex struct {
 	Npcs      codextable.Table
 	Beastiary codextable.Table

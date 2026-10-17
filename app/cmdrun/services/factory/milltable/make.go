@@ -28,7 +28,6 @@ func (f mill) Make() codextable.Table {
 	return *f.target
 }
 
-
 // Helpers
 func Npcs(target *codextable.Table) MillTable {
 	return mill{

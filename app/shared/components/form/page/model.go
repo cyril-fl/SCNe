@@ -79,7 +79,7 @@ func (p *Page) SetSize(s size.Size) {
 	list := p.GetList()
 	p.SetListSize(size.Template{
 		Width:  s.GetWidth(),
-		Height:	models.ListContentHeight(list),
+		Height: models.ListContentHeight(list),
 	})
 }
 

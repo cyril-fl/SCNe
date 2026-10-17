@@ -12,7 +12,6 @@ type Scroll struct{}
 type Submit struct{}
 type Close struct{}
 
-
 type msg interface {
 	PreviousField |
 		NextField |
@@ -23,18 +22,17 @@ type msg interface {
 }
 
 func Send[T msg]() tea.Cmd {
-	return func() tea.Msg { 
+	return func() tea.Msg {
 		return T{}
 	}
 }
 
-
-type Open struct{ 
+type Open struct {
 	ID string
- }
+}
 
 func OpenPage(id string) tea.Cmd {
 	return func() tea.Msg {
-		return Open{ID: id} 
+		return Open{ID: id}
 	}
 }

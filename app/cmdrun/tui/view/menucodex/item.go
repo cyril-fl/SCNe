@@ -2,10 +2,9 @@ package menucodex
 
 func (m *codexMenuItem) GetName() string { return m.id }
 
-
-type codexMenuItem struct{ 
+type codexMenuItem struct {
 	id string
- }
+}
 
 // Getters & Setters
 

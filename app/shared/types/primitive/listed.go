@@ -25,8 +25,7 @@ func (m *List) SetList(listModel *list.Model) {
 	m.list = *listModel
 }
 
-
 func (m *List) SetListSize(template size.Template) {
-		s := size.New(template)
-		m.list.SetSize(s.GetWidth(), s.GetHeight())
+	s := size.New(template)
+	m.list.SetSize(s.GetWidth(), s.GetHeight())
 }

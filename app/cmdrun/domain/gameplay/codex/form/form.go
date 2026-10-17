@@ -88,8 +88,7 @@ func GetQuestForm(values map[string]string) *form.Form {
 	rank := values["rank"]
 	if rank == "" {
 		rank = "intermediate"
-	}	
-
+	}
 
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
@@ -99,7 +98,6 @@ func GetQuestForm(values map[string]string) *form.Form {
 		// TODO Implementer les data en file driven
 		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: priorityItems, Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: rankItems, Validator: nil, Required: true}),
-
 	).Focus()
 }
 
@@ -120,7 +118,6 @@ func getFormRankOptions() []models.Item[string] {
 }
 
 // - Helpers - //
-
 
 // Helpers
 func getFormOracle() []models.Item[string] {

@@ -10,7 +10,6 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-
 func (p *Page) handleKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 	if p.form != nil {
 		return p.handleFormKeyPress(msg)
