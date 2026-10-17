@@ -12,18 +12,6 @@ import (
 
 // Getters & Setters
 
-// GetFolderFiles returns the names of the regular entries directly contained in
-// folderPath. The returned names are not absolute paths.
-func GetFolderFiles(folderPath string) ([]string, error) {
-	return getFolderEntries(folderPath, wantedEntries{directories: false, files: true})
-}
-
-// GetFolderDirectories returns the names of the directories directly contained
-// in folderPath. The returned names are not absolute paths.
-func GetFolderDirectories(folderPath string) ([]string, error) {
-	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
-}
-
 // GetFilesFromSource returns sourcePath when it points to a file. When it
 // points to a directory, it returns the files in that directory and, if
 // recursive is true, in all of its subdirectories.
@@ -40,6 +28,18 @@ func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
 	return getFilesFromDirectoryRecursively(sourcePath, recursive)
 }
 
+
+// GetFolderFiles returns the names of the regular entries directly contained in
+// folderPath. The returned names are not absolute paths.
+func GetFolderFiles(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: false, files: true})
+}
+
+// GetFolderDirectories returns the names of the directories directly contained
+// in folderPath. The returned names are not absolute paths.
+func GetFolderDirectories(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
+}
 
 // getFolderEntries returns the names of the entries in folderPath that match
 // the requested directory and file categories.
@@ -102,8 +102,6 @@ func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]stri
 
 	return files, nil
 }
-
-
 
 // Methods
 

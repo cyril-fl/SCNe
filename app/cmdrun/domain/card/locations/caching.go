@@ -2,7 +2,6 @@ package locations
 
 import (
 	"errors"
-	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
@@ -25,48 +24,34 @@ var folderConfigPath = config.Current.Documents.Folders.Locations
 var cachedConfig []yamlConfig
 var lockedNames map[string]struct{}
 
-func load() error {
+func loadFromSource() error {
 	lockedNames = make(map[string]struct{})
-	folderContents, err := loadFromFolder()
+	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
 	if err != nil {
-		return err
+		return logs.Error("error.locations.load_folder", map[string]any{"Folder": folderConfigPath, "Error": err})
 	}
 
-	errs := []error{}
-	for _, file := range folderContents {
-		filepath := fmt.Sprintf("%s/%s", folderConfigPath, file)
-
-		if err := loadFromFile(filepath); err != nil {
-
-			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": "location",
-				"File":    filepath,
-				"Error":   err,
-			}))
-			continue
-		}
-	}
-
-	if len(errs) > 0 {
+	if errs := handleLoadFromFiles(files); len(errs) > 0 {
 		return errors.Join(errs...)
 	}
 
 	return nil
 }
 
-func loadFromFolder() ([]string, error) {
-	list, err := yaml.GetFolderFiles(folderConfigPath)
-
-	if err != nil {
-
-		return nil, logs.Error("error.loading:folder", map[string]any{
-			"Subject": "location",
-			"Folder":  folderConfigPath,
-			"Error":   err,
-		})
+func handleLoadFromFiles(files []string) []error {
+	errs := []error{}
+	for _, file := range files {
+		if err := loadFromFile(file); err != nil {
+			errs = append(errs, logs.CeaseError("error.loading:file", map[string]any{
+				"Subject": "location",
+				"File":    file,
+				"Error":   err,
+			}))
+			continue
+		}
 	}
 
-	return list, nil
+	return errs
 }
 
 func loadFromFile(fileAddress string) error {
@@ -98,7 +83,7 @@ func loadFromFile(fileAddress string) error {
 // - Collection - //
 func List() []Location {
 	if cachedConfig == nil {
-		err := load()
+		err := loadFromSource()
 		if err != nil {
 			logs.SilentWarning("error.loading", map[string]any{
 				"Subject": "location",
