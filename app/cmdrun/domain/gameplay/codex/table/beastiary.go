@@ -10,19 +10,20 @@ import (
 	"solopg/app/shared/utils/transform"
 	"time"
 )
+
 // - Table --//
 type BeastiaryTable struct {
-	*data[bstyEntry]
+	*data[beastentry]
 }
 
-type bstyEntry struct {
+type beastentry struct {
 	Timestamp time.Time   `bson:"timestamp"`
 	Race      *races.Race `bson:"race"`
 }
 
 var tablebeast = "codex.beastiary"
 
-func NewBeastiaryTable(entries []bstyEntry) Table {
+func NewBeastiary(entries []beastentry) Table {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
@@ -30,15 +31,17 @@ func NewBeastiaryTable(entries []bstyEntry) Table {
 	}
 }
 
-// - Methods --//
+// Getters & Setters
+
+// Methods
 func (tb *BeastiaryTable) Add(race *races.Race) {
-	tb.Entries = append(tb.Entries, bstyEntry{
+	tb.Entries = append(tb.Entries, beastentry{
 		Timestamp: time.Now().UTC(),
 		Race:      race,
 	})
 }
 
-func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
+func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
@@ -114,12 +117,12 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *BeastiaryTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *BeastiaryTable) SaveFromMap(index int, values map[string]string) error {
 	if index < 0 {
-		return tb.AddFromMappedValues(values)
+		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
-	if err := tb.AddFromMappedValues(values); err != nil {
+	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
 	if index < oldLen {
@@ -127,10 +130,6 @@ func (tb *BeastiaryTable) SaveFromMappedValues(index int, values map[string]stri
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
-}
-
-func (tb *BeastiaryTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(tb.FormEntries(), name)
 }
 
 // - Helper --//
@@ -180,23 +179,23 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 	return errors.Join(errs...)
 }
 
-func superChargeEntries(entries []bstyEntry) []bstyEntry {
+func superChargeEntries(entries []beastentry) []beastentry {
 	preloaded := getPreloadBeastiaryEntries()
 
 	return append(preloaded, entries...)
 }
 
-func getPreloadBeastiaryEntries() []bstyEntry {
-	m := make(map[string]bstyEntry)
+func getPreloadBeastiaryEntries() []beastentry {
+	m := make(map[string]beastentry)
 
 	for _, entry := range races.List() {
-		m[entry.GetName()] = bstyEntry{
+		m[entry.GetName()] = beastentry{
 			Timestamp: time.Now().UTC(),
 			Race:      &entry,
 		}
 	}
 
-	slice := make([]bstyEntry, 0, len(m))
+	slice := make([]beastentry, 0, len(m))
 	for value := range m {
 		slice = append(slice, m[value])
 	}

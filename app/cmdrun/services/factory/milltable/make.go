@@ -33,7 +33,7 @@ func Npcs(target *codextable.Table) MillTable {
 	return mill{
 		target: target,
 		factory: func() codextable.Table {
-			return codextable.NewNpcsTable(nil)
+			return codextable.NewNpcs(nil)
 		},
 	}
 }
@@ -42,7 +42,7 @@ func Beastiary(target *codextable.Table) MillTable {
 	return mill{
 		target: target,
 		factory: func() codextable.Table {
-			return codextable.NewBeastiaryTable(nil)
+			return codextable.NewBeastiary(nil)
 		},
 	}
 }
@@ -51,7 +51,7 @@ func Locations(target *codextable.Table) MillTable {
 	return mill{
 		target: target,
 		factory: func() codextable.Table {
-			return codextable.NewLocationsTable(nil)
+			return codextable.NewLocations(nil)
 		},
 	}
 }
@@ -60,7 +60,7 @@ func Objects(target *codextable.Table) MillTable {
 	return mill{
 		target: target,
 		factory: func() codextable.Table {
-			return codextable.NewObjectsTable(nil)
+			return codextable.NewObjects(nil)
 		},
 	}
 }
@@ -69,7 +69,7 @@ func Quest(target *codextable.Table) MillTable {
 	return mill{
 		target: target,
 		factory: func() codextable.Table {
-			return codextable.NewQuestTable(nil)
+			return codextable.NewQuests(nil)
 		},
 	}
 }

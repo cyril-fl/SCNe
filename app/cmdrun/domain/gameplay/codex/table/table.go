@@ -6,10 +6,9 @@ import (
 
 // - Table - //
 type Table interface {
-	AddFromMappedValues(values map[string]string) error
-	SaveFromMappedValues(index int, values map[string]string) error
+	AddFromMap(values map[string]string) error
+	SaveFromMap(index int, values map[string]string) error
 	FormEntries() []Entry
-	FindEntryByName(name string) *Entry
 	Ensure()
 }
 
@@ -64,7 +63,7 @@ func newEntry(name, description string, values map[string]string, locked bool) E
 }
 
 // Helpers
-func findEntryByName(entries []Entry, name string) *Entry {
+func FindEntryByName(entries []Entry, name string) *Entry {
 	for i := range entries {
 		if entries[i].GetName() == name {
 			return &entries[i]

@@ -8,7 +8,7 @@ import (
 func TestNewEntryAndFindEntryByName(t *testing.T) {
 	entry := newEntry("name", "description", map[string]string{"name": "name"}, false)
 
-	found := findEntryByName([]Entry{entry}, "name")
+	found := FindEntryByName([]Entry{entry}, "name")
 
 	if found == nil {
 		t.Fatal("findEntryByName did not find the entry")
@@ -16,8 +16,8 @@ func TestNewEntryAndFindEntryByName(t *testing.T) {
 	if found.GetName() != "name" {
 		t.Fatalf("found entry has name %q, want %q", found.GetName(), "name")
 	}
-	if findEntryByName([]Entry{entry}, "missing") != nil {
-		t.Fatal("findEntryByName found a missing entry")
+	if FindEntryByName([]Entry{entry}, "missing") != nil {
+		t.Fatal("FindEntryByName found a missing entry")
 	}
 }
 
@@ -66,11 +66,11 @@ func TestSubtablesExposeEmptyFormEntries(t *testing.T) {
 		name  string
 		table Table
 	}{
-		{name: "locations", table: NewLocationsTable(nil)},
-		{name: "npcs", table: NewNpcsTable(nil)},
-		{name: "objects", table: NewObjectsTable(nil)},
-		{name: "quest", table: NewQuestTable(nil)},
-		{name: "beastiary", table: NewBeastiaryTable(nil)},
+		{name: "locations", table: NewLocations(nil)},
+		{name: "npcs", table: NewNpcs(nil)},
+		{name: "objects", table: NewObjects(nil)},
+		{name: "quest", table: NewQuests(nil)},
+		{name: "beastiary", table: NewBeastiary(nil)},
 	}
 
 	for _, tt := range tests {
@@ -78,10 +78,11 @@ func TestSubtablesExposeEmptyFormEntries(t *testing.T) {
 			if tt.table == nil {
 				t.Fatal("constructor returned nil")
 			}
-			if entries := tt.table.FormEntries(); entries == nil {
+			entries := tt.table.FormEntries()
+			if entries == nil {
 				t.Fatal("FormEntries returned nil for an empty table")
 			}
-			if tt.table.FindEntryByName("missing") != nil {
+			if FindEntryByName(entries, "missing") != nil {
 				t.Fatal("FindEntryByName found an entry in an empty table")
 			}
 		})

@@ -18,17 +18,17 @@ import (
 LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
 type ObjectsTable struct {
-	*data[objEntry]
+	*data[objectentry]
 }
 
-type objEntry struct {
+type objectentry struct {
 	Timestamp time.Time       `bson:"timestamp"`
 	Object    *objects.Object `bson:"object"`
 }
 
 var tableobject = "codex.objects"
 
-func NewObjectsTable(entries []objEntry) Table {
+func NewObjects(entries []objectentry) Table {
 	return &ObjectsTable{
 		data: new(i19n.Localize(tableobject), entries),
 	}
@@ -37,14 +37,7 @@ func NewObjectsTable(entries []objEntry) Table {
 // Getters & Setters
 
 // Methods
-func (tb *ObjectsTable) Add(object *objects.Object) {
-	tb.Entries = append(tb.Entries, objEntry{
-		Timestamp: time.Now().UTC(),
-		Object:    object,
-	})
-}
-
-func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
+func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
@@ -80,6 +73,13 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
+func (tb *ObjectsTable) Add(object *objects.Object) {
+	tb.Entries = append(tb.Entries, objectentry{
+		Timestamp: time.Now().UTC(),
+		Object:    object,
+	})
+}
+
 func (tb *ObjectsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 
@@ -97,12 +97,12 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *ObjectsTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *ObjectsTable) SaveFromMap(index int, values map[string]string) error {
 	if index < 0 {
-		return tb.AddFromMappedValues(values)
+		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
-	if err := tb.AddFromMappedValues(values); err != nil {
+	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
 	if index < oldLen {
@@ -110,10 +110,6 @@ func (tb *ObjectsTable) SaveFromMappedValues(index int, values map[string]string
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
-}
-
-func (tb *ObjectsTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(tb.FormEntries(), name)
 }
 
 func (tb *ObjectsTable) assertEntry(entry map[string]string) {

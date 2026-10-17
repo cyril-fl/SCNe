@@ -93,12 +93,19 @@ func GetQuestForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "done", Label: "field.done", Defaultvalue: values["done"], Options: getDoneOptions(), Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "reward", Label: "field.reward", Defaultvalue: values["reward"], Validator: nil, Required: true}),
-
 		// TODO Implementer les data en file driven
 		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: priorityItems, Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: rankItems, Validator: nil, Required: true}),
 	).Focus()
+}
+
+func getDoneOptions() []models.Item[string] {
+	return []models.Item[string]{
+		models.NewItem(i19n.Localize("field.done:true"), "", "true"),
+		models.NewItem(i19n.Localize("field.done:false"), "", "false"),
+	}
 }
 
 func getFormPriorityOptions() []models.Item[string] {

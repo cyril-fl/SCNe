@@ -17,16 +17,16 @@ import (
 
 // - Table --//
 type NpcsTable struct {
-	*data[npcsEntry]
+	*data[npcsentry]
 }
-type npcsEntry struct {
+type npcsentry struct {
 	Timestamp time.Time             `bson:"timestamp"`
 	Character *characters.Character `bson:"character"`
 }
 
 var tablenpcs = "codex.npcs"
 
-func NewNpcsTable(entries []npcsEntry) Table {
+func NewNpcs(entries []npcsentry) Table {
 	return &NpcsTable{
 		data: new(i19n.Localize(tablenpcs), entries),
 	}
@@ -36,13 +36,13 @@ func NewNpcsTable(entries []npcsEntry) Table {
 
 // Methods
 func (tb *NpcsTable) Add(character *characters.Character) {
-	tb.Entries = append(tb.Entries, npcsEntry{
+	tb.Entries = append(tb.Entries, npcsentry{
 		Timestamp: time.Now().UTC(),
 		Character: character,
 	})
 }
 
-func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
+func (tb *NpcsTable) AddFromMap(values map[string]string) error {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
@@ -120,12 +120,12 @@ func (tb *NpcsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *NpcsTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *NpcsTable) SaveFromMap(index int, values map[string]string) error {
 	if index < 0 {
-		return tb.AddFromMappedValues(values)
+		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
-	if err := tb.AddFromMappedValues(values); err != nil {
+	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
 	if index < oldLen {
@@ -133,10 +133,6 @@ func (tb *NpcsTable) SaveFromMappedValues(index int, values map[string]string) e
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
-}
-
-func (tb *NpcsTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(tb.FormEntries(), name)
 }
 
 func (tb *NpcsTable) assertEntry(entry map[string]string) {

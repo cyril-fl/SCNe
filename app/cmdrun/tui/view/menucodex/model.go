@@ -101,6 +101,6 @@ func newFormPage(table codextable.Table, makeForm form.Makefunc) *formpage.Page 
 			return items
 		},
 		NewForm: makeForm,
-		Save:    table.SaveFromMappedValues,
+		Save:    table.SaveFromMap,
 	})
 }

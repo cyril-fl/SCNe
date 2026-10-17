@@ -35,20 +35,20 @@ func (e *Engine) GetAdventureJournal() *campaign.Journal {
 }
 
 func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
-	if newLocation == nil {
+	if e == nil || e.State == nil || e.State.Codex == nil || newLocation == nil {
 		return
 	}
 
 	key := "campaign.location:move"
 	table, ok := e.State.Codex.Locations.(interface {
-		FindEntryByName(name string) *codextable.Entry
-		Add(location *locations.Location)
+		FormEntries() []codextable.Entry
+		Add(*locations.Location)
 	})
 	if !ok {
 		return
 	}
 
-	entry := table.FindEntryByName(newLocation.GetName())
+	entry := codextable.FindEntryByName(table.FormEntries(), newLocation.GetName())
 
 	if entry == nil {
 		table.Add(newLocation)

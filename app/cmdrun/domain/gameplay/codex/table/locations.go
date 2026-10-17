@@ -14,17 +14,17 @@ import (
 
 // - Table --//
 type LocationsTable struct {
-	*data[LocationsEntry]
+	*data[locationsentry]
 }
 
-type LocationsEntry struct {
+type locationsentry struct {
 	Timestamp time.Time           `bson:"timestamp"`
 	Location  *locations.Location `bson:"location"`
 }
 
 var tablelocations = "codex.locations"
 
-func NewLocationsTable(entries []LocationsEntry) Table {
+func NewLocations(entries []locationsentry) Table {
 	return &LocationsTable{
 		data: new(i19n.Localize(tablelocations), entries),
 	}
@@ -32,15 +32,8 @@ func NewLocationsTable(entries []LocationsEntry) Table {
 
 // Getters & Setters
 
-// - Methods --//
-func (tb *LocationsTable) Add(location *locations.Location) {
-	tb.Entries = append(tb.Entries, LocationsEntry{
-		Timestamp: time.Now().UTC(),
-		Location:  location,
-	})
-}
-
-func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
+// Methods
+func (tb *LocationsTable) AddFromMap(values map[string]string) error {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
@@ -72,6 +65,14 @@ func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
 	return nil
 }
 
+func (tb *LocationsTable) Add(location *locations.Location) {
+	tb.Entries = append(tb.Entries, locationsentry{
+		Timestamp: time.Now().UTC(),
+		Location:  location,
+	})
+}
+
+
 func (tb *LocationsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 	for _, entry := range tb.Entries {
@@ -86,12 +87,12 @@ func (tb *LocationsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *LocationsTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *LocationsTable) SaveFromMap(index int, values map[string]string) error {
 	if index < 0 {
-		return tb.AddFromMappedValues(values)
+		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
-	if err := tb.AddFromMappedValues(values); err != nil {
+	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
 	if index < oldLen {
@@ -99,10 +100,6 @@ func (tb *LocationsTable) SaveFromMappedValues(index int, values map[string]stri
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
-}
-
-func (tb *LocationsTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(tb.FormEntries(), name)
 }
 
 func (tb *LocationsTable) assertEntry(values map[string]string) {
@@ -128,7 +125,7 @@ func (tb *LocationsTable) Ensure() {
 		tb.name = i19n.Localize(tablelocations)
 	}
 	if tb.Entries == nil {
-		tb.Entries = []LocationsEntry{}
+		tb.Entries = []locationsentry{}
 	}
 }
 

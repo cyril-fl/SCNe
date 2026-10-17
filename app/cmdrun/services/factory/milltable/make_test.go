@@ -10,19 +10,15 @@ type testTable struct {
 	ensured bool
 }
 
-func (t *testTable) AddFromMappedValues(map[string]string) error {
+func (t *testTable) AddFromMap(map[string]string) error {
 	return nil
 }
 
-func (t *testTable) SaveFromMappedValues(int, map[string]string) error {
+func (t *testTable) SaveFromMap(int, map[string]string) error {
 	return nil
 }
 
 func (*testTable) FormEntries() []codextable.Entry {
-	return nil
-}
-
-func (*testTable) FindEntryByName(string) *codextable.Entry {
 	return nil
 }
 

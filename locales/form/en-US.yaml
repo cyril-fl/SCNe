@@ -2,6 +2,12 @@ field.category:
   other: "category (weapon/armor/potion)"
 field.class:
   other: "class"
+field.done:
+  other: "done"
+field.done:true:
+  other: "done"
+field.done:false:
+  other: "to do"
 field.description:
   other: "description"
 field.encounter:

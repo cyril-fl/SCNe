@@ -12,16 +12,16 @@ import (
 
 // - Table --//
 type QuestTable struct {
-	*data[qentry]
+	*data[questentry]
 }
-type qentry struct {
+type questentry struct {
 	Timestamp time.Time    `bson:"timestamp"`
 	Quest     *quest.Quest `bson:"quest"`
 }
 
 var tableobjectives = "codex.quest"
 
-func NewQuestTable(entries []qentry) Table {
+func NewQuests(entries []questentry) Table {
 	return &QuestTable{
 		data: new(i19n.Localize(tableobjectives), entries),
 	}
@@ -31,13 +31,13 @@ func NewQuestTable(entries []qentry) Table {
 
 // Methods
 func (tb *QuestTable) Add(quest *quest.Quest) {
-	tb.Entries = append(tb.Entries, qentry{
+	tb.Entries = append(tb.Entries, questentry{
 		Timestamp: time.Now().UTC(),
 		Quest:     quest,
 	})
 }
 
-func (tb *QuestTable) AddFromMappedValues(values map[string]string) error {
+func (tb *QuestTable) AddFromMap(values map[string]string) error {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
@@ -47,15 +47,16 @@ func (tb *QuestTable) AddFromMappedValues(values map[string]string) error {
 			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
 	}
+	
+	// TODO convet values to quest.Quest struct un fois l'assert fait
 
 	quest, err := quest.New(quest.Template{
 		Name:        values["name"],
 		Description: values["description"],
+		Done:        transform.StringBool(values["done"]),
 		// Priority:    values["priority"],
-		// Done:        values["done"],
-		Reward: values["reward"],
 		// Rank:        values["rank"],
-
+		Reward: values["reward"],
 	})
 
 	if err != nil {
@@ -93,12 +94,12 @@ func (tb *QuestTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *QuestTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *QuestTable) SaveFromMap(index int, values map[string]string) error {
 	if index < 0 {
-		return tb.AddFromMappedValues(values)
+		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
-	if err := tb.AddFromMappedValues(values); err != nil {
+	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
 	if index < oldLen {
@@ -106,10 +107,6 @@ func (tb *QuestTable) SaveFromMappedValues(index int, values map[string]string) 
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
-}
-
-func (tb *QuestTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(tb.FormEntries(), name)
 }
 
 func (tb *QuestTable) assertEntry(values map[string]string) {
