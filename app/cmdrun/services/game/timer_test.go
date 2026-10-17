@@ -1,9 +1,9 @@
-package timer
+package game
 
 import "testing"
 
 func TestTimerStartsPausedAndResumes(t *testing.T) {
-	timer := New()
+	timer := Time()
 
 	if history := timer.GetHistory(); len(history) != 0 {
 		t.Fatalf("new timer history length = %d, want 0", len(history))
@@ -40,7 +40,7 @@ func TestTimerStartsPausedAndResumes(t *testing.T) {
 }
 
 func TestTimerIgnoresInvalidStateTransitions(t *testing.T) {
-	timer := New()
+	timer := Time()
 
 	timer.Pause()
 	timer.Resume()

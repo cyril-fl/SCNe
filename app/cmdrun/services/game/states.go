@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/services/timer"
+	"solopg/app/cmdrun/types/timer"
 	"solopg/app/shared/types/primitive"
 )
 
@@ -15,7 +15,7 @@ type State struct {
 	Codex           *codex.Codex
 	AdventureLog    *campaign.Journal
 	TimeHistory     []timer.Record
-	Timer           *timer.Timer
+	Timer           *Stopwatch
 	Metadata        Metadata
 }
 type Metadata struct {
@@ -35,7 +35,7 @@ func NewState(data CampaignData) *State {
 		Codex:           data.Archives.Codex,
 		AdventureLog:    data.Archives.Journal,
 		TimeHistory:     data.Campaign.TimeHistory,
-		Timer:           timer.New(),
+		Timer:           Time(),
 		Metadata: Metadata{
 			Archive:  data.Archives.GetAge(),
 			Campaign: data.Campaign.GetAge(),

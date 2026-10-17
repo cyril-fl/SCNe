@@ -1,21 +1,20 @@
-package timer
+package game
 
-import "time"
+import (
+	"solopg/app/cmdrun/types/timer"
+	"time"
+)
 
-type Record struct {
-	Start int64
-	Stop  int64
-}
 
-type Timer struct {
+type Stopwatch struct {
 	init      bool
 	running   bool
 	timeStart []int64 // unix milisecond TODO faire une note
 	timeRun   []int64
 }
 
-func New() *Timer {
-	return &Timer{
+func Time() *Stopwatch {
+	return &Stopwatch{
 		init:      false,
 		running:   false,
 		timeStart: []int64{},
@@ -24,15 +23,15 @@ func New() *Timer {
 }
 
 // Getters & Setters
-func (t *Timer) GetHistory() []Record {
+func (t *Stopwatch) GetHistory() []timer.Record {
 	if !t.init {
-		return []Record{}
+		return []timer.Record{}
 	}
 
 	history := t.makeHistory()
 
 	if t.running {
-		history = append(history, Record{
+		history = append(history, timer.Record{
 			Start: getlast(t.timeStart),
 			Stop:  getNow(),
 		})
@@ -41,19 +40,19 @@ func (t *Timer) GetHistory() []Record {
 	return history
 }
 
-func (t *Timer) makeHistory() []Record {
+func (t *Stopwatch) makeHistory() []timer.Record {
 	if !t.init {
-		return []Record{}
+		return []timer.Record{}
 	}
 	maxlength := len(t.timeRun)
-	history := make([]Record, maxlength)
+	history := make([]timer.Record, maxlength)
 
 	for i, start := range t.timeStart {
 		if i >= maxlength {
 			break
 		}
 
-		history[i] = Record{
+		history[i] = timer.Record{
 			Start: start,
 			Stop:  start + t.timeRun[i],
 		}
@@ -61,7 +60,7 @@ func (t *Timer) makeHistory() []Record {
 	return history
 }
 
-func (t *Timer) GetLastTimeStop() int64 {
+func (t *Stopwatch) GetLastTimeStop() int64 {
 	if !t.init {
 		return 0
 	}
@@ -73,7 +72,7 @@ func (t *Timer) GetLastTimeStop() int64 {
 }
 
 // Methods
-func (t *Timer) Start() {
+func (t *Stopwatch) Start() {
 	if t.init {
 		return
 	}
@@ -82,7 +81,7 @@ func (t *Timer) Start() {
 	t.timeStart = append(t.timeStart, getNow())
 }
 
-func (t *Timer) Pause() {
+func (t *Stopwatch) Pause() {
 	if !t.init {
 		return
 	}
@@ -94,7 +93,7 @@ func (t *Timer) Pause() {
 	t.running = false
 }
 
-func (t *Timer) Resume() {
+func (t *Stopwatch) Resume() {
 	if !t.init {
 		return
 	}
@@ -110,16 +109,6 @@ func getNow() int64 {
 	return time.Now().UnixMilli()
 }
 
-/*
-func getfirst[T any](arr []T) T {
-	if len(arr) > 0 {
-		return arr[0]
-	}
-	var zero T
-	return zero
-}
-*/
-
 func getlast[T any](arr []T) T {
 	if len(arr) > 0 {
 		return arr[len(arr)-1]
@@ -128,7 +117,7 @@ func getlast[T any](arr []T) T {
 	return zero
 }
 
-func getRunningTime(history []Record) int64 {
+func getRunningTime(history []timer.Record) int64 {
 	var total int64
 	for _, r := range history {
 		total += r.Stop - r.Start
