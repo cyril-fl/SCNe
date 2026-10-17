@@ -173,6 +173,7 @@ func makeForm() *form.Form {
 			}),
 		).
 		SetSendKey(sharedtui.KEY_ENTER).
+		SetAutoSubmit(false).
 		Focus()
 }
 

@@ -75,7 +75,7 @@ func (m *Form) getCurrentFieldIndex() int {
 	return -1
 }
 
-func (m *Form) setAutoSubmit(autoSubmit bool) *Form {
+func (m *Form) SetAutoSubmit(autoSubmit bool) *Form {
 	m.autoSubmit = autoSubmit
 	return m
 }
@@ -162,9 +162,9 @@ func (m *Form) Reset() *Form {
 
 // - Submit - //
 func (m *Form) EnableAutoSubmit() *Form {
-	return m.setAutoSubmit(true)
+	return m.SetAutoSubmit(true)
 }
 
 func (m *Form) DisableAutoSubmit() *Form {
-	return m.setAutoSubmit(false)
+	return m.SetAutoSubmit(false)
 }
