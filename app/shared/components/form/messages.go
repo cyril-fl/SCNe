@@ -23,7 +23,18 @@ type msg interface {
 }
 
 func Send[T msg]() tea.Cmd {
-	return func() tea.Msg {
+	return func() tea.Msg { 
 		return T{}
+	}
+}
+
+
+type Open struct{ 
+	ID string
+ }
+
+func OpenPage(id string) tea.Cmd {
+	return func() tea.Msg {
+		return Open{ID: id} 
 	}
 }

@@ -5,8 +5,8 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
-	"solopg/app/cmdrun/tui/view/sidemenu/metadatamenu"
+	"solopg/app/cmdrun/tui/view/codexmenu"
+	"solopg/app/cmdrun/tui/view/metadatamenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
@@ -63,12 +63,13 @@ func (m model) GetFooter() []string {
 func makeViewState(params UiParams) statemachine.ViewState[state] {
 	params.Engine.State.Codex.EnsureInitialized()
 
-	pages := codexmenu.NewFormPages(params.Engine.State.Codex)
+	codexpage := codexmenu.NewFormPages(params.Engine.State.Codex)
+
 	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Engine)}
 
 	transitions := map[state][]state{CHAT_SECTION: {}}
 
-	for id, page := range pages {
+	for id, page := range codexpage {
 		step := state(id)
 		views[step] = page
 		transitions[CHAT_SECTION] = append(transitions[CHAT_SECTION], step)

@@ -2,7 +2,6 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/form"
@@ -64,10 +63,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case codexmenu.OpenPageMsg:
-		m.state.HandleTransition(state(msg.ID))
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
+	case form.Open:
+		m.state.HandleTransition(state(msg.ID))
 	case form.Close:
 		m.state.HandleTransition(CHAT_SECTION)
 	case messages.Result:

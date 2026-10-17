@@ -1,4 +1,4 @@
-package formview
+package codex
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
