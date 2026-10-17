@@ -5,8 +5,8 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/cmdrun/services/game"
-	"solopg/app/cmdrun/tui/view/codexmenu"
-	"solopg/app/cmdrun/tui/view/metadatamenu"
+	"solopg/app/cmdrun/tui/view/menucodex"
+	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
@@ -63,7 +63,7 @@ func (m model) GetFooter() []string {
 func makeViewState(params UiParams) statemachine.ViewState[state] {
 	params.Engine.State.Codex.EnsureInitialized()
 
-	codexpage := codexmenu.NewFormPages(params.Engine.State.Codex)
+	codexpage := menucodex.NewFormPages(params.Engine.State.Codex)
 
 	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Engine)}
 
@@ -86,9 +86,9 @@ func makeViewState(params UiParams) statemachine.ViewState[state] {
 // Helpers
 func makeStatView(engine *game.Engine) string {
 	var content strings.Builder
-	metadatamenu.GetCharacterInfo(&content, engine)
-	metadatamenu.GetLocationInfo(&content, engine)
-	metadatamenu.GetStatInfo(&content, engine)
+	menumetadata.GetCharacterInfo(&content, engine)
+	menumetadata.GetLocationInfo(&content, engine)
+	menumetadata.GetStatInfo(&content, engine)
 
 	return strings.TrimRight(content.String(), "\n")
 }
@@ -126,7 +126,7 @@ func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
 			},
 			Msg: messages.Rolled{},
 		}),
-		codexmenu.NewSection(false),
+		menucodex.NewSection(false),
 	}
 
 	for i, item := range row {

@@ -1,4 +1,4 @@
-package metadatamenu
+package menumetadata
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package codexmenu
+package menucodex
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/codex"

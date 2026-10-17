@@ -1,4 +1,4 @@
-package codexmenu
+package menucodex
 
 func (m *codexMenuItem) GetName() string { return m.id }
 
