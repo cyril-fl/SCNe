@@ -17,6 +17,8 @@ type Form struct {
 	autoSubmit bool
 }
 
+type Makefunc = func(map[string]string) *Form
+
 func New(fields ...Field) *Form {
 	return new().Add(fields...)
 }

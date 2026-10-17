@@ -3,6 +3,7 @@ package game
 import (
 	"solopg/app/cmdrun/domain/campaign"
 	"solopg/app/cmdrun/domain/card/locations"
+	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/logs"
 )
@@ -39,7 +40,14 @@ func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
 	}
 
 	key := "campaign.location:move"
-	table := e.State.Codex.LocationsTable
+	table, ok := e.State.Codex.Locations.(interface {
+		FindEntryByName(name string) *codextable.Entry
+		Add(location *locations.Location)
+	})
+	if !ok {
+		return
+	}
+
 	entry := table.FindEntryByName(newLocation.GetName())
 
 	if entry == nil {

@@ -1,107 +1,37 @@
 package codex
 
 import (
-	"errors"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/primitive"
+	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	"solopg/app/cmdrun/services/factory/milltable"
 )
 
-// - Codex - //
+
+
 type Codex struct {
-	NpcsTable      *NpcsTable
-	BeastiaryTable *BeastiaryTable
-	LocationsTable *LocationsTable
-	ObjectsTable   *ObjectsTable
-	QuestTable     *QuestTable
+	Npcs      codextable.Table
+	Beastiary codextable.Table
+	Locations codextable.Table
+	Objects   codextable.Table
+	Quest     codextable.Table
 }
 
 func New() *Codex {
-	return &Codex{
-		NpcsTable:      NewNpcsTable([]NpcsEntry{}),
-		BeastiaryTable: NewBeastiaryTable([]BeastiaryEntry{}),
-		LocationsTable: NewLocationsTable([]LocationsEntry{}),
-		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
-		QuestTable:     NewQuestTable([]QuestEntry{}),
-	}
+	codex := &Codex{}
+	codex.EnsureInitialized()
+	return codex
 }
 
 // EnsureInitialized repairs a Codex loaded from storage where nested tables may be nil.
 func (c *Codex) EnsureInitialized() {
-	if c.NpcsTable == nil {
-		c.NpcsTable = NewNpcsTable(nil)
-	}
-	if c.BeastiaryTable == nil {
-		c.BeastiaryTable = NewBeastiaryTable(nil)
-	}
-	if c.LocationsTable == nil {
-		c.LocationsTable = NewLocationsTable(nil)
-	}
-	if c.ObjectsTable == nil {
-		c.ObjectsTable = NewObjectsTable(nil)
-	}
-	if c.QuestTable == nil {
-		c.QuestTable = NewQuestTable(nil)
+	mills := map[string]milltable.MillTable{
+		"npcs":      milltable.Npcs(&c.Npcs),
+		"beastiary": milltable.Beastiary(&c.Beastiary),
+		"locations": milltable.Locations(&c.Locations),
+		"objects":   milltable.Objects(&c.Objects),
+		"quest":     milltable.Quest(&c.Quest),
 	}
 
-	c.NpcsTable.Ensure()
-	c.BeastiaryTable.Ensure()
-	c.LocationsTable.Ensure()
-	c.ObjectsTable.Ensure()
-	c.QuestTable.Ensure()
-}
-
-// - Codex table - //
-type Table interface {
-	AddFromMappedValues(values map[string]string) error
-	SaveFromMappedValues(index int, values map[string]string) error
-	FormEntries() []Entry
-	Ensure()
-}
-
-type Entry struct {
-	primitive.Descriptible
-
-	Values map[string]string
-	Locked bool
-}
-
-// TODO sceptiqquesur le string map
-func newEntry(name, description string, values map[string]string, locked bool) Entry {
-	return Entry{
-		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
-			Name:        name,
-			Description: description,
-		}),
-		Values: values,
-		Locked: locked,
+	for _, mill := range mills {
+		mill.Make()
 	}
-}
-
-type TableData[E any] struct {
-	name    string
-	Entries []E `bson:"entries"`
-}
-
-func newTable[E any](name string, entries []E) *TableData[E] {
-	return &TableData[E]{
-		name:    name,
-		Entries: entries,
-	}
-}
-
-func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
-	if *table == nil {
-		*table = newTable(name, []E{})
-	}
-}
-
-func (t TableData[any]) formatAssertErrors(err []error) error {
-	return errors.Join(
-		logs.Error("error.invalid", map[string]interface{}{
-			"Subject": t.name,
-			"Value":   err,
-		}),
-
-		errors.Join(err...),
-	)
 }

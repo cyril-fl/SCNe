@@ -14,7 +14,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-// Helper
+// Helpers
 func makeNavigationContent(part []SectionInterface) (string, []int) {
 	blocks := make([]string, 0, len(part))
 	blockoffsets := make([]int, len(part))

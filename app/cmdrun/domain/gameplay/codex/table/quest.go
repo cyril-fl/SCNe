@@ -1,4 +1,4 @@
-package codex
+package codextable
 
 import (
 	"errors"
@@ -21,13 +21,15 @@ type QuestEntry struct {
 
 var tableobjectives = "codex.quest"
 
-func NewQuestTable(entries []QuestEntry) *QuestTable {
+func NewQuestTable(entries []QuestEntry) Table {
 	return &QuestTable{
 		TableData: newTable(i19n.Localize(tableobjectives), entries),
 	}
 }
 
-// - Methods --//
+// Getters & Setters
+
+// Methods
 func (o *QuestTable) Add(quest *quest.Quest) {
 	o.Entries = append(o.Entries, QuestEntry{
 		Timestamp: time.Now().UTC(),
@@ -99,7 +101,10 @@ func (o *QuestTable) SaveFromMappedValues(index int, values map[string]string) e
 	return nil
 }
 
-// - Helper --//
+func (o *QuestTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(o.FormEntries(), name)
+}
+
 func (o *QuestTable) assertEntry(values map[string]string) error {
 	var err []error
 
@@ -127,3 +132,5 @@ func (o *QuestTable) assertEntry(values map[string]string) error {
 func (o *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &o.TableData)
 }
+
+// 

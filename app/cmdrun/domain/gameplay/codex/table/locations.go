@@ -1,4 +1,4 @@
-package codex
+package codextable
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
@@ -22,11 +22,13 @@ type LocationsEntry struct {
 
 var tablelocations = "codex.locations"
 
-func NewLocationsTable(entries []LocationsEntry) *LocationsTable {
+func NewLocationsTable(entries []LocationsEntry) Table {
 	return &LocationsTable{
 		TableData: newTable(i19n.Localize(tablelocations), entries),
 	}
 }
+
+// Getters & Setters
 
 // - Methods --//
 func (tb *LocationsTable) Add(location *locations.Location) {
@@ -91,16 +93,9 @@ func (tb *LocationsTable) SaveFromMappedValues(index int, values map[string]stri
 	return nil
 }
 
-func (tb *LocationsTable) FindEntryByName(name string) *LocationsEntry {
-	for i, entry := range tb.Entries {
-		if entry.Location != nil && entry.Location.GetName() == name {
-			return &tb.Entries[i]
-		}
-	}
-	return nil
+func (tb *LocationsTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(tb.FormEntries(), name)
 }
-
-// - Helper --//
 
 func (tb *LocationsTable) assertEntry(values map[string]string) error {
 	var err []error
@@ -134,3 +129,5 @@ func (tb *LocationsTable) Ensure() {
 		tb.Entries = []LocationsEntry{}
 	}
 }
+
+// - Helper --//

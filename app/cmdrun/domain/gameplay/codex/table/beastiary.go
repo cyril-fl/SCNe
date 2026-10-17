@@ -1,4 +1,4 @@
-package codex
+package codextable
 
 import (
 	"errors"
@@ -23,7 +23,7 @@ type BeastiaryEntry struct {
 
 var tablebeast = "codex.beastiary"
 
-func NewBeastiaryTable(entries []BeastiaryEntry) *BeastiaryTable {
+func NewBeastiaryTable(entries []BeastiaryEntry) Table {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
@@ -122,6 +122,10 @@ func (tb *BeastiaryTable) SaveFromMappedValues(index int, values map[string]stri
 		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
+}
+
+func (tb *BeastiaryTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(tb.FormEntries(), name)
 }
 
 // - Helper --//

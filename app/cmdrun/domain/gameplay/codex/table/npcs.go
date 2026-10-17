@@ -1,4 +1,4 @@
-package codex
+package codextable
 
 import (
 	"errors"
@@ -26,13 +26,15 @@ type NpcsEntry struct {
 
 var tablenpcs = "codex.npcs"
 
-func NewNpcsTable(entries []NpcsEntry) *NpcsTable {
+func NewNpcsTable(entries []NpcsEntry) Table {
 	return &NpcsTable{
 		TableData: newTable(i19n.Localize(tablenpcs), entries),
 	}
 }
 
-// - Methods --//
+// Getters & Setters
+
+// Methods
 func (tb *NpcsTable) Add(character *characters.Character) {
 	tb.Entries = append(tb.Entries, NpcsEntry{
 		Timestamp: time.Now().UTC(),
@@ -127,7 +129,10 @@ func (tb *NpcsTable) SaveFromMappedValues(index int, values map[string]string) e
 	return nil
 }
 
-// - Helper --//
+func (tb *NpcsTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(tb.FormEntries(), name)
+}
+
 func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 	var err []error
 	if entry["name"] == "" {
@@ -169,3 +174,5 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) error {
 func (tb *NpcsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.TableData)
 }
+
+// Helpers

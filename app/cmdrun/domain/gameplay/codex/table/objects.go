@@ -1,4 +1,4 @@
-package codex
+package codextable
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
@@ -26,13 +26,15 @@ type ObjectEntry struct {
 
 var tableobject = "codex.objects"
 
-func NewObjectsTable(entries []ObjectEntry) *ObjectsTable {
+func NewObjectsTable(entries []ObjectEntry) Table {
 	return &ObjectsTable{
 		TableData: newTable(i19n.Localize(tableobject), entries),
 	}
 }
 
-// - Methods --//
+// Getters & Setters
+
+// Methods
 func (tb *ObjectsTable) Add(object *objects.Object) {
 	tb.Entries = append(tb.Entries, ObjectEntry{
 		Timestamp: time.Now().UTC(),
@@ -102,7 +104,10 @@ func (tb *ObjectsTable) SaveFromMappedValues(index int, values map[string]string
 	return nil
 }
 
-// - Helper --//
+func (tb *ObjectsTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(tb.FormEntries(), name)
+}
+
 func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 	var err []error
 
@@ -142,3 +147,5 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 func (tb *ObjectsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.TableData)
 }
+
+// Helpers
