@@ -14,6 +14,12 @@ field.encounter:
   other: "encounter"
 field.name:
   other: "name"
+field.priority:
+  other: "priority"
+field.rank:
+  other: "rank"
+field.reward:
+  other: "reward"
 field.race:
   other: "Race"
 field.title:

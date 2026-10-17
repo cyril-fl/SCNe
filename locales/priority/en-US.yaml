@@ -1,0 +1,7 @@
+priority.low:
+  other: "Low"
+priority.medium:
+  other: "Medium"
+priority.hight:
+  other: "High"
+
