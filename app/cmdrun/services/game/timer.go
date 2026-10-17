@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-
 type Stopwatch struct {
 	init      bool
 	running   bool

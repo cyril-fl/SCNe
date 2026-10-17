@@ -15,13 +15,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// TEST
 type Campaign struct {
 	primitive.Datable
 
 	ID              id.ID                 `bson:"Id" json:"Id"`
 	Player          *characters.Character `bson:"character" json:"character"`
 	CurrentLocation *locations.Location   `bson:"location" json:"location"`
-	TimeHistory     []timer.Record      `bson:"timeHistory" json:"timeHistory"`
+	TimeHistory     []timer.Record        `bson:"timeHistory" json:"timeHistory"`
 }
 
 type Template struct {

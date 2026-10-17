@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// TEST
 type Journal struct {
 	Entries []Entry
 }
