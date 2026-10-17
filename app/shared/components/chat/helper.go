@@ -18,10 +18,6 @@ func (c *Chat) handleSubmit() tea.Cmd {
 		return messages.Fail(c.form.GetErr())
 	}
 
-	logs.SilentInfo("form.submitted", map[string]any{
-		"Form": "onboardename",
-	})
-
 	message, ok := c.form.GetFieldValue("message").(string)
 	if !ok {
 		return messages.Fail(logs.Error("error.unexpected:value", map[string]any{

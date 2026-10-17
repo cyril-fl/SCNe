@@ -7,6 +7,7 @@ import (
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 	"strings"
@@ -203,6 +204,10 @@ func amendChat(c *Chat, message string) {
 	if message == "" {
 		return
 	}
+
+	logs.SilentInfo("form.submitted", map[string]any{
+		"Form": "chat",
+	})
 
 	c.register(c.author, message)
 
