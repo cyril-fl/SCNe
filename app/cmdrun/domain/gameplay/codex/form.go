@@ -78,12 +78,51 @@ func GetObjectForm(values map[string]string) *form.Form {
 
 // - Objectif Form - //
 func GetQuestForm(values map[string]string) *form.Form {
+	priorityItems := getFormPriorityOptions()
+	priority := values["priority"]
+	if priority == "" {
+		priority = "medium"
+	}
+
+	rankItems := getFormRankOptions()
+	rank := values["rank"]
+	if rank == "" {
+		rank = "intermediate"
+	}	
+
+
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
+		field.TextField(field.TextTemplate[string]{ID: "reward", Label: "field.reward", Defaultvalue: values["reward"], Validator: nil, Required: true}),
+
+		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: priorityItems, Validator: nil, Required: true}),
+
+		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: rankItems, Validator: nil, Required: true}),
+
 	).Focus()
 }
 
+func getFormPriorityOptions() []models.Item[string] {
+	items := make([]models.Item[string], 0)
+	for _, value := range []string{"low", "medium", "high"} {
+		items = append(items, models.NewItem(i19n.Localize(value), "", value))
+	}
+	return items
+}
+
+func getFormRankOptions() []models.Item[string] {
+	items := make([]models.Item[string], 0)
+	for _, value := range []string{"novice", "intermediate", "expert"} {
+		items = append(items, models.NewItem(i19n.Localize(value), "", value))
+	}
+	return items
+}
+
+// - Helpers - //
+
+
+// Helpers
 func getFormOracle() []models.Item[string] {
 	values, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
 	if err != nil {
