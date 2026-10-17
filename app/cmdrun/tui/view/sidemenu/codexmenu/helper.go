@@ -23,11 +23,11 @@ func makeCodexList() []*codexMenuItem {
 // side menu only selects one of these page IDs.
 func NewFormPages(c *codex.Codex) map[string]*formpage.Page {
 	return map[string]*formpage.Page{
-		"codex.locations":  newFormPage(c.LocationsTable, formview.GetLocationForm),
-		"codex.npcs":       newFormPage(c.NpcsTable, formview.GetNpcForm),
-		"codex.beastiary":  newFormPage(c.BeastiaryTable, formview.GetBeastiaryForm),
-		"codex.objects":    newFormPage(c.ObjectsTable, formview.GetObjectForm),
-		"codex.quest": newFormPage(c.QuestTable, formview.GetQuestForm),
+		"codex.locations": newFormPage(c.LocationsTable, formview.GetLocationForm),
+		"codex.npcs":      newFormPage(c.NpcsTable, formview.GetNpcForm),
+		"codex.beastiary": newFormPage(c.BeastiaryTable, formview.GetBeastiaryForm),
+		"codex.objects":   newFormPage(c.ObjectsTable, formview.GetObjectForm),
+		"codex.quest":     newFormPage(c.QuestTable, formview.GetQuestForm),
 	}
 }
 
@@ -38,7 +38,7 @@ func newFormPage(table codex.Table, makeForm func(map[string]string) *form.Form)
 			items := make([]formpage.Item, 0, len(entries))
 			for _, entry := range entries {
 				items = append(items, formpage.Item{
-					Name:       i19n.Localize(entry.GetName()),
+					Name:        i19n.Localize(entry.GetName()),
 					Description: i19n.Localize(entry.GetDescription()),
 					Values:      entry.Values,
 					Locked:      entry.Locked,
@@ -50,4 +50,3 @@ func newFormPage(table codex.Table, makeForm func(map[string]string) *form.Form)
 		Save:    table.SaveFromMappedValues,
 	})
 }
-

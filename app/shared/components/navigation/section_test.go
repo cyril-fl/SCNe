@@ -6,6 +6,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+var _ SectionInterface = (*Section)(nil)
+
 type testNamed string
 
 func (v testNamed) GetName() string { return string(v) }

@@ -1,6 +1,10 @@
 package primitive
 
-import "charm.land/bubbles/v2/list"
+import (
+	"solopg/app/cmdrun/types/size"
+
+	"charm.land/bubbles/v2/list"
+)
 
 // TEST
 type List struct {
@@ -17,6 +21,12 @@ func (m *List) GetList() *list.Model {
 	return &m.list
 }
 
-func (m *List) SetList(list list.Model) {
-	m.list = list
+func (m *List) SetList(listModel *list.Model) {
+	m.list = *listModel
+}
+
+
+func (m *List) SetListSize(template size.Template) {
+		s := size.New(template)
+		m.list.SetSize(s.GetWidth(), s.GetHeight())
 }

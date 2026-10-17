@@ -3,6 +3,7 @@ package formpage
 import (
 	"testing"
 
+	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
 
@@ -17,6 +18,19 @@ func testForm(values map[string]string) *form.Form {
 
 func testKey(code rune, mod tea.KeyMod) tea.KeyPressMsg {
 	return tea.KeyPressMsg{Code: code, Mod: mod}
+}
+
+func TestPageSetSizeResizesList(t *testing.T) {
+	page := New(Template{
+		Items:   func() []Item { return nil },
+		NewForm: testForm,
+		Save:    func(int, map[string]string) error { return nil },
+	})
+
+	page.SetSize(size.New(size.Template{Width: 42, Height: 20}))
+	if got := page.GetList().Width(); got != 42 {
+		t.Fatalf("expected list width 42, got %d", got)
+	}
 }
 
 func TestPageCtrlNOpensNewFormFromEmptyPage(t *testing.T) {

@@ -8,25 +8,28 @@ import (
 )
 
 type Rank string
+
 var (
 	// TODO Rendre ca data driven
 	MainKind Rank = "main"
 	SideKind Rank = "side"
 )
-type Priority string 
+
+type Priority string
+
 var (
 	// TODO Rendre ca data driven
-	LowPriority Priority = "low"
+	LowPriority    Priority = "low"
 	MediumPriority Priority = "medium"
-	HighPriority Priority = "high"
+	HighPriority   Priority = "high"
 )
 
 type Quest struct {
 	card.Card
 
-	Done bool
+	Done   bool
 	Prioty Priority
-	Rank Rank
+	Rank   Rank
 	Reward string
 }
 
@@ -35,13 +38,13 @@ type Template struct {
 	Description string
 	Variety     variety.Variety
 
-	Done bool
+	Done   bool
 	Prioty Priority
-	Rank Rank
+	Rank   Rank
 	Reward string
 }
 
-func New(params Template)(*Quest, error){
+func New(params Template) (*Quest, error) {
 	// CHECK cpparce que nil ca a l'ai de passer
 	if !params.Variety.Validate() {
 		params.Variety = variety.MakeDefault("quest_card")
@@ -62,10 +65,10 @@ func New(params Template)(*Quest, error){
 	}
 
 	return &Quest{
-		Card:      *newCard,
-		Done: params.Done,
+		Card:   *newCard,
+		Done:   params.Done,
 		Prioty: params.Prioty,
-		Rank: params.Rank,
+		Rank:   params.Rank,
 		Reward: params.Reward,
 	}, nil
 }

@@ -10,13 +10,16 @@ type PreviousField struct{}
 type Validate struct{}
 type Scroll struct{}
 type Submit struct{}
+type Close struct{}
+
 
 type msg interface {
 	PreviousField |
 		NextField |
 		Validate |
 		Scroll |
-		Submit
+		Submit |
+		Close
 }
 
 func Send[T msg]() tea.Cmd {

@@ -123,4 +123,3 @@ func getFormClassOptions() []models.Item[string] {
 	}
 	return append(items, models.NewItem("None", "", ""))
 }
-

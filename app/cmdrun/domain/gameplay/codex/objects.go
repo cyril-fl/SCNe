@@ -48,9 +48,9 @@ func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
 	object, err := objects.New(objects.Template{
 		Name:        values["name"],
 		Description: values["description"],
-		Rarity:   rarity.Default(),
-		Variety:  variety.AssertWithDefault(values["variety"]),
-		Category: objectcategory.AssertWithDefault(values["category"]),
+		Rarity:      rarity.Default(),
+		Variety:     variety.AssertWithDefault(values["variety"]),
+		Category:    objectcategory.AssertWithDefault(values["category"]),
 	})
 
 	if err != nil {

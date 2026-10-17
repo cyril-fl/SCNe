@@ -15,8 +15,8 @@ type QuestTable struct {
 	*TableData[QuestEntry]
 }
 type QuestEntry struct {
-	Timestamp   time.Time `bson:"timestamp"`
-	Quest *quest.Quest `bson:"quest"`
+	Timestamp time.Time    `bson:"timestamp"`
+	Quest     *quest.Quest `bson:"quest"`
 }
 
 var tableobjectives = "codex.quest"
@@ -30,8 +30,8 @@ func NewQuestTable(entries []QuestEntry) *QuestTable {
 // - Methods --//
 func (o *QuestTable) Add(quest *quest.Quest) {
 	o.Entries = append(o.Entries, QuestEntry{
-		Timestamp:   time.Now().UTC(),
-		Quest: quest,
+		Timestamp: time.Now().UTC(),
+		Quest:     quest,
 	})
 }
 

@@ -5,7 +5,7 @@ import (
 	"solopg/app/cmdrun/tui/view/sidemenu/codexmenu"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
-	formpage "solopg/app/shared/components/form/page"
+	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/statemachine"
@@ -66,10 +66,10 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case codexmenu.OpenPageMsg:
 		m.state.HandleTransition(state(msg.ID))
-	case formpage.CloseMsg:
-		m.state.HandleTransition(CHAT_SECTION)
 	case tea.KeyPressMsg:
 		return m.handleKeyPress(msg)
+	case form.Close:
+		m.state.HandleTransition(CHAT_SECTION)
 	case messages.Result:
 		return m, tea.Tick(1500*time.Millisecond, func(time.Time) tea.Msg {
 			return messages.Delayed{Content: msg.Content}

@@ -12,7 +12,7 @@ type Codex struct {
 	BeastiaryTable *BeastiaryTable
 	LocationsTable *LocationsTable
 	ObjectsTable   *ObjectsTable
-	QuestTable *QuestTable
+	QuestTable     *QuestTable
 }
 
 func New() *Codex {
@@ -21,7 +21,7 @@ func New() *Codex {
 		BeastiaryTable: NewBeastiaryTable([]BeastiaryEntry{}),
 		LocationsTable: NewLocationsTable([]LocationsEntry{}),
 		ObjectsTable:   NewObjectsTable([]ObjectEntry{}),
-		QuestTable: NewQuestTable([]QuestEntry{}),
+		QuestTable:     NewQuestTable([]QuestEntry{}),
 	}
 }
 
