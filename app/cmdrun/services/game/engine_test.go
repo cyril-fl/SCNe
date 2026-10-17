@@ -34,7 +34,7 @@ func TestEngineDiscoverLocationAddsLocationOnce(t *testing.T) {
 	}
 
 	state := &State{Codex: &codex.Codex{
-		Locations: codextable.NewLocations(nil),
+		Locations: codextable.NewLocations(),
 	}}
 	engine := NewEngine(id.New(), state)
 
@@ -49,13 +49,36 @@ func TestEngineDiscoverLocationAddsLocationOnce(t *testing.T) {
 func TestEngineDiscoverLocationIgnoresNil(t *testing.T) {
 	logs.Init(noopLogRegistry{})
 	state := &State{Codex: &codex.Codex{
-		Locations: codextable.NewLocations(nil),
+		Locations: codextable.NewLocations(),
 	}}
 
 	NewEngine(id.New(), state).DiscoverLocation(nil)
 
 	if entries := state.Codex.Locations.FormEntries(); len(entries) != 0 {
 		t.Fatalf("location entries count = %d, want 0", len(entries))
+	}
+}
+
+func TestEngineDiscoverLocationIgnoresUninitializedCodexTable(t *testing.T) {
+	logs.Init(noopLogRegistry{})
+	state := &State{Codex: &codex.Codex{
+		Locations: &codextable.LocationsTable{},
+	}}
+
+	location, err := locations.New(locations.Template{
+		Name:        "The Crossroads",
+		Description: "A test location",
+		Rarity:      rarity.Default(),
+		Variety:     variety.MakeDefault("location_card"),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	NewEngine(id.New(), state).DiscoverLocation(location)
+
+	if entries := state.Codex.Locations.FormEntries(); len(entries) != 1 {
+		t.Fatalf("location entries count = %d, want 1", len(entries))
 	}
 }
 

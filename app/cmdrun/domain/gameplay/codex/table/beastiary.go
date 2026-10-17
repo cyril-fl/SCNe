@@ -23,7 +23,7 @@ type beastentry struct {
 
 var tablebeast = "codex.beastiary"
 
-func NewBeastiary(entries []beastentry) Table {
+func NewBeastiary(entries ...beastentry) *BeastiaryTable {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{

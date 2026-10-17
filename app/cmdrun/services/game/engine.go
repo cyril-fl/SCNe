@@ -30,23 +30,27 @@ func (e *Engine) UpdateLocation(newLocation *locations.Location) {
 	e.DiscoverLocation(newLocation)
 }
 
-func (e *Engine) GetAdventureJournal() *campaign.Journal {
+func (e Engine) GetAdventureJournal() *campaign.Journal {
 	return e.State.AdventureLog
 }
 
+// TODO gerer ca dans un procces
 func (e *Engine) DiscoverLocation(newLocation *locations.Location) {
-	if e == nil || e.State == nil || e.State.Codex == nil || newLocation == nil {
+	if e == nil ||
+		e.State == nil ||
+		e.State.Codex == nil ||
+		newLocation == nil {
 		return
 	}
 
-	key := "campaign.location:move"
-	table, ok := e.State.Codex.Locations.(interface {
-		FormEntries() []codextable.Entry
-		Add(*locations.Location)
-	})
-	if !ok {
-		return
+	if e.State.Codex.Locations == nil {
+		e.State.Codex.EnsureInitialized()
+	} else {
+		e.State.Codex.Locations.Ensure()
 	}
+
+	key := "campaign.location:move"
+	table := e.State.Codex.Locations
 
 	entry := codextable.FindEntryByName(table.FormEntries(), newLocation.GetName())
 

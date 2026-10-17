@@ -42,7 +42,7 @@ func TestDatableSerializesTimestamps(t *testing.T) {
 	datable := Dated()
 
 	encoded, err := bson.Marshal(struct {
-		Datable
+		Datable `bson:",inline"`
 	}{Datable: datable})
 	if err != nil {
 		t.Fatalf("bson.Marshal returned an error: %v", err)

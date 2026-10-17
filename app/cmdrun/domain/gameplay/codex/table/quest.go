@@ -21,7 +21,7 @@ type questentry struct {
 
 var tableobjectives = "codex.quest"
 
-func NewQuests(entries []questentry) Table {
+func NewQuests(entries ...questentry) *QuestTable {
 	return &QuestTable{
 		data: new(i19n.Localize(tableobjectives), entries),
 	}
@@ -47,7 +47,7 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
 	}
-	
+
 	// TODO convet values to quest.Quest struct un fois l'assert fait
 
 	quest, err := quest.New(quest.Template{

@@ -2,15 +2,14 @@ package codex
 
 import (
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/services/factory/milltable"
 )
 
 type Codex struct {
-	Npcs      codextable.Table
-	Beastiary codextable.Table
-	Locations codextable.Table
-	Objects   codextable.Table
-	Quest     codextable.Table
+	Npcs      *codextable.NpcsTable
+	Beastiary *codextable.BeastiaryTable
+	Locations *codextable.LocationsTable
+	Objects   *codextable.ObjectsTable
+	Quest     *codextable.QuestTable
 }
 
 func New() *Codex {
@@ -21,15 +20,29 @@ func New() *Codex {
 
 // EnsureInitialized repairs a Codex loaded from storage where nested tables may be nil.
 func (c *Codex) EnsureInitialized() {
-	mills := map[string]milltable.MillTable{
-		"npcs":      milltable.Npcs(&c.Npcs),
-		"beastiary": milltable.Beastiary(&c.Beastiary),
-		"locations": milltable.Locations(&c.Locations),
-		"objects":   milltable.Objects(&c.Objects),
-		"quest":     milltable.Quest(&c.Quest),
+	if c.Npcs == nil {
+		c.Npcs = codextable.NewNpcs()
+	}
+	if c.Beastiary == nil {
+		c.Beastiary = codextable.NewBeastiary()
+	}
+	if c.Locations == nil {
+		c.Locations = codextable.NewLocations()
+	}
+	if c.Objects == nil {
+		c.Objects = codextable.NewObjects()
+	}
+	if c.Quest == nil {
+		c.Quest = codextable.NewQuests()
 	}
 
-	for _, mill := range mills {
-		mill.Make()
+	for _, table := range []codextable.Table{
+		c.Npcs,
+		c.Beastiary,
+		c.Locations,
+		c.Objects,
+		c.Quest,
+	} {
+		table.Ensure()
 	}
 }

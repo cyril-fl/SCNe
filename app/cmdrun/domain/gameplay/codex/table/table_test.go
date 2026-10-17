@@ -66,11 +66,11 @@ func TestSubtablesExposeEmptyFormEntries(t *testing.T) {
 		name  string
 		table Table
 	}{
-		{name: "locations", table: NewLocations(nil)},
-		{name: "npcs", table: NewNpcs(nil)},
-		{name: "objects", table: NewObjects(nil)},
-		{name: "quest", table: NewQuests(nil)},
-		{name: "beastiary", table: NewBeastiary(nil)},
+		{name: "locations", table: NewLocations()},
+		{name: "npcs", table: NewNpcs()},
+		{name: "objects", table: NewObjects()},
+		{name: "quest", table: NewQuests()},
+		{name: "beastiary", table: NewBeastiary()},
 	}
 
 	for _, tt := range tests {

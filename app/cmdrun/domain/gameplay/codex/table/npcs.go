@@ -26,7 +26,7 @@ type npcsentry struct {
 
 var tablenpcs = "codex.npcs"
 
-func NewNpcs(entries []npcsentry) Table {
+func NewNpcs(entries ...npcsentry) *NpcsTable {
 	return &NpcsTable{
 		data: new(i19n.Localize(tablenpcs), entries),
 	}

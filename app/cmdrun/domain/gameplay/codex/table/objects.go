@@ -28,7 +28,7 @@ type objectentry struct {
 
 var tableobject = "codex.objects"
 
-func NewObjects(entries []objectentry) Table {
+func NewObjects(entries ...objectentry) *ObjectsTable {
 	return &ObjectsTable{
 		data: new(i19n.Localize(tableobject), entries),
 	}

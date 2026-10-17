@@ -52,7 +52,6 @@ func ParseAsString(value any) string {
 	return fmt.Sprintf("%v", value)
 }
 
-
 func StringBool(value string) bool {
 	switch value {
 	case "true", "1", "yes":

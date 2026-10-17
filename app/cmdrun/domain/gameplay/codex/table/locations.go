@@ -24,7 +24,7 @@ type locationsentry struct {
 
 var tablelocations = "codex.locations"
 
-func NewLocations(entries []locationsentry) Table {
+func NewLocations(entries ...locationsentry) *LocationsTable {
 	return &LocationsTable{
 		data: new(i19n.Localize(tablelocations), entries),
 	}
@@ -71,7 +71,6 @@ func (tb *LocationsTable) Add(location *locations.Location) {
 		Location:  location,
 	})
 }
-
 
 func (tb *LocationsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
@@ -121,12 +120,7 @@ func (tb *LocationsTable) assertEntry(values map[string]string) {
 }
 
 func (tb *LocationsTable) Ensure() {
-	if tb.name == "" {
-		tb.name = i19n.Localize(tablelocations)
-	}
-	if tb.Entries == nil {
-		tb.Entries = []locationsentry{}
-	}
+	ensureEmbeddedTable(i19n.Localize(tablelocations), &tb.data)
 }
 
 // - Helper --//
