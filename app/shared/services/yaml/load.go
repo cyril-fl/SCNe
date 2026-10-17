@@ -9,25 +9,40 @@ import (
 )
 
 // TODO Modifier pour pouvoir unmarshal du JSON, utiliser embeding et injection
-func loadYAMLFromFile(fileAddress string, target any) error {
-	data, err := os.ReadFile(fileAddress)
+
+// Getters & Setters
+
+// GetFolderFiles returns the names of the regular entries directly contained in
+// folderPath. The returned names are not absolute paths.
+func GetFolderFiles(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: false, files: true})
+}
+
+// GetFolderDirectories returns the names of the directories directly contained
+// in folderPath. The returned names are not absolute paths.
+func GetFolderDirectories(folderPath string) ([]string, error) {
+	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
+}
+
+// GetFilesFromSource returns sourcePath when it points to a file. When it
+// points to a directory, it returns the files in that directory and, if
+// recursive is true, in all of its subdirectories.
+func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
+	info, err := os.Stat(sourcePath)
 	if err != nil {
-		return logs.RawError("read %s: %w", fileAddress, err)
-
+		return nil, logs.RawError("%q: %w", sourcePath, err)
 	}
 
-	if err := yaml.Unmarshal(data, target); err != nil {
-		return logs.RawError("unmarshal %s: %w", fileAddress, err)
+	if !info.IsDir() {
+		return []string{sourcePath}, nil
 	}
 
-	return nil
+	return getFilesFromDirectoryRecursively(sourcePath, recursive)
 }
 
-type wantedEntries struct {
-	directories bool
-	files       bool
-}
 
+// getFolderEntries returns the names of the entries in folderPath that match
+// the requested directory and file categories.
 func getFolderEntries(folderPath string, wanted wantedEntries) ([]string, error) {
 	entries, err := os.ReadDir(folderPath)
 	if err != nil {
@@ -55,27 +70,8 @@ func getFolderEntries(folderPath string, wanted wantedEntries) ([]string, error)
 	return names, nil
 }
 
-func GetFolderFiles(folderPath string) ([]string, error) {
-	return getFolderEntries(folderPath, wantedEntries{directories: false, files: true})
-}
-
-func GetFolderDirectories(folderPath string) ([]string, error) {
-	return getFolderEntries(folderPath, wantedEntries{directories: true, files: false})
-}
-
-func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
-	info, err := os.Stat(sourcePath)
-	if err != nil {
-		return nil, logs.RawError("%q: %w", sourcePath, err)
-	}
-
-	if !info.IsDir() {
-		return []string{sourcePath}, nil
-	}
-
-	return getFilesFromDirectoryRecursively(sourcePath, recursive)
-}
-
+// getFilesFromDirectoryRecursively returns file paths from folderPath and,
+// when recursive is true, from all nested directories.
 func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]string, error) {
 	entries, err := os.ReadDir(folderPath)
 	if err != nil {
@@ -107,6 +103,12 @@ func getFilesFromDirectoryRecursively(folderPath string, recursive bool) ([]stri
 	return files, nil
 }
 
+
+
+// Methods
+
+// LoadFromFile reads a YAML document from fileAddress and unmarshals it into a
+// value of type T.
 func LoadFromFile[T any](fileAddress string) (*T, error) {
 	var params T
 	if err := loadYAMLFromFile(fileAddress, &params); err != nil {
@@ -116,6 +118,8 @@ func LoadFromFile[T any](fileAddress string) (*T, error) {
 	return &params, nil
 }
 
+// LoadListFromFile reads a YAML sequence from fileAddress and unmarshals it
+// into a slice of T.
 func LoadListFromFile[T any](fileAddress string) ([]T, error) {
 	var params []T
 	if err := loadYAMLFromFile(fileAddress, &params); err != nil {
@@ -123,4 +127,25 @@ func LoadListFromFile[T any](fileAddress string) ([]T, error) {
 	}
 
 	return params, nil
+}
+
+
+// loadYAMLFromFile reads a YAML document from fileAddress and unmarshals it into target.
+func loadYAMLFromFile(fileAddress string, target any) error {
+	data, err := os.ReadFile(fileAddress)
+	if err != nil {
+		return logs.RawError("read %s: %w", fileAddress, err)
+
+	}
+
+	if err := yaml.Unmarshal(data, target); err != nil {
+		return logs.RawError("unmarshal %s: %w", fileAddress, err)
+	}
+
+	return nil
+}
+
+type wantedEntries struct {
+	directories bool
+	files       bool
 }
