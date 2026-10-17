@@ -1,4 +1,4 @@
-package archetypes
+package interfaces
 
 import "solopg/app/cmdrun/domain/card/attributes/stats"
 

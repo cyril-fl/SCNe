@@ -2,12 +2,12 @@ package equipment
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/potency"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/slot"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
+	"solopg/app/cmdrun/types/potency"
 	"solopg/app/shared/services/logs"
 )
 

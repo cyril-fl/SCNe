@@ -3,7 +3,7 @@ package equipment
 import (
 	"errors"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/potency"
+	"solopg/app/cmdrun/types/potency"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/slot"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
