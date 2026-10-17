@@ -30,20 +30,20 @@ func TestPageCtrlNOpensNewFormFromEmptyPage(t *testing.T) {
 	if !page.IsFormOpen() {
 		t.Fatal("expected Ctrl+N to open a form")
 	}
-	if page.Form().GetFieldValue("name") != "" {
+	if page.GetForm().GetFieldValue("name") != "" {
 		t.Fatal("expected a new form to have empty values")
 	}
 }
 
 func TestPageEnterOpensSelectedEntry(t *testing.T) {
 	page := New(Template{
-		Items:   func() []Item { return []Item{{Title: "first", Values: map[string]string{"name": "loaded"}}} },
+		Items:   func() []Item { return []Item{{Name: "first", Values: map[string]string{"name": "loaded"}}} },
 		NewForm: testForm,
 		Save:    func(int, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
-	if got := page.Form().GetFieldValue("name"); got != "loaded" {
+	if got := page.GetForm().GetFieldValue("name"); got != "loaded" {
 		t.Fatalf("expected selected value to be loaded, got %v", got)
 	}
 }
@@ -64,13 +64,13 @@ func TestPageAltEnterDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
 func TestPageAltEnterDoesNotOpenLockedEntry(t *testing.T) {
 	page := New(Template{
 		Items: func() []Item {
-			return []Item{{Title: "template", Locked: true, Values: map[string]string{"name": "template"}}}
+			return []Item{{Name: "template", Locked: true, Values: map[string]string{"name": "template"}}}
 		},
 		NewForm: testForm,
 		Save:    func(int, map[string]string) error { return nil },
 	})
 
-	if page.OpenSelected() {
+	if page.EditItem() {
 		t.Fatal("expected a locked entry not to open for editing")
 	}
 	if page.IsFormOpen() {
@@ -80,7 +80,7 @@ func TestPageAltEnterDoesNotOpenLockedEntry(t *testing.T) {
 
 func TestPageCtrlNOpensNewForm(t *testing.T) {
 	page := New(Template{
-		Items:   func() []Item { return []Item{{Title: "first"}} },
+		Items:   func() []Item { return []Item{{Name: "first"}} },
 		NewForm: testForm,
 		Save:    func(int, map[string]string) error { return nil },
 	})
@@ -93,7 +93,7 @@ func TestPageCtrlNOpensNewForm(t *testing.T) {
 
 func TestPageListNavigationAndEscape(t *testing.T) {
 	page := New(Template{
-		Items:   func() []Item { return []Item{{Title: "first"}, {Title: "second"}} },
+		Items:   func() []Item { return []Item{{Name: "first"}, {Name: "second"}} },
 		NewForm: testForm,
 		Save:    func(int, map[string]string) error { return nil },
 	})
@@ -123,7 +123,7 @@ func TestPageSubmitCallsSave(t *testing.T) {
 		},
 	})
 
-	page.OpenNew()
+	page.EditNewItem()
 	page.Update(form.Validate{})
 	if !called {
 		t.Fatal("expected form submission callback")
@@ -144,7 +144,7 @@ func TestPageAltEnterValidates(t *testing.T) {
 		},
 	})
 
-	page.OpenNew()
+	page.EditNewItem()
 	cmd := page.Update(testKey(tea.KeyEnter, tea.ModAlt))
 	if cmd == nil {
 		t.Fatal("expected Alt+Enter to request validation")
@@ -166,7 +166,7 @@ func TestPageLastFieldValidates(t *testing.T) {
 		},
 	})
 
-	page.OpenNew()
+	page.EditNewItem()
 	cmd := page.Update(form.NextField{})
 	if cmd == nil {
 		t.Fatal("expected last field to request validation")

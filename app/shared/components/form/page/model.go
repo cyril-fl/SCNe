@@ -7,6 +7,7 @@ import (
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	sharedtui "solopg/app/shared/tui"
+	"solopg/app/shared/types/primitive"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -15,7 +16,7 @@ import (
 // Item is an entry displayed by a FormPage. Values are used to initialise the
 // form when the entry is opened for editing.
 type Item struct {
-	Title       string
+	Name       string
 	Description string
 	Values      map[string]string
 	Locked      bool
@@ -27,93 +28,101 @@ type Template struct {
 	Save    func(index int, values map[string]string) error
 }
 
-type CloseMsg struct{}
 
-type FormPage struct {
+type Page struct {
+	primitive.List
+
 	items   func() []Item
 	newForm func(map[string]string) *form.Form
 	save    func(int, map[string]string) error
-	list    list.Model
+
 	form    *form.Form
 	index   int
 }
-
-// Page is kept as a concise alias for callers that prefer the component's
-// shorter name.
-type Page = FormPage
-
-func New(template Template) *FormPage {
-	p := &FormPage{
+// TODO regardader pour adopter cette pholosipheio ou c'est possible
+func New(template Template) *Page {
+	p := &Page{
 		items:   template.Items,
 		newForm: template.NewForm,
 		save:    template.Save,
 		index:   -1,
 	}
-	p.list = list.New(nil, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(&p.list)
-	p.Refresh()
+	
+	p.intList()
+	p.refresh()
+
 	return p
 }
 
-func (p *FormPage) Refresh() {
-	items := p.items()
-	listItems := make([]list.Item, 0, len(items))
-	for _, item := range items {
-		listItems = append(listItems, models.NewItem(item.Title, item.Description, item))
-	}
-	p.list.SetItems(listItems)
-}
 
-func (p *FormPage) SetSize(s size.Size) {
-	p.list.SetSize(s.GetWidth(), s.GetHeight())
-}
+// Getters & Setters
 
-func (p *FormPage) SetFocus(focused bool) {
-	models.SetListFocus(&p.list, focused)
-}
-
-func (p *FormPage) GetList() *list.Model { return &p.list }
-
-func (p *FormPage) IsFormOpen() bool { return p.form != nil }
-
-func (p *FormPage) Form() *form.Form { return p.form }
-
-func (p *FormPage) OpenNew() {
-	p.index = -1
-	p.form = p.newForm(nil)
-}
-
-func (p *FormPage) OpenSelected() bool {
-	selected, ok := p.list.SelectedItem().(models.Item[Item])
-	if !ok {
-		return false
-	}
-	p.index = p.list.Index()
-	entry := selected.Value()
-	if entry.Locked {
-		return false
-	}
-	p.form = p.newForm(entry.Values)
-	return true
-}
-
-// HandleEscape closes the form first. If no form is open, it reports that the
-// owning menu may close the page.
-func (p *FormPage) HandleEscape() bool {
+func (p *Page) GetView() string {
 	if p.form != nil {
-		p.form = nil
-		p.index = -1
-		return true
+		return p.form.View().Content
 	}
-	return false
+	li := p.GetList()
+	return li.View()
 }
 
-func (p *FormPage) Close() {
+func (p *Page) GetForm() *form.Form { 
+	return p.form 
+}
+
+func (p *Page) GetFooter() []string {
+	if p.form != nil {
+		return []string{i19n.Localize("cmd.alt+enter:validate")}
+	}
+	return []string{i19n.Localize("cmd.ctrl+n:new")}
+}
+
+func (p *Page) SetFocus(focused bool) {
+	models.SetListFocus(p.GetList(), focused)
+}
+
+
+func (p *Page) SetSize(s size.Size) {
+	p.SetSize(s)
+}
+
+func (p *Page) IsFormOpen() bool { 
+	return p.form != nil 
+}
+
+
+// Methods
+func (p *Page) Close() {
 	p.form = nil
 	p.index = -1
 }
 
-func (p *FormPage) Update(msg tea.Msg) tea.Cmd {
+func (p *Page) EditNewItem() {
+	p.index = -1
+	p.form = p.newForm(nil)
+}
+
+func (p *Page) EditItem() bool {
+	list := p.GetList()
+	
+	selected, ok := list.SelectedItem().(models.Item[Item])
+	if !ok {
+		return false
+	}
+
+	p.index = list.Index()
+	entry := selected.Value()
+	if entry.Locked {
+		return false
+	}
+	
+	p.form = p.newForm(entry.Values)
+	return true
+}
+
+
+func (p *Page) Update(msg tea.Msg) tea.Cmd {
+	list := p.GetList()
+
 	if p.form != nil {
 		switch value := msg.(type) {
 		case form.Validate:
@@ -127,7 +136,7 @@ func (p *FormPage) Update(msg tea.Msg) tea.Cmd {
 			}
 			p.form = nil
 			p.index = -1
-			p.Refresh()
+			p.refresh()
 			return nil
 		case tea.KeyPressMsg:
 			switch sharedtui.EventKey(value.String()) {
@@ -147,30 +156,48 @@ func (p *FormPage) Update(msg tea.Msg) tea.Cmd {
 		case sharedtui.KEY_ESC:
 			return func() tea.Msg { return CloseMsg{} }
 		case sharedtui.SHORT_CTRL_N:
-			p.OpenNew()
+			p.EditNewItem()
 			return nil
 		case sharedtui.CMD_ALT_ENTER:
-			p.OpenSelected()
+			p.EditItem()
 			return nil
 		}
 	}
-	var cmd tea.Cmd
-	p.list, cmd = p.list.Update(msg)
+
+	newlist, cmd := list.Update(msg)
+	p.SetList(newlist)
 	return cmd
 }
 
-func (p *FormPage) View() string {
-	if p.form != nil {
-		return p.form.View().Content
-	}
-	return p.list.View()
+// Methods
+func (p *Page) intList() {
+	l := p.GetList()
+	*l = list.New(nil, list.NewDefaultDelegate(), 0, 0)
+	models.ConfigureList(l)
 }
 
-func (p *FormPage) GetView() string { return p.View() }
-
-func (p *FormPage) GetFooter() []string {
-	if p.form != nil {
-		return []string{i19n.Localize("cmd.alt+enter:validate")}
+func (p *Page) refresh() {
+	l := p.GetList()
+	items := p.items()
+	listItems := make([]list.Item, 0, len(items))
+	for _, item := range items {
+		listItems = append(listItems, models.NewItem(item.Name, item.Description, item))
 	}
-	return []string{i19n.Localize("cmd.ctrl+n:new")}
+	l.SetItems(listItems)
+}
+
+// Helpers
+type CloseMsg struct{}
+
+// Implementations
+
+// HandleEscape closes the form first. If no form is open, it reports that the
+// owning menu may close the page.
+func (p *Page) HandleEscape() bool {
+	if p.form != nil {
+		p.form = nil
+		p.index = -1
+		return true
+	}
+	return false
 }

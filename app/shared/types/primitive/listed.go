@@ -2,6 +2,7 @@ package primitive
 
 import "charm.land/bubbles/v2/list"
 
+// TEST
 type List struct {
 	list list.Model
 }
@@ -16,6 +17,6 @@ func (m *List) GetList() *list.Model {
 	return &m.list
 }
 
-func (m *List) SetList(list *list.Model) {
-	m.list = *list
+func (m *List) SetList(list list.Model) {
+	m.list = list
 }

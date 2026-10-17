@@ -9,13 +9,13 @@ import (
 
 type Rank string
 var (
-	// Ou a, b, c , s, ss ..
+	// TODO Rendre ca data driven
 	MainKind Rank = "main"
 	SideKind Rank = "side"
 )
-// Yaml ca en data drive
 type Priority string 
 var (
+	// TODO Rendre ca data driven
 	LowPriority Priority = "low"
 	MediumPriority Priority = "medium"
 	HighPriority Priority = "high"
@@ -62,8 +62,7 @@ func New(params Template)(*Quest, error){
 	}
 
 	return &Quest{
-		Name: params.Name,
-		Description: params.Description,
+		Card:      *newCard,
 		Done: params.Done,
 		Prioty: params.Prioty,
 		Rank: params.Rank,

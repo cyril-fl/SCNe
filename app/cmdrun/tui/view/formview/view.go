@@ -1,15 +1,20 @@
-package codexmenu
+package formview
 
 import (
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
+	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"solopg/app/cmdrun/domain/card/characters/classes"
+	"solopg/app/cmdrun/domain/card/characters/races"
+	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
+	"solopg/config"
 )
 
 // - NPC Form - //
-func getNpcForm(values map[string]string) *form.Form {
+func GetNpcForm(values map[string]string) *form.Form {
 	statsFields := getFormStatsFields(values)
 	encounter := values["encounter"]
 	if encounter == "" {
@@ -28,7 +33,7 @@ func getNpcForm(values map[string]string) *form.Form {
 }
 
 // - Beast Form - //
-func getBeastiaryForm(values map[string]string) *form.Form {
+func GetBeastiaryForm(values map[string]string) *form.Form {
 	statsFields := getFormStatsFields(values)
 	encounter := values["encounter"]
 	if encounter == "" {
@@ -45,7 +50,7 @@ func getBeastiaryForm(values map[string]string) *form.Form {
 }
 
 // - Location Form - //
-func getLocationForm(values map[string]string) *form.Form {
+func GetLocationForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
@@ -53,7 +58,7 @@ func getLocationForm(values map[string]string) *form.Form {
 }
 
 // - Object Form - //
-func getObjectForm(values map[string]string) *form.Form {
+func GetObjectForm(values map[string]string) *form.Form {
 	var categoryItems []models.Item[string]
 
 	if len(objectcategory.List()) == 0 {
@@ -72,9 +77,50 @@ func getObjectForm(values map[string]string) *form.Form {
 }
 
 // - Objectif Form - //
-func getObjectifForm(values map[string]string) *form.Form {
+func GetQuestForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
 	).Focus()
 }
+
+func getFormOracle() []models.Item[string] {
+	values, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
+	if err != nil {
+		return nil
+	}
+	items := make([]models.Item[string], 0, len(values))
+	for _, value := range values {
+		items = append(items, models.NewItem(i19n.Localize("oracles."+value), "", value))
+	}
+	return items
+}
+
+func getFormStatsFields(values map[string]string) []form.Field {
+	fields := make([]form.Field, 0)
+	for _, value := range stats.List() {
+		fields = append(fields, field.TextField(field.TextTemplate[string]{
+			ID:           value.String(),
+			Label:        i19n.Localize(value.String()),
+			Defaultvalue: values[value.String()],
+		}))
+	}
+	return fields
+}
+
+func getFormRaceOptions() []models.Item[string] {
+	items := make([]models.Item[string], 0)
+	for _, value := range races.List() {
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
+	}
+	return items
+}
+
+func getFormClassOptions() []models.Item[string] {
+	items := make([]models.Item[string], 0)
+	for _, value := range classes.List() {
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
+	}
+	return append(items, models.NewItem("None", "", ""))
+}
+
