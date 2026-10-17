@@ -38,10 +38,10 @@ type Template struct {
 	Description string
 	Variety     variety.Variety
 
-	Done   bool
-	Prioty Priority
-	Rank   Rank
-	Reward string
+	Done     bool
+	Priority Priority
+	Rank     Rank
+	Reward   string
 }
 
 func New(params Template) (*Quest, error) {
@@ -67,7 +67,7 @@ func New(params Template) (*Quest, error) {
 	return &Quest{
 		Card:   *newCard,
 		Done:   params.Done,
-		Prioty: params.Prioty,
+		Prioty: params.Priority,
 		Rank:   params.Rank,
 		Reward: params.Reward,
 	}, nil

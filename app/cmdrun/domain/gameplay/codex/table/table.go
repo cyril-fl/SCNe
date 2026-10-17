@@ -1,8 +1,6 @@
 package codextable
 
 import (
-	"errors"
-	"solopg/app/shared/services/logs"
 	"solopg/app/shared/types/primitive"
 )
 
@@ -15,13 +13,15 @@ type Table interface {
 	Ensure()
 }
 
-type TableData[E any] struct {
+type data[E any] struct {
+	primitive.Fallible
+
 	name    string
 	Entries []E `bson:"entries"`
 }
 
-func newTable[E any](name string, entries []E) *TableData[E] {
-	return &TableData[E]{
+func new[E any](name string, entries []E) *data[E] {
+	return &data[E]{
 		name:    name,
 		Entries: entries,
 	}
@@ -30,21 +30,11 @@ func newTable[E any](name string, entries []E) *TableData[E] {
 // Getters a Setters
 
 // Methods
-func (t TableData[any]) formatAssertErrors(err []error) error {
-	return errors.Join(
-		logs.Error("error.invalid", map[string]interface{}{
-			"Subject": t.name,
-			"Value":   err,
-		}),
-
-		errors.Join(err...),
-	)
-}
 
 // Helpers
-func ensureEmbeddedTable[E any](name string, table **TableData[E]) {
+func ensureEmbeddedTable[E any](name string, table **data[E]) {
 	if *table == nil {
-		*table = newTable(name, []E{})
+		*table = new(name, []E{})
 	}
 }
 

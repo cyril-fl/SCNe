@@ -17,18 +17,18 @@ import (
 
 // - Table --//
 type NpcsTable struct {
-	*TableData[NpcsEntry]
+	*data[npcsEntry]
 }
-type NpcsEntry struct {
+type npcsEntry struct {
 	Timestamp time.Time             `bson:"timestamp"`
 	Character *characters.Character `bson:"character"`
 }
 
 var tablenpcs = "codex.npcs"
 
-func NewNpcsTable(entries []NpcsEntry) Table {
+func NewNpcsTable(entries []npcsEntry) Table {
 	return &NpcsTable{
-		TableData: newTable(i19n.Localize(tablenpcs), entries),
+		data: new(i19n.Localize(tablenpcs), entries),
 	}
 }
 
@@ -36,15 +36,21 @@ func NewNpcsTable(entries []NpcsEntry) Table {
 
 // Methods
 func (tb *NpcsTable) Add(character *characters.Character) {
-	tb.Entries = append(tb.Entries, NpcsEntry{
+	tb.Entries = append(tb.Entries, npcsEntry{
 		Timestamp: time.Now().UTC(),
 		Character: character,
 	})
 }
 
 func (tb *NpcsTable) AddFromMappedValues(values map[string]string) error {
-	if err := tb.assertEntry(values); err != nil {
-		return err
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
 	}
 
 	generator := millstats.NewWithValues(values)
@@ -133,46 +139,41 @@ func (tb *NpcsTable) FindEntryByName(name string) *Entry {
 	return findEntryByName(tb.FormEntries(), name)
 }
 
-func (tb *NpcsTable) assertEntry(entry map[string]string) error {
-	var err []error
+func (tb *NpcsTable) assertEntry(entry map[string]string) {
+	tb.ClearErr()
+
 	if entry["name"] == "" {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.description",
 		}))
 	}
 	if !races.Assert(entry["race"]) {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.race",
 		}))
 	}
 	if !classes.Assert(entry["class"]) {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.class",
 		}))
 	}
-
-	if len(err) > 0 {
-		return tb.formatAssertErrors(err)
-	}
-
-	return nil
 }
 
 func (tb *NpcsTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.data)
 }
 
 // Helpers

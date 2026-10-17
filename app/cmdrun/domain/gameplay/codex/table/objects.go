@@ -1,6 +1,8 @@
 package codextable
 
 import (
+	"errors"
+	"os"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
@@ -16,19 +18,19 @@ import (
 LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
 type ObjectsTable struct {
-	*TableData[ObjectEntry]
+	*data[objEntry]
 }
 
-type ObjectEntry struct {
+type objEntry struct {
 	Timestamp time.Time       `bson:"timestamp"`
 	Object    *objects.Object `bson:"object"`
 }
 
 var tableobject = "codex.objects"
 
-func NewObjectsTable(entries []ObjectEntry) Table {
+func NewObjectsTable(entries []objEntry) Table {
 	return &ObjectsTable{
-		TableData: newTable(i19n.Localize(tableobject), entries),
+		data: new(i19n.Localize(tableobject), entries),
 	}
 }
 
@@ -36,15 +38,21 @@ func NewObjectsTable(entries []ObjectEntry) Table {
 
 // Methods
 func (tb *ObjectsTable) Add(object *objects.Object) {
-	tb.Entries = append(tb.Entries, ObjectEntry{
+	tb.Entries = append(tb.Entries, objEntry{
 		Timestamp: time.Now().UTC(),
 		Object:    object,
 	})
 }
 
 func (tb *ObjectsTable) AddFromMappedValues(values map[string]string) error {
-	if err := tb.assertEntry(values); err != nil {
-		return err
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
 	}
 
 	object, err := objects.New(objects.Template{
@@ -108,18 +116,18 @@ func (tb *ObjectsTable) FindEntryByName(name string) *Entry {
 	return findEntryByName(tb.FormEntries(), name)
 }
 
-func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
-	var err []error
+func (tb *ObjectsTable) assertEntry(entry map[string]string) {
+	tb.ClearErr()
 
 	if entry["name"] == "" {
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "item",
 			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "item",
 			"Property": "property.description",
 		}))
@@ -136,16 +144,10 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) error {
 			err = append(err, fmt.Errorf("category is required"))
 		}
 	*/
-
-	if len(err) > 0 {
-		return tb.formatAssertErrors(err)
-	}
-
-	return nil
 }
 
 func (tb *ObjectsTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.data)
 }
 
 // Helpers

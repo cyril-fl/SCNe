@@ -10,38 +10,43 @@ import (
 	"solopg/app/shared/utils/transform"
 	"time"
 )
-
 // - Table --//
 type BeastiaryTable struct {
-	*TableData[BeastiaryEntry]
+	*data[bstyEntry]
 }
 
-type BeastiaryEntry struct {
+type bstyEntry struct {
 	Timestamp time.Time   `bson:"timestamp"`
 	Race      *races.Race `bson:"race"`
 }
 
 var tablebeast = "codex.beastiary"
 
-func NewBeastiaryTable(entries []BeastiaryEntry) Table {
+func NewBeastiaryTable(entries []bstyEntry) Table {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
-		TableData: newTable(i19n.Localize(tablebeast), entries),
+		data: new(i19n.Localize(tablebeast), entries),
 	}
 }
 
 // - Methods --//
 func (tb *BeastiaryTable) Add(race *races.Race) {
-	tb.Entries = append(tb.Entries, BeastiaryEntry{
+	tb.Entries = append(tb.Entries, bstyEntry{
 		Timestamp: time.Now().UTC(),
 		Race:      race,
 	})
 }
 
 func (tb *BeastiaryTable) AddFromMappedValues(values map[string]string) error {
-	if err := tb.assertEntry(values); err != nil {
-		return err
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
 	}
 
 	generator := millstats.NewWithValues(values)
@@ -129,12 +134,10 @@ func (tb *BeastiaryTable) FindEntryByName(name string) *Entry {
 }
 
 // - Helper --//
-func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
-	var err []error
-
+func (tb *BeastiaryTable) assertEntry(entry map[string]string) {
+	tb.ClearErr()
 	if entry["name"] == "" {
-
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "race",
 			"Property": "property.name",
 		}))
@@ -142,21 +145,15 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) error {
 
 	if entry["description"] == "" {
 
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "race",
 			"Property": "property.description",
 		}))
 	}
-
-	if len(err) > 0 {
-		return tb.formatAssertErrors(err)
-	}
-
-	return nil
 }
 
 func (tb *BeastiaryTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.TableData)
+	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.data)
 	tb.syncWithConfig()
 }
 
@@ -183,23 +180,23 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 	return errors.Join(errs...)
 }
 
-func superChargeEntries(entries []BeastiaryEntry) []BeastiaryEntry {
+func superChargeEntries(entries []bstyEntry) []bstyEntry {
 	preloaded := getPreloadBeastiaryEntries()
 
 	return append(preloaded, entries...)
 }
 
-func getPreloadBeastiaryEntries() []BeastiaryEntry {
-	m := make(map[string]BeastiaryEntry)
+func getPreloadBeastiaryEntries() []bstyEntry {
+	m := make(map[string]bstyEntry)
 
 	for _, entry := range races.List() {
-		m[entry.GetName()] = BeastiaryEntry{
+		m[entry.GetName()] = bstyEntry{
 			Timestamp: time.Now().UTC(),
 			Race:      &entry,
 		}
 	}
 
-	slice := make([]BeastiaryEntry, 0, len(m))
+	slice := make([]bstyEntry, 0, len(m))
 	for value := range m {
 		slice = append(slice, m[value])
 	}

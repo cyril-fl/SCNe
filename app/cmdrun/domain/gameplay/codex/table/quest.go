@@ -12,43 +12,50 @@ import (
 
 // - Table --//
 type QuestTable struct {
-	*TableData[QuestEntry]
+	*data[qentry]
 }
-type QuestEntry struct {
+type qentry struct {
 	Timestamp time.Time    `bson:"timestamp"`
 	Quest     *quest.Quest `bson:"quest"`
 }
 
 var tableobjectives = "codex.quest"
 
-func NewQuestTable(entries []QuestEntry) Table {
+func NewQuestTable(entries []qentry) Table {
 	return &QuestTable{
-		TableData: newTable(i19n.Localize(tableobjectives), entries),
+		data: new(i19n.Localize(tableobjectives), entries),
 	}
 }
 
 // Getters & Setters
 
 // Methods
-func (o *QuestTable) Add(quest *quest.Quest) {
-	o.Entries = append(o.Entries, QuestEntry{
+func (tb *QuestTable) Add(quest *quest.Quest) {
+	tb.Entries = append(tb.Entries, qentry{
 		Timestamp: time.Now().UTC(),
 		Quest:     quest,
 	})
 }
 
-func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
-	if err := o.assertEntry(values); err != nil {
+func (tb *QuestTable) AddFromMappedValues(values map[string]string) error {
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
 		cwd, cwderr := os.Getwd()
 		return logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
-			"Error": errors.Join(cwderr, err),
+			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
 	}
 
 	quest, err := quest.New(quest.Template{
 		Name:        values["name"],
 		Description: values["description"],
+		// Priority:    values["priority"],
+		// Done:        values["done"],
+		Reward: values["reward"],
+		// Rank:        values["rank"],
+
 	})
 
 	if err != nil {
@@ -58,7 +65,7 @@ func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 		})
 	}
 
-	o.Add(quest)
+	tb.Add(quest)
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobjectives,
@@ -69,10 +76,10 @@ func (o *QuestTable) AddFromMappedValues(values map[string]string) error {
 }
 
 // MEDIUM refavtor tout ca en se basant sur object ect
-func (o *QuestTable) FormEntries() []Entry {
-	entries := make([]Entry, 0, len(o.Entries))
+func (tb *QuestTable) FormEntries() []Entry {
+	entries := make([]Entry, 0, len(tb.Entries))
 
-	for _, entry := range o.Entries {
+	for _, entry := range tb.Entries {
 		if entry.Quest == nil {
 			continue
 		}
@@ -86,51 +93,49 @@ func (o *QuestTable) FormEntries() []Entry {
 	return entries
 }
 
-func (o *QuestTable) SaveFromMappedValues(index int, values map[string]string) error {
+func (tb *QuestTable) SaveFromMappedValues(index int, values map[string]string) error {
 	if index < 0 {
-		return o.AddFromMappedValues(values)
+		return tb.AddFromMappedValues(values)
 	}
-	oldLen := len(o.Entries)
-	if err := o.AddFromMappedValues(values); err != nil {
+	oldLen := len(tb.Entries)
+	if err := tb.AddFromMappedValues(values); err != nil {
 		return err
 	}
 	if index < oldLen {
-		o.Entries[index] = o.Entries[oldLen]
-		o.Entries = o.Entries[:oldLen]
+		tb.Entries[index] = tb.Entries[oldLen]
+		tb.Entries = tb.Entries[:oldLen]
 	}
 	return nil
 }
 
-func (o *QuestTable) FindEntryByName(name string) *Entry {
-	return findEntryByName(o.FormEntries(), name)
+func (tb *QuestTable) FindEntryByName(name string) *Entry {
+	return findEntryByName(tb.FormEntries(), name)
 }
 
-func (o *QuestTable) assertEntry(values map[string]string) error {
-	var err []error
+func (tb *QuestTable) assertEntry(values map[string]string) {
+	tb.ClearErr()
 
 	if values["name"] == "" {
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "objectives",
 			"Property": "property.name",
 		}))
 	}
 	if values["description"] == "" {
-
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "objectives",
 			"Property": "property.description",
 		}))
 	}
 
-	if len(err) > 0 {
-		return o.formatAssertErrors(err)
-	}
-
-	return nil
+	// TODO Check value Done
+	// TODO Check value Priority
+	// TODO Check value Reward
+	// TODO Check value Rank
 }
 
-func (o *QuestTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tableobjectives), &o.TableData)
+func (tb *QuestTable) Ensure() {
+	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.data)
 }
 
 //

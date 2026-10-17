@@ -1,6 +1,8 @@
 package codextable
 
 import (
+	"errors"
+	"os"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/locations"
@@ -12,7 +14,7 @@ import (
 
 // - Table --//
 type LocationsTable struct {
-	*TableData[LocationsEntry]
+	*data[LocationsEntry]
 }
 
 type LocationsEntry struct {
@@ -24,7 +26,7 @@ var tablelocations = "codex.locations"
 
 func NewLocationsTable(entries []LocationsEntry) Table {
 	return &LocationsTable{
-		TableData: newTable(i19n.Localize(tablelocations), entries),
+		data: new(i19n.Localize(tablelocations), entries),
 	}
 }
 
@@ -39,8 +41,14 @@ func (tb *LocationsTable) Add(location *locations.Location) {
 }
 
 func (tb *LocationsTable) AddFromMappedValues(values map[string]string) error {
-	if err := tb.assertEntry(values); err != nil {
-		return err
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
 	}
 
 	location, err := locations.New(locations.Template{
@@ -97,28 +105,22 @@ func (tb *LocationsTable) FindEntryByName(name string) *Entry {
 	return findEntryByName(tb.FormEntries(), name)
 }
 
-func (tb *LocationsTable) assertEntry(values map[string]string) error {
-	var err []error
+func (tb *LocationsTable) assertEntry(values map[string]string) {
+	tb.ClearErr()
 
 	if values["name"] == "" {
-
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "name",
 		}))
 	}
+
 	if values["description"] == "" {
-		err = append(err, logs.Error("error.required", map[string]any{
+		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "location",
 			"Property": "description",
 		}))
 	}
-
-	if len(err) > 0 {
-		return tb.formatAssertErrors(err)
-	}
-
-	return nil
 }
 
 func (tb *LocationsTable) Ensure() {
