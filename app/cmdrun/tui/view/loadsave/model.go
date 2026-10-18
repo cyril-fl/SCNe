@@ -7,7 +7,6 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-// TODO check si j'ai besoin de garder la structure "tea model" mais je pense que oui
 type model struct {
 	list     list.Model
 	selected *campaign.Campaign

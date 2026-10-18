@@ -5,7 +5,6 @@ import (
 	"solopg/app/shared/services/factory"
 )
 
-// TEST
 type MillTable interface {
 	Make() codextable.Table
 }

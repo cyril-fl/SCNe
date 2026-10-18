@@ -32,7 +32,7 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	for _, option := range template.Options {
 		items = append(items, option)
 	}
-	// FIXME LOW Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
+	// FIXME Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
 	options := list.New(items, list.NewDefaultDelegate(), 15, 10)
 	models.ConfigureList(&options)
 	models.SetListFocus(&options, false)

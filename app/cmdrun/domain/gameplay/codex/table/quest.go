@@ -52,8 +52,6 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 		})
 	}
 
-	// TODO convet values to quest.Quest struct un fois l'assert fait
-
 	quest, err := quest.New(quest.Template{
 		Name:        values["name"],
 		Description: values["description"],
@@ -80,7 +78,6 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 	return nil
 }
 
-// MEDIUM refavtor tout ca en se basant sur object ect
 func (tb *QuestTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 
@@ -92,11 +89,12 @@ func (tb *QuestTable) FormEntries() []Entry {
 		name, description := entry.Quest.GetName(), entry.Quest.GetDescription()
 
 		entries = append(entries, newEntry(name, description, map[string]string{
-			"name": name, "description": description,
-			"done":     strconv.FormatBool(entry.Quest.Done),
-			"priority": entry.Quest.Priority.GetName(),
-			"rank":     entry.Quest.Rank.String(),
-			"reward":   entry.Quest.Reward,
+			"name":        name,
+			"description": description,
+			"done":        strconv.FormatBool(entry.Quest.Done),
+			"priority":    entry.Quest.Priority.GetName(),
+			"rank":        entry.Quest.Rank.String(),
+			"reward":      entry.Quest.Reward,
 		}, false))
 	}
 	return entries
@@ -132,11 +130,6 @@ func (tb *QuestTable) assertEntry(values map[string]string) {
 			"Property": "property.description",
 		}))
 	}
-
-	// TODO Check value Done
-	// TODO Check value Priority
-	// TODO Check value Reward
-	// TODO Check value Rank
 }
 
 func (tb *QuestTable) Ensure() {

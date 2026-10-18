@@ -13,8 +13,7 @@ type Delayed struct {
 }
 
 /*
-HIGH Faire des erreurs coder cfr le doc dans la branch
-update readme.
+HIGH Faire des erreurs coder cfr le doc dans la branch update readme.
 */
 type Failed struct {
 	Err error
@@ -24,7 +23,6 @@ type Refreshed struct {
 	Option viewoptions.RefreshOption
 }
 
-// LOW Verrifier si tjrs necessaire, surelent avant le refactor. des steps
 type Resolved struct {
 	Completed bool
 	Value     any

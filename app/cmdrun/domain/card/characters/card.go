@@ -13,7 +13,6 @@ import (
 	"solopg/app/shared/services/logs"
 )
 
-// LOW voir pour rendre privé ce qui peu l'être
 type Character struct {
 	card.Card
 

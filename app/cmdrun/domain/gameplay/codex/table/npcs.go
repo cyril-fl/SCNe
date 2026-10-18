@@ -114,7 +114,9 @@ func (tb *NpcsTable) FormEntries() []Entry {
 			values[stat] = plumtransform.ParseAsString(value)
 		}
 		entries = append(entries, newEntry(
-			character.GetName(), character.Race, values,
+			character.GetName(),
+			character.Race,
+			values,
 			characters.IsLocked(character.GetName()),
 		))
 	}

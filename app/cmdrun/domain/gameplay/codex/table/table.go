@@ -53,7 +53,6 @@ type Entry struct {
 // Getters and Setters
 
 // Methodss
-// TODO sceptiqquesur le string map
 func newEntry(name, description string, values map[string]string, locked bool) Entry {
 	return Entry{
 		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{

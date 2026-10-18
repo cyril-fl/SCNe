@@ -6,7 +6,6 @@ import (
 	"charm.land/bubbles/v2/list"
 )
 
-// TEST
 type List struct {
 	list list.Model
 }

@@ -118,8 +118,6 @@ func GetByName(name string) (*Oracle, error) {
 }
 
 func (o Oracle) GetName() string {
-	// return o.name
-	// TODO Si ca merde implment un autre methode pour les list dans le menu
 	return fmt.Sprintf("oracles.%s", o.name)
 }
 

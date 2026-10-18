@@ -52,10 +52,8 @@ func (m *model) SetSectionSize(size size.Size) {
 
 func (m model) GetFooter() []string {
 	footer := []string{shortcut.SAVE.String()}
-	// TODO uniformier les comportement avec seulement alt + , ou shit + pour le side menu, dice, oracle ect on les deuw.
 	footer = append(footer, m.state.GetFooter()...)
 	footer = append(footer, m.menu.GetFooter()...)
-
 	return footer
 }
 

@@ -50,7 +50,7 @@ pourquoi :
 		Modifier               Modifier `yaml:"modifier"`
 	}
 
-et pas
+et pas :
 
 	type Effect struct {
 		primitive.Descriptible `yaml:"description"`

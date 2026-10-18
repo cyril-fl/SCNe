@@ -92,7 +92,9 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 		name, description := entry.Object.GetName(), entry.Object.GetDescription()
 
 		entries = append(entries, newEntry(name, description, map[string]string{
-			"name": name, "description": description, "category": entry.Object.Category.String(),
+			"name":        name,
+			"description": description,
+			"category":    entry.Object.Category.String(),
 		}, false))
 	}
 	return entries

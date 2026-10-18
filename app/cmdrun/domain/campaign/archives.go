@@ -1,15 +1,15 @@
 package campaign
 
 import (
-	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/cmdrun/types/interfaces"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// TEST
 type Archives struct {
 	plumprimitive.Datable
 

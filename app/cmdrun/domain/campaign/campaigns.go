@@ -15,7 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// TEST
 type Campaign struct {
 	plumprimitive.Datable
 
