@@ -12,15 +12,18 @@ type Table interface {
 	Ensure()
 }
 
-type data[E any] struct {
+// Data is embedded by each Codex table so its entries are part of the table's
+// BSON document. It must remain exported because the MongoDB BSON encoder
+// ignores anonymous fields whose type is unexported.
+type Data[E any] struct {
 	plumprimitive.Fallible
 
 	name    string
 	Entries []E `bson:"entries"`
 }
 
-func new[E any](name string, entries []E) *data[E] {
-	return &data[E]{
+func new[E any](name string, entries []E) *Data[E] {
+	return &Data[E]{
 		name:    name,
 		Entries: entries,
 	}
@@ -31,7 +34,7 @@ func new[E any](name string, entries []E) *data[E] {
 // Methods
 
 // Helpers
-func ensureEmbeddedTable[E any](name string, table **data[E]) {
+func ensureEmbeddedTable[E any](name string, table **Data[E]) {
 	if *table == nil {
 		*table = new(name, []E{})
 	}

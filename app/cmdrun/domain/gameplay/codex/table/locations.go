@@ -15,7 +15,7 @@ import (
 
 // - Table --//
 type LocationsTable struct {
-	*data[locationsentry]
+	*Data[locationsentry] `bson:",inline"`
 }
 
 type locationsentry struct {
@@ -27,7 +27,7 @@ var tablelocations = "codex.locations"
 
 func NewLocations(entries ...locationsentry) *LocationsTable {
 	return &LocationsTable{
-		data: new(i19n.Localize(tablelocations), entries),
+		Data: new(i19n.Localize(tablelocations), entries),
 	}
 }
 
@@ -121,7 +121,7 @@ func (tb *LocationsTable) assertEntry(values map[string]string) {
 }
 
 func (tb *LocationsTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tablelocations), &tb.data)
+	ensureEmbeddedTable(i19n.Localize(tablelocations), &tb.Data)
 }
 
 // - Helper --//

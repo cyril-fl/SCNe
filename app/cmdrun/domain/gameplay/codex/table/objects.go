@@ -19,7 +19,7 @@ import (
 LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
 type ObjectsTable struct {
-	*data[objectentry]
+	*Data[objectentry] `bson:",inline"`
 }
 
 type objectentry struct {
@@ -31,7 +31,7 @@ var tableobject = "codex.objects"
 
 func NewObjects(entries ...objectentry) *ObjectsTable {
 	return &ObjectsTable{
-		data: new(i19n.Localize(tableobject), entries),
+		Data: new(i19n.Localize(tableobject), entries),
 	}
 }
 
@@ -144,7 +144,7 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) {
 }
 
 func (tb *ObjectsTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.data)
+	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.Data)
 }
 
 // Helpers

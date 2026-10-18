@@ -16,7 +16,7 @@ import (
 
 // - Table --//
 type QuestTable struct {
-	*data[questentry]
+	*Data[questentry] `bson:",inline"`
 }
 type questentry struct {
 	Timestamp time.Time    `bson:"timestamp"`
@@ -27,7 +27,7 @@ var tableobjectives = "codex.quest"
 
 func NewQuests(entries ...questentry) *QuestTable {
 	return &QuestTable{
-		data: new(i19n.Localize(tableobjectives), entries),
+		Data: new(i19n.Localize(tableobjectives), entries),
 	}
 }
 
@@ -140,7 +140,7 @@ func (tb *QuestTable) assertEntry(values map[string]string) {
 }
 
 func (tb *QuestTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.data)
+	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.Data)
 }
 
 //

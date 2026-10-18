@@ -22,7 +22,7 @@ func TestNewEntryAndFindEntryByName(t *testing.T) {
 }
 
 func TestEnsureEmbeddedTableInitializesOnlyMissingData(t *testing.T) {
-	var table *data[string]
+	var table *Data[string]
 
 	ensureEmbeddedTable("table", &table)
 

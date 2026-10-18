@@ -4,9 +4,15 @@ import (
 	"os"
 	"testing"
 
+	"solopg/app/cmdrun/domain/card/attributes/rarity"
+	"solopg/app/cmdrun/domain/card/attributes/variety"
+	"solopg/app/cmdrun/domain/card/locations"
+	"solopg/app/cmdrun/domain/card/quest"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/logs"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type testLogRegistrar struct{}
@@ -59,5 +65,52 @@ func TestArchivesEnsureInitialized(t *testing.T) {
 	}
 	if archives.Journal.Entries == nil || archives.Log.Entries == nil {
 		t.Fatal("EnsureInitialized did not initialize journal entries")
+	}
+}
+
+func TestArchivesBSONRoundTripPreservesCodexEntries(t *testing.T) {
+	location, err := locations.New(locations.Template{
+		Name:        "Saved location",
+		Description: "A location that must survive a save",
+		Rarity:      rarity.Default(),
+		Variety:     variety.MakeDefault("location_card"),
+	})
+	if err != nil {
+		t.Fatalf("locations.New() error = %v", err)
+	}
+
+	newQuest, err := quest.New(quest.Template{
+		Name:        "Saved quest",
+		Description: "A quest that must survive a save",
+	})
+	if err != nil {
+		t.Fatalf("quest.New() error = %v", err)
+	}
+
+	archives := NewArchives(ArchivesTemplate{
+		CampaignID: id.New(),
+		Codex:      codex.New(),
+		Journal:    NewJournal([]Entry{}),
+		Log:        NewJournal([]Entry{}),
+	})
+	archives.Codex.Locations.Add(location)
+	archives.Codex.Quest.Add(newQuest)
+
+	encoded, err := bson.Marshal(archives)
+	if err != nil {
+		t.Fatalf("bson.Marshal() error = %v", err)
+	}
+
+	var decoded Archives
+	if err := bson.Unmarshal(encoded, &decoded); err != nil {
+		t.Fatalf("bson.Unmarshal() error = %v", err)
+	}
+	decoded.EnsureInitialized()
+
+	if got := len(decoded.Codex.Locations.FormEntries()); got != 1 {
+		t.Fatalf("decoded locations = %d, want 1", got)
+	}
+	if got := len(decoded.Codex.Quest.FormEntries()); got != 1 {
+		t.Fatalf("decoded quests = %d, want 1", got)
 	}
 }

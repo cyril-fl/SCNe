@@ -14,7 +14,7 @@ import (
 
 // - Table --//
 type BeastiaryTable struct {
-	*data[beastentry]
+	*Data[beastentry] `bson:",inline"`
 }
 
 type beastentry struct {
@@ -28,7 +28,7 @@ func NewBeastiary(entries ...beastentry) *BeastiaryTable {
 	entries = superChargeEntries(entries)
 
 	return &BeastiaryTable{
-		data: new(i19n.Localize(tablebeast), entries),
+		Data: new(i19n.Localize(tablebeast), entries),
 	}
 }
 
@@ -153,7 +153,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) {
 }
 
 func (tb *BeastiaryTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.data)
+	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.Data)
 	tb.syncWithConfig()
 }
 

@@ -18,7 +18,7 @@ import (
 
 // - Table --//
 type NpcsTable struct {
-	*data[npcsentry]
+	*Data[npcsentry] `bson:",inline"`
 }
 type npcsentry struct {
 	Timestamp time.Time             `bson:"timestamp"`
@@ -29,7 +29,7 @@ var tablenpcs = "codex.npcs"
 
 func NewNpcs(entries ...npcsentry) *NpcsTable {
 	return &NpcsTable{
-		data: new(i19n.Localize(tablenpcs), entries),
+		Data: new(i19n.Localize(tablenpcs), entries),
 	}
 }
 
@@ -170,7 +170,7 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) {
 }
 
 func (tb *NpcsTable) Ensure() {
-	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.data)
+	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.Data)
 }
 
 // Helpers
