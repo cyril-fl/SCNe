@@ -1,6 +1,7 @@
 package loadsave
 
 import (
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/header"
 
@@ -22,6 +23,12 @@ func (m *model) GetHeader() header.Template {
 func (m *model) GetSection() []string {
 	return []string{
 		m.list.View(),
+	}
+}
+
+func (m *model) GetFooter() []string {
+	return []string{
+		shortcut.SELECT.String(),
 	}
 }
 

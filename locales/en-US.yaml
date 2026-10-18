@@ -1,21 +1,21 @@
 # --- Global ---
   # Ctrl
-cmd.ctrl+q:quit:
-  other: "Ctrl+Q: Quit"
-cmd.ctrl+s:save:
-  other: "Ctrl+S: Save"
-cmd.shift+enter:add:
-  other: "Shift+Enter: Add"
-cmd.shift+enter:open:
-  other: "Shift+Enter: Open"
-cmd.shift+enter:roll:
-  other: "Shift+Enter: Roll"
-cmd.ctrl+n:new:
-  other: "Ctrl+N: New"
-cmd.alt+enter:validate:
-  other: "Alt+Enter: Validate"
-cmd.alt+enter:open:
-  other: "Alt+Enter: Open"
+quit:
+  other: "quit"
+save:
+  other: "save"
+save:form:
+  other: "register"
+send:
+  other: "send"
+roll:
+  other: "roll"
+open:
+  other: "open"
+select:
+  other: "select"
+new:
+  other: "new"
 
 # Options
 accept:

@@ -5,13 +5,13 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/tui/view/menucodex"
 	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/factory/millroll"
-	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/statemachine"
 	interfass "solopg/app/shared/types/interface"
 	"strings"
@@ -51,7 +51,7 @@ func (m *model) SetSectionSize(size size.Size) {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{i19n.Localize("cmd.ctrl+s:save")}
+	footer := []string{shortcut.SAVE.String()}
 	// TODO uniformier les comportement avec seulement alt + , ou shit + pour le side menu, dice, oracle ect on les deuw.
 	footer = append(footer, m.state.GetFooter()...)
 	footer = append(footer, m.menu.GetFooter()...)
@@ -76,7 +76,7 @@ func makeViewState(params UiParams) statemachine.ViewState[state] {
 		transitions[step] = []state{CHAT_SECTION}
 	}
 
-	return statemachine.NewView[state](statemachine.TemplateViewState[state]{
+	return statemachine.NewView(statemachine.TemplateViewState[state]{
 		Base:       CHAT_SECTION,
 		Transition: transitions,
 		Views:      views,
@@ -102,7 +102,7 @@ func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterfa
 		navigation.NewSection(navigation.TemplateSection[oracle.Oracle]{
 			ID:      "oracles",
 			Options: oracle.ListVisible(),
-			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
+			Footer:  []string{shortcut.THROW.String()},
 			HandleEnterInput: func(value oracle.Oracle) tea.Cmd {
 				return millroll.Execute(millroll.Oracles(value))
 			},
@@ -111,7 +111,7 @@ func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterfa
 		navigation.NewSection(navigation.TemplateSection[dice.Dice]{
 			ID:      "dice",
 			Options: dice.List(),
-			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
+			Footer:  []string{shortcut.THROW.String()},
 			HandleEnterInput: func(value dice.Dice) tea.Cmd {
 				return millroll.Execute(millroll.Dice(value))
 			},
@@ -120,7 +120,7 @@ func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterfa
 		navigation.NewSection(navigation.TemplateSection[hint.Hint]{
 			ID:      "hint",
 			Options: hint.List(),
-			Footer:  []string{i19n.Localize("cmd.shift+enter:roll")},
+			Footer:  []string{shortcut.THROW.String()},
 			HandleEnterInput: func(value hint.Hint) tea.Cmd {
 				return millroll.Execute(millroll.Hint(value))
 			},

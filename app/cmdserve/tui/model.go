@@ -2,6 +2,7 @@ package cmdservetui
 
 import (
 	"context"
+
 	pluminterface "github.com/cyril-fl/plum/interface"
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plumtypes "github.com/cyril-fl/plum/types"
@@ -45,7 +46,7 @@ func New[T pluminterface.Stringable](params StreamModelTemplate[T]) model[T] {
 		ctx:        params.Context,
 		repository: params.Repository,
 		flags:      params.Flags,
-		errorset:   plumtypes.New[error](),
+		errorset:   plumtypes.NewSet[error](),
 	}
 }
 

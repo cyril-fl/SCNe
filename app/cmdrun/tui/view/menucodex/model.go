@@ -4,6 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	codexform "solopg/app/cmdrun/domain/gameplay/codex/form"
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/shared/components/form"
 	formpage "solopg/app/shared/components/form/page"
 	"solopg/app/shared/components/models"
@@ -19,7 +20,9 @@ import (
 func NewSection(focused bool) *codexMenu {
 	return &codexMenu{
 		Section: navigation.NewSection(navigation.TemplateSection[*codexMenuItem]{
-			ID: "codex", Options: makeCodexList(), Focused: focused,
+			ID:      "codex",
+			Options: makeCodexList(),
+			Focused: focused,
 		},
 		)}
 }
@@ -31,6 +34,7 @@ type CodexMenuParams struct {
 
 type codexMenu struct {
 	*navigation.Section
+	isSubviewOpen bool
 }
 
 // Getters & Setters
@@ -42,7 +46,11 @@ func (m *codexMenu) GetView() string {
 }
 
 func (m *codexMenu) GetFooter() []string {
-	return []string{i19n.Localize("cmd.alt+enter:open")}
+	if !m.isSubviewOpen {
+		return []string{shortcut.OPEN.String()}
+	}
+
+	return nil
 }
 
 func (m *codexMenu) getSelectedPage() *codexMenuItem {
@@ -57,8 +65,13 @@ func (m *codexMenu) getSelectedPage() *codexMenuItem {
 // The codex side menu is a category selector. The selected category is opened
 // in the gameboard state machine, not rendered in this side menu.
 func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
-	if key, ok := msg.(tea.KeyPressMsg); ok {
-		switch plumtypes.Key(key.String()) {
+	switch msg := msg.(type) {
+	case form.Close:
+		m.isSubviewOpen = false
+	case form.Open:
+		m.isSubviewOpen = true
+	case tea.KeyPressMsg:
+		switch plumtypes.Key(msg.String()) {
 		case plumtypes.CMD_ALT_ENTER:
 			if selected := m.getSelectedPage(); selected != nil {
 				return form.OpenPage(selected.id)
@@ -74,15 +87,15 @@ func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 // side menu only selects one of these page IDs.
 func NewFormPages(c *codex.Codex) map[string]*formpage.Page {
 	return map[string]*formpage.Page{
-		"codex.locations": newFormPage(c.Locations, codexform.GetLocationForm),
-		"codex.npcs":      newFormPage(c.Npcs, codexform.GetNpcForm),
-		"codex.beastiary": newFormPage(c.Beastiary, codexform.GetBeastiaryForm),
-		"codex.objects":   newFormPage(c.Objects, codexform.GetObjectForm),
-		"codex.quest":     newFormPage(c.Quest, codexform.GetQuestForm),
+		"codex.locations": newpage(c.Locations, codexform.GetLocationForm),
+		"codex.npcs":      newpage(c.Npcs, codexform.GetNpcForm),
+		"codex.beastiary": newpage(c.Beastiary, codexform.GetBeastiaryForm),
+		"codex.objects":   newpage(c.Objects, codexform.GetObjectForm),
+		"codex.quest":     newpage(c.Quest, codexform.GetQuestForm),
 	}
 }
 
-func newFormPage(table codextable.Table, makeForm form.Makefunc) *formpage.Page {
+func newpage(table codextable.Table, makeForm form.Makefunc) *formpage.Page {
 	return formpage.New(formpage.Template{
 		Items: func() []formpage.Item {
 

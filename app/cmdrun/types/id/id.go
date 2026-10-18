@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// TODO rechercher où il n'est pas utilisé et uniformiser le comportements
 type ID uuid.UUID
 
 func New() ID {

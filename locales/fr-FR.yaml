@@ -1,21 +1,21 @@
 # --- Global ---
 # Ctrl
-cmd.ctrl+q:quit:
-  other: "Ctrl+Q: Quitter"
-cmd.ctrl+s:save:
-  other: "Ctrl+S : Sauvegarder"
-cmd.shift+enter:add:
-  other: "Shift+Entrée : Ajouter"
-cmd.shift+enter:open:
-  other: "Shift+Entrée : Ouvrir"
-cmd.shift+enter:roll:
-  other: "Shift+Entrée : Lancer"
-cmd.ctrl+n:new:
-  other: "Ctrl+N : Nouveau"
-cmd.alt+enter:validate:
-  other: "Alt+Entrée : Valider"
-cmd.alt+enter:open:
-  other: "Alt+Entrée : Ouvrir"
+quit:
+  other: "quitter"
+save:
+  other: "sauvegarder"
+save:form:
+  other: "enregistrer"  
+send:
+  other: "envoyer"
+roll:
+  other: "lancer"
+open:
+  other: "ouvrir"
+select:
+  other: "selectionner"
+new:
+  other: "nouveau"
 
 # Options
 accept:

@@ -1,10 +1,11 @@
 package navigation
 
 import (
-	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"

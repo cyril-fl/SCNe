@@ -9,6 +9,7 @@ import (
 	"solopg/app/shared/services/logs"
 	"time"
 
+	plumtypes "github.com/cyril-fl/plum/types"
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
@@ -154,6 +155,7 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) {
 
 func (tb *BeastiaryTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.Data)
+	tb.Entries = superChargeEntries(tb.Entries)
 	tb.syncWithConfig()
 }
 
@@ -181,25 +183,39 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 }
 
 func superChargeEntries(entries []beastentry) []beastentry {
-	preloaded := getPreloadBeastiaryEntries()
+	known := makeKnowEntry(entries)
+	result := makeMissingEntries(known, entries)
 
-	return append(preloaded, entries...)
+	return result
 }
 
-func getPreloadBeastiaryEntries() []beastentry {
-	m := make(map[string]beastentry)
+func makeKnowEntry(entries []beastentry) plumtypes.Set[string] {
+	set := plumtypes.NewSet[string]()
 
-	for _, entry := range races.List() {
-		m[entry.GetName()] = beastentry{
-			Timestamp: time.Now().UTC(),
-			Race:      &entry,
+	for _, entry := range entries {
+		if entry.Race == nil {
+			continue
 		}
+		set.Add(entry.Race.GetName())
 	}
 
-	slice := make([]beastentry, 0, len(m))
-	for value := range m {
-		slice = append(slice, m[value])
+	return set
+}
+
+func makeMissingEntries(known plumtypes.Set[string], entries []beastentry) []beastentry {
+	all := append([]beastentry(nil), entries...)
+
+	for _, r := range races.List() {
+		if known.Has(r.GetName()) {
+			continue
+		}
+
+		known.Add(r.GetName())
+		all = append(all, beastentry{
+			Timestamp: time.Now().UTC(),
+			Race:      &r,
+		})
 	}
 
-	return slice
+	return all
 }

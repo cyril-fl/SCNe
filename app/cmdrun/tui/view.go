@@ -3,8 +3,8 @@ package cmdruntui
 import (
 	"errors"
 	"os"
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
@@ -12,7 +12,7 @@ import (
 
 func (m model) View() tea.View {
 	m.layout.SetSize(size.NewFromWindow(m.steps.GetSize()))
-	m.layout.SetFooter(i19n.Localize("cmd.ctrl+q:quit"))
+	m.layout.SetFooter(shortcut.QUIT.String())
 
 	if m.steps.HasErr() {
 		cwd, cwderr := os.Getwd()

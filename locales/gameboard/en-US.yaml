@@ -30,5 +30,3 @@ chat.msg:welcome:
   other: "Welcome to the chat room!\nType a message and press Enter to send."
 chat.placeholder:
   other: "Describe your action here..."
-chat.footer:
-  other: "Enter: send"

@@ -1,8 +1,8 @@
 package chat
 
 import (
-	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
@@ -11,6 +11,8 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/types/primitive"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 
 	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/viewport"
@@ -69,7 +71,7 @@ func (c *Chat) GetView() string {
 
 func (m Chat) GetFooter() []string {
 	return []string{
-		i19n.Localize("chat.footer"),
+		shortcut.SEND.String(),
 	}
 }
 

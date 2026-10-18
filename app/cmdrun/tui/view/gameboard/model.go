@@ -1,7 +1,6 @@
 package gameboard
 
 import (
-	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
@@ -10,6 +9,8 @@ import (
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/statemachine"
 	"time"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
@@ -52,10 +53,16 @@ func (m model) Init() tea.Cmd {
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	statecmd := m.state.Update(msg)
+
+	_, ok := msg.(form.Close)
+	isCloseForm := ok
+	isChatSection := m.state.Current() == CHAT_SECTION
+
 	var menucmd tea.Cmd
-	if m.state.Current() == CHAT_SECTION {
+	if isChatSection || isCloseForm {
 		menucmd = m.menu.HandleUpdate(msg)
 	}
+
 	next, cmd := m.handleUpdate(msg)
 
 	return next, tea.Sequence(menucmd, statecmd, cmd)

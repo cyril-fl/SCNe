@@ -1,10 +1,10 @@
 package formpage
 
 import (
+	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
-	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
@@ -51,6 +51,7 @@ func New(template Template) *Page {
 	return p
 }
 
+// TODO la page a un décallage et ne s'affiche pas nickel
 // Getters & Setters
 func (p *Page) GetView() string {
 	if p.form != nil {
@@ -65,10 +66,33 @@ func (p *Page) GetForm() *form.Form {
 }
 
 func (p *Page) GetFooter() []string {
+	res := []string{}
 	if p.form != nil {
-		return []string{i19n.Localize("cmd.alt+enter:validate")}
+		res = append(res, shortcut.SAVEFORM.String())
+		return res
 	}
-	return []string{i19n.Localize("cmd.ctrl+n:new")}
+
+	res = append(res, shortcut.NEW.String())
+	if !p.isSelectedLocked() {
+		res = append(res, shortcut.EDIT.String())
+	}
+
+	return res
+}
+
+func (p *Page) isSelectedLocked() bool {
+	li := p.GetList()
+	item := li.SelectedItem()
+
+	if item == nil {
+		return false
+	}
+
+	if item, ok := item.(models.Item[Item]); ok && !item.Value().Locked {
+		return false
+	}
+
+	return true
 }
 
 func (p *Page) SetFocus(focused bool) {

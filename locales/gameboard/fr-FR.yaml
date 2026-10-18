@@ -29,5 +29,5 @@ chat.msg:welcome:
   other: "Bienvenue dans le chat !\nÉcrivez un message puis appuyez sur Entrée pour l'envoyer."
 chat.placeholder:
   other: "Decrivez votre action ici..."
-chat.footer:
-  other: "Entrée: Evoyer"
+
+
