@@ -1,12 +1,17 @@
-Go Tests
+---
+name: go-test-run
+description: "Run Go unit tests using this project's Makefile and report failures accurately."
+---
+
+# Go Tests
 
 Mandatory Command
 
 The project includes a Makefile that configures the environment required to run Go tests. Always use the Makefile to execute tests.
 
-* From the project root, run make test to execute all tests.
+* From the project root, run `make test` to execute all tests.
 * To target a specific package or individual tests, use make test ARGS="...".
-* Never run go test ./... or go test directly, as these commands do not configure the project’s specific test environment.
+* Never run `go test ./...` or `go test` directly, as these commands do not configure the project's specific test environment.
 
 Procedure
 

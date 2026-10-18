@@ -1,5 +1,7 @@
-name: go-tests
-description: Use this skill whenever the user requests the creation or modification of Go unit tests, particularly when files contain the // TEST comment.
+---
+name: go-test-create
+description: "Create or update Go unit tests when requested, especially for files containing a // TEST marker."
+---
 
 Go Tests
 
@@ -43,8 +45,8 @@ Procedure
 
 6. Verify the Results
 
-* Consult the Makefile and project documentation to identify the recommended test command.
-* Run the tests from the appropriate directory.
+* Consult the Makefile and project documentation to confirm the recommended test command.
+* Run tests from the project root with `make test`, or target a package with `make test ARGS="..."`.
 * Verify that the new tests pass and distinguish test failures from potential defects in the production code.
 * Confirm that all completed files have had their // TEST markers removed.
 
