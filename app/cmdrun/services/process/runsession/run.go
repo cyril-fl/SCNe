@@ -11,7 +11,6 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/generatesteplist"
 
 	"solopg/app/cmdrun/services/process/savestate"
@@ -22,10 +21,12 @@ import (
 	"solopg/app/cmdrun/tui/view/onboarding/onboardforgecharacter"
 	"solopg/app/cmdrun/tui/view/onboarding/onboardlocation"
 	"solopg/app/shared/components/models"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 	cache
 
 	db  *mango.Mongo

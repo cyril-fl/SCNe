@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/utils/transform"
 	"strings"
 
 	"strconv"
@@ -13,6 +11,8 @@ import (
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // TEST
@@ -64,7 +64,7 @@ func (m *textField[T]) View() tea.View {
 
 // Getters & Setters
 func (f *textField[T]) GetValueAsString() string {
-	return transform.ParseAsString(f.Value())
+	return plumtransform.ParseAsString(f.Value())
 }
 
 func (m *textField[T]) getNoLabelView(input, err string) tea.View {
@@ -105,18 +105,18 @@ func (m *textField[T]) Init() tea.Cmd {
 func (m *textField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_ENTER:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_ENTER:
 			return m, tea.Sequence(
 				form.Send[form.NextField](),
 				form.Send[form.Scroll](),
 			)
-		case sharedtui.KEY_UP:
+		case plumtypes.KEY_UP:
 			return m, tea.Sequence(
 				form.Send[form.PreviousField](),
 				form.Send[form.Scroll](),
 			)
-		case sharedtui.KEY_DOWN:
+		case plumtypes.KEY_DOWN:
 			return m, tea.Sequence(
 				form.Send[form.NextField](),
 				form.Send[form.Scroll](),

@@ -10,9 +10,10 @@ import (
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 
 	"time"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Table --//
@@ -92,7 +93,7 @@ func (tb *NpcsTable) AddFromMap(values map[string]string) error {
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tablenpcs,
-		"Entry": transform.ParseJson(character),
+		"Entry": plumtransform.ParseJson(character),
 	})
 
 	return nil
@@ -110,7 +111,7 @@ func (tb *NpcsTable) FormEntries() []Entry {
 			"class": character.Class, "race": character.Race,
 		}
 		for stat, value := range character.Stats.MappedString() {
-			values[stat] = transform.ParseAsString(value)
+			values[stat] = plumtransform.ParseAsString(value)
 		}
 		entries = append(entries, newEntry(
 			character.GetName(), character.Race, values,

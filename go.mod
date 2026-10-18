@@ -1,14 +1,18 @@
 module solopg
 
-go 1.27.1
+go 1.27.2
 
 require (
 	charm.land/bubbles/v2 v2.1.1
 	charm.land/bubbletea/v2 v2.0.7
 	charm.land/lipgloss/v2 v2.0.6
+	github.com/charmbracelet/x/ansi v0.11.8
+	github.com/cyril-fl/plum v0.0.0-20261018110304-3888ffeb8518
 	github.com/google/uuid v1.6.0
+	github.com/joho/godotenv v1.5.1
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/spf13/cobra v1.10.2
+	github.com/spf13/pflag v1.0.9
 	go.mongodb.org/mongo-driver v1.17.4
 	golang.org/x/text v0.42.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -21,7 +25,6 @@ require (
 	github.com/briandowns/spinner v1.23.2 // indirect
 	github.com/charmbracelet/colorprofile v0.4.3 // indirect
 	github.com/charmbracelet/ultraviolet v0.0.0-20260811164956-006e29f97886 // indirect
-	github.com/charmbracelet/x/ansi v0.11.8 // indirect
 	github.com/charmbracelet/x/term v0.2.2 // indirect
 	github.com/charmbracelet/x/termios v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.2.2 // indirect
@@ -36,7 +39,6 @@ require (
 	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/kaptinlin/jsonpointer v0.4.28 // indirect
 	github.com/kaptinlin/jsonschema v0.9.10 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
@@ -63,7 +65,6 @@ require (
 	github.com/sahilm/fuzzy v0.1.3 // indirect
 	github.com/schollz/progressbar/v3 v3.19.1 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
-	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/tidwall/jsonc v0.3.3 // indirect
 	github.com/urfave/cli/v3 v3.14.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -80,5 +81,7 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/term v0.46.0 // indirect
 )
+
+replace github.com/cyril-fl/plum => /Users/cyrilflambard/Devloppement/go/plum
 
 tool github.com/evilmartians/lefthook/v2

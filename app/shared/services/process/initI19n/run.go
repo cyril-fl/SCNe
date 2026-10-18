@@ -6,16 +6,16 @@ import (
 	"slices"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/yaml"
 	"strings"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	y "gopkg.in/yaml.v3"
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 	cache
 
 	cfg    i19n.Config

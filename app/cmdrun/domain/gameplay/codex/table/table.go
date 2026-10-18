@@ -1,7 +1,7 @@
 package codextable
 
 import (
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Table - //
@@ -13,7 +13,7 @@ type Table interface {
 }
 
 type data[E any] struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 
 	name    string
 	Entries []E `bson:"entries"`
@@ -41,7 +41,7 @@ func ensureEmbeddedTable[E any](name string, table **data[E]) {
 
 // Entry
 type Entry struct {
-	primitive.Descriptible
+	plumprimitive.Descriptible
 
 	Values map[string]string
 	Locked bool
@@ -53,7 +53,7 @@ type Entry struct {
 // TODO sceptiqquesur le string map
 func newEntry(name, description string, values map[string]string, locked bool) Entry {
 	return Entry{
-		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
 			Name:        name,
 			Description: description,
 		}),

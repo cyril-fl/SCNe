@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestBasicStatsAndNamesAreCopiedFromCache(t *testing.T) {
@@ -18,7 +18,7 @@ func TestBasicStatsAndNamesAreCopiedFromCache(t *testing.T) {
 		t.Fatal(err)
 	}
 	fileConfigPath = path
-	cachedConfig = primitive.NewCache[yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 	names, err := ListWithError()
 	if err != nil || len(names) != 1 || names[0] != "mock.stat" {

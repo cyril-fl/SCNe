@@ -6,11 +6,11 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/initI19n"
 	"solopg/app/shared/services/process/initloggerepository"
 	"solopg/config"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/pflag"
 )
 
@@ -48,11 +48,11 @@ func RunCmdServe(flags func() *pflag.FlagSet) error {
 		GetFlags: flags,
 	})
 
-	processes := []process.Processable{
+	processes := []plumprimitive.Processable{
 		logger,
 		translation,
 		session,
 	}
 
-	return process.HandleProcess(processes)
+	return plumprimitive.HandleProcess(processes)
 }

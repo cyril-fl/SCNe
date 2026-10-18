@@ -1,12 +1,12 @@
 package statemachine
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"slices"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/footer"
 	"solopg/app/shared/services/logs"
 	interfass "solopg/app/shared/types/interface"
-	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -18,7 +18,7 @@ type TemplateViewState[T comparable] struct {
 }
 
 type ViewState[T comparable] struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 
 	current    T
 	transition map[T][]T

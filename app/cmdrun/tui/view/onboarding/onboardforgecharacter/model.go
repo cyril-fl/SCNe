@@ -4,9 +4,8 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/components/models"
 
-	sharedtui "solopg/app/shared/tui"
-
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 type model struct {
@@ -30,11 +29,11 @@ func (m *model) Init() tea.Cmd {
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_ENTER:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_ENTER:
 			return m, m.reroll.HandleEnterInput()
-		case sharedtui.KEY_ESC:
-			// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
+		case plumtypes.KEY_ESC:
+			// NOTE: Intercept plumtypes.KEY_ESC to prevent list.Update() from quitting.
 			return m, nil
 		}
 	}

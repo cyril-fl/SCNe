@@ -4,8 +4,9 @@ import (
 	"slices"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Configuration & caching - //
@@ -15,7 +16,7 @@ type yamlConfig struct {
 
 var fileConfigPath = config.Current.Documents.Files.ObjectsCategory
 
-var cachedConfig = primitive.NewCache[yamlConfig]()
+var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 func loadFromFile() (yamlConfig, error) {
 	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)

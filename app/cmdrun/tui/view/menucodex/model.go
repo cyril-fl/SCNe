@@ -9,11 +9,11 @@ import (
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/services/i19n"
-	sharedtui "solopg/app/shared/tui"
 
 	"solopg/app/cmdrun/types/size"
 
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 func NewSection(focused bool) *codexMenu {
@@ -58,8 +58,8 @@ func (m *codexMenu) getSelectedPage() *codexMenuItem {
 // in the gameboard state machine, not rendered in this side menu.
 func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 	if key, ok := msg.(tea.KeyPressMsg); ok {
-		switch sharedtui.EventKey(key.String()) {
-		case sharedtui.CMD_ALT_ENTER:
+		switch plumtypes.Key(key.String()) {
+		case plumtypes.CMD_ALT_ENTER:
 			if selected := m.getSelectedPage(); selected != nil {
 				return form.OpenPage(selected.id)
 			}

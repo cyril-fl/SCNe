@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestMakeDefaultUpdatesCacheWithoutDuplicates(t *testing.T) {
@@ -17,7 +17,7 @@ func TestMakeDefaultUpdatesCacheWithoutDuplicates(t *testing.T) {
 		t.Fatal(err)
 	}
 	fileConfigPath = path
-	cachedConfig = primitive.NewCache[yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 	MakeDefault("mock.runtime")
 	MakeDefault("mock.runtime")

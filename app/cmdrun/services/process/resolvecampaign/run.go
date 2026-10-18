@@ -11,12 +11,13 @@ import (
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/process"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 	cache
 
 	ctx *cmdruntui.Context

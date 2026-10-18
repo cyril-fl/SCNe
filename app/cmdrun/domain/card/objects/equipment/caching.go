@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/slot"
@@ -12,7 +13,6 @@ import (
 	"solopg/app/cmdrun/types/potency"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 )
 
 // - Configuration & caching - //
@@ -31,7 +31,7 @@ type yamlConfig struct {
 
 var folderConfigPath = "data/template/armor_sets"
 
-var cachedConfig = primitive.NewCache[[]yamlConfig]()
+var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromSource() ([]yamlConfig, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)

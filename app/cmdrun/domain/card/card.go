@@ -5,12 +5,13 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/primitive"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type Card struct {
-	primitive.Descriptible
+	plumprimitive.Descriptible
 
 	Rarity  rarity.Rarity
 	Variety variety.Variety
@@ -53,7 +54,7 @@ func NewCard(params NewCardParams) (*Card, error) {
 	}
 
 	return &Card{
-		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
 			Name:        params.Name,
 			Description: params.Description,
 		}),

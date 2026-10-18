@@ -3,18 +3,19 @@ package cmdrun
 import (
 	cmdrunrunsession "solopg/app/cmdrun/services/process/runsession"
 	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/process"
 	initI19n "solopg/app/shared/services/process/initI19n"
 	initlogger "solopg/app/shared/services/process/initloggerepository"
-	"solopg/app/shared/utils/cleanui"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plumcleanui "github.com/cyril-fl/plum/utils/cleanui"
 )
 
 func RunCmdRun() error {
 	var db *mango.Mongo
 	var err error
 
-	cleanui.Run()
+	plumcleanui.Run()
 
 	if db, err = mango.Init(); err != nil {
 		return err
@@ -32,11 +33,11 @@ func RunCmdRun() error {
 	translation := initI19n.Process(config.Current.I18n, "")
 	session := cmdrunrunsession.Process(db)
 
-	processes := []process.Processable{
+	processes := []plumprimitive.Processable{
 		logger,
 		translation,
 		session,
 	}
 
-	return process.HandleProcess(processes)
+	return plumprimitive.HandleProcess(processes)
 }

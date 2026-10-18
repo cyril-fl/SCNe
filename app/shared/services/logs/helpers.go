@@ -1,10 +1,10 @@
 package logs
 
 import (
-	interfass "solopg/app/shared/types/interface"
+	pluminterface "github.com/cyril-fl/plum/interface"
 )
 
-func ConvertStringablesToList[T interfass.Stringable](list []T) []Log {
+func ConvertStringablesToList[T pluminterface.Stringable](list []T) []Log {
 	logList := make([]Log, 0, len(list))
 
 	for _, item := range list {

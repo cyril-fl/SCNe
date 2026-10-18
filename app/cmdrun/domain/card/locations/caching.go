@@ -8,8 +8,9 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Configuration & caching - //
@@ -28,7 +29,7 @@ type cacheValue struct {
 	LockedNames map[string]struct{}
 }
 
-var cachedConfig = primitive.NewCache[cacheValue]()
+var cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 func loadFromSource() (cacheValue, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)

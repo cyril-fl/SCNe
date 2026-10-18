@@ -5,12 +5,12 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/header"
 	"solopg/app/shared/services/i19n"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/utils/transform"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 func (m model) View() tea.View {
@@ -68,11 +68,11 @@ func (m *model) makeInformationView() string {
 	v := strings.Builder{}
 	v.WriteString(fmt.Sprintf("%s : ", i19n.Localize(m.reroll.Value.GetName())))
 
-	if sharedtui.EventKey(m.reroll.Value.Descriptible.GetDescription()) != sharedtui.KEY_EMPTY {
+	if plumtypes.Key(m.reroll.Value.Descriptible.GetDescription()) != plumtypes.KEY_EMPTY {
 		v.WriteString(i19n.Localize(m.reroll.Value.Descriptible.GetDescription()))
 	}
 
-	v.WriteString(strings.Join([]string{"| ", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
+	v.WriteString(strings.Join([]string{"| ", plumtransform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
 	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 
 	return v.String()

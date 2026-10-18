@@ -2,39 +2,39 @@ package cmdserverunsession
 
 import (
 	"context"
+	pluminterface "github.com/cyril-fl/plum/interface"
 	"os"
 	"os/signal"
 
 	cmdservetui "solopg/app/cmdserve/tui"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process"
 	"solopg/app/shared/services/process/generatesteplist"
-	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/pflag"
 )
 
-type run[T interfass.Stringable] struct {
-	process.Process
+type run[T pluminterface.Stringable] struct {
+	plumprimitive.Process
 	cache[T]
 
 	getRepository func() repository.Watchable[T]
 	getFlags      func() *pflag.FlagSet
 }
 
-type cache[T interfass.Stringable] struct {
+type cache[T pluminterface.Stringable] struct {
 	view       *generatesteplist.Generator[cmdservetui.Context]
 	repository repository.Watchable[T]
 }
 
-type ProcessTemplate[T interfass.Stringable] struct {
+type ProcessTemplate[T pluminterface.Stringable] struct {
 	GetRepository func() repository.Watchable[T]
 	GetFlags      func() *pflag.FlagSet
 }
 
-func Process[T interfass.Stringable](
+func Process[T pluminterface.Stringable](
 	params ProcessTemplate[T],
 ) *run[T] {
 	return &run[T]{

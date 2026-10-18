@@ -2,9 +2,10 @@ package mango
 
 import (
 	"os"
-	"solopg/app/shared/utils/transform"
 	"solopg/config"
 	"strings"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 type MongoEnvironment struct {
@@ -37,8 +38,8 @@ func (env *MongoEnvironment) ReadEnv() {
 }
 
 func (env *MongoEnvironment) GetEnvURI() string {
-	uri := transform.CleanJoin("@", env.getCredentials(), env.getHostAt())
-	return transform.CleanJoin("", "mongodb://", uri)
+	uri := plumtransform.CleanJoin("@", env.getCredentials(), env.getHostAt())
+	return plumtransform.CleanJoin("", "mongodb://", uri)
 }
 
 func (env *MongoEnvironment) SetEnvURI() {
@@ -58,7 +59,7 @@ func (env *MongoEnvironment) getCredentials() string {
 	if env.username == "" || env.password == "" {
 		return ""
 	}
-	return transform.CleanJoin(":", env.username, env.password)
+	return plumtransform.CleanJoin(":", env.username, env.password)
 }
 
 func (env *MongoEnvironment) getHostAt() string {
@@ -69,5 +70,5 @@ func (env *MongoEnvironment) getHostAt() string {
 		env.port = PORT
 	}
 
-	return transform.CleanJoin(":", env.host, env.port)
+	return plumtransform.CleanJoin(":", env.host, env.port)
 }

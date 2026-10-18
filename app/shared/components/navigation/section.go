@@ -1,19 +1,18 @@
 package navigation
 
 import (
+	pluminterface "github.com/cyril-fl/plum/interface"
 	"solopg/app/shared/services/i19n"
-	interfass "solopg/app/shared/types/interface"
 	"solopg/app/shared/types/primitive"
-	"solopg/app/shared/utils/transform"
 
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/models"
 
 	"charm.land/lipgloss/v2"
 
-	sharedtui "solopg/app/shared/tui"
-
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 type Section struct {
@@ -26,7 +25,7 @@ type Section struct {
 	sendMsg           func() tea.Cmd
 }
 
-type TemplateSection[T interfass.Named] struct {
+type TemplateSection[T pluminterface.Named] struct {
 	ID               string
 	Options          []T
 	Focused          bool
@@ -35,7 +34,7 @@ type TemplateSection[T interfass.Named] struct {
 	Msg              tea.Msg
 }
 
-func NewSection[T interfass.Named](params TemplateSection[T]) *Section {
+func NewSection[T pluminterface.Named](params TemplateSection[T]) *Section {
 	model := makeSectionModel(params)
 	return &Section{
 		List:              primitive.Listed(model),
@@ -65,7 +64,7 @@ func (s *Section) SetSize(size size.Size) {
 
 func (s *Section) GetView() string {
 	list := s.GetList()
-	title := transform.Uppercase(i19n.Localize(s.id))
+	title := plumtransform.Uppercase(i19n.Localize(s.id))
 	title = lipgloss.NewStyle().Bold(true).Render(title)
 
 	return lipgloss.JoinVertical(
@@ -84,8 +83,8 @@ func (s *Section) GetFooter() []string {
 func (s *Section) HandleUpdate(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.CMD_SHIFT_ENTER, sharedtui.CMD_ALT_ENTER:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.CMD_SHIFT_ENTER, plumtypes.CMD_ALT_ENTER:
 			cmds := []tea.Cmd{}
 			if s.handlerEnterInput != nil {
 				cmds = append(cmds, s.handlerEnterInput())

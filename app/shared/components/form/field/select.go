@@ -7,12 +7,12 @@ import (
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // TEST
@@ -66,7 +66,7 @@ func (f *selectField[T]) Value() any {
 }
 
 func (f *selectField[T]) GetValueAsString() string {
-	return transform.ParseAsString(f.Value())
+	return plumtransform.ParseAsString(f.Value())
 }
 
 func (f *selectField[T]) Reset() {
@@ -111,10 +111,10 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.options.SetSize(msg.Width, msg.Height)
 	case tea.KeyPressMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_UP, plumtypes.KEY_DOWN:
 			return m.handleDirection(msg)
-		case sharedtui.KEY_ENTER:
+		case plumtypes.KEY_ENTER:
 			return m, tea.Sequence(
 				form.Send[form.NextField](),
 				form.Send[form.Scroll](),

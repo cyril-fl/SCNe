@@ -5,11 +5,11 @@ import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/layout/header"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/utils/transform"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 func (m model) View() tea.View {
@@ -73,7 +73,7 @@ func (m *model) makeInformationView() string {
 	}
 
 	v.WriteString(strings.Join(buildsChoiceStr, ", "))
-	v.WriteString(strings.Join([]string{"| ", transform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
+	v.WriteString(strings.Join([]string{"| ", plumtransform.Capitalize(i19n.Localize("attempt")), ": "}, ""))
 	v.WriteString(fmt.Sprintf("%d", m.reroll.Attempt))
 	return v.String()
 }

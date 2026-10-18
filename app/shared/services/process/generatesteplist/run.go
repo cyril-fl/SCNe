@@ -2,14 +2,14 @@ package generatesteplist
 
 import (
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/process"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type run[T any] struct {
-	process.Process
+	plumprimitive.Process
 
 	steps step.List[T]
 }

@@ -8,8 +8,9 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Configuration & caching - //
@@ -20,7 +21,7 @@ type yamlConfig struct {
 
 var folderConfigPath = config.Current.Documents.Folders.Hint
 
-var cachedConfig = primitive.NewCache[[]yamlConfig]()
+var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromSource() ([]yamlConfig, error) {
 	//  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement

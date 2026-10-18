@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"solopg/app/shared/utils/debug"
 	"solopg/config"
 
+	plumdebug "github.com/cyril-fl/plum/utils/debug"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ var configCmd = &cobra.Command{
 	Long:    cmd.Config.Long,
 	Example: cmd.Config.Example,
 	Run: func(cobra *cobra.Command, args []string) {
-		debug.Json(config.Current)
+		plumdebug.Json(config.Current)
 	},
 }
 

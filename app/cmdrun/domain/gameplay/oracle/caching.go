@@ -9,9 +9,11 @@ import (
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
-	"solopg/app/shared/utils/transform"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Configuration & caching - //
@@ -38,7 +40,7 @@ type Result[T any] struct {
 
 var folderConfigPath = config.Current.Documents.Folders.Oracle
 
-var cachedConfig = primitive.NewCache[[]yamlConfig]()
+var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromSource() ([]yamlConfig, error) {
 	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
@@ -110,7 +112,7 @@ func GetByName(name string) (*Oracle, error) {
 	}
 
 	return nil, logs.Error("error.not_found.id", map[string]any{
-		"Subject": transform.Capitalize(i19n.Localize("oracle")),
+		"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
 		"ID":      name,
 	})
 }
@@ -139,7 +141,7 @@ func List() []Oracle {
 	if err != nil {
 		cachedConfig.ReportError(func(err error) {
 			logs.Error("error.loading", map[string]any{
-				"Subject": transform.Capitalize(i19n.Localize("oracle")),
+				"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
 				"Error":   err,
 			})
 		})
@@ -165,7 +167,7 @@ func ListFromFolder(path string) ([]string, error) {
 	if err != nil {
 
 		return nil, logs.Error("error.loading:folder", map[string]any{
-			"Subject": transform.Capitalize(i19n.Localize("oracle")),
+			"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
 			"Folder":  path,
 			"Error":   err,
 		})
@@ -177,7 +179,7 @@ func ListFromFolder(path string) ([]string, error) {
 		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
 
 			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": transform.Capitalize(i19n.Localize("oracle")),
+				"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
 				"File":    file,
 				"Error":   err,
 			}))

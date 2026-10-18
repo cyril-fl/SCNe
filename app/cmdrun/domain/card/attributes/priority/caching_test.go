@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/primitive"
 )
 
 type cachingTestLogRegistry struct{}
@@ -27,7 +27,7 @@ func TestPriorityCacheSupportsLookupAndNameUniqueness(t *testing.T) {
 		t.Fatal(err)
 	}
 	filePath = path
-	cachedConfig = primitive.NewCache[[]yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 	values, err := ListWithError()
 	if err != nil || len(values) != 1 {

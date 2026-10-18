@@ -9,15 +9,15 @@ import (
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/cmdrun/types/timer"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/types/primitive"
-	"solopg/app/shared/utils/transform"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 // TEST
 type Campaign struct {
-	primitive.Datable
+	plumprimitive.Datable
 
 	ID              id.ID                 `bson:"Id" json:"Id"`
 	Player          *characters.Character `bson:"character" json:"character"`
@@ -32,7 +32,7 @@ type Template struct {
 
 func New(params Template) *Campaign {
 	return &Campaign{
-		Datable: primitive.Dated(),
+		Datable: plumprimitive.Dated(),
 
 		ID:              id.New(),
 		Player:          params.Player,
@@ -43,8 +43,8 @@ func New(params Template) *Campaign {
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
 		c.Player.GetName(),
-		transform.Capitalize(i19n.Localize(c.Player.Race)),
-		transform.Capitalize(i19n.Localize(c.Player.Class)),
+		plumtransform.Capitalize(i19n.Localize(c.Player.Race)),
+		plumtransform.Capitalize(i19n.Localize(c.Player.Class)),
 	)
 }
 

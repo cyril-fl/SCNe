@@ -3,7 +3,7 @@ package races
 import (
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestIsLockedTracksTemplateEntriesOnly(t *testing.T) {
@@ -12,7 +12,7 @@ func TestIsLockedTracksTemplateEntriesOnly(t *testing.T) {
 		cachedConfig = originalConfig
 	})
 
-	cachedConfig = primitive.NewCache[cacheValue]()
+	cachedConfig = plumprimitive.NewCache[cacheValue]()
 	cachedConfig.Update(func(config *cacheValue) {
 		config.Configs = []yamlConfig{{Name: "race.template"}}
 		config.LockedNames = map[string]struct{}{"race.template": {}}

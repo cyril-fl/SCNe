@@ -4,10 +4,10 @@ import (
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 type RerollModel[T any] struct {
@@ -104,11 +104,11 @@ func newConfiguredList(items []list.Item, width, height int) list.Model {
 }
 
 func trueLabel(options rerollOptions) string {
-	return transform.Capitalize(i19n.Localize(options.true))
+	return plumtransform.Capitalize(i19n.Localize(options.true))
 }
 
 func falseLabel(options rerollOptions) string {
-	return transform.Capitalize(i19n.Localize(options.false))
+	return plumtransform.Capitalize(i19n.Localize(options.false))
 }
 
 type rerollOptions struct {

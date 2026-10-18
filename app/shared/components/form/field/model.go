@@ -3,7 +3,8 @@ package field
 import (
 	"errors"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/utils/transform"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // TEST
@@ -64,7 +65,7 @@ func (f *field[T]) Label() string {
 	if label == "" {
 		label = f.id
 	}
-	return transform.Capitalize(label)
+	return plumtransform.Capitalize(label)
 }
 
 func (f *field[T]) SetError(err error) {

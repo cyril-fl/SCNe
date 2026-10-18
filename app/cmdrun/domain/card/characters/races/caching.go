@@ -4,8 +4,9 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Configuration & caching - //
@@ -23,7 +24,7 @@ type cacheValue struct {
 	LockedNames map[string]struct{}
 }
 
-var cachedConfig = primitive.NewCache[cacheValue]()
+var cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 func loadFromFile() ([]yamlConfig, error) {
 	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
@@ -126,7 +127,7 @@ func makeSet(configs []yamlConfig) []Race {
 
 func newFromYaml(config yamlConfig) Race {
 	return Race{
-		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
 			Name:        config.Name,
 			Description: config.Description,
 		}),

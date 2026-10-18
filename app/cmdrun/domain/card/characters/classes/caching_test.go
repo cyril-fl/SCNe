@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestClassCacheSupportsRuntimeInsertAndCachedHit(t *testing.T) {
@@ -18,7 +18,7 @@ func TestClassCacheSupportsRuntimeInsertAndCachedHit(t *testing.T) {
 		t.Fatal(err)
 	}
 	filePath = path
-	cachedConfig = primitive.NewCache[[]yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 	if values, err := ListWithError(); err != nil || len(values) != 1 {
 		t.Fatalf("ListWithError() = %#v, %v", values, err)

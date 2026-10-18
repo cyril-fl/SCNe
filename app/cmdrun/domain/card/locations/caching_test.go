@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/primitive"
 )
 
 type cachingTestLogRegistry struct{}
@@ -32,7 +32,7 @@ func TestLoadFromSourceLoadsRootAndNestedLocations(t *testing.T) {
 	writeLocationConfig(t, filepath.Join(nested, "nested.yaml"), "mock.location.nested")
 
 	folderConfigPath = folder
-	cachedConfig = primitive.NewCache[cacheValue]()
+	cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 	if _, err := cachedConfig.Load(loadFromSource); err != nil {
 		t.Fatalf("loadFromSource() error = %v", err)
@@ -68,7 +68,7 @@ func TestLoadFromSourceDoesNotPublishPartialConfiguration(t *testing.T) {
 		t.Fatal(err)
 	}
 	folderConfigPath = folder
-	cachedConfig = primitive.NewCache[cacheValue]()
+	cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 	if _, err := ListWithError(); err == nil {
 		t.Fatal("expected invalid YAML to fail loading")

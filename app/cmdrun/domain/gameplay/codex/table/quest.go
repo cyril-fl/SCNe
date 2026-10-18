@@ -8,9 +8,10 @@ import (
 	"solopg/app/cmdrun/domain/card/quest"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 	"strconv"
 	"time"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Table --//
@@ -56,7 +57,7 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 	quest, err := quest.New(quest.Template{
 		Name:        values["name"],
 		Description: values["description"],
-		Done:        transform.StringBool(values["done"]),
+		Done:        plumtransform.StringBool(values["done"]),
 		Priority:    priority.MakeDefault(values["priority"]),
 		Rank:        rank.AssertWithDefault(values["rank"]),
 		Reward:      values["reward"],
@@ -73,7 +74,7 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobjectives,
-		"Entry": transform.ParseJson(values),
+		"Entry": plumtransform.ParseJson(values),
 	})
 
 	return nil

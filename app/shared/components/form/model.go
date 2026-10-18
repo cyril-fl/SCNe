@@ -2,17 +2,17 @@ package form
 
 import (
 	"errors"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/types/primitive"
 
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 // - Form - //
 type Form struct {
-	primitive.Fallible
-	sendKey    sharedtui.EventKey
+	plumprimitive.Fallible
+	sendKey    plumtypes.Key
 	fields     []Field
 	autoSubmit bool
 }
@@ -51,7 +51,7 @@ func (m *Form) GetValuesAsMappedString() map[string]string {
 	return formValues
 }
 
-func (m *Form) SetSendKey(key sharedtui.EventKey) *Form {
+func (m *Form) SetSendKey(key plumtypes.Key) *Form {
 	m.sendKey = key
 	return m
 }

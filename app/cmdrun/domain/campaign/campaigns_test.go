@@ -8,7 +8,8 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/types/primitive"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestNewCampaign(t *testing.T) {
@@ -32,7 +33,7 @@ func TestCampaignFilter(t *testing.T) {
 func TestCampaignTitle(t *testing.T) {
 	i19n.SetCache(nil)
 	player := &characters.Character{
-		Card: card.Card{Descriptible: primitive.Describe(primitive.TemplateDescriptible{Name: "Aria"})},
+		Card: card.Card{Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{Name: "Aria"})},
 		Race: "elf", Class: "warrior",
 	}
 

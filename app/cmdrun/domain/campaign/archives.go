@@ -1,17 +1,17 @@
 package campaign
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/cmdrun/types/interfaces"
-	"solopg/app/shared/types/primitive"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 // TEST
 type Archives struct {
-	primitive.Datable
+	plumprimitive.Datable
 
 	CampaignID id.ID        `bson:"campaignId" json:"campaignId"`
 	Codex      *codex.Codex `bson:"codex" json:"codex"`
@@ -28,7 +28,7 @@ type ArchivesTemplate struct {
 
 func NewArchives(params ArchivesTemplate) *Archives {
 	return &Archives{
-		Datable: primitive.Dated(),
+		Datable: plumprimitive.Dated(),
 
 		CampaignID: params.CampaignID,
 		Codex:      params.Codex,

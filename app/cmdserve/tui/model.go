@@ -2,13 +2,12 @@ package cmdservetui
 
 import (
 	"context"
+	pluminterface "github.com/cyril-fl/plum/interface"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plumtypes "github.com/cyril-fl/plum/types"
 
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
-	sharedtui "solopg/app/shared/tui"
-	interfass "solopg/app/shared/types/interface"
-	"solopg/app/shared/types/primitive"
-	"solopg/app/shared/types/set"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -20,15 +19,15 @@ type Context struct{}
 type contextStepList = step.List[Context]
 type Step = step.Step[Context]
 
-type StreamModelTemplate[T interfass.Stringable] struct {
+type StreamModelTemplate[T pluminterface.Stringable] struct {
 	Context    context.Context
 	Steps      *contextStepList
 	Repository repository.Watchable[T]
 	Flags      *pflag.FlagSet
 }
 
-type model[T interfass.Stringable] struct {
-	primitive.Fallible
+type model[T pluminterface.Stringable] struct {
+	plumprimitive.Fallible
 
 	ctx        context.Context
 	repository repository.Watchable[T]
@@ -36,17 +35,17 @@ type model[T interfass.Stringable] struct {
 	stream     <-chan T
 	flags      *pflag.FlagSet
 
-	errorset set.Set[error]
+	errorset plumtypes.Set[error]
 
 	size *tea.WindowSizeMsg
 }
 
-func New[T interfass.Stringable](params StreamModelTemplate[T]) model[T] {
+func New[T pluminterface.Stringable](params StreamModelTemplate[T]) model[T] {
 	return model[T]{
 		ctx:        params.Context,
 		repository: params.Repository,
 		flags:      params.Flags,
-		errorset:   set.New[error](),
+		errorset:   plumtypes.New[error](),
 	}
 }
 
@@ -75,8 +74,8 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.size = &msg
 		return m, nil
 	case tea.KeyMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.SHORT_CTRL_C, sharedtui.SHORT_CTRL_Q:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.SHORT_CTRL_C, plumtypes.SHORT_CTRL_Q:
 			return m, tea.Quit
 		}
 	}
@@ -85,7 +84,7 @@ func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // Helpers
-func startWatch[T interfass.Stringable](m model[T]) tea.Cmd {
+func startWatch[T pluminterface.Stringable](m model[T]) tea.Cmd {
 	return func() tea.Msg {
 		stream, err := m.repository.Watch(m.ctx)
 		if err != nil {

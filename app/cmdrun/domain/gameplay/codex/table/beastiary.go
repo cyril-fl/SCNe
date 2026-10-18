@@ -7,8 +7,9 @@ import (
 	"solopg/app/cmdrun/services/factory/millstats"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 	"time"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Table --//
@@ -95,7 +96,7 @@ func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tablebeast,
-		"Entry": transform.ParseJson(race),
+		"Entry": plumtransform.ParseJson(race),
 	})
 
 	return nil
@@ -110,7 +111,7 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 		name, description := entry.Race.GetName(), entry.Race.GetDescription()
 		values := map[string]string{"name": name, "description": description}
 		for _, modifier := range entry.Race.GetBonus() {
-			values[modifier.Stat.String()] = transform.ParseAsString(modifier.Value)
+			values[modifier.Stat.String()] = plumtransform.ParseAsString(modifier.Value)
 		}
 		entries = append(entries, newEntry(name, description, values, races.IsLocked(name)))
 	}

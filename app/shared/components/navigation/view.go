@@ -1,19 +1,19 @@
 package navigation
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/types/primitive"
 	"strings"
 
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 type Navigation struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 	cache
 
 	static []string
@@ -120,8 +120,8 @@ func (n *Navigation) HandleUpdate(msg tea.Msg) tea.Cmd {
 
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_UP, plumtypes.KEY_DOWN:
 			n.handleDirectionInput(msg)
 		}
 	}

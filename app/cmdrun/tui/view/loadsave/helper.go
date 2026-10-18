@@ -5,17 +5,17 @@ import (
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // Methods
 func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.KEY_ENTER:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.KEY_ENTER:
 		if selected, ok := m.list.SelectedItem().(models.Item[*campaign.Campaign]); ok {
 			m.selected = selected.Value()
 		}
@@ -25,8 +25,8 @@ func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				Value:     m.selected,
 			}
 		}
-	case sharedtui.KEY_ESC:
-		// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
+	case plumtypes.KEY_ESC:
+		// NOTE: Intercept plumtypes.KEY_ESC to prevent list.Update() from quitting.
 		return m, nil
 	}
 
@@ -38,7 +38,7 @@ func (m *model) handKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 // Helpers
 func makeItems(data []campaign.Campaign) []list.Item {
 	items := []list.Item{
-		models.NewItem[*campaign.Campaign](transform.Capitalize(i19n.Localize("campaign:new")), "", nil),
+		models.NewItem[*campaign.Campaign](plumtransform.Capitalize(i19n.Localize("campaign:new")), "", nil),
 	}
 
 	for _, s := range data {

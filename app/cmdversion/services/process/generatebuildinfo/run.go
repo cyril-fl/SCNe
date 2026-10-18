@@ -3,9 +3,10 @@ package generatebuildinfo
 import (
 	"os/exec"
 	"solopg/app/cmdversion/types/buildinfo"
-	"solopg/app/shared/services/process"
 	"solopg/config"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 	cache
 }
 

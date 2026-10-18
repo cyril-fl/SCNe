@@ -1,12 +1,12 @@
 package navigation
 
 import (
+	pluminterface "github.com/cyril-fl/plum/interface"
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	interfass "solopg/app/shared/types/interface"
 	"strings"
 
 	"charm.land/bubbles/v2/list"
@@ -30,7 +30,7 @@ func makeNavigationContent(part []SectionInterface) (string, []int) {
 	return strings.Join(blocks, "\n"), blockoffsets
 }
 
-func makeSectionModel[T interfass.Named](params TemplateSection[T]) list.Model {
+func makeSectionModel[T pluminterface.Named](params TemplateSection[T]) list.Model {
 	items := make([]list.Item, 0, len(params.Options))
 
 	for _, option := range params.Options {
@@ -45,7 +45,7 @@ func makeSectionModel[T interfass.Named](params TemplateSection[T]) list.Model {
 	return model
 }
 
-func makeEnterInputHandler[T interfass.Named](model *list.Model, params TemplateSection[T]) func() tea.Cmd {
+func makeEnterInputHandler[T pluminterface.Named](model *list.Model, params TemplateSection[T]) func() tea.Cmd {
 	if params.HandleEnterInput == nil {
 		return nil
 	}

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestDefaultAndListWithErrorUseConfiguredValues(t *testing.T) {
@@ -17,7 +17,7 @@ func TestDefaultAndListWithErrorUseConfiguredValues(t *testing.T) {
 		t.Fatal(err)
 	}
 	fileConfigPath = path
-	cachedConfig = primitive.NewCache[yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 	if got := Default(); got != "mock.rarity" {
 		t.Fatalf("Default() = %q", got)

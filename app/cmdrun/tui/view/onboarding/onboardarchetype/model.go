@@ -6,11 +6,11 @@ import (
 	"solopg/app/shared/messages"
 
 	"solopg/app/shared/services/i19n"
-	sharedtui "solopg/app/shared/tui"
-	"solopg/app/shared/utils/transform"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 type step int
@@ -39,7 +39,7 @@ func NewModel[T interfaces.Archetype](name string, data []T) *model {
 			continue
 		}
 
-		label := transform.Capitalize(i19n.Localize(i.GetName()))
+		label := plumtransform.Capitalize(i19n.Localize(i.GetName()))
 		items = append(items, models.NewItem(label, "", i))
 	}
 
@@ -71,8 +71,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_ENTER:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_ENTER:
 			selectedItem := m.list.SelectedItem()
 			if selectedItem == nil {
 				return m, nil
@@ -82,8 +82,8 @@ func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 				Completed: true,
 				Value:     selectedItem,
 			})
-		case sharedtui.KEY_ESC:
-			// NOTE: Intercept sharedtui.KEY_ESC to prevent list.Update() from quitting.
+		case plumtypes.KEY_ESC:
+			// NOTE: Intercept plumtypes.KEY_ESC to prevent list.Update() from quitting.
 			return m, nil
 
 		}
@@ -95,13 +95,13 @@ func (m *model) updateList(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) updateConfirm(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// if keyMsg, ok := msg.(tea.KeyMsg); ok && sharedtui.EventKey(keyMsg.String()) == sharedtui.KEY_ENTER {
+	// if keyMsg, ok := msg.(tea.KeyMsg); ok && plumtypes.Key(keyMsg.String()) == plumtypes.KEY_ENTER {
 	// 	return m, tea.Quit
 	// }
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch sharedtui.EventKey(msg.String()) {
-		case sharedtui.KEY_ENTER:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.KEY_ENTER:
 			return m, tea.Quit
 		}
 	}

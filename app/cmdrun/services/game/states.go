@@ -6,7 +6,8 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	"solopg/app/cmdrun/types/timer"
-	"solopg/app/shared/types/primitive"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type State struct {
@@ -19,8 +20,8 @@ type State struct {
 	Metadata        Metadata
 }
 type Metadata struct {
-	Archive  primitive.Datable
-	Campaign primitive.Datable
+	Archive  plumprimitive.Datable
+	Campaign plumprimitive.Datable
 }
 
 type CampaignData struct {

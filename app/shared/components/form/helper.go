@@ -1,16 +1,15 @@
 package form
 
 import (
-	sharedtui "solopg/app/shared/tui"
-
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 func (m *Form) handleKeyPressMsg(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.KEY_TAB:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.KEY_TAB:
 		return m, Send[NextField]()
-	case sharedtui.KEY_SHIFT_TAB:
+	case plumtypes.KEY_SHIFT_TAB:
 		return m, Send[PreviousField]()
 	case m.sendKey:
 		return m, Send[Validate]()

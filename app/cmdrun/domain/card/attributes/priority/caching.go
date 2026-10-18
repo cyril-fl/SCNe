@@ -3,8 +3,9 @@ package priority
 import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/yaml"
-	"solopg/app/shared/types/primitive"
 	"solopg/config"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Configuration & caching - //
@@ -15,7 +16,7 @@ type yamlConfig struct {
 
 var filePath = config.Current.Documents.Files.Priorities
 
-var cachedConfig = primitive.NewCache[[]yamlConfig]()
+var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromFile() ([]yamlConfig, error) {
 	params, err := yaml.LoadListFromFile[yamlConfig](filePath)

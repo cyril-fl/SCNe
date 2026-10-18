@@ -8,8 +8,9 @@ import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 	"time"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Table --//
@@ -59,7 +60,7 @@ func (tb *LocationsTable) AddFromMap(values map[string]string) error {
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tablelocations,
-		"Entry": transform.ParseJson(location),
+		"Entry": plumtransform.ParseJson(location),
 	})
 
 	return nil

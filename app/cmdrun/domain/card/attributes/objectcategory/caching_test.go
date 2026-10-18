@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestListUsesLoadedValueAfterSourceRemoval(t *testing.T) {
@@ -17,7 +17,7 @@ func TestListUsesLoadedValueAfterSourceRemoval(t *testing.T) {
 		t.Fatal(err)
 	}
 	fileConfigPath = path
-	cachedConfig = primitive.NewCache[yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 	values, err := ListWithError()
 	if err != nil || len(values) != 1 || values[0] != "mock.category" {

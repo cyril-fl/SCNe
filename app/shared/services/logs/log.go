@@ -5,10 +5,10 @@ import (
 	"slices"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/types/primitive"
 	"strings"
 	"time"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -34,7 +34,7 @@ func AssertKind(kind Kind) bool {
 
 // -- Log -- //
 type Log struct {
-	primitive.Datable
+	plumprimitive.Datable
 
 	ID      id.ID
 	Type    Kind
@@ -54,7 +54,7 @@ func New(params Template) *Log {
 	}
 
 	return &Log{
-		Datable: primitive.Steady(),
+		Datable: plumprimitive.Steady(),
 
 		ID:      id.New(),
 		Type:    params.Type,

@@ -4,10 +4,10 @@ import (
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/messages"
-	sharedtui "solopg/app/shared/tui"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 func (p *Page) handleKeyPress(msg tea.KeyPressMsg) tea.Cmd {
@@ -18,11 +18,11 @@ func (p *Page) handleKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 }
 
 func (p *Page) handleFormKeyPress(msg tea.KeyPressMsg) tea.Cmd {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.KEY_ESC:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.KEY_ESC:
 		p.HandleEscape()
 		return nil
-	case sharedtui.CMD_ALT_ENTER:
+	case plumtypes.CMD_ALT_ENTER:
 		return form.Send[form.Validate]()
 	default:
 		return p.handleModelUpdate(msg)
@@ -30,12 +30,12 @@ func (p *Page) handleFormKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 }
 
 func (p *Page) handleListKeyPress(msg tea.KeyPressMsg) tea.Cmd {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.KEY_ESC:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.KEY_ESC:
 		return p.handleKeyEsc()
-	case sharedtui.SHORT_CTRL_N:
+	case plumtypes.SHORT_CTRL_N:
 		return p.handleCtrlN()
-	case sharedtui.CMD_ALT_ENTER:
+	case plumtypes.CMD_ALT_ENTER:
 		return p.handleAltEnter()
 	default:
 		return p.handleModelUpdate(msg)

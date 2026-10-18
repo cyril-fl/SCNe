@@ -1,6 +1,7 @@
 package gameboard
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
@@ -8,7 +9,6 @@ import (
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/statemachine"
-	"solopg/app/shared/types/primitive"
 	"time"
 
 	"charm.land/bubbles/v2/textarea"
@@ -17,7 +17,7 @@ import (
 
 // - Model - //
 type model struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 
 	state  statemachine.ViewState[state]
 	menu   *navigation.Navigation

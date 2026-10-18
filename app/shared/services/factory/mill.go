@@ -1,11 +1,11 @@
 package factory
 
 import (
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type Mill struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 }
 
 /*

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestLoadFromSourcePublishesAllTemporaryFilesAtomically(t *testing.T) {
@@ -26,7 +26,7 @@ func TestLoadFromSourcePublishesAllTemporaryFilesAtomically(t *testing.T) {
 		}
 	}
 	folderConfigPath = folder
-	cachedConfig = primitive.NewCache[[]yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 	configs, err := cachedConfig.Load(loadFromSource)
 	if err != nil || len(configs) != 2 {

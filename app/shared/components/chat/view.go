@@ -1,6 +1,7 @@
 package chat
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/cmdrun/services/game"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
@@ -8,7 +9,6 @@ import (
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 	"solopg/app/shared/types/primitive"
 	"strings"
 
@@ -17,10 +17,11 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 type Chat struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 	primitive.Notifier
 	cache
 
@@ -173,7 +174,7 @@ func makeForm() *form.Form {
 				Placeholder: i19n.Localize("chat.placeholder"),
 			}),
 		).
-		SetSendKey(sharedtui.KEY_ENTER).
+		SetSendKey(plumtypes.KEY_ENTER).
 		SetAutoSubmit(false).
 		Focus()
 }

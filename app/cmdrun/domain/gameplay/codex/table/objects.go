@@ -9,8 +9,9 @@ import (
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/utils/transform"
 	"time"
+
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Table --//
@@ -67,7 +68,7 @@ func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobject,
-		"Entry": transform.ParseJson(object),
+		"Entry": plumtransform.ParseJson(object),
 	})
 
 	return nil

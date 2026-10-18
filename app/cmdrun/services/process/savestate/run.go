@@ -5,11 +5,12 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 
 	db     *mango.Mongo
 	engine *game.Engine

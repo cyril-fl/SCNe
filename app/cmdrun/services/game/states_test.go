@@ -5,7 +5,8 @@ import (
 	"time"
 
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/shared/types/primitive"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestNewStatePreservesCampaignDates(t *testing.T) {
@@ -16,13 +17,13 @@ func TestNewStatePreservesCampaignDates(t *testing.T) {
 
 	data := CampaignData{
 		Campaign: &campaign.Campaign{
-			Datable: primitive.Datable{
+			Datable: plumprimitive.Datable{
 				CreatedAt: campaignCreatedAt,
 				UpdatedAt: campaignUpdatedAt,
 			},
 		},
 		Archives: &campaign.Archives{
-			Datable: primitive.Datable{
+			Datable: plumprimitive.Datable{
 				CreatedAt: archiveCreatedAt,
 				UpdatedAt: archiveUpdatedAt,
 			},

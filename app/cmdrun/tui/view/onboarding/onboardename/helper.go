@@ -5,9 +5,9 @@ import (
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 func makeForm() *form.Form {
@@ -15,7 +15,7 @@ func makeForm() *form.Form {
 		New(
 			field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Validator: nil, Required: true}),
 		).
-		SetSendKey(sharedtui.KEY_ENTER).
+		SetSendKey(plumtypes.KEY_ENTER).
 		Focus()
 }
 

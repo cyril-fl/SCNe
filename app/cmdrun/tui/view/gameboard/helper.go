@@ -3,10 +3,10 @@ package gameboard
 import (
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
 	"time"
 
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 func (m *model) handleSaveInput(msg messages.Saved) (*model, tea.Cmd) {
@@ -31,10 +31,10 @@ func (m *model) handleSaveInput(msg messages.Saved) (*model, tea.Cmd) {
 // Input
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
-	switch sharedtui.EventKey(msg.String()) {
-	// case sharedtui.KEY_ENTER:
+	switch plumtypes.Key(msg.String()) {
+	// case plumtypes.KEY_ENTER:
 	// m.handleEnterInput()
-	case sharedtui.KEY_UP, sharedtui.KEY_DOWN:
+	case plumtypes.KEY_UP, plumtypes.KEY_DOWN:
 		// m.handleDirectionInput(msg)
 		// default:
 		// 	handleDefaultInput(m, msg)
@@ -44,8 +44,8 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 }
 
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.CMD_CTRL_S:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.CMD_CTRL_S:
 		return m, messages.Save(m.save)
 	}
 

@@ -6,12 +6,13 @@ import (
 	"encoding/json"
 	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/shared/types/primitive"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Race - //
 type Race struct {
-	primitive.Descriptible
+	plumprimitive.Descriptible
 
 	Playable bool
 	Bonus    []stats.Modifier
@@ -26,7 +27,7 @@ type Template = struct {
 
 func New(params Template) Race {
 	return Race{
-		Descriptible: primitive.Describe(primitive.TemplateDescriptible{
+		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
 			Name:        params.Name,
 			Description: params.Description,
 		}),

@@ -1,8 +1,8 @@
 package models
 
 import (
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/shared/messages"
-	"solopg/app/shared/types/primitive"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -12,7 +12,7 @@ type ContextStepList[T any] = step.List[T]
 type Step[T any] = step.Step[T]
 
 type StepModel[T any] struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 	*ContextStepList[T]
 	Context T
 	size    *tea.WindowSizeMsg

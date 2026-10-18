@@ -2,9 +2,9 @@ package i19n
 
 import (
 	"fmt"
+	plumtypes "github.com/cyril-fl/plum/types"
 	"os"
 	"slices"
-	"solopg/app/shared/types/set"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -148,7 +148,7 @@ func isFileFormatValid(extension format) error {
 }
 
 func isLocalesConfigValid(defaultLocale string, locales []Locale) error {
-	localeSet := make(set.Set[string])
+	localeSet := make(plumtypes.Set[string])
 
 	for _, locale := range locales {
 		if localeSet.Has(locale.Code) {

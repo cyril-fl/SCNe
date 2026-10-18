@@ -1,19 +1,18 @@
 package cmdruntui
 
 import (
-	"solopg/app/shared/services/logs"
-	sharedtui "solopg/app/shared/tui"
-
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
+	"solopg/app/shared/services/logs"
 )
 
 // Handlers
 func (m *model) handleEvent(msg tea.KeyMsg) (*model, tea.Cmd) {
-	switch sharedtui.EventKey(msg.String()) {
-	case sharedtui.SHORT_CTRL_Q:
+	switch plumtypes.Key(msg.String()) {
+	case plumtypes.SHORT_CTRL_Q:
 		logs.SilentInfo("system.msg:quit")
 		return m, tea.Quit
-	case sharedtui.KEY_ESC:
+	case plumtypes.KEY_ESC:
 		current := m.steps.GetCurrentSubmodel()
 		if current == nil {
 			logs.SilentInfo("system.msg:quit")

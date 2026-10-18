@@ -2,7 +2,7 @@ package mango
 
 import (
 	"context"
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,7 +13,7 @@ var env = NewEnvironment()
 
 // -- Mongo & Database -- //
 type Mongo struct {
-	primitive.Fallible
+	plumprimitive.Fallible
 
 	client   *mongo.Client
 	instance *mongo.Database

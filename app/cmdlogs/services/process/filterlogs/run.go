@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"solopg/app/shared/services/factory/millfilterlog"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/process"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/pflag"
 )
 
 type run struct {
-	process.Process
+	plumprimitive.Process
 	cache
 
 	getList  func() ([]logs.Log, error)

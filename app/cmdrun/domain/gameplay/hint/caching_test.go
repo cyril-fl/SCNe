@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/types/primitive"
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 func TestHintCacheLoadsRecursivelyAndReturnsValueCopies(t *testing.T) {
@@ -24,7 +24,7 @@ func TestHintCacheLoadsRecursivelyAndReturnsValueCopies(t *testing.T) {
 		t.Fatal(err)
 	}
 	folderConfigPath = folder
-	cachedConfig = primitive.NewCache[[]yamlConfig]()
+	cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 	values, err := ListWithError()
 	if err != nil || len(values) != 2 {
