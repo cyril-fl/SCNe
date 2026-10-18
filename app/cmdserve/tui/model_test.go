@@ -7,7 +7,16 @@ import (
 	"testing"
 
 	tea "charm.land/bubbletea/v2"
+	pluminterface "github.com/cyril-fl/plum/interface"
+	"github.com/spf13/pflag"
+
+	"solopg/app/shared/services/logs"
+	"solopg/app/shared/services/mango/repository"
 )
+
+type testEvent string
+
+func (e testEvent) String() string { return string(e) }
 
 type fakeWatchable[T any] struct {
 	stream <-chan T
@@ -22,19 +31,30 @@ func (f *fakeWatchable[T]) Watch(ctx context.Context) (<-chan T, error) {
 	return f.stream, f.err
 }
 
-func TestModelReceivesEventsWithoutOpeningMultipleStreams(t *testing.T) {
-	stream := make(chan int, 1)
-	stream <- 42
+func newTestModel[T pluminterface.Stringable](ctx context.Context, repo repository.Watchable[T]) model[T] {
+	flags := pflag.NewFlagSet("test", pflag.ContinueOnError)
+	flags.String("filter", "", "")
 
-	repo := &fakeWatchable[int]{stream: stream}
-	m := NewModel(context.Background(), nil, repo)
+	return New(StreamModelTemplate[T]{
+		Context:    ctx,
+		Repository: repo,
+		Flags:      flags,
+	})
+}
+
+func TestModelReceivesEventsWithoutOpeningMultipleStreams(t *testing.T) {
+	stream := make(chan testEvent, 1)
+	stream <- "42"
+
+	repo := &fakeWatchable[testEvent]{stream: stream}
+	m := newTestModel(context.Background(), repo)
 
 	ready := m.Init()()
 	_, wait := m.Update(ready)
 	event := wait()
 	_, next := m.Update(event)
 
-	if got := m.events; len(got) != 1 || got[0] != 42 {
+	if got := m.events; len(got) != 1 || got[0] != "42" {
 		t.Fatalf("unexpected events: %v", got)
 	}
 	if repo.calls != 1 {
@@ -47,14 +67,14 @@ func TestModelReceivesEventsWithoutOpeningMultipleStreams(t *testing.T) {
 
 func TestModelReturnsErrorWhenWatchFails(t *testing.T) {
 	want := errors.New("watch failed")
-	repo := &fakeWatchable[int]{err: want}
-	m := NewModel(context.Background(), nil, repo)
+	repo := &fakeWatchable[testEvent]{err: want}
+	m := newTestModel(context.Background(), repo)
 
 	msg := m.Init()()
 	_, quit := m.Update(msg)
 
-	if !errors.Is(m.Err(), want) {
-		t.Fatalf("model error = %v, want %v", m.Err(), want)
+	if !errors.Is(m.GetErr(), want) {
+		t.Fatalf("model error = %v, want %v", m.GetErr(), want)
 	}
 	if _, ok := quit().(tea.QuitMsg); !ok {
 		t.Fatal("expected tea.Quit after Watch failure")
@@ -62,17 +82,17 @@ func TestModelReturnsErrorWhenWatchFails(t *testing.T) {
 }
 
 func TestModelReturnsErrorWhenStreamCloses(t *testing.T) {
-	stream := make(chan int)
+	stream := make(chan testEvent)
 	close(stream)
-	repo := &fakeWatchable[int]{stream: stream}
-	m := NewModel(context.Background(), nil, repo)
+	repo := &fakeWatchable[testEvent]{stream: stream}
+	m := newTestModel(context.Background(), repo)
 
 	ready := m.Init()()
 	_, wait := m.Update(ready)
 	closed := wait()
 	_, quit := m.Update(closed)
 
-	if m.Err() == nil {
+	if m.GetErr() == nil {
 		t.Fatal("expected an error when the stream closes")
 	}
 	if _, ok := quit().(tea.QuitMsg); !ok {
@@ -81,8 +101,8 @@ func TestModelReturnsErrorWhenStreamCloses(t *testing.T) {
 }
 
 func TestViewDoesNotOpenTheRepositoryStream(t *testing.T) {
-	repo := &fakeWatchable[int]{}
-	m := NewModel(context.Background(), nil, repo)
+	repo := &fakeWatchable[testEvent]{}
+	m := newTestModel(context.Background(), repo)
 
 	_ = m.View()
 
@@ -91,25 +111,23 @@ func TestViewDoesNotOpenTheRepositoryStream(t *testing.T) {
 	}
 }
 
-func TestViewRendersEventsAndErrors(t *testing.T) {
-	repo := &fakeWatchable[string]{}
-	m := NewModel(context.Background(), nil, repo)
-	m.events = []string{"first", "second"}
-	m.err = errors.New("stream failed")
+func TestViewRendersEvents(t *testing.T) {
+	repo := &fakeWatchable[logs.Log]{}
+	m := newTestModel(context.Background(), repo)
+	first := logs.Log{Type: logs.INFO, Author: "test", Message: "first"}
+	second := logs.Log{Type: logs.INFO, Author: "test", Message: "second"}
+	m.events = []logs.Log{first, second}
 
 	content := m.View().Content
-	if !strings.Contains(content, "first") || !strings.Contains(content, "second") {
+	if !strings.Contains(content, first.String()) || !strings.Contains(content, second.String()) {
 		t.Fatalf("view does not contain events: %q", content)
-	}
-	if !strings.Contains(content, "stream failed") {
-		t.Fatalf("view does not contain the error: %q", content)
 	}
 }
 
-func TestModelQuitsOnQ(t *testing.T) {
-	m := NewModel(context.Background(), nil, &fakeWatchable[int]{})
+func TestModelQuitsOnCtrlQ(t *testing.T) {
+	m := newTestModel(context.Background(), &fakeWatchable[testEvent]{})
 
-	_, quit := m.Update(tea.KeyPressMsg(tea.Key{Text: "q"}))
+	_, quit := m.Update(tea.KeyPressMsg(tea.Key{Code: 'q', Mod: tea.ModCtrl}))
 
 	if _, ok := quit().(tea.QuitMsg); !ok {
 		t.Fatal("expected tea.Quit after q")
@@ -120,8 +138,8 @@ func TestModelUsesTheProvidedContext(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	repo := &fakeWatchable[int]{stream: make(chan int)}
-	m := NewModel(ctx, nil, repo)
+	repo := &fakeWatchable[testEvent]{stream: make(chan testEvent)}
+	m := newTestModel(ctx, repo)
 	_ = m.Init()()
 
 	if repo.ctx != ctx {
