@@ -91,10 +91,10 @@ func GetQuestForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "done", Label: "field.done", Defaultvalue: values["done"], Options: getDoneOptions(), Validator: nil, Required: true}),
-		field.TextField(field.TextTemplate[string]{ID: "reward", Label: "field.reward", Defaultvalue: values["reward"], Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: getFormPriorityOptions(), Validator: nil, Required: true}),
-		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: getFormRankOptions(), Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "done", Label: "field.done", Defaultvalue: values["done"], Options: getDoneOptions(), Validator: nil, Required: false}),
+		field.TextField(field.TextTemplate[string]{ID: "reward", Label: "field.reward", Defaultvalue: values["reward"], Validator: nil, Required: false}),
+		field.SelectField(field.SelectTemplate[string]{ID: "priority", Label: "field.priority", Defaultvalue: values["priority"], Options: getFormPriorityOptions(), Validator: nil, Required: false}),
+		field.SelectField(field.SelectTemplate[string]{ID: "rank", Label: "field.rank", Defaultvalue: values["rank"], Options: getFormRankOptions(), Validator: nil, Required: false}),
 	).Focus()
 }
 

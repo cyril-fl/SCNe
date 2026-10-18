@@ -28,7 +28,6 @@ func GetFilesFromSource(sourcePath string, recursive bool) ([]string, error) {
 	return getFilesFromDirectoryRecursively(sourcePath, recursive)
 }
 
-
 // GetFolderFiles returns the names of the regular entries directly contained in
 // folderPath. The returned names are not absolute paths.
 func GetFolderFiles(folderPath string) ([]string, error) {
@@ -126,7 +125,6 @@ func LoadListFromFile[T any](fileAddress string) ([]T, error) {
 
 	return params, nil
 }
-
 
 // loadYAMLFromFile reads a YAML document from fileAddress and unmarshals it into target.
 func loadYAMLFromFile(fileAddress string, target any) error {

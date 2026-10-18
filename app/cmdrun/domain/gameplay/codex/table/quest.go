@@ -93,7 +93,7 @@ func (tb *QuestTable) FormEntries() []Entry {
 		entries = append(entries, newEntry(name, description, map[string]string{
 			"name": name, "description": description,
 			"done":     strconv.FormatBool(entry.Quest.Done),
-			"priority": entry.Quest.Prioty.GetName(),
+			"priority": entry.Quest.Priority.GetName(),
 			"rank":     entry.Quest.Rank.String(),
 			"reward":   entry.Quest.Reward,
 		}, false))

@@ -12,10 +12,10 @@ import (
 type Quest struct {
 	card.Card
 
-	Done   bool
-	Prioty priority.Priority
-	Rank   rank.Rank
-	Reward string
+	Done     bool
+	Priority priority.Priority
+	Rank     rank.Rank
+	Reward   string
 }
 
 type Template struct {
@@ -50,10 +50,10 @@ func New(params Template) (*Quest, error) {
 	}
 
 	return &Quest{
-		Card:   *newCard,
-		Done:   params.Done,
-		Prioty: params.Priority,
-		Rank:   params.Rank,
-		Reward: params.Reward,
+		Card:     *newCard,
+		Done:     params.Done,
+		Priority: params.Priority,
+		Rank:     params.Rank,
+		Reward:   params.Reward,
 	}, nil
 }
