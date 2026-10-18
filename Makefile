@@ -12,7 +12,10 @@ LDFLAGS = -X solopg/app/cmdversion/services/process/generatebuildinfo.AppName=$(
           -X solopg/app/cmdversion/services/process/generatebuildinfo.Date=$(DATE) \
           -X solopg/config.env=$(ENV)
 
-.PHONY: build run test
+.PHONY: setup build run test
+
+setup:
+	go tool lefthook install
 
 build:
 	go build -o $(APP_NAME) -ldflags "$(LDFLAGS)" .
