@@ -1,6 +1,8 @@
 package id
 
 import (
+	"encoding/base64"
+
 	"github.com/google/uuid"
 )
 
@@ -12,4 +14,9 @@ func New() ID {
 
 func (id ID) String() string {
 	return uuid.UUID(id).String()
+}
+
+func (id ID) Base64() string {
+	value := uuid.UUID(id)
+	return base64.StdEncoding.EncodeToString(value[:])
 }

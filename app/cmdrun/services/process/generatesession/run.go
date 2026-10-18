@@ -84,7 +84,7 @@ func (p *run) makeSession() {
 }
 
 func (p *run) makeAuthor() {
-	logs.SetAuthor(p.cache.resolvedCampaign.ID.String())
+	logs.SetAuthor(p.cache.resolvedCampaign.ID.Base64())
 }
 
 func (p *run) ensureSaveState() {

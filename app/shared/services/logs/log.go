@@ -44,7 +44,7 @@ type Log struct {
 
 type Template struct {
 	Type    Kind
-	Author  string // Player Id O system
+	Author  string // Player ID or system
 	Message string
 }
 
