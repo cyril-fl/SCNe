@@ -6,7 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/services/process/generatengine"
+	"solopg/app/cmdrun/services/process/generatesession"
 	cmdruntui "solopg/app/cmdrun/tui"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
@@ -115,20 +115,20 @@ func (p *run) makeResolveStep() {
 		models.Step[cmdruntui.Context]{
 			Submodel: models.Resolve(),
 			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				process := generatengine.Process(p.db, ctx)
+				process := generatesession.Process(p.db, ctx)
 				process.Run()
 
 				if process.HasErr() {
 					return logs.Error("error.unexpected:action", map[string]any{
-						"Action": "unexpected:action.build_engine",
+						"Action": "unexpected:action.build_session",
 						"Error":  process.GetErr().Error(),
 					})
 				}
 
 				p.cache.view.Insert(models.Step[cmdruntui.Context]{
 					Submodel: gameboard.NewModel(gameboard.UiParams{
-						Engine: process.GetResult(),
-						OnSave: savestate.Save(p.db, process.GetResult()),
+						Session: process.GetResult(),
+						OnSave:  savestate.Save(p.db, process.GetResult()),
 					}),
 				})
 

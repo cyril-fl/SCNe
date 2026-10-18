@@ -1,4 +1,4 @@
-package game
+package session
 
 import (
 	"testing"
@@ -9,13 +9,13 @@ import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
-func TestNewStatePreservesCampaignDates(t *testing.T) {
+func TestNewSessionStatePreservesCampaignDates(t *testing.T) {
 	campaignCreatedAt := time.Date(2026, time.January, 1, 12, 0, 0, 0, time.UTC)
 	campaignUpdatedAt := campaignCreatedAt.Add(time.Hour)
 	archiveCreatedAt := campaignCreatedAt.Add(2 * time.Hour)
 	archiveUpdatedAt := campaignCreatedAt.Add(3 * time.Hour)
 
-	data := CampaignData{
+	data := SessionData{
 		Campaign: &campaign.Campaign{
 			Datable: plumprimitive.Datable{
 				CreatedAt: campaignCreatedAt,
@@ -30,18 +30,18 @@ func TestNewStatePreservesCampaignDates(t *testing.T) {
 		},
 	}
 
-	state := NewState(data)
+	state := NewSessionState(data)
 
 	if !state.Metadata.Campaign.GetcreatedAt().Equal(campaignCreatedAt) {
-		t.Fatal("NewState did not preserve campaign CreatedAt")
+		t.Fatal("NewSessionState did not preserve campaign CreatedAt")
 	}
 	if !state.Metadata.Campaign.GetupdatedAt().Equal(campaignUpdatedAt) {
-		t.Fatal("NewState did not preserve campaign UpdatedAt")
+		t.Fatal("NewSessionState did not preserve campaign UpdatedAt")
 	}
 	if !state.Metadata.Archive.GetcreatedAt().Equal(archiveCreatedAt) {
-		t.Fatal("NewState did not preserve archive CreatedAt")
+		t.Fatal("NewSessionState did not preserve archive CreatedAt")
 	}
 	if !state.Metadata.Archive.GetupdatedAt().Equal(archiveUpdatedAt) {
-		t.Fatal("NewState did not preserve archive UpdatedAt")
+		t.Fatal("NewSessionState did not preserve archive UpdatedAt")
 	}
 }

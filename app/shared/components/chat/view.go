@@ -2,7 +2,7 @@ package chat
 
 import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
@@ -191,10 +191,10 @@ func makeHistory(c *Chat) string {
 	return strings.Join(c.history, "\n")
 }
 
-func initHistory(engine *game.Engine) []string {
-	raw := make([]string, 0, len(engine.State.AdventureLog.Entries))
+func initHistory(gameSession *session.GameSession) []string {
+	raw := make([]string, 0, len(gameSession.State.AdventureLog.Entries))
 
-	for _, entry := range engine.State.AdventureLog.Entries {
+	for _, entry := range gameSession.State.AdventureLog.Entries {
 		raw = append(raw, entry.String())
 	}
 

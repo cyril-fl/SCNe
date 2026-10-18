@@ -2,7 +2,7 @@ package gameboard
 
 import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/form"
@@ -19,27 +19,27 @@ import (
 type model struct {
 	plumprimitive.Fallible
 
-	state  statemachine.ViewState[state]
-	menu   *navigation.Navigation
-	engine *game.Engine
-	save   func() error
-	size   size.Size
+	state   statemachine.ViewState[state]
+	menu    *navigation.Navigation
+	session *session.GameSession
+	save    func() error
+	size    size.Size
 }
 
 type UiParams struct {
-	Engine *game.Engine
-	OnSave func() error
+	Session *session.GameSession
+	OnSave  func() error
 }
 
 func NewModel(params UiParams) *model {
 	return &model{
 		state: makeViewState(params),
 		menu: navigation.New(navigation.Template{
-			Static:     []string{makeStatView(params.Engine)},
-			Scrollable: makePanelPart(params.Engine),
+			Static:     []string{makeStatView(params.Session)},
+			Scrollable: makePanelPart(params.Session),
 		}),
-		engine: params.Engine,
-		save:   params.OnSave,
+		session: params.Session,
+		save:    params.OnSave,
 	}
 }
 
@@ -84,27 +84,27 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	return m, nil
 }
 
-func makeChat(engine *game.Engine) *chat.Chat {
+func makeChat(gameSession *session.GameSession) *chat.Chat {
 	return chat.New(chat.Template{
-		Author:  initAuthor(engine),
-		History: initJournal(engine),
+		Author:  initAuthor(gameSession),
+		History: initJournal(gameSession),
 		Register: func(author, message string) {
-			engine.GetAdventureJournal().AddEntry(author, message)
+			gameSession.GetAdventureJournal().AddEntry(author, message)
 		},
 	})
 }
 
-func initAuthor(engine *game.Engine) string {
+func initAuthor(gameSession *session.GameSession) string {
 	author := "System"
-	if engine.State.Player != nil {
-		author = engine.State.Player.GetName()
+	if gameSession.State.Player != nil {
+		author = gameSession.State.Player.GetName()
 	}
 	return author
 }
 
-func initJournal(engine *game.Engine) []string {
-	raw := make([]string, 0, len(engine.State.AdventureLog.Entries))
-	for _, entry := range engine.State.AdventureLog.Entries {
+func initJournal(gameSession *session.GameSession) []string {
+	raw := make([]string, 0, len(gameSession.State.AdventureLog.Entries))
+	for _, entry := range gameSession.State.AdventureLog.Entries {
 		raw = append(raw, entry.String())
 	}
 	return raw

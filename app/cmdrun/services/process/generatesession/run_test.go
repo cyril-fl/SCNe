@@ -1,4 +1,4 @@
-package generatengine
+package generatesession
 
 import (
 	"testing"

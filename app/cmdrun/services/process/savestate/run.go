@@ -1,7 +1,7 @@
 package savestate
 
 import (
-	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
@@ -12,14 +12,14 @@ import (
 type run struct {
 	plumprimitive.Process
 
-	db     *mango.Mongo
-	engine *game.Engine
+	db      *mango.Mongo
+	session *session.GameSession
 }
 
-func Process(db *mango.Mongo, engine *game.Engine) *run {
+func Process(db *mango.Mongo, gameSession *session.GameSession) *run {
 	return &run{
-		db:     db,
-		engine: engine,
+		db:      db,
+		session: gameSession,
 	}
 }
 
@@ -39,22 +39,22 @@ func (p *run) GetResult() {
 // Methods
 func (p *run) saveCampaign() {
 	repo := repository.Campaign().SetDb(p.db)
-	data := p.engine.ExportCampaign()
+	data := p.session.ExportCampaign()
 	p.SetErr(repo.Register(data))
 }
 
 func (p *run) saveArchives() {
 	repo := repository.Archives().SetDb(p.db)
-	data := p.engine.ExportArchives()
+	data := p.session.ExportArchives()
 
 	p.SetErr(repo.Register(data))
 }
 
 // Helpers
 // Save returns a function that saves the game state to the database when called.
-func Save(db *mango.Mongo, engine *game.Engine) func() error {
+func Save(db *mango.Mongo, gameSession *session.GameSession) func() error {
 	return func() error {
-		process := Process(db, engine)
+		process := Process(db, gameSession)
 		process.Run()
 
 		return process.GetErr()

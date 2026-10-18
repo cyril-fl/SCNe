@@ -1,4 +1,4 @@
-package game
+package session
 
 import (
 	"solopg/app/cmdrun/types/timer"
@@ -8,11 +8,11 @@ import (
 type Stopwatch struct {
 	init      bool
 	running   bool
-	timeStart []int64 // unix milisecond TODO faire une note
+	timeStart []int64 // unix milliseconds
 	timeRun   []int64
 }
 
-func Time() *Stopwatch {
+func NewStopwatch() *Stopwatch {
 	return &Stopwatch{
 		init:      false,
 		running:   false,
@@ -21,7 +21,6 @@ func Time() *Stopwatch {
 	}
 }
 
-// Getters & Setters
 func (t *Stopwatch) GetHistory() []timer.Record {
 	if !t.init {
 		return []timer.Record{}
@@ -70,7 +69,6 @@ func (t *Stopwatch) GetLastTimeStop() int64 {
 	return getlast(t.timeStart) + getlast(t.timeRun)
 }
 
-// Methods
 func (t *Stopwatch) Start() {
 	if t.init {
 		return
@@ -103,7 +101,6 @@ func (t *Stopwatch) Resume() {
 	t.running = true
 }
 
-// Helpers
 func getNow() int64 {
 	return time.Now().UnixMilli()
 }

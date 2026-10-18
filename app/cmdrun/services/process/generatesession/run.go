@@ -1,8 +1,8 @@
-package generatengine
+package generatesession
 
 import (
 	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/services/process/resolvearchives"
 	"solopg/app/cmdrun/services/process/resolvecampaign"
 	"solopg/app/cmdrun/services/process/savestate"
@@ -24,7 +24,7 @@ type run struct {
 type cache struct {
 	resolvedCampaign *campaign.Campaign
 	loadedArchives   *campaign.Archives
-	engine           *game.Engine
+	session          *session.GameSession
 
 	err error
 }
@@ -40,13 +40,13 @@ func (p *run) Run() {
 	p.makeCampaign()
 	p.makeArchives()
 	p.makeAuthor()
-	p.makeEngine()
+	p.makeSession()
 	p.ensureSaveState()
 }
 
 // Getters & Setters
-func (p *run) GetResult() *game.Engine {
-	return p.cache.engine
+func (p *run) GetResult() *session.GameSession {
+	return p.cache.session
 }
 
 // Methods
@@ -72,12 +72,12 @@ func (p *run) makeArchives() {
 	p.SetErr(process.GetErr())
 }
 
-func (p *run) makeEngine() {
+func (p *run) makeSession() {
 	if p.HasErr() {
 		return
 	}
 
-	p.cache.engine = game.NewEngine(p.cache.resolvedCampaign.ID, game.NewState(game.CampaignData{
+	p.cache.session = session.NewGameSession(p.cache.resolvedCampaign.ID, session.NewSessionState(session.SessionData{
 		Campaign: p.cache.resolvedCampaign,
 		Archives: p.cache.loadedArchives,
 	}))
@@ -92,15 +92,15 @@ func (p *run) ensureSaveState() {
 		return
 	}
 
-	p.cache.engine.State.Timer.Start()
+	p.cache.session.State.Stopwatch.Start()
 
 	if p.ctx.SelectedSave != nil {
 		return
 	}
 
-	p.cache.engine.Initialize()
+	p.cache.session.Initialize()
 
-	process := savestate.Process(p.db, p.cache.engine)
+	process := savestate.Process(p.db, p.cache.session)
 	process.Run()
 
 	p.SetErr(process.GetErr())

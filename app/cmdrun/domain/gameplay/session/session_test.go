@@ -1,4 +1,4 @@
-package game
+package session
 
 import (
 	"testing"
@@ -12,16 +12,16 @@ import (
 	"solopg/app/shared/services/logs"
 )
 
-func TestNewEngineStoresCampaignAndState(t *testing.T) {
-	state := &State{}
+func TestNewGameSessionStoresCampaignAndState(t *testing.T) {
+	state := &SessionState{}
 	campaignID := id.New()
-	engine := NewEngine(campaignID, state)
-	if engine.CampaignID != campaignID || engine.State != state {
-		t.Fatal("engine did not retain its campaign ID and state")
+	gameSession := NewGameSession(campaignID, state)
+	if gameSession.CampaignID != campaignID || gameSession.State != state {
+		t.Fatal("game session did not retain its campaign ID and state")
 	}
 }
 
-func TestEngineDiscoverLocationAddsLocationOnce(t *testing.T) {
+func TestGameSessionDiscoverLocationAddsLocationOnce(t *testing.T) {
 	logs.Init(noopLogRegistry{})
 	location, err := locations.New(locations.Template{
 		Name:        "The Crossroads",
@@ -33,35 +33,35 @@ func TestEngineDiscoverLocationAddsLocationOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	state := &State{Codex: &codex.Codex{
+	state := &SessionState{Codex: &codex.Codex{
 		Locations: codextable.NewLocations(),
 	}}
-	engine := NewEngine(id.New(), state)
+	gameSession := NewGameSession(id.New(), state)
 
-	engine.DiscoverLocation(location)
-	engine.DiscoverLocation(location)
+	gameSession.DiscoverLocation(location)
+	gameSession.DiscoverLocation(location)
 
 	if entries := state.Codex.Locations.FormEntries(); len(entries) != 1 {
 		t.Fatalf("location entries count = %d, want 1", len(entries))
 	}
 }
 
-func TestEngineDiscoverLocationIgnoresNil(t *testing.T) {
+func TestGameSessionDiscoverLocationIgnoresNil(t *testing.T) {
 	logs.Init(noopLogRegistry{})
-	state := &State{Codex: &codex.Codex{
+	state := &SessionState{Codex: &codex.Codex{
 		Locations: codextable.NewLocations(),
 	}}
 
-	NewEngine(id.New(), state).DiscoverLocation(nil)
+	NewGameSession(id.New(), state).DiscoverLocation(nil)
 
 	if entries := state.Codex.Locations.FormEntries(); len(entries) != 0 {
 		t.Fatalf("location entries count = %d, want 0", len(entries))
 	}
 }
 
-func TestEngineDiscoverLocationIgnoresUninitializedCodexTable(t *testing.T) {
+func TestGameSessionDiscoverLocationInitializesCodexTable(t *testing.T) {
 	logs.Init(noopLogRegistry{})
-	state := &State{Codex: &codex.Codex{
+	state := &SessionState{Codex: &codex.Codex{
 		Locations: &codextable.LocationsTable{},
 	}}
 
@@ -75,7 +75,7 @@ func TestEngineDiscoverLocationIgnoresUninitializedCodexTable(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	NewEngine(id.New(), state).DiscoverLocation(location)
+	NewGameSession(id.New(), state).DiscoverLocation(location)
 
 	if entries := state.Codex.Locations.FormEntries(); len(entries) != 1 {
 		t.Fatalf("location entries count = %d, want 1", len(entries))

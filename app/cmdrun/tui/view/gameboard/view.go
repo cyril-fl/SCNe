@@ -4,7 +4,7 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/services/game"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/tui/view/menucodex"
 	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
@@ -61,11 +61,11 @@ func (m model) GetFooter() []string {
 
 // Methods
 func makeViewState(params UiParams) statemachine.ViewState[state] {
-	params.Engine.State.Codex.EnsureInitialized()
+	params.Session.State.Codex.EnsureInitialized()
 
-	codexpage := menucodex.NewFormPages(params.Engine.State.Codex)
+	codexpage := menucodex.NewFormPages(params.Session.State.Codex)
 
-	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Engine)}
+	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Session)}
 
 	transitions := map[state][]state{CHAT_SECTION: {}}
 
@@ -84,17 +84,17 @@ func makeViewState(params UiParams) statemachine.ViewState[state] {
 }
 
 // Helpers
-func makeStatView(engine *game.Engine) string {
+func makeStatView(gameSession *session.GameSession) string {
 	var content strings.Builder
-	menumetadata.GetCharacterInfo(&content, engine)
-	menumetadata.GetLocationInfo(&content, engine)
-	menumetadata.GetStatInfo(&content, engine)
+	menumetadata.GetCharacterInfo(&content, gameSession)
+	menumetadata.GetLocationInfo(&content, gameSession)
+	menumetadata.GetStatInfo(&content, gameSession)
 
 	return strings.TrimRight(content.String(), "\n")
 }
 
-func makePanelPart(engine *game.Engine) []navigation.SectionInterface {
-	codex := engine.State.Codex
+func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterface {
+	codex := gameSession.State.Codex
 	codex.EnsureInitialized()
 
 	list := []navigation.SectionInterface{}
