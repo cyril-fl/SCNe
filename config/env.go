@@ -1,7 +1,9 @@
 package config
 
+import plumconfig "github.com/cyril-fl/plum/config"
+
 var env = ""
 
 func IsDev() bool {
-	return EnvIs(env, "dev", "development", "develop", "")
+	return plumconfig.EnvIs(env, "dev", "development", "develop", "")
 }

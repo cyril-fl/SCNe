@@ -1,14 +1,14 @@
 package cmdargs
 
 import (
-	"solopg/config"
 	"strconv"
 
+	plumcliconfig "github.com/cyril-fl/plum/cli/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
-func MakeFlags(cmd *cobra.Command, args []config.Cmdarg) []*pflag.FlagSet {
+func MakeFlags(cmd *cobra.Command, args []plumcliconfig.Cmdarg) []*pflag.FlagSet {
 	var flags []*pflag.FlagSet
 	for _, arg := range args {
 

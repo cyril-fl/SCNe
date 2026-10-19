@@ -1,11 +1,13 @@
 package config
 
+import plumcliconfig "github.com/cyril-fl/plum/cli/config"
+
 type commands struct {
-	Config  Cmdparams `yaml:"config"`
-	Logs    Cmdparams `yaml:"logs"`
-	Root    Cmdparams `yaml:"root"`
-	Run     Cmdparams `yaml:"run"`
-	Serve   Cmdparams `yaml:"serve"`
-	Try     Cmdparams `yaml:"try"`
-	Version Cmdparams `yaml:"version"`
+	Config  plumcliconfig.Cmdparams `yaml:"config"`
+	Logs    plumcliconfig.Cmdparams `yaml:"logs"`
+	Root    plumcliconfig.Cmdparams `yaml:"root"`
+	Run     plumcliconfig.Cmdparams `yaml:"run"`
+	Serve   plumcliconfig.Cmdparams `yaml:"serve"`
+	Try     plumcliconfig.Cmdparams `yaml:"try"`
+	Version plumcliconfig.Cmdparams `yaml:"version"`
 }
