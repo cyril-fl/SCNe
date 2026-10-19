@@ -1,6 +1,7 @@
 # Env & config locale
 .env
 .env.*
+!.env.example
 
 # Binaires compilés
 solopg

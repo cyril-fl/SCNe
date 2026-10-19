@@ -33,6 +33,8 @@ Le nom du fichier dépend du mode d'exécution :
 - `.env` — utilisé lorsque l'application est exécutée directement sur la machine avec Go.
 - `.env.docker` — utilisé lorsque l'application est exécutée dans le conteneur Docker.
 
+> ℹ️ Cfr. env.exemple
+
 ### Environnement Docker
 
 Avec Docker, le fichier `.env.docker` est chargé par le service `app` du `compose.yaml`.
