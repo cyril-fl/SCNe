@@ -32,7 +32,7 @@ Before importing a Plum package, verify that its implementation is in one or mor
 
 ## Verification
 
-- When touching a Go file containing `// TEST`, invoke `$go-test:create` before changing it.
-- Invoke `$go-test:run` before running tests, then run `make test` from the project root.
+- When touching a Go file containing `// TEST`, invoke `$go-test-create` before changing it.
+- Invoke `$go-test-run` before running tests, then run `make test` from the project root.
 - Run `make build`; if the host Go cache is inaccessible, use `GOCACHE=/tmp/solopg-go-cache make build`.
 - Search for removed local import paths and `git diff --check` before finishing.

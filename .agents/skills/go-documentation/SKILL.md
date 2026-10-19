@@ -1,6 +1,7 @@
 ---
 name: go-documentation
 description: Document an existing Go codebase on explicit request, following Go doc conventions while preserving behavior and clearly separating reviewed code from work in progress.
+disable-model-invocation: true
 ---
 
 # Go documentation
