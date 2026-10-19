@@ -12,7 +12,6 @@ import (
 
 type config struct {
 	Name      string            `yaml:"name"`
-	Verbose   bool              `yaml:"verbose"`
 	I18n      i19n.Config       `yaml:"i18n"`
 	Commands  commands          `yaml:"commands"`
 	Documents structureDocument `yaml:"documents"`

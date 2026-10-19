@@ -1,5 +1,4 @@
 name: "solopg"
-verbose: false
 i18n: 
   default: "fr"
   dir: "locales"
