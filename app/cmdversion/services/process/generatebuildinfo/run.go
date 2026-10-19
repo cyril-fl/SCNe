@@ -96,7 +96,7 @@ type executablenv struct {
 }
 
 func executeByEnv(e executablenv) {
-	if config.Current.IsDev() {
+	if config.IsDev() {
 		e.devfunc()
 	} else {
 		e.prodfunc()

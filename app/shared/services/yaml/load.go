@@ -8,6 +8,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// TODO Move to plum
 // TODO Modifier pour pouvoir unmarshal du JSON, utiliser embeding et injection
 
 // Getters & Setters

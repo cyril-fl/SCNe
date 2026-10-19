@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func MakeFlags(cmd *cobra.Command, args []config.Arg) []*pflag.FlagSet {
+func MakeFlags(cmd *cobra.Command, args []config.Cmdarg) []*pflag.FlagSet {
 	var flags []*pflag.FlagSet
 	for _, arg := range args {
 

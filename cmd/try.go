@@ -2,6 +2,7 @@ package cmd
 
 import (
 	src "solopg/app/cmdtry"
+	"solopg/config"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,7 @@ var tryCmd = &cobra.Command{
 }
 
 func init() {
-	if !c.IsDev() {
+	if !config.IsDev() {
 		return
 	}
 

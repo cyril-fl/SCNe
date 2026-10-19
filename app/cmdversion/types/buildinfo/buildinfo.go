@@ -30,7 +30,7 @@ func (b BuildInfo) String() string {
 	sb := strings.Builder{}
 
 	env := "dev"
-	if !config.Current.IsDev() {
+	if !config.IsDev() {
 		env = "prod"
 	}
 
