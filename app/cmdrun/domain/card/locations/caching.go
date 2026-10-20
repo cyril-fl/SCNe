@@ -2,15 +2,15 @@ package locations
 
 import (
 	"errors"
-	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 // - Configuration & caching - //
@@ -32,9 +32,10 @@ type cacheValue struct {
 var cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 func loadFromSource() (cacheValue, error) {
-	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
-	if err != nil {
-		return cacheValue{}, err
+	entries := plummillentries.New()
+	files := entries.GetFilesFromSource(folderConfigPath, true)
+	if entries.HasErr() {
+		return cacheValue{}, logs.RawError("%w", entries.GetErr())
 	}
 
 	configs := make([]yamlConfig, 0, len(files))
@@ -59,10 +60,10 @@ func loadFromSource() (cacheValue, error) {
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {
-	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-
-	if err != nil {
-		return yamlConfig{}, fmt.Errorf("load %s: %w", fileAddress, err)
+	loader := plummillload.New(fileAddress)
+	params := loader.LoadFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return yamlConfig{}, logs.RawError("load %s: %w", fileAddress, loader.GetErr())
 	}
 
 	/*

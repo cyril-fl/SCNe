@@ -2,15 +2,15 @@ package hint
 
 import (
 	"errors"
-	"fmt"
 	"path/filepath"
 
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 // - Configuration & caching - //
@@ -26,9 +26,10 @@ var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 func loadFromSource() ([]yamlConfig, error) {
 	//  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement
 	// Appliquer cette logique la au oracles dice ect...
-	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
-	if err != nil {
-		return nil, fmt.Errorf("load hint folder %s: %w", folderConfigPath, err)
+	entries := plummillentries.New()
+	files := entries.GetFilesFromSource(folderConfigPath, true)
+	if entries.HasErr() {
+		return nil, logs.RawError("load hint folder %s: %w", folderConfigPath, entries.GetErr())
 	}
 
 	configs := make([]yamlConfig, 0, len(files))
@@ -50,9 +51,10 @@ func loadFromSource() ([]yamlConfig, error) {
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {
-	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-	if err != nil {
-		return yamlConfig{}, fmt.Errorf("load hint file %s: %w", fileAddress, err)
+	loader := plummillload.New(fileAddress)
+	params := loader.LoadFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return yamlConfig{}, logs.RawError("load hint file %s: %w", fileAddress, loader.GetErr())
 	}
 	return *params, nil
 }
@@ -116,26 +118,21 @@ func List() []Hint {
 }
 
 func ListFromFolder(path string) ([]string, error) {
-	list, err := yaml.GetFolderFiles(path)
-	if err != nil {
+	entries := plummillentries.New()
+	list := entries.GetFolderFiles(path)
+	if entries.HasErr() {
 
-		return nil, logs.Error("error.loading:folder", map[string]any{
-			"Subject": "hint",
-			"Folder":  path,
-			"Error":   err,
-		})
+		return nil, logs.RawError("load hint folder %s: %w", path, entries.GetErr())
 	}
 
 	errs := []error{}
 	hints := []string{}
 	for _, file := range list {
-		if params, err := yaml.LoadFromFile[yamlConfig](filepath.Join(path, file)); err != nil {
+		loader := plummillload.New(filepath.Join(path, file))
+		params := loader.LoadFromFile[yamlConfig]()
+		if loader.HasErr() {
 
-			errs = append(errs, logs.Error("error.loading:file", map[string]any{
-				"Subject": "hint",
-				"File":    file,
-				"Error":   err,
-			}))
+			errs = append(errs, logs.RawError("load hint file %s: %w", file, loader.GetErr()))
 		} else {
 			hints = append(hints, params.Name)
 		}

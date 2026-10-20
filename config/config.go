@@ -4,10 +4,11 @@ import (
 	"os"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"strings"
 
 	"github.com/joho/godotenv"
+
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 type config struct {
@@ -21,10 +22,10 @@ var Current config
 
 func load() (*config, error) {
 	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))
-	current, err := yaml.LoadFromFile[config](file)
-
-	if err != nil {
-		return nil, err
+	loader := plummillload.New(file)
+	current := loader.LoadFromFile[config]()
+	if loader.HasErr() {
+		return nil, logs.RawError("%w", loader.GetErr())
 	}
 
 	if err := current.I18n.Validate(); err != nil {

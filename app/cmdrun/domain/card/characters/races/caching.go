@@ -3,10 +3,10 @@ package races
 import (
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 // - Configuration & caching - //
@@ -27,9 +27,10 @@ type cacheValue struct {
 var cachedConfig = plumprimitive.NewCache[cacheValue]()
 
 func loadFromFile() ([]yamlConfig, error) {
-	params, err := yaml.LoadListFromFile[yamlConfig](fileConfigPath)
-	if err != nil {
-		return nil, err
+	loader := plummillload.New(fileConfigPath)
+	params := loader.LoadListFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return nil, logs.RawError("%w", loader.GetErr())
 	}
 
 	return params, nil

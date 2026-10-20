@@ -6,10 +6,10 @@ import (
 	"slices"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	y "gopkg.in/yaml.v3"
 )
@@ -185,9 +185,10 @@ func (p *run) reset() {
 
 // Helpers
 func loadLocaleFile(cfg i19n.Config) ([]string, error) {
-	files, err := yaml.GetFilesFromSource(cfg.Dir, true)
-	if err != nil {
-		return nil, err
+	entries := plummillentries.New()
+	files := entries.GetFilesFromSource(cfg.Dir, true)
+	if entries.HasErr() {
+		return nil, logs.RawError("%w", entries.GetErr())
 	}
 
 	assertedFiles := make([]string, 0)

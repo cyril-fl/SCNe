@@ -2,10 +2,10 @@ package priority
 
 import (
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 // - Configuration & caching - //
@@ -19,9 +19,10 @@ var filePath = config.Current.Documents.Files.Priorities
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromFile() ([]yamlConfig, error) {
-	params, err := yaml.LoadListFromFile[yamlConfig](filePath)
-	if err != nil {
-		return nil, err
+	loader := plummillload.New(filePath)
+	params := loader.LoadListFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return nil, logs.RawError("%w", loader.GetErr())
 	}
 
 	return params, nil

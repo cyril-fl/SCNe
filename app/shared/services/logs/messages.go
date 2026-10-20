@@ -46,7 +46,7 @@ func SilentError(id string, data ...map[string]any) {
 	})
 }
 
-func RawError(id string, format string, a ...any) error {
+func RawError(format string, a ...any) error {
 	err := fmt.Errorf(format, a...)
 
 	registerFromTemplate(Template{

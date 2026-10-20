@@ -3,10 +3,10 @@ package objectcategory
 import (
 	"slices"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 // - Configuration & caching - //
@@ -19,9 +19,10 @@ var fileConfigPath = config.Current.Documents.Files.ObjectsCategory
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 func loadFromFile() (yamlConfig, error) {
-	params, err := yaml.LoadFromFile[yamlConfig](fileConfigPath)
-	if err != nil {
-		return yamlConfig{}, err
+	loader := plummillload.New(fileConfigPath)
+	params := loader.LoadFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return yamlConfig{}, logs.RawError("%w", loader.GetErr())
 	}
 
 	return *params, nil

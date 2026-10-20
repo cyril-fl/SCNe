@@ -7,7 +7,8 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
+
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )
 
 type Article struct {
@@ -58,9 +59,10 @@ func New(params Template) (*Article, error) {
 }
 
 func FromFile(fileAddress string) (*Article, error) {
-	params, err := yaml.LoadFromFile[Template](fileAddress)
-	if err != nil {
-		return nil, err
+	loader := plummillload.New(fileAddress)
+	params := loader.LoadFromFile[Template]()
+	if loader.HasErr() {
+		return nil, logs.RawError("%w", loader.GetErr())
 	}
 
 	return New(*params)

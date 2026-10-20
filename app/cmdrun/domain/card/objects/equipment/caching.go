@@ -2,9 +2,10 @@ package equipment
 
 import (
 	"errors"
-	"fmt"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"
+	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/slot"
@@ -12,7 +13,6 @@ import (
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/types/potency"
 	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/yaml"
 )
 
 // - Configuration & caching - //
@@ -34,9 +34,10 @@ var folderConfigPath = "data/template/armor_sets"
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromSource() ([]yamlConfig, error) {
-	files, err := yaml.GetFilesFromSource(folderConfigPath, true)
-	if err != nil {
-		return nil, fmt.Errorf("load gear folder %s: %w", folderConfigPath, err)
+	entries := plummillentries.New()
+	files := entries.GetFilesFromSource(folderConfigPath, true)
+	if entries.HasErr() {
+		return nil, logs.RawError("load gear folder %s: %w", folderConfigPath, entries.GetErr())
 	}
 
 	configs := make([]yamlConfig, 0, len(files))
@@ -58,9 +59,10 @@ func loadFromSource() ([]yamlConfig, error) {
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {
-	params, err := yaml.LoadFromFile[yamlConfig](fileAddress)
-	if err != nil {
-		return yamlConfig{}, fmt.Errorf("load gear file %s: %w", fileAddress, err)
+	loader := plummillload.New(fileAddress)
+	params := loader.LoadFromFile[yamlConfig]()
+	if loader.HasErr() {
+		return yamlConfig{}, logs.RawError("load gear file %s: %w", fileAddress, loader.GetErr())
 	}
 	return *params, nil
 }
