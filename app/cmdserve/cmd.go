@@ -11,10 +11,11 @@ import (
 	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"github.com/spf13/pflag"
+	"github.com/spf13/cobra"
 )
 
-func RunCmdServe(flags func() *pflag.FlagSet) error {
+// TEST
+func RunCmdServe(cobra *cobra.Command, args []string) error {
 	var db *mango.Mongo
 	var err error
 
@@ -45,7 +46,7 @@ func RunCmdServe(flags func() *pflag.FlagSet) error {
 			repo.SetDb(db)
 			return repo
 		},
-		GetFlags: flags,
+		GetFlags: cobra.Flags,
 	})
 
 	processes := []plumprimitive.Processable{

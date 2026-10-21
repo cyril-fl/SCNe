@@ -2,8 +2,8 @@ package cmd
 
 import (
 	src "solopg/app/cmdserve"
-	"solopg/app/shared/utils/cmdargs"
 
+	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"
 )
 
@@ -12,13 +12,11 @@ var cmdServe = &cobra.Command{
 	Short:   cmd.Serve.Short,
 	Long:    cmd.Serve.Long,
 	Example: cmd.Serve.Example,
-	RunE: func(cobra *cobra.Command, args []string) error {
-		return src.RunCmdServe(cobra.Flags)
-	},
+	RunE:    src.RunCmdServe,
 }
 
 func init() {
-	cmdargs.MakeFlags(cmdServe, cmd.Serve.Args)
+	plumcliutilsargs.Makeflags(cmdServe, cmd.Serve.Flags)
 
 	cmdRoot.AddCommand(cmdServe)
 }

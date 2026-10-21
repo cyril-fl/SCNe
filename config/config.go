@@ -22,6 +22,7 @@ var Current config
 
 func load() (*config, error) {
 	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))
+
 	loader := plummillload.New(file)
 	current := loader.LoadFromFile[config]()
 	if loader.HasErr() {
