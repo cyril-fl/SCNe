@@ -6,7 +6,9 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 
 	"solopg/app/shared/messages"
-	"solopg/app/shared/services/factory"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
+
 	"solopg/app/shared/services/i19n"
 	"strings"
 
@@ -26,7 +28,7 @@ func Oracles(value oracle.Oracle) Roller {
 }
 
 type milloracle struct {
-	factory.Mill
+	plumprimitive.Mill
 	oracle oracle.Oracle
 }
 
@@ -36,7 +38,7 @@ func Hint(value hint.Hint) Roller {
 }
 
 type millhint struct {
-	factory.Mill
+	plumprimitive.Mill
 	hint hint.Hint
 }
 
@@ -46,7 +48,7 @@ func Dice(value dice.Dice) Roller {
 }
 
 type milldice struct {
-	factory.Mill
+	plumprimitive.Mill
 	dice dice.Dice
 }
 

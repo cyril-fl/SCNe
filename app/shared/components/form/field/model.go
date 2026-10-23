@@ -7,7 +7,6 @@ import (
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
-// TEST
 // - Field - //
 type field[T any] struct {
 	id           string

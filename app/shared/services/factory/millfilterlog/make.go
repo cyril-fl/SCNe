@@ -1,9 +1,10 @@
 package millfilterlog
 
 import (
-	"solopg/app/shared/services/factory"
 	"solopg/app/shared/services/logs"
 	"strings"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 
 	"github.com/spf13/pflag"
 )
@@ -11,7 +12,7 @@ import (
 type Mill = mill
 
 type mill struct {
-	factory.Mill
+	plumprimitive.Mill
 
 	list  []logs.Log
 	flags *pflag.FlagSet

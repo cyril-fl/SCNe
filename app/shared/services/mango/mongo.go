@@ -11,8 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// TEST
-
 var env = NewEnvironment()
 
 // -- Mongo & Database -- //

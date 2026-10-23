@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"solopg/app/shared/services/factory/millfilterlog"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/services/mango/repository"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/pflag"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
-// TEST
 type run struct {
 	plumprimitive.Process
 	cache
 
-	getList  func() ([]logs.Log, error)
+	getList  func(filter bson.M, opts ...repository.FindOption) ([]logs.Log, error)
 	getFlags func() *pflag.FlagSet
 }
 
@@ -24,7 +25,7 @@ type cache struct {
 }
 
 type ProcessTemplate struct {
-	GetList  func() ([]logs.Log, error)
+	GetList  func(filter bson.M, opts ...repository.FindOption) ([]logs.Log, error)
 	GetFlags func() *pflag.FlagSet
 }
 
@@ -51,7 +52,7 @@ func (p *run) GetResult() {
 
 // Methods
 func (p *run) makeList() {
-	list, err := p.getList()
+	list, err := p.getList(nil)
 	if err != nil {
 		p.SetErr(err)
 		return

@@ -2,7 +2,6 @@ package cmdlogs
 
 import (
 	cmdlogssession "solopg/app/cmdlogs/services/process/filterlogs"
-	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
 
@@ -14,12 +13,11 @@ import (
 func RunCmdLogs(cobra *cobra.Command, args []string) error {
 	db := mango.GetDb()
 
+	repo := repository.LogSystem()
+	repo.SetDb(db)
+
 	session := cmdlogssession.Process(cmdlogssession.ProcessTemplate{
-		GetList: func() ([]logs.Log, error) {
-			repo := repository.LogSystem()
-			repo.SetDb(db)
-			return repo.Load(nil)
-		},
+		GetList:  repo.Load,
 		GetFlags: cobra.Flags,
 	})
 

@@ -2,7 +2,8 @@ package milltable
 
 import (
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/shared/services/factory"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type MillTable interface {
@@ -10,7 +11,7 @@ type MillTable interface {
 }
 
 type mill struct {
-	factory.Mill
+	plumprimitive.Mill
 
 	target  *codextable.Table
 	factory func() codextable.Table

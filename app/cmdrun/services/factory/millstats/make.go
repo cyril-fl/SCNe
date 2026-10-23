@@ -7,13 +7,14 @@ import (
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/shared/services/factory"
 	"solopg/app/shared/services/logs"
 	"strconv"
+
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 type mill struct {
-	factory.Mill
+	plumprimitive.Mill
 
 	values    map[string]string
 	modifiers []stats.Modifier

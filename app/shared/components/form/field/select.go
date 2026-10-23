@@ -15,7 +15,6 @@ import (
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
-// TEST
 // - Field - //
 type selectField[T any] struct {
 	field[T]
