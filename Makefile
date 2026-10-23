@@ -24,6 +24,6 @@ run:
 	go run -ldflags "$(LDFLAGS)" .
 
 test:
-	CONFIG_FILE=$(CURDIR)/config/.config.yaml \
+	@CONFIG_FILE=$(CURDIR)/config/.config.yaml \
 	GOCACHE=$${GOCACHE:-/tmp/solopg-go-cache} \
 	go test -exec "sh -c 'cd \"$(CURDIR)\" && exec \"\$$@\"' sh" $(ARGS)
