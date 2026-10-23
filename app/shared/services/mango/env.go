@@ -42,11 +42,6 @@ func (env *MongoEnvironment) GetEnvURI() string {
 	return plumtransform.CleanJoin("", "mongodb://", uri)
 }
 
-func (env *MongoEnvironment) SetEnvURI() {
-	uri := env.GetEnvURI()
-	os.Setenv("MONGO_URI", uri)
-}
-
 func (env *MongoEnvironment) GetEnvDBName() string {
 	if env.dbname == "" {
 		env.dbname = config.Current.Name

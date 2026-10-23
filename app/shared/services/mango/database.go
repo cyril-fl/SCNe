@@ -71,7 +71,6 @@ func (db *Mongo) Disconnect() {
 // Helpers
 func Init() (db *Mongo, err error) {
 	env.ReadEnv()
-	env.SetEnvURI()
 
 	db = New()
 	db.Connect()
