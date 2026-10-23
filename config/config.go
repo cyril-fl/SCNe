@@ -18,6 +18,7 @@ type config struct {
 	Documents structureDocument `yaml:"documents"`
 }
 
+// TODO remplacer par un getter.
 var Current config
 
 func load() (*config, error) {

@@ -5,9 +5,6 @@ import (
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango"
 	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process/initI19n"
-	"solopg/app/shared/services/process/initloggerepository"
-	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/cobra"
@@ -15,23 +12,8 @@ import (
 
 // TEST
 func RunCmdLogs(cobra *cobra.Command, args []string) error {
-	var db *mango.Mongo
-	var err error
+	db := mango.GetDb()
 
-	if db, err = mango.Init(); err != nil {
-		return err
-	}
-	defer db.Disconnect()
-
-	/* --- NOTE Everything above this line is non loggable --- */
-	/*
-		- STEP 1: Initialize translation bundle
-		- STEP 2: Initialize logger repository
-		- STEP 3: Run session
-	*/
-
-	logger := initloggerepository.Process(db)
-	translation := initI19n.Process(config.Current.I18n, "")
 	session := cmdlogssession.Process(cmdlogssession.ProcessTemplate{
 		GetList: func() ([]logs.Log, error) {
 			repo := repository.LogSystem()
@@ -42,8 +24,6 @@ func RunCmdLogs(cobra *cobra.Command, args []string) error {
 	})
 
 	processes := []plumprimitive.Processable{
-		logger,
-		translation,
 		session,
 	}
 

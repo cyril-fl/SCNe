@@ -8,11 +8,12 @@ import (
 )
 
 var cmdServe = &cobra.Command{
-	Use:     cmd.Serve.Use,
-	Short:   cmd.Serve.Short,
-	Long:    cmd.Serve.Long,
-	Example: cmd.Serve.Example,
-	RunE:    src.RunCmdServe,
+	Use:         cmd.Serve.Use,
+	Short:       cmd.Serve.Short,
+	Long:        cmd.Serve.Long,
+	Example:     cmd.Serve.Example,
+	Annotations: map[string]string{withDb: ""},
+	RunE:        src.RunCmdServe,
 }
 
 func init() {

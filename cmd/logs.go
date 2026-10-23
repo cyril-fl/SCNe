@@ -8,11 +8,12 @@ import (
 )
 
 var cmdLogs = &cobra.Command{
-	Use:     cmd.Logs.Use,
-	Short:   cmd.Logs.Short,
-	Long:    cmd.Logs.Long,
-	Example: cmd.Logs.Example,
-	RunE:    cmdlogs.RunCmdLogs,
+	Use:         cmd.Logs.Use,
+	Short:       cmd.Logs.Short,
+	Long:        cmd.Logs.Long,
+	Example:     cmd.Logs.Example,
+	Annotations: map[string]string{withDb: ""},
+	RunE:        cmdlogs.RunCmdLogs,
 }
 
 func init() {
