@@ -78,11 +78,14 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 		if entry.Race == nil {
 			continue
 		}
+
 		name, description := entry.Race.GetName(), entry.Race.GetDescription()
 		values := map[string]string{"name": name, "description": description}
+
 		for _, modifier := range entry.Race.GetBonus() {
 			values[modifier.Stat.String()] = plumtransform.ParseAsString(modifier.Value)
 		}
+
 		entries = append(entries, newEntry(entry.ID, name, description, values, races.IsLocked(name)))
 	}
 	return entries
@@ -90,9 +93,11 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 
 func (tb *BeastiaryTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry beastentry) bool { return entry.ID == entryID })
+
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
+
 	return tb.editFromMap(index, values)
 }
 

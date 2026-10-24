@@ -1,6 +1,7 @@
 package formpage
 
 import (
+	"errors"
 	"testing"
 
 	"solopg/app/cmdrun/types/id"
@@ -214,5 +215,21 @@ func TestPageSaveReceivesSelectedEntryIDWhenFiltered(t *testing.T) {
 
 	if saved != beta {
 		t.Fatalf("Save received %v, want %v", saved, beta)
+	}
+}
+
+func TestPageSaveErrorKeepsFormOpen(t *testing.T) {
+	page := New(Template{
+		Items:   func() []Item { return nil },
+		NewForm: testForm,
+		Save:    func(id.ID, map[string]string) error { return errors.New("save failed") },
+	})
+
+	page.EditNewItem()
+	if cmd := page.Update(form.Validate{}); cmd == nil {
+		t.Fatal("expected a failure command when Save fails")
+	}
+	if !page.IsFormOpen() || !page.GetForm().HasErr() {
+		t.Fatal("expected form to stay open with the save error")
 	}
 }

@@ -54,7 +54,7 @@ func (f *Footer) GetSize() size.Size {
 // Methods
 func (f *Footer) Merge(model tea.Model) *Footer {
 	if view, ok := model.(HasFooter); ok {
-		f.plugins = append(f.plugins, view.GetFooter()...)
+		f.plugins = view.GetFooter()
 	}
 	return f
 }

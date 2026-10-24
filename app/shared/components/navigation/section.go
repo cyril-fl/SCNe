@@ -1,10 +1,11 @@
 package navigation
 
 import (
-	pluminterface "github.com/cyril-fl/plum/interface"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/style"
 	"solopg/app/shared/types/primitive"
+
+	pluminterface "github.com/cyril-fl/plum/interface"
 
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/models"
