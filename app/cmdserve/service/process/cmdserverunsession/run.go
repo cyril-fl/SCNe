@@ -7,6 +7,8 @@ import (
 	"os/signal"
 
 	cmdservetui "solopg/app/cmdserve/tui"
+	"solopg/app/cmdserve/tui/view/logstream"
+	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
 	"solopg/app/shared/services/process/generatesteplist"
@@ -70,22 +72,17 @@ func (p *run[T]) runTuiView() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	/*
-		FIXME MEDIUM devrais être une vue et nom l'equilavent du moteur qui tourne dans CMDRUN
-		Deplaver le moteur aiderais a ameliore et fixer ici
-		Ne devrai pas rester comme ça ca ca marche mais ma melanger les responsabilté
-	*/
-	model := cmdservetui.New(cmdservetui.StreamModelTemplate[T]{
-		Context:    ctx,
-		Steps:      p.cache.view.GetSteps(),
-		Repository: p.repository,
-		Flags:      p.getFlags(),
+	p.cache.view.Add(models.Step[cmdservetui.Context]{
+		Submodel: logstream.NewModel(logstream.UiParams[T]{
+			Context:    ctx,
+			Repository: p.repository,
+			Flags:      p.getFlags(),
+		}),
 	})
 
+	model := cmdservetui.NewModel(p.cache.view.GetSteps())
+
 	p.cache.view.Run(&model, tea.WithContext(ctx))
-	if model.HasErr() {
-		p.SetErr(model.GetErr())
-	}
 
 	if p.cache.view.HasErr() {
 		p.SetErr(p.cache.view.GetErr())

@@ -1,31 +1,24 @@
 package cmdservetui
 
 import (
-	"solopg/app/shared/services/factory/millfilterlog"
+	"errors"
+	"os"
+
 	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )
 
-func (m *model[T]) View() tea.View {
-	mill := millfilterlog.New(millfilterlog.Template{
-		LogList: logs.ConvertStringablesToList(m.events),
-		Flags:   m.flags,
-	})
-
-	mill.Filter()
-
-	if m.HasErr() {
-		m.handleStreamError(m.GetErr())
+func (m *model) View() tea.View {
+	if m.steps.HasErr() {
+		cwd, cwderr := os.Getwd()
+		logs.SilentError("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, m.steps.GetErr()),
+		})
+	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
+		return current.View()
 	}
 
-	return tea.NewView(mill.GetJoinedStringList())
-}
-
-func (m *model[T]) makeLogList() []T {
-	list := make([]T, 0, len(m.events))
-	for _, event := range m.events {
-		list = append(list, event)
-	}
-	return list
+	return tea.NewView("")
 }
