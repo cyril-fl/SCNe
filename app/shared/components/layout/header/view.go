@@ -3,6 +3,7 @@ package header
 import (
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/style"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -87,9 +88,7 @@ func (p Header) getTitleGroup() string {
 		"",
 	)
 
-	return lipgloss.NewStyle().
-		Bold(true).
-		Render(view)
+	return style.Title.Render(view)
 }
 
 func (p *Header) getTitleGroupHeight() int {

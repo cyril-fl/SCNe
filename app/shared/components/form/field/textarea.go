@@ -3,6 +3,7 @@ package field
 import (
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/services/style"
 	"strings"
 
 	"charm.land/bubbles/v2/textarea"
@@ -44,9 +45,7 @@ func TextareaField(template TextareaTemplate) *textareaField {
 func (m *textareaField) View() tea.View {
 	err := ""
 	if m.GetError() != nil {
-		err = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("1")).
-			Render(m.GetError().Error())
+		err = style.Error.Render(m.GetError().Error())
 	}
 
 	if m.nolabel {
@@ -72,9 +71,7 @@ func (m *textareaField) getNoLabelView(input, err string) tea.View {
 }
 
 func (m *textareaField) getLabelView(input, err string) tea.View {
-	title := lipgloss.NewStyle().
-		Bold(true).
-		Render(m.Label())
+	title := style.Title.Render(m.Label())
 
 	return tea.NewView(
 		lipgloss.JoinVertical(

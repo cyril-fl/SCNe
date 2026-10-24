@@ -3,6 +3,7 @@ package navigation
 import (
 	pluminterface "github.com/cyril-fl/plum/interface"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/style"
 	"solopg/app/shared/types/primitive"
 
 	"solopg/app/cmdrun/types/size"
@@ -65,7 +66,7 @@ func (s *Section) SetSize(size size.Size) {
 func (s *Section) GetView() string {
 	list := s.GetList()
 	title := plumtransform.Uppercase(i19n.Localize(s.id))
-	title = lipgloss.NewStyle().Bold(true).Render(title)
+	title = style.Title.Render(title)
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,

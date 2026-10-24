@@ -7,6 +7,7 @@ import (
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/logs"
+	"solopg/app/shared/services/style"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -128,17 +129,13 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *selectField[T]) View() tea.View {
-	title := lipgloss.NewStyle().
-		Bold(true).
-		Render(m.Label())
+	title := style.Title.Render(m.Label())
 
 	options := m.options.View()
 
 	err := ""
 	if m.GetError() != nil {
-		err = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("1")).
-			Render(m.GetError().Error())
+		err = style.Error.Render(m.GetError().Error())
 	}
 
 	return tea.NewView(

@@ -4,6 +4,7 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	"solopg/app/shared/services/style"
 )
 
 func (m *Form) View() tea.View {
@@ -14,9 +15,7 @@ func (m *Form) View() tea.View {
 	}
 
 	if m.HasErr() {
-		err := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("1")).
-			Render("\n" + m.GetErr().Error())
+		err := style.Error.Render("\n" + m.GetErr().Error())
 
 		contents = append(contents, "\n"+err)
 	}
@@ -39,10 +38,7 @@ func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 		}
 
 		if m.HasErr() {
-			err := lipgloss.NewStyle().
-				Width(viewport.Width()).
-				Foreground(lipgloss.Color("1")).
-				Render("\n" + m.GetErr().Error())
+			err := style.Error.Width(viewport.Width()).Render("\n" + m.GetErr().Error())
 
 			height += lipgloss.Height(err)
 		}

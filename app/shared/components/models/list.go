@@ -2,7 +2,7 @@ package models
 
 import (
 	"charm.land/bubbles/v2/list"
-	"charm.land/lipgloss/v2"
+	"solopg/app/shared/services/style"
 )
 
 type Item[T any] struct {
@@ -36,7 +36,7 @@ func ConfigureList(menu *list.Model) {
 func SetListFocus(menu *list.Model, focused bool) {
 	delegate := list.NewDefaultDelegate()
 	if !focused {
-		inactiveColor := lipgloss.Color("#777777")
+		inactiveColor := style.Inactive.GetForeground()
 		delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.
 			Foreground(inactiveColor).
 			BorderForeground(inactiveColor)
