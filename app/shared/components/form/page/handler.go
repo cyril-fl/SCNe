@@ -23,7 +23,7 @@ func (p *Page) handleFormKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 	case plumtypes.KEY_ESC:
 		p.HandleEscape()
 		return nil
-	case plumtypes.CMD_ALT_ENTER:
+	case plumtypes.CMD_CTRL_ENTER:
 		return form.Send[form.Validate]()
 	default:
 		return p.handleModelUpdate(msg)
@@ -36,8 +36,8 @@ func (p *Page) handleListKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 		return p.handleKeyEsc()
 	case plumtypes.SHORT_CTRL_N:
 		return p.handleCtrlN()
-	case plumtypes.CMD_ALT_ENTER:
-		return p.handleAltEnter()
+	case plumtypes.CMD_CTRL_ENTER:
+		return p.handleCtrlEnter()
 	default:
 		return p.handleModelUpdate(msg)
 	}
@@ -86,7 +86,7 @@ func (p *Page) handleCtrlN() tea.Cmd {
 	return nil
 }
 
-func (p *Page) handleAltEnter() tea.Cmd {
+func (p *Page) handleCtrlEnter() tea.Cmd {
 	if p.form == nil {
 		p.EditItem()
 		return nil

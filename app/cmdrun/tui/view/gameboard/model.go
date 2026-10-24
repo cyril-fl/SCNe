@@ -14,6 +14,7 @@ import (
 
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
+	plumtypes "github.com/cyril-fl/plum/types"
 )
 
 // - Model - //
@@ -59,8 +60,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	isChatSection := m.state.Current() == CHAT_SECTION
 
 	var menucmd tea.Cmd
-	if isChatSection || isCloseForm {
-		menucmd = m.menu.HandleUpdate(msg)
+	if menumsg, ok := toMenuMsg(msg); ok && (isChatSection || isCloseForm) {
+		menucmd = m.menu.HandleUpdate(menumsg)
 	}
 
 	next, cmd := m.handleUpdate(msg)
@@ -89,6 +90,25 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	}
 
 	return m, nil
+}
+
+// toMenuMsg keeps plain arrows for the chat textarea and maps alt+arrows to menu navigation.
+func toMenuMsg(msg tea.Msg) (tea.Msg, bool) {
+	key, ok := msg.(tea.KeyPressMsg)
+	if !ok {
+		return msg, true
+	}
+
+	switch plumtypes.Key(key.String()) {
+	case plumtypes.KEY_UP, plumtypes.KEY_DOWN:
+		return nil, false
+	case plumtypes.KEY_ALT_UP:
+		return tea.KeyPressMsg{Code: tea.KeyUp}, true
+	case plumtypes.KEY_ALT_DOWN:
+		return tea.KeyPressMsg{Code: tea.KeyDown}, true
+	}
+
+	return msg, true
 }
 
 func makeChat(gameSession *session.GameSession) *chat.Chat {

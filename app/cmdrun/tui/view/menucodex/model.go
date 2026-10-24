@@ -72,7 +72,7 @@ func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 		m.isSubviewOpen = true
 	case tea.KeyPressMsg:
 		switch plumtypes.Key(msg.String()) {
-		case plumtypes.CMD_ALT_ENTER:
+		case plumtypes.CMD_CTRL_ENTER:
 			if selected := m.getSelectedPage(); selected != nil {
 				return form.OpenPage(selected.id)
 			}

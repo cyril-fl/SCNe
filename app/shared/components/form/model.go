@@ -56,6 +56,15 @@ func (m *Form) SetSendKey(key plumtypes.Key) *Form {
 	return m
 }
 
+func (m *Form) SetWidth(width int) *Form {
+	for _, f := range m.fields {
+		if resizable, ok := f.(interface{ SetWidth(int) }); ok {
+			resizable.SetWidth(width)
+		}
+	}
+	return m
+}
+
 func (m *Form) getFieldsErrors() []error {
 	fieldErrors := make([]error, 0, len(m.fields))
 	for _, f := range m.fields {

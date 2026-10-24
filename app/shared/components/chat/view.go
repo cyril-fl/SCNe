@@ -77,6 +77,7 @@ func (m Chat) GetFooter() []string {
 
 func (c *Chat) SetSize(size size.Size) {
 	c.size = size
+	c.form.SetWidth(size.GetWidth())
 }
 
 // Methods
@@ -170,10 +171,11 @@ func (c *Chat) makeNotification() string {
 func makeForm() *form.Form {
 	return form.
 		New(
-			field.TextField(field.TextTemplate[string]{
+			field.TextareaField(field.TextareaTemplate{
 				ID:          "message",
 				NoLabel:     true,
 				Placeholder: i19n.Localize("chat.placeholder"),
+				Height:      3,
 			}),
 		).
 		SetSendKey(plumtypes.KEY_ENTER).

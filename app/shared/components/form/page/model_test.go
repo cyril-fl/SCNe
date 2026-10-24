@@ -57,26 +57,26 @@ func TestPageEnterOpensSelectedEntry(t *testing.T) {
 		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
-	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
+	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
 	if got := page.GetForm().GetFieldValue("name"); got != "loaded" {
 		t.Fatalf("expected selected value to be loaded, got %v", got)
 	}
 }
 
-func TestPageAltEnterDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
+func TestPageCtrlEnterDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
 		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
-	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
+	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
 	if page.IsFormOpen() {
-		t.Fatal("expected Alt+Enter on an empty list not to open a form")
+		t.Fatal("expected Ctrl+Enter on an empty list not to open a form")
 	}
 }
 
-func TestPageAltEnterDoesNotOpenLockedEntry(t *testing.T) {
+func TestPageCtrlEnterDoesNotOpenLockedEntry(t *testing.T) {
 	page := New(Template{
 		Items: func() []Item {
 			return []Item{{Name: "template", Locked: true, Values: map[string]string{"name": "template"}}}
@@ -117,7 +117,7 @@ func TestPageListNavigationAndEscape(t *testing.T) {
 	if page.GetList().Index() != 1 {
 		t.Fatalf("expected list cursor 1, got %d", page.GetList().Index())
 	}
-	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
+	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
 	page.Update(testKey(tea.KeyEsc, 0))
 	if page.IsFormOpen() {
 		t.Fatal("expected Escape to close the form")
@@ -148,7 +148,7 @@ func TestPageSubmitCallsSave(t *testing.T) {
 	}
 }
 
-func TestPageAltEnterValidates(t *testing.T) {
+func TestPageCtrlEnterValidates(t *testing.T) {
 	called := false
 	page := New(Template{
 		Items:   func() []Item { return nil },
@@ -160,13 +160,13 @@ func TestPageAltEnterValidates(t *testing.T) {
 	})
 
 	page.EditNewItem()
-	cmd := page.Update(testKey(tea.KeyEnter, tea.ModAlt))
+	cmd := page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
 	if cmd == nil {
-		t.Fatal("expected Alt+Enter to request validation")
+		t.Fatal("expected Ctrl+Enter to request validation")
 	}
 	page.Update(cmd())
 	if !called {
-		t.Fatal("expected Alt+Enter to submit the form")
+		t.Fatal("expected Ctrl+Enter to submit the form")
 	}
 }
 

@@ -36,6 +36,8 @@ const (
 	INPUT kind = "input"
 	// FieldTypeSelect represents a select field.
 	SELECT kind = "select"
+	// FieldTypeTextarea represents a multi-line text field.
+	TEXTAREA kind = "textarea"
 )
 
 // newField creates a form field with an automatically generated identifier.

@@ -4,7 +4,7 @@ package shortcut
 
 var (
 	EDIT = NewShortcut(Template{
-		Command: AltEnter,
+		Command: CtrlEnter,
 		Label:   "edit",
 	})
 	NEW = NewShortcut(Template{
@@ -12,7 +12,7 @@ var (
 		Label:   "new",
 	})
 	OPEN = NewShortcut(Template{
-		Command: AltEnter,
+		Command: CtrlEnter,
 		Label:   "open",
 	})
 	QUIT = NewShortcut(Template{
@@ -20,7 +20,7 @@ var (
 		Label:   "quit",
 	})
 	SAVEFORM = NewShortcut(Template{
-		Command: AltEnter,
+		Command: CtrlEnter,
 		Label:   "save:form",
 	})
 	SAVE = NewShortcut(Template{
@@ -36,7 +36,7 @@ var (
 		Label:   "send",
 	})
 	THROW = NewShortcut(Template{
-		Command: AltEnter,
+		Command: CtrlEnter,
 		Label:   "roll",
 	})
 )

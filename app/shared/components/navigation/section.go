@@ -84,7 +84,7 @@ func (s *Section) HandleUpdate(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		switch plumtypes.Key(msg.String()) {
-		case plumtypes.CMD_SHIFT_ENTER, plumtypes.CMD_ALT_ENTER:
+		case plumtypes.CMD_SHIFT_ENTER, plumtypes.CMD_CTRL_ENTER:
 			cmds := []tea.Cmd{}
 			if s.handlerEnterInput != nil {
 				cmds = append(cmds, s.handlerEnterInput())
