@@ -42,22 +42,6 @@ type Modifier struct {
 	Value int  `yaml:"value"`
 }
 
-/*
-LOW : Pour quoi EFFECT a be soiin d'annotation, pas CHARECTR dans card.go
-pourquoi :
-
-	type Effect struct {
-		primitive.Descriptible `yaml:"description"`
-		Modifier               Modifier `yaml:"modifier"`
-	}
-
-et pas :
-
-	type Effect struct {
-		primitive.Descriptible `yaml:"description"`
-		Modifier `yaml:"modifier"`
-	}
-*/
 type Effect struct {
 	plumprimitive.Descriptible `yaml:"description"`
 	Modifier                   Modifier `yaml:"modifier"`
