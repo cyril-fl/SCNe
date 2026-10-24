@@ -1,3 +1,5 @@
+.PHONY: setup build run test up
+
 ENV ?= dev
 
 APP_NAME ?= solopg
@@ -20,10 +22,16 @@ setup:
 build:
 	go build -o $(APP_NAME) -ldflags "$(LDFLAGS)" .
 
-run:
-	go run -ldflags "$(LDFLAGS)" .
+# run:
+# 	go run -ldflags "$(LDFLAGS)" .
 
 test:
 	@CONFIG_FILE=$(CURDIR)/config/.config.yaml \
 	GOCACHE=$${GOCACHE:-/tmp/solopg-go-cache} \
 	go test -exec "sh -c 'cd \"$(CURDIR)\" && exec \"\$$@\"' sh" $(ARGS)
+
+up: 
+	@colima start && docker compose up -d
+
+down:
+	@docker compose down && colima stop
