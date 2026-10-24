@@ -19,7 +19,7 @@ type yamlConfig struct {
 	Values []string `yaml:"values"`
 }
 
-var folderConfigPath = config.Current.Documents.Folders.Hint
+var folderConfigPath = config.GetConfig().Documents.Folders.Hint
 
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 

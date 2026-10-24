@@ -44,7 +44,7 @@ func (env *MongoEnvironment) GetEnvURI() string {
 
 func (env *MongoEnvironment) GetEnvDBName() string {
 	if env.dbname == "" {
-		env.dbname = config.Current.Name
+		env.dbname = config.GetConfig().Name
 	}
 
 	return env.dbname

@@ -36,7 +36,7 @@ func setup(db *mango.Mongo) error {
 	*/
 
 	logger := initloggerepository.Process(db)
-	translation := initI19n.Process(config.Current.I18n, "")
+	translation := initI19n.Process(config.GetConfig().I18n, "")
 
 	processes := []plumprimitive.Processable{
 		logger,

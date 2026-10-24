@@ -18,7 +18,7 @@ type yamlConfig struct {
 	BaseStats Stats  `yaml:"baseStats"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Stats
+var fileConfigPath = config.GetConfig().Documents.Files.Stats
 
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 

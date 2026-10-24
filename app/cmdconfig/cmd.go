@@ -9,5 +9,5 @@ import (
 )
 
 func RunCmdConfig(cobra *cobra.Command, args []string) {
-	plumdebug.Json(config.Current)
+	plumdebug.Json(config.GetConfig())
 }

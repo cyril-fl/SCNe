@@ -32,7 +32,7 @@ type yamlConfig struct {
 	Wallet      wallet.Wallet       `yaml:"wallet"`
 }
 
-var folderConfigPath = config.Current.Documents.Folders.Characters
+var folderConfigPath = config.GetConfig().Documents.Folders.Characters
 
 type cacheValue struct {
 	Configs     []yamlConfig

@@ -14,7 +14,7 @@ type yamlConfig struct {
 	Values []Variety `yaml:"values"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Variety
+var fileConfigPath = config.GetConfig().Documents.Files.Variety
 
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 

@@ -17,7 +17,7 @@ type yamlConfig struct {
 	Bonus       []stats.Modifier `yaml:"bonus"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Races
+var fileConfigPath = config.GetConfig().Documents.Files.Races
 
 type cacheValue struct {
 	Configs     []yamlConfig

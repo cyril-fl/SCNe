@@ -22,7 +22,7 @@ type yamlConfig struct {
 	Effects     []stats.Effect `yaml:"effects"`
 }
 
-var folderConfigPath = config.Current.Documents.Folders.Locations
+var folderConfigPath = config.GetConfig().Documents.Folders.Locations
 
 type cacheValue struct {
 	Configs     []yamlConfig

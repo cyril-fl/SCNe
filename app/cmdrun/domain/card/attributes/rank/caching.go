@@ -14,7 +14,7 @@ type yamlConfig struct {
 	Values []Rank `yaml:"values"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Ranks
+var fileConfigPath = config.GetConfig().Documents.Files.Ranks
 
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 

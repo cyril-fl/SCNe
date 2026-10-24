@@ -62,6 +62,6 @@ func setI19n() {
 	if !LOCALIZE_ON {
 		return
 	}
-	translation := initI19n.Process(config.Current.I18n, "")
+	translation := initI19n.Process(config.GetConfig().I18n, "")
 	translation.Run()
 }

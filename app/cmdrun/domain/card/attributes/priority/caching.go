@@ -14,7 +14,7 @@ type yamlConfig struct {
 	Weight int    `yaml:"weight"`
 }
 
-var filePath = config.Current.Documents.Files.Priorities
+var filePath = config.GetConfig().Documents.Files.Priorities
 
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 

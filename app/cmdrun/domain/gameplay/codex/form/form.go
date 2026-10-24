@@ -133,7 +133,7 @@ func getFormRankOptions() []models.Item[string] {
 
 // Helpers
 func getFormOracle() []models.Item[string] {
-	values, err := oracle.ListFromFolder(config.Current.Documents.Folders.Encounters)
+	values, err := oracle.ListFromFolder(config.GetConfig().Documents.Folders.Encounters)
 	if err != nil {
 		return nil
 	}

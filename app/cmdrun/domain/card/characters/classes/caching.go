@@ -17,7 +17,7 @@ type yamlConfig struct {
 	ArmorSet string           `yaml:"armor_set"`
 }
 
-var filePath = config.Current.Documents.Files.Classes
+var filePath = config.GetConfig().Documents.Files.Classes
 
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 

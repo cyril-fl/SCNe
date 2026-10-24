@@ -15,7 +15,7 @@ type yamlConfig struct {
 	Default Rarity   `yaml:"default"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Rarity
+var fileConfigPath = config.GetConfig().Documents.Files.Rarity
 
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 

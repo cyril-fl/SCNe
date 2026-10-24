@@ -18,33 +18,40 @@ type config struct {
 	Documents structureDocument `yaml:"documents"`
 }
 
-// TODO remplacer par un getter.
-var Current config
+var current config
 
-func load() (*config, error) {
+func GetConfig() config {
+	return current
+}
+
+func load() {
 	file := strings.TrimSpace(os.Getenv("CONFIG_FILE"))
 
 	loader := plummillload.New(file)
-	current := loader.LoadFromFile[config]()
+	loaded := loader.LoadFromFile[config]()
+
+	var e error
+
 	if loader.HasErr() {
-		return nil, logs.RawError("%w", loader.GetErr())
+		e = logs.RawError("%w", loader.GetErr())
 	}
 
-	if err := current.I18n.Validate(); err != nil {
-		return nil, logs.Error("error.invalid", map[string]any{
+	if err := loaded.I18n.Validate(); err != nil {
+		e = logs.Error("error.invalid", map[string]any{
 			"Subject": "config",
 			"Error":   err,
 		})
+		panic(e)
 	}
 
-	return current, nil
+	if e != nil {
+		panic(e)
+	}
+
+	current = *loaded
 }
 
 func init() {
 	godotenv.Load()
-	loaded, err := load()
-	if err != nil {
-		panic(err)
-	}
-	Current = *loaded
+	load()
 }

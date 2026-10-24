@@ -42,15 +42,11 @@ func TestGetEnvURIWithoutCredentials(t *testing.T) {
 }
 
 func TestGetEnvDBNameUsesConfiguredNameAsFallback(t *testing.T) {
-	original := config.Current.Name
-	t.Cleanup(func() { config.Current.Name = original })
-	config.Current.Name = "solopg-test"
-
 	env := NewEnvironment()
-	if got, want := env.GetEnvDBName(), "solopg-test"; got != want {
+	if got, want := env.GetEnvDBName(), config.GetConfig().Name; got != want {
 		t.Fatalf("GetEnvDBName() = %q, want %q", got, want)
 	}
-	if env.dbname != "solopg-test" {
+	if env.dbname != config.GetConfig().Name {
 		t.Fatalf("GetEnvDBName() did not cache fallback name: %q", env.dbname)
 	}
 

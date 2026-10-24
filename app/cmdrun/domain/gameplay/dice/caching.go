@@ -17,7 +17,7 @@ type yamlConfig struct {
 	Sides int    `yaml:"sides"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.Dice
+var fileConfigPath = config.GetConfig().Documents.Files.Dice
 
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 

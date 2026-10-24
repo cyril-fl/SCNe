@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var c = config.Current
+var c = config.GetConfig()
 var cmd = c.Commands
 
 var cmdRoot = &cobra.Command{

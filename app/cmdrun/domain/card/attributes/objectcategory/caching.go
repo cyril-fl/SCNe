@@ -14,7 +14,7 @@ type yamlConfig struct {
 	Values []Category `yaml:"values"`
 }
 
-var fileConfigPath = config.Current.Documents.Files.ObjectsCategory
+var fileConfigPath = config.GetConfig().Documents.Files.ObjectsCategory
 
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
