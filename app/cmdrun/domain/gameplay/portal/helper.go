@@ -3,6 +3,8 @@ package portal
 import (
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/dice"
+	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/logs"
 )
 
@@ -22,4 +24,9 @@ func Teleport() (*locations.Location, error) {
 	selectedLocation := list[roll-1]
 
 	return &selectedLocation, nil
+}
+
+// Travel moves the session to the codex location entryID.
+func Travel(gameSession *session.GameSession, entryID id.ID) {
+	gameSession.UpdateLocation(gameSession.State.Codex.Locations.Find(entryID))
 }

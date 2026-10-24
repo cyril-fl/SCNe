@@ -64,7 +64,7 @@ func (m model) GetFooter() []string {
 func makeViewState(params UiParams) statemachine.ViewState[state] {
 	params.Session.State.Codex.EnsureInitialized()
 
-	codexpage := menucodex.NewFormPages(params.Session.State.Codex)
+	codexpage := menucodex.NewFormPages(params.Session)
 
 	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Session)}
 

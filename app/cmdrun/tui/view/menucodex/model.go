@@ -4,7 +4,10 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	codexform "solopg/app/cmdrun/domain/gameplay/codex/form"
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	"solopg/app/cmdrun/domain/gameplay/portal"
+	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/tui/shortcut"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/components/form"
 	formpage "solopg/app/shared/components/form/page"
 	"solopg/app/shared/components/models"
@@ -85,17 +88,28 @@ func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 
 // NewFormPages creates the pages owned by the gameboard state machine. The
 // side menu only selects one of these page IDs.
-func NewFormPages(c *codex.Codex) map[string]*formpage.Page {
+func NewFormPages(gameSession *session.GameSession) map[string]*formpage.Page {
+	c := gameSession.State.Codex
 	return map[string]*formpage.Page{
-		"codex.locations": newpage(c.Locations, codexform.GetLocationForm),
-		"codex.npcs":      newpage(c.Npcs, codexform.GetNpcForm),
-		"codex.beastiary": newpage(c.Beastiary, codexform.GetBeastiaryForm),
-		"codex.objects":   newpage(c.Objects, codexform.GetObjectForm),
-		"codex.quest":     newpage(c.Quest, codexform.GetQuestForm),
+		"codex.locations": newpage(c.Locations, codexform.GetLocationForm, newTravelAction(gameSession)),
+		"codex.npcs":      newpage(c.Npcs, codexform.GetNpcForm, nil),
+		"codex.beastiary": newpage(c.Beastiary, codexform.GetBeastiaryForm, nil),
+		"codex.objects":   newpage(c.Objects, codexform.GetObjectForm, nil),
+		"codex.quest":     newpage(c.Quest, codexform.GetQuestForm, nil),
 	}
 }
 
-func newpage(table codextable.Table, makeForm form.Makefunc) *formpage.Page {
+// newTravelAction sets the selected codex location as the session's current location.
+func newTravelAction(gameSession *session.GameSession) *formpage.Action {
+	return &formpage.Action{
+		Label: "travel",
+		Run: func(entryID id.ID) {
+			portal.Travel(gameSession, entryID)
+		},
+	}
+}
+
+func newpage(table codextable.Table, makeForm form.Makefunc, action *formpage.Action) *formpage.Page {
 	return formpage.New(formpage.Template{
 		Items: func() []formpage.Item {
 
@@ -116,5 +130,6 @@ func newpage(table codextable.Table, makeForm form.Makefunc) *formpage.Page {
 		},
 		NewForm: makeForm,
 		Save:    table.SaveFromMap,
+		Action:  action,
 	})
 }

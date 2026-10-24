@@ -26,6 +26,14 @@ type Template struct {
 	NewForm func(values map[string]string) *form.Form
 	// Save receives a zero ID for a new entry.
 	Save func(entryID id.ID, values map[string]string) error
+	// Action is optional.
+	Action *Action
+}
+
+// Action runs on the selected entry with Ctrl+Enter while the list is shown.
+type Action struct {
+	Label string
+	Run   func(entryID id.ID)
 }
 
 type Page struct {
@@ -34,6 +42,7 @@ type Page struct {
 	items   func() []Item
 	newForm func(map[string]string) *form.Form
 	save    func(id.ID, map[string]string) error
+	action  *Action
 
 	form    *form.Form
 	entryID id.ID
@@ -45,6 +54,7 @@ func New(template Template) *Page {
 		items:   template.Items,
 		newForm: template.NewForm,
 		save:    template.Save,
+		action:  template.Action,
 	}
 
 	p.intList()
@@ -69,17 +79,30 @@ func (p *Page) GetForm() *form.Form {
 
 func (p *Page) GetFooter() []string {
 	isFormOpen := p.IsFormOpen()
+	isLocked := p.isSelectedLocked()
+	hasAction := p.action != nil
 
 	switch {
 	case isFormOpen && p.form.CanRepeat():
 		return []string{shortcut.SAVEFORM.String(), shortcut.ADD.String()}
 	case isFormOpen:
 		return []string{shortcut.SAVEFORM.String()}
-	case p.isSelectedLocked():
+	case isLocked && hasAction:
+		return []string{shortcut.NEW.String(), p.getActionFooter()}
+	case isLocked:
 		return []string{shortcut.NEW.String()}
+	case hasAction:
+		return []string{shortcut.NEW.String(), shortcut.EDIT.String(), p.getActionFooter()}
 	default:
 		return []string{shortcut.NEW.String(), shortcut.EDIT.String()}
 	}
+}
+
+func (p *Page) getActionFooter() string {
+	return shortcut.NewShortcut(shortcut.Template{
+		Command: shortcut.CtrlEnter,
+		Label:   p.action.Label,
+	}).String()
 }
 
 func (p *Page) isSelectedLocked() bool {

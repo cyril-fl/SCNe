@@ -18,6 +18,8 @@ add:
   other: "ajouter"
 navigate:
   other: "naviguer"
+travel:
+  other: "voyager"
 new:
   other: "nouveau"
 

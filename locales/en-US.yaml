@@ -18,6 +18,8 @@ add:
   other: "add"
 navigate:
   other: "navigate"
+travel:
+  other: "travel"
 new:
   other: "new"
 

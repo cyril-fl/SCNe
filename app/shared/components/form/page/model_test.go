@@ -51,33 +51,33 @@ func TestPageCtrlNOpensNewFormFromEmptyPage(t *testing.T) {
 	}
 }
 
-func TestPageEnterOpensSelectedEntry(t *testing.T) {
+func TestPageCtrlEOpensSelectedEntry(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return []Item{{Name: "first", Values: map[string]string{"name": "loaded"}}} },
 		NewForm: testForm,
 		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
-	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
+	page.Update(testKey('e', tea.ModCtrl))
 	if got := page.GetForm().GetFieldValue("name"); got != "loaded" {
 		t.Fatalf("expected selected value to be loaded, got %v", got)
 	}
 }
 
-func TestPageCtrlEnterDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
+func TestPageCtrlEDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
 		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
-	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
+	page.Update(testKey('e', tea.ModCtrl))
 	if page.IsFormOpen() {
-		t.Fatal("expected Ctrl+Enter on an empty list not to open a form")
+		t.Fatal("expected Ctrl+E on an empty list not to open a form")
 	}
 }
 
-func TestPageCtrlEnterDoesNotOpenLockedEntry(t *testing.T) {
+func TestPageCtrlEDoesNotOpenLockedEntry(t *testing.T) {
 	page := New(Template{
 		Items: func() []Item {
 			return []Item{{Name: "template", Locked: true, Values: map[string]string{"name": "template"}}}
@@ -118,7 +118,7 @@ func TestPageListNavigationAndEscape(t *testing.T) {
 	if page.GetList().Index() != 1 {
 		t.Fatalf("expected list cursor 1, got %d", page.GetList().Index())
 	}
-	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
+	page.Update(testKey('e', tea.ModCtrl))
 	page.Update(testKey(tea.KeyEsc, 0))
 	if page.IsFormOpen() {
 		t.Fatal("expected Escape to close the form")
@@ -231,5 +231,24 @@ func TestPageSaveErrorKeepsFormOpen(t *testing.T) {
 	}
 	if !page.IsFormOpen() || !page.GetForm().HasErr() {
 		t.Fatal("expected form to stay open with the save error")
+	}
+}
+
+func TestPageCtrlEnterRunsActionOnSelectedEntry(t *testing.T) {
+	entryID := id.New()
+	var got id.ID
+	page := New(Template{
+		Items:   func() []Item { return []Item{{ID: entryID, Name: "first"}} },
+		NewForm: testForm,
+		Save:    func(id.ID, map[string]string) error { return nil },
+		Action:  &Action{Run: func(selected id.ID) { got = selected }},
+	})
+
+	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))
+	if got != entryID {
+		t.Fatalf("expected action to receive %v, got %v", entryID, got)
+	}
+	if page.IsFormOpen() {
+		t.Fatal("expected Ctrl+Enter not to open a form")
 	}
 }

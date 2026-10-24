@@ -141,6 +141,14 @@ func (tb *LocationsTable) FormEntries() []Entry {
 	return entries
 }
 
+func (tb *LocationsTable) Find(entryID id.ID) *locations.Location {
+	index := slices.IndexFunc(tb.Entries, func(entry locationsentry) bool { return entry.ID == entryID })
+	if index < 0 {
+		return nil
+	}
+	return tb.Entries[index].Location
+}
+
 func (tb *LocationsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry locationsentry) bool { return entry.ID == entryID })
 	if entryID.IsZero() || index < 0 {

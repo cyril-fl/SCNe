@@ -36,6 +36,8 @@ func (p *Page) handleListKeyPress(msg tea.KeyPressMsg) tea.Cmd {
 		return p.handleKeyEsc()
 	case plumtypes.SHORT_CTRL_N:
 		return p.handleCtrlN()
+	case "ctrl+e":
+		return p.handleCtrlE()
 	case plumtypes.CMD_CTRL_ENTER:
 		return p.handleCtrlEnter()
 	default:
@@ -87,11 +89,25 @@ func (p *Page) handleCtrlN() tea.Cmd {
 }
 
 func (p *Page) handleCtrlEnter() tea.Cmd {
-	if p.form == nil {
-		p.EditItem()
+	if p.action == nil {
 		return nil
 	}
-	return form.Send[form.Validate]()
+
+	list := p.GetList()
+	selected, ok := list.SelectedItem().(models.Item[Item])
+	if !ok {
+		return nil
+	}
+
+	p.action.Run(selected.Value().ID)
+	return nil
+}
+
+func (p *Page) handleCtrlE() tea.Cmd {
+	if p.form == nil {
+		p.EditItem()
+	}
+	return nil
 }
 
 func (p *Page) intList() {

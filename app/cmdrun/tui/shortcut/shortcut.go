@@ -13,6 +13,7 @@ const (
 	CtrlQ      Command = "^Q"
 	CtrlS      Command = "^S"
 	CtrlN      Command = "^N"
+	CtrlE      Command = "^E"
 	ShiftEnter Command = "⇧↳"
 	CtrlEnter  Command = "^↳"
 	Enter      Command = "↳"

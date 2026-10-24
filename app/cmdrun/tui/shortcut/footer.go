@@ -8,7 +8,7 @@ var (
 		Label:   "add",
 	})
 	EDIT = NewShortcut(Template{
-		Command: CtrlEnter,
+		Command: CtrlE,
 		Label:   "edit",
 	})
 	NAVIGATE = NewShortcut(Template{
