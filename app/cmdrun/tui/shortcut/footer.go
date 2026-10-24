@@ -3,6 +3,10 @@ package shortcut
 // i19n.Localize("cmd.ctrl+n:new"
 
 var (
+	ADD = NewShortcut(Template{
+		Command: CtrlPlus,
+		Label:   "add",
+	})
 	EDIT = NewShortcut(Template{
 		Command: CtrlEnter,
 		Label:   "edit",

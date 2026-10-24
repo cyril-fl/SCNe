@@ -68,18 +68,18 @@ func (p *Page) GetForm() *form.Form {
 }
 
 func (p *Page) GetFooter() []string {
-	res := []string{}
-	if p.form != nil {
-		res = append(res, shortcut.SAVEFORM.String())
-		return res
-	}
+	isFormOpen := p.IsFormOpen()
 
-	res = append(res, shortcut.NEW.String())
-	if !p.isSelectedLocked() {
-		res = append(res, shortcut.EDIT.String())
+	switch {
+	case isFormOpen && p.form.CanRepeat():
+		return []string{shortcut.SAVEFORM.String(), shortcut.ADD.String()}
+	case isFormOpen:
+		return []string{shortcut.SAVEFORM.String()}
+	case p.isSelectedLocked():
+		return []string{shortcut.NEW.String()}
+	default:
+		return []string{shortcut.NEW.String(), shortcut.EDIT.String()}
 	}
-
-	return res
 }
 
 func (p *Page) isSelectedLocked() bool {

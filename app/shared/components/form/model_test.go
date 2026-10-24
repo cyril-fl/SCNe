@@ -2,6 +2,7 @@ package form
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -175,5 +176,35 @@ func TestFormGetFieldScrollArea(t *testing.T) {
 	f.focusOnIndex(1)
 	if top, height := f.GetFieldScrollArea(vp); top != 1 || height != 1 {
 		t.Fatalf("GetFieldScrollArea() = %d, %d; want 1, 1", top, height)
+	}
+}
+
+func TestFormRepeat(t *testing.T) {
+	f := New(&testField{id: "name"}, Repeat(RepeatTemplate{
+		ID: "effect",
+		Make: func(index int) []Field {
+			return []Field{
+				&testField{id: fmt.Sprintf("effect.%d.name", index), value: "n"},
+				&testField{id: fmt.Sprintf("effect.%d.stat", index), value: "s"},
+			}
+		},
+	})).Focus()
+	key := tea.KeyPressMsg{Code: '=', Mod: tea.ModCtrl}
+
+	f.Update(key)
+	if f.CanRepeat() || len(f.GetValuesAsMappedString()) != 3 {
+		t.Fatal("ctrl+= outside the repeat field added a group")
+	}
+
+	f.Update(NextField{})
+	f.Update(NextField{})
+	if !f.CanRepeat() {
+		t.Fatal("NextField did not walk into the repeated fields")
+	}
+
+	f.Update(key)
+	values := f.GetValuesAsMappedString()
+	if len(values) != 5 || values["effect.1.stat"] != "s" {
+		t.Fatalf("ctrl+= did not add a group: %v", values)
 	}
 }

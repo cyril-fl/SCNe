@@ -17,6 +17,7 @@ const (
 	CtrlEnter  Command = "^↳"
 	Enter      Command = "↳"
 	AltArrows  Command = "⌥↑↓"
+	CtrlPlus   Command = "^+"
 )
 
 type Template struct {

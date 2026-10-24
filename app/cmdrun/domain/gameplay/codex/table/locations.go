@@ -2,16 +2,20 @@ package codextable
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
+	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"strconv"
 	"time"
 
+	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
@@ -69,6 +73,7 @@ func (tb *LocationsTable) locationFromMap(values map[string]string) (*locations.
 		Description: values["description"],
 		Rarity:      rarity.Default(),
 		Variety:     variety.MakeDefault("location_card"),
+		Effects:     effectsFromValues(values),
 	})
 
 	if err != nil {
@@ -76,6 +81,34 @@ func (tb *LocationsTable) locationFromMap(values map[string]string) (*locations.
 	}
 
 	return location, nil
+}
+
+// effectsFromValues reads the effect.<i>.* form groups: each filled stat becomes one effect.
+func effectsFromValues(values map[string]string) []stats.Effect {
+	effects := []stats.Effect{}
+	for i := 0; ; i++ {
+		prefix := fmt.Sprintf("effect.%d.", i)
+		name, ok := values[prefix+"name"]
+		if !ok {
+			return effects
+		}
+
+		for _, stat := range stats.List() {
+			raw := values[prefix+stat.String()]
+			if raw == "" {
+				continue
+			}
+
+			value, _ := strconv.Atoi(raw)
+			effects = append(effects, stats.Effect{
+				Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
+					Name:        name,
+					Description: values[prefix+"description"],
+				}),
+				Modifier: stats.Modifier{Stat: stat, Value: value},
+			})
+		}
+	}
 }
 
 func (tb *LocationsTable) Add(location *locations.Location) {
@@ -93,10 +126,17 @@ func (tb *LocationsTable) FormEntries() []Entry {
 			continue
 		}
 		name, description := entry.Location.GetName(), entry.Location.GetDescription()
-		entries = append(entries, newEntry(entry.ID, name, description, map[string]string{
+		values := map[string]string{
 			"name":        name,
 			"description": description,
-		}, locations.IsLocked(name)))
+		}
+		for i, effect := range entry.Location.Effects {
+			prefix := fmt.Sprintf("effect.%d.", i)
+			values[prefix+"name"] = effect.GetName()
+			values[prefix+"description"] = effect.GetDescription()
+			values[prefix+effect.Modifier.Stat.String()] = strconv.Itoa(effect.Modifier.Value)
+		}
+		entries = append(entries, newEntry(entry.ID, name, description, values, locations.IsLocked(name)))
 	}
 	return entries
 }

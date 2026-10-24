@@ -3,6 +3,7 @@ package form
 import (
 	"errors"
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	"maps"
 	"solopg/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
@@ -45,6 +46,10 @@ func (m *Form) GetValuesAsMappedString() map[string]string {
 	formValues := make(map[string]string)
 
 	for _, f := range m.fields {
+		if r, ok := f.(*repeatField); ok {
+			maps.Copy(formValues, r.group.GetValuesAsMappedString())
+			continue
+		}
 		formValues[f.ID()] = f.GetValueAsString()
 	}
 
@@ -84,6 +89,16 @@ func (m *Form) getCurrentFieldIndex() int {
 	return -1
 }
 
+// CanRepeat reports whether the focused field is a Repeat, which then accepts alt+"+".
+func (m *Form) CanRepeat() bool {
+	index := m.getCurrentFieldIndex()
+	if index < 0 {
+		return false
+	}
+	_, ok := m.fields[index].(*repeatField)
+	return ok
+}
+
 func (m *Form) SetAutoSubmit(autoSubmit bool) *Form {
 	m.autoSubmit = autoSubmit
 	return m
@@ -109,12 +124,22 @@ func (m *Form) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		return m.handleKeyPressMsg(msg)
 	case NextField:
+		if r, ok := m.fields[currentIndex].(*repeatField); ok && r.next() {
+			return m, nil
+		}
 		if m.isLastField() && m.autoSubmit {
 			return m, Send[Validate]()
 		}
 		return m.focusOnIndex(currentIndex + 1), nil
 	case PreviousField:
-		return m.focusOnIndex(currentIndex - 1), nil
+		if r, ok := m.fields[currentIndex].(*repeatField); ok && r.previous() {
+			return m, nil
+		}
+		m.focusOnIndex(currentIndex - 1)
+		if r, ok := m.fields[m.getCurrentFieldIndex()].(*repeatField); ok {
+			r.focusLast()
+		}
+		return m, nil
 
 	}
 

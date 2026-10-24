@@ -1,6 +1,7 @@
 package codexform
 
 import (
+	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/priority"
 	"solopg/app/cmdrun/domain/card/attributes/rank"
@@ -19,7 +20,7 @@ import (
 
 // - NPC Form - //
 func GetNpcForm(values map[string]string) *form.Form {
-	statsFields := getFormStatsFields(values)
+	statsFields := getFormStatsFields(values, "")
 	encounter := values["encounter"]
 	if encounter == "" {
 		encounter = "encounter_normal"
@@ -38,7 +39,7 @@ func GetNpcForm(values map[string]string) *form.Form {
 
 // - Beast Form - //
 func GetBeastiaryForm(values map[string]string) *form.Form {
-	statsFields := getFormStatsFields(values)
+	statsFields := getFormStatsFields(values, "")
 	encounter := values["encounter"]
 	if encounter == "" {
 		encounter = "encounter_normal"
@@ -58,7 +59,33 @@ func GetLocationForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
+		form.Repeat(form.RepeatTemplate{
+			ID:    "effect",
+			Count: countEffects(values),
+			Make: func(index int) []form.Field {
+				return getEffectFields(values, index)
+			},
+		}),
 	).Focus()
+}
+
+func countEffects(values map[string]string) int {
+	count := 0
+	for {
+		if _, ok := values[fmt.Sprintf("effect.%d.name", count)]; !ok {
+			return count
+		}
+		count++
+	}
+}
+
+func getEffectFields(values map[string]string, index int) []form.Field {
+	prefix := fmt.Sprintf("effect.%d.", index)
+	fields := []form.Field{
+		field.TextField(field.TextTemplate[string]{ID: prefix + "name", Label: "field.effect.name", Defaultvalue: values[prefix+"name"], Validator: nil, Required: false}),
+		field.TextField(field.TextTemplate[string]{ID: prefix + "description", Label: "field.effect.description", Defaultvalue: values[prefix+"description"], Validator: nil, Required: false}),
+	}
+	return append(fields, getFormStatsFields(values, prefix)...)
 }
 
 // - Object Form - //
@@ -146,13 +173,13 @@ func getFormOracle() []models.Item[string] {
 	return items
 }
 
-func getFormStatsFields(values map[string]string) []form.Field {
+func getFormStatsFields(values map[string]string, prefix string) []form.Field {
 	fields := make([]form.Field, 0)
 	for _, value := range stats.List() {
 		fields = append(fields, field.TextField(field.TextTemplate[string]{
-			ID:           value.String(),
+			ID:           prefix + value.String(),
 			Label:        i19n.Localize(value.String()),
-			Defaultvalue: values[value.String()],
+			Defaultvalue: values[prefix+value.String()],
 			Validator:    validateStat,
 		}))
 	}

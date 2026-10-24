@@ -10,6 +10,10 @@ field.done:false:
   other: "a faire"
 field.description:
   other: "description"
+field.effect.name:
+  other: "nom de l'effet"
+field.effect.description:
+  other: "description de l'effet"
 field.encounter:
   other: "rencontre"
 field.name:
