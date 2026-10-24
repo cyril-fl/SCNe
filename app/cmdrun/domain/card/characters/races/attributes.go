@@ -1,24 +1,24 @@
 package races
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Race - //
+// ID is stable across renames: characters reference their race by ID.
+// Template races use their name as ID, since they cannot be renamed.
 type Race struct {
 	plumprimitive.Descriptible
 
+	ID       string `bson:"id"`
 	Playable bool
 	Bonus    []stats.Modifier
 }
 
 type Template = struct {
+	ID          string           `json:"id"`
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
 	Playable    bool             `json:"playable"`
@@ -31,9 +31,14 @@ func New(params Template) Race {
 			Name:        params.Name,
 			Description: params.Description,
 		}),
+		ID:       params.ID,
 		Playable: params.Playable,
 		Bonus:    params.Bonus,
 	}
+}
+
+func (r Race) GetID() string {
+	return r.ID
 }
 
 func (r Race) IsPlayable() bool {
@@ -44,18 +49,6 @@ func (r Race) GetBonus() []stats.Modifier {
 	return r.Bonus
 }
 
-func (r Race) GetHash() string {
-	encoded, _ := json.Marshal(Template{
-		Name:        r.GetName(),
-		Description: r.GetDescription(),
-		Playable:    r.IsPlayable(),
-		Bonus:       r.GetBonus(),
-	})
-	digest := sha256.Sum256(encoded)
-
-	return hex.EncodeToString(digest[:])
-}
-
 func Assert(provided string) bool {
-	return provided != "" || slices.Contains(ListNames(), provided)
+	return provided != "" && FindByID(provided) != nil
 }

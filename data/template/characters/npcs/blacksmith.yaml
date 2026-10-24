@@ -3,7 +3,7 @@ description: A skilled blacksmith who can forge weapons and armor for adventurer
 rarity: A
 variety: character_card
 class: Craftsman
-race: Dwarf
+race: race.dwarf
 stats:
   health: 15
   physical: 15

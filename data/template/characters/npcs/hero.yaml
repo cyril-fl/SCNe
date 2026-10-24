@@ -3,7 +3,7 @@ description: This is a test character
 rarity: A
 variety: character_card
 class: Adventurer
-race: Human
+race: race.human
 stats:
   health: 20
   physical: 10

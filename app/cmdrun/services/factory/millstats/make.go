@@ -110,13 +110,13 @@ func (m *mill) reset() {
 }
 
 // Helpers
-// GetBonus returns the class and race bonus, ignoring unknown names.
+// GetBonus returns the class and race (by ID) bonus, ignoring unknown ones.
 func GetBonus(class, race string) []stats.Modifier {
 	var bonus []stats.Modifier
 	if c := classes.FindByName(class); c != nil {
 		bonus = append(bonus, c.GetBonus()...)
 	}
-	if r := races.FindByName(race); r != nil {
+	if r := races.FindByID(race); r != nil {
 		bonus = append(bonus, r.GetBonus()...)
 	}
 	return bonus

@@ -142,13 +142,3 @@ func TestSaveFromMapAddsEntryForZeroID(t *testing.T) {
 		t.Fatalf("entries = %#v, want one entry with an ID", table.Entries)
 	}
 }
-
-func TestEnsureAssignsMissingEntryIDs(t *testing.T) {
-	table := NewQuests(questentry{})
-
-	table.Ensure()
-
-	if table.Entries[0].ID.IsZero() {
-		t.Fatal("Ensure did not assign an ID to a legacy entry")
-	}
-}

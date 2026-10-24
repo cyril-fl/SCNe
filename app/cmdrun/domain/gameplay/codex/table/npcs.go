@@ -104,7 +104,7 @@ func (tb *NpcsTable) FormEntries() []Entry {
 		}
 		entries = append(entries, newEntry(entry.ID,
 			character.GetName(),
-			character.Race,
+			i19n.Localize(races.NameOf(character.Race)),
 			values,
 			characters.IsLocked(character.GetName()),
 		))
@@ -188,13 +188,6 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) {
 
 func (tb *NpcsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.Data)
-
-	// Entries saved before IDs existed are loaded with a zero ID.
-	for i := range tb.Entries {
-		if tb.Entries[i].ID.IsZero() {
-			tb.Entries[i].ID = id.New()
-		}
-	}
 }
 
 // Helpers

@@ -14,23 +14,23 @@ func TestIsLockedTracksTemplateEntriesOnly(t *testing.T) {
 
 	cachedConfig = plumprimitive.NewCache[cacheValue]()
 	cachedConfig.Update(func(config *cacheValue) {
-		config.Configs = []yamlConfig{{Name: "race.template"}}
-		config.LockedNames = map[string]struct{}{"race.template": {}}
+		config.Configs = []yamlConfig{{ID: "race.template", Name: "race.template"}}
+		config.LockedIDs = map[string]struct{}{"race.template": {}}
 	})
 
 	if !IsLocked("race.template") {
 		t.Fatal("expected the template race to be locked")
 	}
 
-	if err := AddInConfig(Template{Name: "race.custom"}); err != nil {
+	if err := AddInConfig(Template{ID: "custom", Name: "race.custom"}); err != nil {
 		t.Fatalf("adding a custom race failed: %v", err)
 	}
-	if IsLocked("race.custom") {
+	if IsLocked("custom") {
 		t.Fatal("expected a race added at runtime not to be locked")
 	}
 }
 
-func TestReplaceInConfigReplacesByNameOrAdds(t *testing.T) {
+func TestReplaceInConfigReplacesByIDOrAdds(t *testing.T) {
 	originalConfig := cachedConfig
 	t.Cleanup(func() {
 		cachedConfig = originalConfig
@@ -38,23 +38,45 @@ func TestReplaceInConfigReplacesByNameOrAdds(t *testing.T) {
 
 	cachedConfig = plumprimitive.NewCache[cacheValue]()
 	cachedConfig.Update(func(config *cacheValue) {
-		config.Configs = []yamlConfig{{Name: "race.old"}, {Name: "race.other"}}
+		config.Configs = []yamlConfig{{ID: "old", Name: "race.old"}, {ID: "other", Name: "race.other"}}
 	})
 
-	if err := ReplaceInConfig("race.old", Template{Name: "race.new"}); err != nil {
+	if err := ReplaceInConfig("old", Template{ID: "old", Name: "race.new"}); err != nil {
 		t.Fatalf("replacing a race failed: %v", err)
 	}
-	if FindByName("race.old") != nil || FindByName("race.new") == nil {
-		t.Fatalf("races = %v, want race.old replaced by race.new", ListNames())
+	if got := NameOf("old"); got != "race.new" {
+		t.Fatalf("NameOf(old) = %q, want race.new", got)
 	}
 	if len(List()) != 2 {
-		t.Fatalf("races = %v, want 2 races", ListNames())
+		t.Fatalf("races = %v, want 2 races", List())
 	}
 
-	if err := ReplaceInConfig("race.missing", Template{Name: "race.added"}); err != nil {
+	if err := ReplaceInConfig("missing", Template{ID: "added", Name: "race.added"}); err != nil {
 		t.Fatalf("adding a missing race failed: %v", err)
 	}
-	if FindByName("race.added") == nil || len(List()) != 3 {
-		t.Fatalf("races = %v, want race.added appended", ListNames())
+	if FindByID("added") == nil || len(List()) != 3 {
+		t.Fatalf("races = %v, want race.added appended", List())
+	}
+}
+
+func TestAssertAndNameOfUseIDs(t *testing.T) {
+	originalConfig := cachedConfig
+	t.Cleanup(func() {
+		cachedConfig = originalConfig
+	})
+
+	cachedConfig = plumprimitive.NewCache[cacheValue]()
+	cachedConfig.Update(func(config *cacheValue) {
+		config.Configs = []yamlConfig{{ID: "known", Name: "race.known"}}
+	})
+
+	if !Assert("known") {
+		t.Fatal("Assert rejected a known race ID")
+	}
+	if Assert("race.known") || Assert("unknown") || Assert("") {
+		t.Fatal("Assert accepted a name, an unknown ID or an empty ID")
+	}
+	if got := NameOf("unknown"); got != "unknown" {
+		t.Fatalf("NameOf(unknown) = %q, want the ID back", got)
 	}
 }

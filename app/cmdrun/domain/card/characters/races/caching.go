@@ -12,6 +12,7 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
+	ID          string           `yaml:"id"`
 	Name        string           `yaml:"name"`
 	Description string           `yaml:"description"`
 	Playable    bool             `yaml:"playable"`
@@ -21,8 +22,8 @@ type yamlConfig struct {
 var fileConfigPath = config.GetConfig().Documents.Files.Races
 
 type cacheValue struct {
-	Configs     []yamlConfig
-	LockedNames map[string]struct{}
+	Configs   []yamlConfig
+	LockedIDs map[string]struct{}
 }
 
 var cachedConfig = plumprimitive.NewCache[cacheValue]()
@@ -34,18 +35,18 @@ func loadFromFile() ([]yamlConfig, error) {
 		return nil, logs.RawError("%w", loader.GetErr())
 	}
 
+	// Template races are never renamed, so their name is a stable ID.
+	for i := range params {
+		if params[i].ID == "" {
+			params[i].ID = params[i].Name
+		}
+	}
+
 	return params, nil
 }
 
 func Has(value Template) bool {
-	new := New(value)
-
-	for _, race := range List() {
-		if race.GetHash() == new.GetHash() {
-			return true
-		}
-	}
-	return false
+	return FindByID(value.ID) != nil
 }
 
 func AddInConfig(value Template) error {
@@ -62,6 +63,7 @@ func AddInConfig(value Template) error {
 	}
 
 	new := yamlConfig{
+		ID:          value.ID,
 		Name:        value.Name,
 		Description: value.Description,
 		Playable:    value.Playable,
@@ -75,15 +77,16 @@ func AddInConfig(value Template) error {
 	return nil
 }
 
-// ReplaceInConfig swaps the race named name for value, or adds value when
-// name is not in the config.
-func ReplaceInConfig(name string, value Template) error {
+// ReplaceInConfig swaps the race with this id for value, or adds value when
+// id is not in the config.
+func ReplaceInConfig(id string, value Template) error {
 	if _, err := ListWithError(); err != nil {
 		reportLoadError()
 		return err
 	}
 
 	replacement := yamlConfig{
+		ID:          value.ID,
 		Name:        value.Name,
 		Description: value.Description,
 		Playable:    value.Playable,
@@ -91,7 +94,7 @@ func ReplaceInConfig(name string, value Template) error {
 	}
 
 	cachedConfig.Update(func(config *cacheValue) {
-		index := slices.IndexFunc(config.Configs, func(c yamlConfig) bool { return c.Name == name })
+		index := slices.IndexFunc(config.Configs, func(c yamlConfig) bool { return c.ID == id })
 		if index < 0 {
 			config.Configs = append(config.Configs, replacement)
 			return
@@ -112,10 +115,10 @@ func ListWithError() ([]Race, error) {
 
 		locked := make(map[string]struct{}, len(configs))
 		for _, value := range configs {
-			locked[value.Name] = struct{}{}
+			locked[value.ID] = struct{}{}
 		}
 
-		return cacheValue{Configs: configs, LockedNames: locked}, nil
+		return cacheValue{Configs: configs, LockedIDs: locked}, nil
 	})
 	if err != nil {
 		return nil, err
@@ -160,22 +163,15 @@ func newFromYaml(config yamlConfig) Race {
 			Name:        config.Name,
 			Description: config.Description,
 		}),
+		ID:       config.ID,
 		Playable: config.Playable,
 		Bonus:    config.Bonus,
 	}
 }
 
-func ListNames() []string {
-	var list []string
-	for _, i := range List() {
-		list = append(list, i.GetName())
-	}
-	return list
-}
-
 // IsLocked reports whether a race comes from the initial template cache.
 // Races added later with AddInConfig are intentionally not locked.
-func IsLocked(name string) bool {
+func IsLocked(id string) bool {
 	config, err := cachedConfig.Load(func() (cacheValue, error) {
 		configs, err := loadFromFile()
 		if err != nil {
@@ -184,24 +180,32 @@ func IsLocked(name string) bool {
 
 		locked := make(map[string]struct{}, len(configs))
 		for _, value := range configs {
-			locked[value.Name] = struct{}{}
+			locked[value.ID] = struct{}{}
 		}
 
-		return cacheValue{Configs: configs, LockedNames: locked}, nil
+		return cacheValue{Configs: configs, LockedIDs: locked}, nil
 	})
 	if err != nil {
 		reportLoadError()
 		return false
 	}
-	_, ok := config.LockedNames[name]
+	_, ok := config.LockedIDs[id]
 	return ok
 }
 
-func FindByName(name string) *Race {
+func FindByID(id string) *Race {
 	for _, i := range List() {
-		if i.GetName() == name {
+		if i.GetID() == id {
 			return &i
 		}
 	}
 	return nil
+}
+
+// NameOf returns the name of the race with this id, or id when it is unknown.
+func NameOf(id string) string {
+	if race := FindByID(id); race != nil {
+		return race.GetName()
+	}
+	return id
 }

@@ -87,7 +87,7 @@ func (p *run) generateCharacter() {
 
 	p.cache.player, p.cache.err = characters.New(characters.Template{
 		Name:      p.ctx.SelectedName,
-		Race:      p.ctx.SelectedRace.GetName(),
+		Race:      p.ctx.SelectedRace.GetID(),
 		Class:     p.ctx.SelectedClass.GetName(),
 		Rarity:    rarity.Default(),
 		Stats:     makeStatsFromContext(p.ctx),

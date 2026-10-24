@@ -36,7 +36,7 @@ func TestNpcsEditDoesNotStackStats(t *testing.T) {
 	if len(stats.List()) == 0 || len(classList) == 0 || len(raceList) == 0 {
 		t.Skip("no stat, class or race in the loaded config")
 	}
-	table, values := newTestNpcs(t, classList[0].GetName(), raceList[0].GetName())
+	table, values := newTestNpcs(t, classList[0].GetName(), raceList[0].GetID())
 	entryID := table.Entries[0].ID
 
 	for range 2 {
@@ -61,7 +61,7 @@ func TestNpcsEditSwapsClassBonus(t *testing.T) {
 		t.Skip("needs stats, two classes and a race in the loaded config")
 	}
 	previousClass, editedClass := classList[0], classList[1]
-	table, values := newTestNpcs(t, previousClass.GetName(), raceList[0].GetName())
+	table, values := newTestNpcs(t, previousClass.GetName(), raceList[0].GetID())
 	values["class"] = editedClass.GetName()
 
 	if err := table.SaveFromMap(table.Entries[0].ID, values); err != nil {

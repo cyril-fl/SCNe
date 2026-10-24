@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"solopg/app/cmdrun/domain/card/characters"
+	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/domain/card/locations"
 
 	"solopg/app/cmdrun/types/id"
@@ -42,7 +43,7 @@ func New(params Template) *Campaign {
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
 		c.Player.GetName(),
-		plumtransform.Capitalize(i19n.Localize(c.Player.Race)),
+		plumtransform.Capitalize(i19n.Localize(races.NameOf(c.Player.Race))),
 		plumtransform.Capitalize(i19n.Localize(c.Player.Class)),
 	)
 }

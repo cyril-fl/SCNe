@@ -176,7 +176,7 @@ func validateStat(value string) error {
 func getFormRaceOptions() []models.Item[string] {
 	items := make([]models.Item[string], 0)
 	for _, value := range races.List() {
-		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
+		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetID()))
 	}
 	return items
 }

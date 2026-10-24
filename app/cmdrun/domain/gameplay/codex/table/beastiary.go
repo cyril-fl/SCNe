@@ -52,6 +52,7 @@ func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
 	if err != nil {
 		return err
 	}
+	raw.ID = id.New().String()
 
 	if err := races.AddInConfig(raw); err != nil {
 		return logs.Error("error.unexpected", map[string]any{
@@ -86,7 +87,7 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 			values[modifier.Stat.String()] = plumtransform.ParseAsString(modifier.Value)
 		}
 
-		entries = append(entries, newEntry(entry.ID, name, description, values, races.IsLocked(name)))
+		entries = append(entries, newEntry(entry.ID, name, description, values, races.IsLocked(entry.Race.GetID())))
 	}
 	return entries
 }
@@ -102,9 +103,7 @@ func (tb *BeastiaryTable) SaveFromMap(entryID id.ID, values map[string]string) e
 }
 
 // The edited beast replaces its race in the config instead of adding a new one.
-// TODO renaming a beast leaves PNJs with the old race name: their next edit
-// fails race validation and the old race bonus is never subtracted.
-// Either rename the race on PNJs too, or make the name read-only on edit.
+// The race keeps its ID, so characters follow a rename.
 func (tb *BeastiaryTable) editFromMap(index int, values map[string]string) error {
 	raw, err := tb.templateFromMap(values)
 	if err != nil {
@@ -112,7 +111,9 @@ func (tb *BeastiaryTable) editFromMap(index int, values map[string]string) error
 	}
 
 	previous := tb.Entries[index].Race
-	if err := races.ReplaceInConfig(previous.GetName(), raw); err != nil {
+	raw.ID = previous.GetID()
+
+	if err := races.ReplaceInConfig(previous.GetID(), raw); err != nil {
 		return logs.Error("error.unexpected", map[string]any{
 			"Subject": "race",
 			"Error":   err,
@@ -191,13 +192,6 @@ func (tb *BeastiaryTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.Data)
 	tb.Entries = superChargeEntries(tb.Entries)
 
-	// Entries saved before IDs existed are loaded with a zero ID.
-	for i := range tb.Entries {
-		if tb.Entries[i].ID.IsZero() {
-			tb.Entries[i].ID = id.New()
-		}
-	}
-
 	tb.syncWithConfig()
 }
 
@@ -206,6 +200,7 @@ func (tb *BeastiaryTable) syncWithConfig() error {
 
 	for _, race := range tb.Entries {
 		if err := races.AddInConfig(races.Template{
+			ID:          race.Race.GetID(),
 			Name:        race.Race.GetName(),
 			Description: race.Race.GetDescription(),
 			Playable:    race.Race.IsPlayable(),
@@ -238,7 +233,7 @@ func makeKnowEntry(entries []beastentry) plumtypes.Set[string] {
 		if entry.Race == nil {
 			continue
 		}
-		set.Add(entry.Race.GetName())
+		set.Add(entry.Race.GetID())
 	}
 
 	return set
@@ -248,11 +243,11 @@ func makeMissingEntries(known plumtypes.Set[string], entries []beastentry) []bea
 	all := append([]beastentry(nil), entries...)
 
 	for _, r := range races.List() {
-		if known.Has(r.GetName()) {
+		if known.Has(r.GetID()) {
 			continue
 		}
 
-		known.Add(r.GetName())
+		known.Add(r.GetID())
 		all = append(all, beastentry{
 			ID:        id.New(),
 			Timestamp: time.Now().UTC(),

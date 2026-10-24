@@ -3,7 +3,7 @@ description: A small, gelatinous creature that oozes around and attacks anything
 rarity: A
 variety: character_card
 class: Beast
-race: Slime
+race: race.slime
 stats:
   health: 3
   physical: 1

@@ -150,13 +150,6 @@ func (tb *QuestTable) assertEntry(values map[string]string) {
 
 func (tb *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.Data)
-
-	// Entries saved before IDs existed are loaded with a zero ID.
-	for i := range tb.Entries {
-		if tb.Entries[i].ID.IsZero() {
-			tb.Entries[i].ID = id.New()
-		}
-	}
 }
 
 //
