@@ -128,11 +128,11 @@ func (tb *NpcsTable) editFromMap(index int, values map[string]string) error {
 	}
 
 	previous := tb.Entries[index].Character
-	previousBonus := getBonus(previous.Class, previous.Race)
-	editedBonus := getBonus(values["class"], values["race"])
+	previousBonus := millstats.GetBonus(previous.Class, previous.Race)
+	editedBonus := millstats.GetBonus(values["class"], values["race"])
 
 	editedStats := statsFromValues(values)
-	editedStats.ApplyModifiers(negateModifiers(previousBonus))
+	editedStats.RemoveModifiers(previousBonus)
 	editedStats.ApplyModifiers(editedBonus)
 
 	character, err := newCharacterFromMap(values, editedStats)
@@ -224,24 +224,4 @@ func statsFromValues(values map[string]string) stats.Stats {
 		result[stat] = value
 	}
 	return result
-}
-
-func getBonus(class, race string) []stats.Modifier {
-	var bonus []stats.Modifier
-	if c := classes.FindByName(class); c != nil {
-		bonus = append(bonus, c.GetBonus()...)
-	}
-	if r := races.FindByName(race); r != nil {
-		bonus = append(bonus, r.GetBonus()...)
-	}
-	return bonus
-}
-
-func negateModifiers(modifiers []stats.Modifier) []stats.Modifier {
-	negated := make([]stats.Modifier, 0, len(modifiers))
-	for _, modifier := range modifiers {
-		modifier.Value = -modifier.Value
-		negated = append(negated, modifier)
-	}
-	return negated
 }

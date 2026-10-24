@@ -87,12 +87,7 @@ func (m *mill) makeModifiersFromValuesWithFallback() {
 }
 
 func (m *mill) makeModifiersFromAttributesValues() {
-	if class := classes.FindByName(m.values["class"]); class != nil {
-		m.modifiers = append(m.modifiers, class.GetBonus()...)
-	}
-	if race := races.FindByName(m.values["race"]); race != nil {
-		m.modifiers = append(m.modifiers, race.GetBonus()...)
-	}
+	m.modifiers = append(m.modifiers, GetBonus(m.values["class"], m.values["race"])...)
 }
 
 func (m *mill) makeRandomModifiersFromOracleValue() {
@@ -115,6 +110,18 @@ func (m *mill) reset() {
 }
 
 // Helpers
+// GetBonus returns the class and race bonus, ignoring unknown names.
+func GetBonus(class, race string) []stats.Modifier {
+	var bonus []stats.Modifier
+	if c := classes.FindByName(class); c != nil {
+		bonus = append(bonus, c.GetBonus()...)
+	}
+	if r := races.FindByName(race); r != nil {
+		bonus = append(bonus, r.GetBonus()...)
+	}
+	return bonus
+}
+
 type FromValuesParams struct {
 	Randomness bool
 }

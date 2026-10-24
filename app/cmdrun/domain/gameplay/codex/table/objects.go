@@ -42,11 +42,27 @@ func NewObjects(entries ...objectentry) *ObjectsTable {
 
 // Methods
 func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
+	object, err := tb.objectFromMap(values)
+	if err != nil {
+		return err
+	}
+
+	tb.Add(object)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tableobject,
+		"Entry": plumtransform.ParseJson(object),
+	})
+
+	return nil
+}
+
+func (tb *ObjectsTable) objectFromMap(values map[string]string) (*objects.Object, error) {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
 		cwd, cwderr := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
+		return nil, logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
@@ -61,20 +77,13 @@ func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 	})
 
 	if err != nil {
-		return logs.Error("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "item",
 			"Error":   err,
 		})
 	}
 
-	tb.Add(object)
-
-	logs.SilentSuccess("codex.entry:added", map[string]any{
-		"Table": tableobject,
-		"Entry": plumtransform.ParseJson(object),
-	})
-
-	return nil
+	return object, nil
 }
 
 func (tb *ObjectsTable) Add(object *objects.Object) {
@@ -109,14 +118,16 @@ func (tb *ObjectsTable) SaveFromMap(entryID id.ID, values map[string]string) err
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
-	oldLen := len(tb.Entries)
-	if err := tb.AddFromMap(values); err != nil {
+	return tb.editFromMap(index, values)
+}
+
+func (tb *ObjectsTable) editFromMap(index int, values map[string]string) error {
+	object, err := tb.objectFromMap(values)
+	if err != nil {
 		return err
 	}
-	edited := tb.Entries[oldLen]
-	edited.ID = entryID
-	tb.Entries[index] = edited
-	tb.Entries = tb.Entries[:oldLen]
+
+	tb.Entries[index].Object = object
 	return nil
 }
 

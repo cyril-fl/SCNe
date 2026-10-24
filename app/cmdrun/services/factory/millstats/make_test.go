@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"solopg/app/cmdrun/domain/card/characters/classes"
+	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/shared/services/logs"
 )
 
@@ -50,5 +52,22 @@ func TestGenerateFromValuesResetsPreviousModifiers(t *testing.T) {
 	}
 	if !m.HasErr() {
 		t.Fatal("expected generation error")
+	}
+}
+
+func TestGetBonusCombinesClassAndRace(t *testing.T) {
+	classList, raceList := classes.List(), races.List()
+	if len(classList) == 0 || len(raceList) == 0 {
+		t.Skip("no class or race in the loaded config")
+	}
+	class, race := classList[0], raceList[0]
+
+	bonus := GetBonus(class.GetName(), race.GetName())
+
+	if want := len(class.GetBonus()) + len(race.GetBonus()); len(bonus) != want {
+		t.Fatalf("GetBonus returned %d modifiers, want %d", len(bonus), want)
+	}
+	if bonus := GetBonus("class.missing", "race.missing"); len(bonus) != 0 {
+		t.Fatalf("GetBonus with unknown names = %#v, want empty", bonus)
 	}
 }

@@ -1,6 +1,7 @@
 package races
 
 import (
+	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/shared/services/logs"
 	"solopg/config"
@@ -69,6 +70,33 @@ func AddInConfig(value Template) error {
 
 	cachedConfig.Update(func(config *cacheValue) {
 		config.Configs = append(config.Configs, new)
+	})
+
+	return nil
+}
+
+// ReplaceInConfig swaps the race named name for value, or adds value when
+// name is not in the config.
+func ReplaceInConfig(name string, value Template) error {
+	if _, err := ListWithError(); err != nil {
+		reportLoadError()
+		return err
+	}
+
+	replacement := yamlConfig{
+		Name:        value.Name,
+		Description: value.Description,
+		Playable:    value.Playable,
+		Bonus:       value.Bonus,
+	}
+
+	cachedConfig.Update(func(config *cacheValue) {
+		index := slices.IndexFunc(config.Configs, func(c yamlConfig) bool { return c.Name == name })
+		if index < 0 {
+			config.Configs = append(config.Configs, replacement)
+			return
+		}
+		config.Configs[index] = replacement
 	})
 
 	return nil

@@ -46,11 +46,27 @@ func (tb *QuestTable) Add(quest *quest.Quest) {
 }
 
 func (tb *QuestTable) AddFromMap(values map[string]string) error {
+	quest, err := tb.questFromMap(values)
+	if err != nil {
+		return err
+	}
+
+	tb.Add(quest)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tableobjectives,
+		"Entry": plumtransform.ParseJson(values),
+	})
+
+	return nil
+}
+
+func (tb *QuestTable) questFromMap(values map[string]string) (*quest.Quest, error) {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
 		cwd, cwderr := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
+		return nil, logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
@@ -66,20 +82,13 @@ func (tb *QuestTable) AddFromMap(values map[string]string) error {
 	})
 
 	if err != nil {
-		return logs.Error("error.invalid:new", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "objectives",
 			"Error":   err,
 		})
 	}
 
-	tb.Add(quest)
-
-	logs.SilentSuccess("codex.entry:added", map[string]any{
-		"Table": tableobjectives,
-		"Entry": plumtransform.ParseJson(values),
-	})
-
-	return nil
+	return quest, nil
 }
 
 func (tb *QuestTable) FormEntries() []Entry {
@@ -109,14 +118,16 @@ func (tb *QuestTable) SaveFromMap(entryID id.ID, values map[string]string) error
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
-	oldLen := len(tb.Entries)
-	if err := tb.AddFromMap(values); err != nil {
+	return tb.editFromMap(index, values)
+}
+
+func (tb *QuestTable) editFromMap(index int, values map[string]string) error {
+	edited, err := tb.questFromMap(values)
+	if err != nil {
 		return err
 	}
-	edited := tb.Entries[oldLen]
-	edited.ID = entryID
-	tb.Entries[index] = edited
-	tb.Entries = tb.Entries[:oldLen]
+
+	tb.Entries[index].Quest = edited
 	return nil
 }
 

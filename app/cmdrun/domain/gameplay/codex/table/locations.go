@@ -38,11 +38,27 @@ func NewLocations(entries ...locationsentry) *LocationsTable {
 
 // Methods
 func (tb *LocationsTable) AddFromMap(values map[string]string) error {
+	location, err := tb.locationFromMap(values)
+	if err != nil {
+		return err
+	}
+
+	tb.Add(location)
+
+	logs.SilentSuccess("codex.entry:added", map[string]any{
+		"Table": tablelocations,
+		"Entry": plumtransform.ParseJson(location),
+	})
+
+	return nil
+}
+
+func (tb *LocationsTable) locationFromMap(values map[string]string) (*locations.Location, error) {
 	tb.assertEntry(values)
 
 	if tb.HasErr() {
 		cwd, cwderr := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
+		return nil, logs.Error("error.unexpected", map[string]any{
 			"Path":  cwd,
 			"Error": errors.Join(cwderr, tb.GetErr()),
 		})
@@ -56,17 +72,10 @@ func (tb *LocationsTable) AddFromMap(values map[string]string) error {
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	tb.Add(location)
-
-	logs.SilentSuccess("codex.entry:added", map[string]any{
-		"Table": tablelocations,
-		"Entry": plumtransform.ParseJson(location),
-	})
-
-	return nil
+	return location, nil
 }
 
 func (tb *LocationsTable) Add(location *locations.Location) {
@@ -97,14 +106,16 @@ func (tb *LocationsTable) SaveFromMap(entryID id.ID, values map[string]string) e
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
-	oldLen := len(tb.Entries)
-	if err := tb.AddFromMap(values); err != nil {
+	return tb.editFromMap(index, values)
+}
+
+func (tb *LocationsTable) editFromMap(index int, values map[string]string) error {
+	location, err := tb.locationFromMap(values)
+	if err != nil {
 		return err
 	}
-	edited := tb.Entries[oldLen]
-	edited.ID = entryID
-	tb.Entries[index] = edited
-	tb.Entries = tb.Entries[:oldLen]
+
+	tb.Entries[index].Location = location
 	return nil
 }
 

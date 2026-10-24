@@ -126,6 +126,13 @@ func (s *Stats) ApplyModifiers(mods []Modifier) {
 	}
 }
 
+func (s *Stats) RemoveModifiers(mods []Modifier) {
+	for _, mod := range mods {
+		mod.Value = -mod.Value
+		s.ApplyModifier(mod)
+	}
+}
+
 func (s Stat) Validate() bool {
 	return slices.Contains(List(), s)
 }

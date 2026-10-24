@@ -48,44 +48,9 @@ func (tb *BeastiaryTable) Add(race *races.Race) {
 }
 
 func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
-	tb.assertEntry(values)
-
-	if tb.HasErr() {
-		cwd, cwderr := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
-			"Path":  cwd,
-			"Error": errors.Join(cwderr, tb.GetErr()),
-		})
-	}
-
-	generator := millstats.NewWithValues(values)
-	generator.GenerateFromValues(millstats.FromValuesParams{
-		Randomness: false,
-	})
-
-	if generator.HasErr() {
-		cwd, err := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
-			"Path":  cwd,
-			"Error": errors.Join(err, generator.GetErr()),
-		})
-	}
-
-	/*
-		NOTE: Generated bonuses may be negative.
-		First of all, this is intentional and follows the following logic:
-		`a Troll is stupid and therefore receives an Intelligence penalty.``
-
-		Then, this should not be handled by the process itself, but by the template
-		selected with values["encounter"].
-
-		These are configurable in the /data/systems/rules/oracles/encounter directory.
-	*/
-	raw := races.Template{
-		Name:        values["name"],
-		Description: values["description"],
-		Playable:    false,
-		Bonus:       generator.GetModifiers(),
+	raw, err := tb.templateFromMap(values)
+	if err != nil {
+		return err
 	}
 
 	if err := races.AddInConfig(raw); err != nil {
@@ -128,15 +93,74 @@ func (tb *BeastiaryTable) SaveFromMap(entryID id.ID, values map[string]string) e
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
-	oldLen := len(tb.Entries)
-	if err := tb.AddFromMap(values); err != nil {
+	return tb.editFromMap(index, values)
+}
+
+// The edited beast replaces its race in the config instead of adding a new one.
+// TODO renaming a beast leaves PNJs with the old race name: their next edit
+// fails race validation and the old race bonus is never subtracted.
+// Either rename the race on PNJs too, or make the name read-only on edit.
+func (tb *BeastiaryTable) editFromMap(index int, values map[string]string) error {
+	raw, err := tb.templateFromMap(values)
+	if err != nil {
 		return err
 	}
-	edited := tb.Entries[oldLen]
-	edited.ID = entryID
-	tb.Entries[index] = edited
-	tb.Entries = tb.Entries[:oldLen]
+
+	previous := tb.Entries[index].Race
+	if err := races.ReplaceInConfig(previous.GetName(), raw); err != nil {
+		return logs.Error("error.unexpected", map[string]any{
+			"Subject": "race",
+			"Error":   err,
+		})
+	}
+
+	race := races.New(raw)
+	tb.Entries[index].Race = &race
 	return nil
+}
+
+func (tb *BeastiaryTable) templateFromMap(values map[string]string) (races.Template, error) {
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return races.Template{}, logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
+	}
+
+	generator := millstats.NewWithValues(values)
+	generator.GenerateFromValues(millstats.FromValuesParams{
+		Randomness: false,
+	})
+
+	if generator.HasErr() {
+		cwd, err := os.Getwd()
+		return races.Template{}, logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(err, generator.GetErr()),
+		})
+	}
+
+	/*
+		NOTE: Generated bonuses may be negative.
+		First of all, this is intentional and follows the following logic:
+		`a Troll is stupid and therefore receives an Intelligence penalty.``
+
+		Then, this should not be handled by the process itself, but by the template
+		selected with values["encounter"].
+
+		These are configurable in the /data/systems/rules/oracles/encounter directory.
+	*/
+	raw := races.Template{
+		Name:        values["name"],
+		Description: values["description"],
+		Playable:    false,
+		Bonus:       generator.GetModifiers(),
+	}
+
+	return raw, nil
 }
 
 // - Helper --//
