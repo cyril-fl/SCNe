@@ -10,16 +10,17 @@ import (
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
-// REFACTOR LOW Surtout la maniere de if else
 func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession) {
 	var characterName = plumtransform.Uppercase(i19n.Localize("character"))
 
-	isSessionNil := gameSession == nil || gameSession.State == nil
+	state := getState(gameSession)
+	isPlayerNil := state.Player == nil
 
-	if isSessionNil || gameSession.State.Player == nil {
+	switch {
+	case isPlayerNil:
 		fmt.Fprintf(content, "%s", characterName)
-	} else {
-		fmt.Fprintf(content, "%s %s", characterName, i19n.Localize(gameSession.State.Player.GetName()))
+	default:
+		fmt.Fprintf(content, "%s %s", characterName, i19n.Localize(state.Player.GetName()))
 	}
 
 	content.WriteString("\n")
@@ -28,13 +29,16 @@ func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession
 func GetLocationInfo(content *strings.Builder, gameSession *session.GameSession) {
 	var locationName = plumtransform.Uppercase(i19n.Localize("location"))
 
-	isSessionNil := gameSession == nil || gameSession.State == nil
+	state := getState(gameSession)
+	isLocationNil := state.CurrentLocation == nil
 
-	if isSessionNil || gameSession.State.CurrentLocation == nil {
+	switch {
+	case isLocationNil:
 		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize("unknown_place"))
-	} else {
-		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(gameSession.State.CurrentLocation.GetName()))
+	default:
+		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(state.CurrentLocation.GetName()))
 	}
+
 	content.WriteString("\n")
 }
 
@@ -42,13 +46,28 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 	content.WriteString(plumtransform.Uppercase(i19n.Localize("stats")))
 	content.WriteString("\n")
 
-	if gameSession == nil || gameSession.State == nil || gameSession.State.Player == nil {
+	state := getState(gameSession)
+	isPlayerNil := state.Player == nil
+
+	switch {
+	case isPlayerNil:
 		content.WriteString(i19n.Localize("stats.entry:unknowns"))
-	} else {
+	default:
 		for _, stat := range stats.List() {
 			key := "stat." + string(stat)
 			label := i19n.Localize(key)
-			fmt.Fprintf(content, "%-10s %d\n", label, gameSession.State.Player.Stats[stat])
+			fmt.Fprintf(content, "%-10s %d\n", label, state.Player.Stats[stat])
 		}
 	}
+}
+
+// Helpers
+
+// getState returns an empty state when the session or its state is missing,
+// so callers can read its fields without nil checks.
+func getState(gameSession *session.GameSession) *session.SessionState {
+	if gameSession == nil || gameSession.State == nil {
+		return &session.SessionState{}
+	}
+	return gameSession.State
 }
