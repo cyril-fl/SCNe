@@ -43,7 +43,9 @@ func (m *model) handleKeyPress(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch plumtypes.Key(msg.String()) {
 	case plumtypes.CMD_CTRL_S:
-		return m, messages.Save(m.save)
+		if m.state.Current() == CHAT_SECTION {
+			return m, messages.Save(m.save)
+		}
 	}
 
 	return m, nil

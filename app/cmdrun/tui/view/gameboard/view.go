@@ -51,7 +51,12 @@ func (m *model) SetSectionSize(size size.Size) {
 }
 
 func (m model) GetFooter() []string {
-	footer := []string{shortcut.SAVE.String()}
+	footer := []string{}
+
+	if m.state.Current() == CHAT_SECTION {
+		footer = append(footer, shortcut.SAVE.String())
+	}
+
 	footer = append(footer, m.state.GetFooter()...)
 	footer = append(footer, m.menu.GetFooter()...)
 	return footer
