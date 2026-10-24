@@ -14,6 +14,8 @@ open:
   other: "open"
 select:
   other: "select"
+navigate:
+  other: "navigate"
 new:
   other: "new"
 

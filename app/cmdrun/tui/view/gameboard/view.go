@@ -52,7 +52,7 @@ func (m model) GetFooter() []string {
 	footer := []string{}
 
 	if m.state.Current() == CHAT_SECTION {
-		footer = append(footer, shortcut.SAVE.String())
+		footer = append(footer, shortcut.SAVE.String(), shortcut.NAVIGATE.String())
 	}
 
 	footer = append(footer, m.state.GetFooter()...)

@@ -7,6 +7,10 @@ var (
 		Command: CtrlEnter,
 		Label:   "edit",
 	})
+	NAVIGATE = NewShortcut(Template{
+		Command: AltArrows,
+		Label:   "navigate",
+	})
 	NEW = NewShortcut(Template{
 		Command: CtrlN,
 		Label:   "new",
