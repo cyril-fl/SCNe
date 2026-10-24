@@ -103,8 +103,10 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 
 	case tea.KeyMsg:
 		return c.handleInput(msg)
+	default:
+		// paste and cursor blink messages must reach the input
+		return c.handleInput(msg)
 	}
-	return nil
 }
 
 func (c *Chat) Amend(content string) {

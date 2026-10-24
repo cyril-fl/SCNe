@@ -29,8 +29,8 @@ func (v *Layout) MergeSection(other tea.Model) {
 		v.section = section.Nil()
 	}
 
-	v.section.Merge(other)
 	v.section.SetSize(other, v.getAvailableSectionSize())
+	v.section.Merge(other)
 }
 
 func (v *Layout) getAvailableSectionSize() size.Size {

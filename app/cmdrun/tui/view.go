@@ -23,8 +23,9 @@ func (m model) View() tea.View {
 	} else if current := m.steps.GetCurrentSubmodel(); current != nil {
 		m.layout.SetHeader(current)
 		m.layout.MergeFooter(current)
-		m.layout.MergeSection(current)
+		// sidepanel first: the section width is computed from the sidepanel width
 		m.layout.MergeSidepanel(current)
+		m.layout.MergeSection(current)
 	}
 
 	return m.layout.GetView()

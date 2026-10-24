@@ -116,7 +116,10 @@ func (m *textareaField) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	return m, nil
+	// paste and cursor blink messages are not key presses
+	newInput, cmd := m.input.Update(msg)
+	m.input = newInput
+	return m, cmd
 }
 
 // - Field Implementation - //
@@ -165,6 +168,8 @@ func makeTextarea(placeholder string, height int) textarea.Model {
 	input.Placeholder = placeholder
 	input.ShowLineNumbers = false
 	input.KeyMap.InsertNewline.SetKeys(string(plumtypes.CMD_ALT_ENTER))
+	input.KeyMap.WordForward.SetKeys("alt+right", "alt+f", "ctrl+right")
+	input.KeyMap.WordBackward.SetKeys("alt+left", "alt+b", "ctrl+left")
 
 	styles := input.Styles()
 	styles.Focused.CursorLine = lipgloss.NewStyle()

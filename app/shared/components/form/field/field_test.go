@@ -343,3 +343,27 @@ func TestTextareaFieldViewLabel(t *testing.T) {
 		t.Fatal("View() shows label with NoLabel")
 	}
 }
+
+func TestTextareaFieldPasteInsertsContent(t *testing.T) {
+	f := TextareaField(TextareaTemplate{Template: Template[string]{ID: "message"}})
+	f.Focus()
+
+	f.Update(tea.PasteMsg{Content: "pasted"})
+
+	if got := f.GetValueAsString(); got != "pasted" {
+		t.Fatalf("value after paste = %q, want pasted", got)
+	}
+}
+
+func TestTextareaFieldCtrlLeftMovesByWord(t *testing.T) {
+	f := TextareaField(TextareaTemplate{Template: Template[string]{ID: "message"}})
+	f.Focus()
+
+	f.Update(tea.PasteMsg{Content: "hello world"})
+	f.Update(tea.KeyPressMsg{Code: tea.KeyLeft, Mod: tea.ModCtrl})
+	f.Update(tea.KeyPressMsg{Code: 'X', Text: "X"})
+
+	if got := f.GetValueAsString(); got != "hello Xworld" {
+		t.Fatalf("value after ctrl+left = %q, want %q", got, "hello Xworld")
+	}
+}
