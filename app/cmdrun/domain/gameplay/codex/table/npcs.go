@@ -5,6 +5,7 @@ import (
 	"os"
 	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
+	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
@@ -12,6 +13,7 @@ import (
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
+	"strconv"
 
 	"time"
 
@@ -48,14 +50,8 @@ func (tb *NpcsTable) Add(character *characters.Character) {
 }
 
 func (tb *NpcsTable) AddFromMap(values map[string]string) error {
-	tb.assertEntry(values)
-
-	if tb.HasErr() {
-		cwd, cwderr := os.Getwd()
-		return logs.Error("error.unexpected", map[string]any{
-			"Path":  cwd,
-			"Error": errors.Join(cwderr, tb.GetErr()),
-		})
+	if err := tb.checkEntry(values); err != nil {
+		return err
 	}
 
 	generator := millstats.NewWithValues(values)
@@ -77,20 +73,9 @@ func (tb *NpcsTable) AddFromMap(values map[string]string) error {
 		be calculated / represented by a dice roll in an oracle, for example:
 		a powerful character stats would be chosen with the legendary.
 	*/
-	character, err := characters.New(characters.Template{
-		Name:        values["name"],
-		Description: values["description"],
-		Rarity:      rarity.Default(),
-		Race:        values["race"],
-		Class:       values["class"],
-		Stats:       generator.GetStats(),
-	})
-
+	character, err := newCharacterFromMap(values, generator.GetStats())
 	if err != nil {
-		return logs.Error("error.invalid:new", map[string]any{
-			"Subject": "npcs",
-			"Error":   err,
-		})
+		return err
 	}
 
 	tb.Add(character)
@@ -132,14 +117,43 @@ func (tb *NpcsTable) SaveFromMap(entryID id.ID, values map[string]string) error 
 	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
-	oldLen := len(tb.Entries)
-	if err := tb.AddFromMap(values); err != nil {
+	return tb.editFromMap(index, values)
+}
+
+// Edited values already hold final stats: only the class and race bonus
+// difference is applied, never the roll.
+func (tb *NpcsTable) editFromMap(index int, values map[string]string) error {
+	if err := tb.checkEntry(values); err != nil {
 		return err
 	}
-	edited := tb.Entries[oldLen]
-	edited.ID = entryID
-	tb.Entries[index] = edited
-	tb.Entries = tb.Entries[:oldLen]
+
+	previous := tb.Entries[index].Character
+	previousBonus := getBonus(previous.Class, previous.Race)
+	editedBonus := getBonus(values["class"], values["race"])
+
+	editedStats := statsFromValues(values)
+	editedStats.ApplyModifiers(negateModifiers(previousBonus))
+	editedStats.ApplyModifiers(editedBonus)
+
+	character, err := newCharacterFromMap(values, editedStats)
+	if err != nil {
+		return err
+	}
+
+	tb.Entries[index].Character = character
+	return nil
+}
+
+func (tb *NpcsTable) checkEntry(values map[string]string) error {
+	tb.assertEntry(values)
+
+	if tb.HasErr() {
+		cwd, cwderr := os.Getwd()
+		return logs.Error("error.unexpected", map[string]any{
+			"Path":  cwd,
+			"Error": errors.Join(cwderr, tb.GetErr()),
+		})
+	}
 	return nil
 }
 
@@ -147,28 +161,24 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) {
 	tb.ClearErr()
 
 	if entry["name"] == "" {
-
 		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.name",
 		}))
 	}
 	if entry["description"] == "" {
-
 		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.description",
 		}))
 	}
 	if !races.Assert(entry["race"]) {
-
 		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.race",
 		}))
 	}
 	if !classes.Assert(entry["class"]) {
-
 		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "npcs",
 			"Property": "property.class",
@@ -188,3 +198,50 @@ func (tb *NpcsTable) Ensure() {
 }
 
 // Helpers
+func newCharacterFromMap(values map[string]string, characterStats stats.Stats) (*characters.Character, error) {
+	character, err := characters.New(characters.Template{
+		Name:        values["name"],
+		Description: values["description"],
+		Rarity:      rarity.Default(),
+		Race:        values["race"],
+		Class:       values["class"],
+		Stats:       characterStats,
+	})
+
+	if err != nil {
+		return nil, logs.Error("error.invalid:new", map[string]any{
+			"Subject": "npcs",
+			"Error":   err,
+		})
+	}
+	return character, nil
+}
+
+func statsFromValues(values map[string]string) stats.Stats {
+	result := make(stats.Stats)
+	for _, stat := range stats.List() {
+		value, _ := strconv.Atoi(values[stat.String()])
+		result[stat] = value
+	}
+	return result
+}
+
+func getBonus(class, race string) []stats.Modifier {
+	var bonus []stats.Modifier
+	if c := classes.FindByName(class); c != nil {
+		bonus = append(bonus, c.GetBonus()...)
+	}
+	if r := races.FindByName(race); r != nil {
+		bonus = append(bonus, r.GetBonus()...)
+	}
+	return bonus
+}
+
+func negateModifiers(modifiers []stats.Modifier) []stats.Modifier {
+	negated := make([]stats.Modifier, 0, len(modifiers))
+	for _, modifier := range modifiers {
+		modifier.Value = -modifier.Value
+		negated = append(negated, modifier)
+	}
+	return negated
+}

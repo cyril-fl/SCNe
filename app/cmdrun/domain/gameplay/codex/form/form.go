@@ -12,7 +12,9 @@ import (
 	"solopg/app/shared/components/form/field"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/logs"
 	"solopg/config"
+	"strconv"
 )
 
 // - NPC Form - //
@@ -151,9 +153,24 @@ func getFormStatsFields(values map[string]string) []form.Field {
 			ID:           value.String(),
 			Label:        i19n.Localize(value.String()),
 			Defaultvalue: values[value.String()],
+			Validator:    validateStat,
 		}))
 	}
 	return fields
+}
+
+// Empty is allowed: the stat is then rolled from the encounter oracle.
+func validateStat(value string) error {
+	if value == "" {
+		return nil
+	}
+	if _, err := strconv.Atoi(value); err != nil {
+		return logs.Error("error.invalid", map[string]any{
+			"Subject": "stat",
+			"Value":   value,
+		})
+	}
+	return nil
 }
 
 func getFormRaceOptions() []models.Item[string] {
