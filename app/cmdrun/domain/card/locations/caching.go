@@ -38,25 +38,41 @@ func loadFromSource() (cacheValue, error) {
 		return cacheValue{}, logs.RawError("%w", entries.GetErr())
 	}
 
+	configs, errs := loadFromFiles(files)
+
+	if len(errs) > 0 {
+		return cacheValue{}, errors.Join(errs...)
+	}
+
+	locked := lockNames(configs)
+
+	return cacheValue{Configs: configs, LockedNames: locked}, nil
+}
+
+func lockNames(configs []yamlConfig) map[string]struct{} {
+	locked := make(map[string]struct{}, len(configs))
+
+	for _, config := range configs {
+		locked[config.Name] = struct{}{}
+	}
+
+	return locked
+}
+
+func loadFromFiles(files []string) ([]yamlConfig, []error) {
 	configs := make([]yamlConfig, 0, len(files))
-	locked := make(map[string]struct{}, len(files))
-	var errs []error
+	errs := make([]error, 0, len(files))
+
 	for _, file := range files {
 		config, err := loadFromFile(file)
 		if err != nil {
 			errs = append(errs, err)
 			continue
 		}
-
 		configs = append(configs, config)
-		locked[config.Name] = struct{}{}
 	}
 
-	if err := errors.Join(errs...); err != nil {
-		return cacheValue{}, err
-	}
-
-	return cacheValue{Configs: configs, LockedNames: locked}, nil
+	return configs, errs
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {

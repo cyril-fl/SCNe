@@ -40,8 +40,19 @@ func loadFromSource() ([]yamlConfig, error) {
 		return nil, logs.RawError("load gear folder %s: %w", folderConfigPath, entries.GetErr())
 	}
 
+	configs, errs := loadFromFiles(files)
+
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return configs, nil
+}
+
+func loadFromFiles(files []string) ([]yamlConfig, []error) {
 	configs := make([]yamlConfig, 0, len(files))
-	errs := make([]error, 0)
+	errs := make([]error, 0, len(files))
+
 	for _, file := range files {
 		config, err := loadFromFile(file)
 		if err != nil {
@@ -51,11 +62,7 @@ func loadFromSource() ([]yamlConfig, error) {
 		configs = append(configs, config)
 	}
 
-	if len(errs) > 0 {
-		return nil, errors.Join(errs...)
-	}
-
-	return configs, nil
+	return configs, errs
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {

@@ -2,7 +2,6 @@ package hint
 
 import (
 	"errors"
-	"path/filepath"
 
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/shared/services/logs"
@@ -24,16 +23,26 @@ var folderConfigPath = config.GetConfig().Documents.Folders.Hint
 var cachedConfig = plumprimitive.NewCache[[]yamlConfig]()
 
 func loadFromSource() ([]yamlConfig, error) {
-	//  LOW ameliorer. Si c'est un fichier on load si c'est un folder on load mais autrement
-	// Appliquer cette logique la au oracles dice ect...
 	entries := plummillentries.New()
 	files := entries.GetFilesFromSource(folderConfigPath, true)
+
 	if entries.HasErr() {
 		return nil, logs.RawError("load hint folder %s: %w", folderConfigPath, entries.GetErr())
 	}
 
+	configs, errs := loadFromFiles(files)
+
+	if len(errs) > 0 {
+		return nil, errors.Join(errs...)
+	}
+
+	return configs, nil
+}
+
+func loadFromFiles(files []string) ([]yamlConfig, []error) {
 	configs := make([]yamlConfig, 0, len(files))
-	errs := make([]error, 0)
+	errs := make([]error, 0, len(files))
+
 	for _, file := range files {
 		config, err := loadFromFile(file)
 		if err != nil {
@@ -43,19 +52,17 @@ func loadFromSource() ([]yamlConfig, error) {
 		configs = append(configs, config)
 	}
 
-	if len(errs) > 0 {
-		return nil, errors.Join(errs...)
-	}
-
-	return configs, nil
+	return configs, errs
 }
 
 func loadFromFile(fileAddress string) (yamlConfig, error) {
 	loader := plummillload.New(fileAddress)
 	params := loader.LoadFromFile[yamlConfig]()
+
 	if loader.HasErr() {
 		return yamlConfig{}, logs.RawError("load hint file %s: %w", fileAddress, loader.GetErr())
 	}
+
 	return *params, nil
 }
 
@@ -117,34 +124,6 @@ func List() []Hint {
 	return hints
 }
 
-func ListFromFolder(path string) ([]string, error) {
-	entries := plummillentries.New()
-	list := entries.GetFolderFiles(path)
-	if entries.HasErr() {
-
-		return nil, logs.RawError("load hint folder %s: %w", path, entries.GetErr())
-	}
-
-	errs := []error{}
-	hints := []string{}
-	for _, file := range list {
-		loader := plummillload.New(filepath.Join(path, file))
-		params := loader.LoadFromFile[yamlConfig]()
-		if loader.HasErr() {
-
-			errs = append(errs, logs.RawError("load hint file %s: %w", file, loader.GetErr()))
-		} else {
-			hints = append(hints, params.Name)
-		}
-	}
-
-	if len(errs) > 0 {
-		return nil, errors.Join(errs...)
-	}
-
-	return hints, nil
-}
-
 func makeSet(configs []yamlConfig) []Hint {
 	result := make([]Hint, 0, len(configs))
 
@@ -159,6 +138,9 @@ func makeSet(configs []yamlConfig) []Hint {
 func Roll(hint Hint) []string {
 	res := []string{}
 	values := hint.Values()
+	if len(values) == 0 {
+		return nil
+	}
 
 	for i := 0; i < 3; i++ {
 		value := dice.Roll(len(values))
