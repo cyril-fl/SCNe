@@ -3,6 +3,7 @@ package navigation
 import (
 	"solopg/app/cmdrun/types/direction"
 	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/services/style"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
@@ -47,7 +48,7 @@ func (n *Navigation) GetView() string {
 	n.view.SetContent(content)
 	n.setOffset(contentoffsets)
 
-	return panelStyle().
+	return style.Panel.
 		Width(n.size.GetWidth()).
 		Height(n.size.GetHeight()).
 		Render(n.makeBody())
@@ -67,10 +68,9 @@ func (n *Navigation) getStaticView() string {
 
 func (n *Navigation) SetSize(newsize size.Size) {
 	n.size = newsize
-	style := panelStyle()
 
-	w := max(0, n.size.GetWidth()-style.GetHorizontalFrameSize())
-	h := max(0, n.size.GetHeight()-style.GetVerticalFrameSize())
+	w := max(0, n.size.GetWidth()-style.Panel.GetHorizontalFrameSize())
+	h := max(0, n.size.GetHeight()-style.Panel.GetVerticalFrameSize())
 
 	if static := n.getStaticView(); static != "" && len(n.scroll) > 0 {
 		h -= lipgloss.Height(static) + 1
@@ -180,13 +180,4 @@ func (n *Navigation) makeBody() string {
 // Helpers
 type context struct {
 	section SectionInterface
-}
-
-// LOW deplacer ça dans un factory qui gerer les style
-func panelStyle() lipgloss.Style {
-	return lipgloss.NewStyle().
-		Padding(0, 1).
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("5"))
-	// Background(lipgloss.Color("2")).
 }
