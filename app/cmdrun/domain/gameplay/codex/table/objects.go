@@ -3,10 +3,12 @@ package codextable
 import (
 	"errors"
 	"os"
+	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/objects"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"time"
@@ -23,6 +25,7 @@ type ObjectsTable struct {
 }
 
 type objectentry struct {
+	ID        id.ID           `bson:"id"`
 	Timestamp time.Time       `bson:"timestamp"`
 	Object    *objects.Object `bson:"object"`
 }
@@ -76,6 +79,7 @@ func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 
 func (tb *ObjectsTable) Add(object *objects.Object) {
 	tb.Entries = append(tb.Entries, objectentry{
+		ID:        id.New(),
 		Timestamp: time.Now().UTC(),
 		Object:    object,
 	})
@@ -91,7 +95,7 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 
 		name, description := entry.Object.GetName(), entry.Object.GetDescription()
 
-		entries = append(entries, newEntry(name, description, map[string]string{
+		entries = append(entries, newEntry(entry.ID, name, description, map[string]string{
 			"name":        name,
 			"description": description,
 			"category":    entry.Object.Category.String(),
@@ -100,18 +104,19 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *ObjectsTable) SaveFromMap(index int, values map[string]string) error {
-	if index < 0 {
+func (tb *ObjectsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
+	index := slices.IndexFunc(tb.Entries, func(entry objectentry) bool { return entry.ID == entryID })
+	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
 	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
-	if index < oldLen {
-		tb.Entries[index] = tb.Entries[oldLen]
-		tb.Entries = tb.Entries[:oldLen]
-	}
+	edited := tb.Entries[oldLen]
+	edited.ID = entryID
+	tb.Entries[index] = edited
+	tb.Entries = tb.Entries[:oldLen]
 	return nil
 }
 
@@ -147,6 +152,13 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) {
 
 func (tb *ObjectsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.Data)
+
+	// Entries saved before IDs existed are loaded with a zero ID.
+	for i := range tb.Entries {
+		if tb.Entries[i].ID.IsZero() {
+			tb.Entries[i].ID = id.New()
+		}
+	}
 }
 
 // Helpers

@@ -3,9 +3,11 @@ package codextable
 import (
 	"errors"
 	"os"
+	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/cmdrun/domain/card/locations"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"time"
@@ -19,6 +21,7 @@ type LocationsTable struct {
 }
 
 type locationsentry struct {
+	ID        id.ID               `bson:"id"`
 	Timestamp time.Time           `bson:"timestamp"`
 	Location  *locations.Location `bson:"location"`
 }
@@ -68,6 +71,7 @@ func (tb *LocationsTable) AddFromMap(values map[string]string) error {
 
 func (tb *LocationsTable) Add(location *locations.Location) {
 	tb.Entries = append(tb.Entries, locationsentry{
+		ID:        id.New(),
 		Timestamp: time.Now().UTC(),
 		Location:  location,
 	})
@@ -80,7 +84,7 @@ func (tb *LocationsTable) FormEntries() []Entry {
 			continue
 		}
 		name, description := entry.Location.GetName(), entry.Location.GetDescription()
-		entries = append(entries, newEntry(name, description, map[string]string{
+		entries = append(entries, newEntry(entry.ID, name, description, map[string]string{
 			"name":        name,
 			"description": description,
 		}, locations.IsLocked(name)))
@@ -88,18 +92,19 @@ func (tb *LocationsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *LocationsTable) SaveFromMap(index int, values map[string]string) error {
-	if index < 0 {
+func (tb *LocationsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
+	index := slices.IndexFunc(tb.Entries, func(entry locationsentry) bool { return entry.ID == entryID })
+	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
 	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
-	if index < oldLen {
-		tb.Entries[index] = tb.Entries[oldLen]
-		tb.Entries = tb.Entries[:oldLen]
-	}
+	edited := tb.Entries[oldLen]
+	edited.ID = entryID
+	tb.Entries[index] = edited
+	tb.Entries = tb.Entries[:oldLen]
 	return nil
 }
 
@@ -123,6 +128,13 @@ func (tb *LocationsTable) assertEntry(values map[string]string) {
 
 func (tb *LocationsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablelocations), &tb.Data)
+
+	// Entries saved before IDs existed are loaded with a zero ID.
+	for i := range tb.Entries {
+		if tb.Entries[i].ID.IsZero() {
+			tb.Entries[i].ID = id.New()
+		}
+	}
 }
 
 // - Helper --//

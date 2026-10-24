@@ -3,6 +3,8 @@ package milltable
 import (
 	"testing"
 
+	"solopg/app/cmdrun/types/id"
+
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
 )
 
@@ -14,7 +16,7 @@ func (t *testTable) AddFromMap(map[string]string) error {
 	return nil
 }
 
-func (t *testTable) SaveFromMap(int, map[string]string) error {
+func (t *testTable) SaveFromMap(id.ID, map[string]string) error {
 	return nil
 }
 

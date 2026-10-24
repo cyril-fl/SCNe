@@ -3,9 +3,11 @@ package codextable
 import (
 	"errors"
 	"os"
+	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/priority"
 	"solopg/app/cmdrun/domain/card/attributes/rank"
 	"solopg/app/cmdrun/domain/card/quest"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"strconv"
@@ -19,6 +21,7 @@ type QuestTable struct {
 	*Data[questentry] `bson:",inline"`
 }
 type questentry struct {
+	ID        id.ID        `bson:"id"`
 	Timestamp time.Time    `bson:"timestamp"`
 	Quest     *quest.Quest `bson:"quest"`
 }
@@ -36,6 +39,7 @@ func NewQuests(entries ...questentry) *QuestTable {
 // Methods
 func (tb *QuestTable) Add(quest *quest.Quest) {
 	tb.Entries = append(tb.Entries, questentry{
+		ID:        id.New(),
 		Timestamp: time.Now().UTC(),
 		Quest:     quest,
 	})
@@ -88,7 +92,7 @@ func (tb *QuestTable) FormEntries() []Entry {
 
 		name, description := entry.Quest.GetName(), entry.Quest.GetDescription()
 
-		entries = append(entries, newEntry(name, description, map[string]string{
+		entries = append(entries, newEntry(entry.ID, name, description, map[string]string{
 			"name":        name,
 			"description": description,
 			"done":        strconv.FormatBool(entry.Quest.Done),
@@ -100,18 +104,19 @@ func (tb *QuestTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *QuestTable) SaveFromMap(index int, values map[string]string) error {
-	if index < 0 {
+func (tb *QuestTable) SaveFromMap(entryID id.ID, values map[string]string) error {
+	index := slices.IndexFunc(tb.Entries, func(entry questentry) bool { return entry.ID == entryID })
+	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
 	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
-	if index < oldLen {
-		tb.Entries[index] = tb.Entries[oldLen]
-		tb.Entries = tb.Entries[:oldLen]
-	}
+	edited := tb.Entries[oldLen]
+	edited.ID = entryID
+	tb.Entries[index] = edited
+	tb.Entries = tb.Entries[:oldLen]
 	return nil
 }
 
@@ -134,6 +139,13 @@ func (tb *QuestTable) assertEntry(values map[string]string) {
 
 func (tb *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.Data)
+
+	// Entries saved before IDs existed are loaded with a zero ID.
+	for i := range tb.Entries {
+		if tb.Entries[i].ID.IsZero() {
+			tb.Entries[i].ID = id.New()
+		}
+	}
 }
 
 //

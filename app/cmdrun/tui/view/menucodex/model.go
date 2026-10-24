@@ -104,6 +104,7 @@ func newpage(table codextable.Table, makeForm form.Makefunc) *formpage.Page {
 
 			for _, entry := range entries {
 				items = append(items, formpage.Item{
+					ID:          entry.ID,
 					Name:        i19n.Localize(entry.GetName()),
 					Description: i19n.Localize(entry.GetDescription()),
 					Values:      entry.Values,

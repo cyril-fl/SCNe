@@ -1,6 +1,7 @@
 package formpage
 
 import (
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/messages"
@@ -63,12 +64,12 @@ func (p *Page) handleValidate() tea.Cmd {
 	if p.form.HasErr() {
 		return messages.Fail(p.form.GetErr())
 	}
-	if err := p.save(p.index, p.form.GetValuesAsMappedString()); err != nil {
+	if err := p.save(p.entryID, p.form.GetValuesAsMappedString()); err != nil {
 		p.form.SetErr(err)
 		return messages.Fail(err)
 	}
 	p.form = nil
-	p.index = -1
+	p.entryID = id.ID{}
 	p.refresh()
 	return nil
 }

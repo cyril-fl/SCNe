@@ -3,11 +3,13 @@ package codextable
 import (
 	"errors"
 	"os"
+	"slices"
 	"solopg/app/cmdrun/domain/card/attributes/rarity"
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/characters/classes"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/services/factory/millstats"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 
@@ -21,6 +23,7 @@ type NpcsTable struct {
 	*Data[npcsentry] `bson:",inline"`
 }
 type npcsentry struct {
+	ID        id.ID                 `bson:"id"`
 	Timestamp time.Time             `bson:"timestamp"`
 	Character *characters.Character `bson:"character"`
 }
@@ -38,6 +41,7 @@ func NewNpcs(entries ...npcsentry) *NpcsTable {
 // Methods
 func (tb *NpcsTable) Add(character *characters.Character) {
 	tb.Entries = append(tb.Entries, npcsentry{
+		ID:        id.New(),
 		Timestamp: time.Now().UTC(),
 		Character: character,
 	})
@@ -113,7 +117,7 @@ func (tb *NpcsTable) FormEntries() []Entry {
 		for stat, value := range character.Stats.MappedString() {
 			values[stat] = plumtransform.ParseAsString(value)
 		}
-		entries = append(entries, newEntry(
+		entries = append(entries, newEntry(entry.ID,
 			character.GetName(),
 			character.Race,
 			values,
@@ -123,18 +127,19 @@ func (tb *NpcsTable) FormEntries() []Entry {
 	return entries
 }
 
-func (tb *NpcsTable) SaveFromMap(index int, values map[string]string) error {
-	if index < 0 {
+func (tb *NpcsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
+	index := slices.IndexFunc(tb.Entries, func(entry npcsentry) bool { return entry.ID == entryID })
+	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
 	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
-	if index < oldLen {
-		tb.Entries[index] = tb.Entries[oldLen]
-		tb.Entries = tb.Entries[:oldLen]
-	}
+	edited := tb.Entries[oldLen]
+	edited.ID = entryID
+	tb.Entries[index] = edited
+	tb.Entries = tb.Entries[:oldLen]
 	return nil
 }
 
@@ -173,6 +178,13 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) {
 
 func (tb *NpcsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.Data)
+
+	// Entries saved before IDs existed are loaded with a zero ID.
+	for i := range tb.Entries {
+		if tb.Entries[i].ID.IsZero() {
+			tb.Entries[i].ID = id.New()
+		}
+	}
 }
 
 // Helpers

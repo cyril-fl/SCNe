@@ -1,13 +1,15 @@
 package codextable
 
 import (
+	"solopg/app/cmdrun/types/id"
+
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
 // - Table - //
 type Table interface {
 	AddFromMap(values map[string]string) error
-	SaveFromMap(index int, values map[string]string) error
+	SaveFromMap(entryID id.ID, values map[string]string) error
 	FormEntries() []Entry
 	Ensure()
 }
@@ -46,6 +48,7 @@ func ensureEmbeddedTable[E any](name string, table **Data[E]) {
 type Entry struct {
 	plumprimitive.Descriptible
 
+	ID     id.ID
 	Values map[string]string
 	Locked bool
 }
@@ -53,8 +56,9 @@ type Entry struct {
 // Getters and Setters
 
 // Methodss
-func newEntry(name, description string, values map[string]string, locked bool) Entry {
+func newEntry(entryID id.ID, name, description string, values map[string]string, locked bool) Entry {
 	return Entry{
+		ID: entryID,
 		Descriptible: plumprimitive.Describe(plumprimitive.TemplateDescriptible{
 			Name:        name,
 			Description: description,

@@ -3,6 +3,7 @@ package formpage
 import (
 	"testing"
 
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/form/field"
@@ -24,7 +25,7 @@ func TestPageSetSizeResizesList(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.SetSize(size.New(size.Template{Width: 42, Height: 20}))
@@ -37,7 +38,7 @@ func TestPageCtrlNOpensNewFormFromEmptyPage(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey('n', tea.ModCtrl))
@@ -53,7 +54,7 @@ func TestPageEnterOpensSelectedEntry(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return []Item{{Name: "first", Values: map[string]string{"name": "loaded"}}} },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
@@ -66,7 +67,7 @@ func TestPageAltEnterDoesNotOpenNewFormWhenListIsEmpty(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey(tea.KeyEnter, tea.ModAlt))
@@ -81,7 +82,7 @@ func TestPageAltEnterDoesNotOpenLockedEntry(t *testing.T) {
 			return []Item{{Name: "template", Locked: true, Values: map[string]string{"name": "template"}}}
 		},
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	if page.EditItem() {
@@ -96,7 +97,7 @@ func TestPageCtrlNOpensNewForm(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return []Item{{Name: "first"}} },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey('n', tea.ModCtrl))
@@ -109,7 +110,7 @@ func TestPageListNavigationAndEscape(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return []Item{{Name: "first"}, {Name: "second"}} },
 		NewForm: testForm,
-		Save:    func(int, map[string]string) error { return nil },
+		Save:    func(id.ID, map[string]string) error { return nil },
 	})
 
 	page.Update(testKey(tea.KeyDown, 0))
@@ -131,8 +132,8 @@ func TestPageSubmitCallsSave(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save: func(index int, values map[string]string) error {
-			called = index == -1 && values["name"] == ""
+		Save: func(entryID id.ID, values map[string]string) error {
+			called = entryID.IsZero() && values["name"] == ""
 			return nil
 		},
 	})
@@ -152,7 +153,7 @@ func TestPageAltEnterValidates(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save: func(index int, values map[string]string) error {
+		Save: func(entryID id.ID, values map[string]string) error {
 			called = true
 			return nil
 		},
@@ -174,7 +175,7 @@ func TestPageLastFieldValidates(t *testing.T) {
 	page := New(Template{
 		Items:   func() []Item { return nil },
 		NewForm: testForm,
-		Save: func(index int, values map[string]string) error {
+		Save: func(entryID id.ID, values map[string]string) error {
 			called = true
 			return nil
 		},
@@ -188,5 +189,30 @@ func TestPageLastFieldValidates(t *testing.T) {
 	page.Update(cmd())
 	if !called {
 		t.Fatal("expected last field transition to submit the form")
+	}
+}
+
+func TestPageSaveReceivesSelectedEntryIDWhenFiltered(t *testing.T) {
+	alpha, beta := id.New(), id.New()
+	var saved id.ID
+	page := New(Template{
+		Items: func() []Item {
+			return []Item{{ID: alpha, Name: "alpha"}, {ID: beta, Name: "beta"}}
+		},
+		NewForm: testForm,
+		Save: func(entryID id.ID, values map[string]string) error {
+			saved = entryID
+			return nil
+		},
+	})
+
+	page.GetList().SetFilterText("beta")
+	if !page.EditItem() {
+		t.Fatal("expected filtered entry to open for editing")
+	}
+	page.Update(form.Validate{})
+
+	if saved != beta {
+		t.Fatalf("Save received %v, want %v", saved, beta)
 	}
 }

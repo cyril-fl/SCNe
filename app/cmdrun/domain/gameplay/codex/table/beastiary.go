@@ -3,8 +3,10 @@ package codextable
 import (
 	"errors"
 	"os"
+	"slices"
 	"solopg/app/cmdrun/domain/card/characters/races"
 	"solopg/app/cmdrun/services/factory/millstats"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
 	"solopg/app/shared/services/logs"
 	"time"
@@ -19,6 +21,7 @@ type BeastiaryTable struct {
 }
 
 type beastentry struct {
+	ID        id.ID       `bson:"id"`
 	Timestamp time.Time   `bson:"timestamp"`
 	Race      *races.Race `bson:"race"`
 }
@@ -38,6 +41,7 @@ func NewBeastiary(entries ...beastentry) *BeastiaryTable {
 // Methods
 func (tb *BeastiaryTable) Add(race *races.Race) {
 	tb.Entries = append(tb.Entries, beastentry{
+		ID:        id.New(),
 		Timestamp: time.Now().UTC(),
 		Race:      race,
 	})
@@ -114,23 +118,24 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 		for _, modifier := range entry.Race.GetBonus() {
 			values[modifier.Stat.String()] = plumtransform.ParseAsString(modifier.Value)
 		}
-		entries = append(entries, newEntry(name, description, values, races.IsLocked(name)))
+		entries = append(entries, newEntry(entry.ID, name, description, values, races.IsLocked(name)))
 	}
 	return entries
 }
 
-func (tb *BeastiaryTable) SaveFromMap(index int, values map[string]string) error {
-	if index < 0 {
+func (tb *BeastiaryTable) SaveFromMap(entryID id.ID, values map[string]string) error {
+	index := slices.IndexFunc(tb.Entries, func(entry beastentry) bool { return entry.ID == entryID })
+	if entryID.IsZero() || index < 0 {
 		return tb.AddFromMap(values)
 	}
 	oldLen := len(tb.Entries)
 	if err := tb.AddFromMap(values); err != nil {
 		return err
 	}
-	if index < oldLen {
-		tb.Entries[index] = tb.Entries[oldLen]
-		tb.Entries = tb.Entries[:oldLen]
-	}
+	edited := tb.Entries[oldLen]
+	edited.ID = entryID
+	tb.Entries[index] = edited
+	tb.Entries = tb.Entries[:oldLen]
 	return nil
 }
 
@@ -156,6 +161,14 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) {
 func (tb *BeastiaryTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.Data)
 	tb.Entries = superChargeEntries(tb.Entries)
+
+	// Entries saved before IDs existed are loaded with a zero ID.
+	for i := range tb.Entries {
+		if tb.Entries[i].ID.IsZero() {
+			tb.Entries[i].ID = id.New()
+		}
+	}
+
 	tb.syncWithConfig()
 }
 
@@ -212,6 +225,7 @@ func makeMissingEntries(known plumtypes.Set[string], entries []beastentry) []bea
 
 		known.Add(r.GetName())
 		all = append(all, beastentry{
+			ID:        id.New(),
 			Timestamp: time.Now().UTC(),
 			Race:      &r,
 		})

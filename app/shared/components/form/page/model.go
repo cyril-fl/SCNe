@@ -2,6 +2,7 @@ package formpage
 
 import (
 	"solopg/app/cmdrun/tui/shortcut"
+	"solopg/app/cmdrun/types/id"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
@@ -11,8 +12,9 @@ import (
 )
 
 // Item is an entry displayed by a FormPage. Values are used to initialise the
-// form when the entry is opened for editing.
+// form when the entry is opened for editing. ID is passed back to Save.
 type Item struct {
+	ID          id.ID
 	Name        string
 	Description string
 	Values      map[string]string
@@ -22,7 +24,8 @@ type Item struct {
 type Template struct {
 	Items   func() []Item
 	NewForm func(values map[string]string) *form.Form
-	Save    func(index int, values map[string]string) error
+	// Save receives a zero ID for a new entry.
+	Save func(entryID id.ID, values map[string]string) error
 }
 
 type Page struct {
@@ -30,10 +33,10 @@ type Page struct {
 
 	items   func() []Item
 	newForm func(map[string]string) *form.Form
-	save    func(int, map[string]string) error
+	save    func(id.ID, map[string]string) error
 
-	form  *form.Form
-	index int
+	form    *form.Form
+	entryID id.ID
 }
 
 // TODO regardader pour adopter cette pholosipheio ou c'est possible
@@ -42,7 +45,6 @@ func New(template Template) *Page {
 		items:   template.Items,
 		newForm: template.NewForm,
 		save:    template.Save,
-		index:   -1,
 	}
 
 	p.intList()
@@ -125,11 +127,11 @@ func (p *Page) Update(msg tea.Msg) tea.Cmd {
 
 func (p *Page) Close() {
 	p.form = nil
-	p.index = -1
+	p.entryID = id.ID{}
 }
 
 func (p *Page) EditNewItem() {
-	p.index = -1
+	p.entryID = id.ID{}
 	p.form = p.newForm(nil)
 }
 
@@ -141,8 +143,8 @@ func (p *Page) EditItem() bool {
 		return false
 	}
 
-	p.index = list.Index()
 	entry := selected.Value()
+	p.entryID = entry.ID
 	if entry.Locked {
 		return false
 	}
@@ -154,7 +156,7 @@ func (p *Page) EditItem() bool {
 func (p *Page) HandleEscape() bool {
 	if p.form != nil {
 		p.form = nil
-		p.index = -1
+		p.entryID = id.ID{}
 		return true
 	}
 	return false
