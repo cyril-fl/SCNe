@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	"solopg/app/cmdrun/domain/card/attributes/rarity"
+	"solopg/app/cmdrun/domain/card/attributes/variety"
 	"solopg/app/shared/services/logs"
 )
 
@@ -66,5 +68,31 @@ func writeCharacterConfig(t *testing.T, path, name string) {
 		"wallet: {}\n"
 	if err := os.WriteFile(path, []byte(contents), 0o644); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestLoadFromFileRegistersNonEmptyAttributes(t *testing.T) {
+	folder := t.TempDir()
+	loaded := filepath.Join(folder, "loaded.yaml")
+	if err := os.WriteFile(loaded, []byte("name: mock.character\nrarity: mock.character.rarity\nvariety: mock.character.variety\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	empty := filepath.Join(folder, "empty.yaml")
+	if err := os.WriteFile(empty, []byte("name: mock.character.empty\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := loadFromFile(loaded); err != nil {
+		t.Fatalf("loadFromFile(loaded) error = %v", err)
+	}
+	if _, err := loadFromFile(empty); err != nil {
+		t.Fatalf("loadFromFile(empty) error = %v", err)
+	}
+
+	if !rarity.Assert("mock.character.rarity") || !variety.Assert("mock.character.variety") {
+		t.Error("loaded rarity and variety should be registered")
+	}
+	if rarity.Assert("") || variety.Assert("") {
+		t.Error("empty rarity and variety should not be registered")
 	}
 }

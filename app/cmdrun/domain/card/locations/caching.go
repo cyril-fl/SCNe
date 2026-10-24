@@ -66,13 +66,13 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 		return yamlConfig{}, logs.RawError("load %s: %w", fileAddress, loader.GetErr())
 	}
 
-	/*
-		LOW Verrifier ou "MakeDefault" pourrait être utile
-		ex: Si la data vien d'une carte loader, c'est valider
-
-		Exemple a suivre pour les autres variete et autres pourquoi ? si ca vien d'une carte loader, c'est valider !
-	*/
-	variety.MakeDefault(params.Variety)
+	// Values from a loaded card file are trusted: register them as valid.
+	if params.Rarity != "" {
+		rarity.MakeDefault(params.Rarity)
+	}
+	if params.Variety != "" {
+		variety.MakeDefault(params.Variety)
+	}
 
 	return *params, nil
 }
@@ -129,8 +129,8 @@ func newFromYaml(config yamlConfig) *Location {
 	newLocation, err := New(Template{
 		Name:        config.Name,
 		Description: config.Description,
-		Rarity:      rarity.MakeDefault(config.Rarity),
-		Variety:     variety.MakeDefault(config.Variety),
+		Rarity:      rarity.Rarity(config.Rarity),
+		Variety:     variety.Variety(config.Variety),
 		Effects:     config.Effects,
 	})
 

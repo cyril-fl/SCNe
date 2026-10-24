@@ -64,6 +64,18 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 	if loader.HasErr() {
 		return yamlConfig{}, logs.RawError("load gear file %s: %w", fileAddress, loader.GetErr())
 	}
+
+	// Values from a loaded card file are trusted: register them as valid.
+	if params.Rarity != "" {
+		rarity.MakeDefault(string(params.Rarity))
+	}
+	if params.Variety != "" {
+		variety.MakeDefault(string(params.Variety))
+	}
+	if params.Category != "" {
+		objectcategory.MakeDefault(string(params.Category))
+	}
+
 	return *params, nil
 }
 
