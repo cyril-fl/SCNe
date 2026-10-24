@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"solopg/app/cmdroot"
-	"solopg/app/shared/services/annotations"
+	"solopg/app/cmdversion/services/process/generatebuildinfo"
 	"solopg/app/shared/services/mango"
 	"solopg/config"
 
@@ -15,26 +15,13 @@ var c = config.Current
 var cmd = c.Commands
 
 var cmdRoot = &cobra.Command{
-	Use:   c.Name,
-	Short: cmd.Root.Short,
-	Long:  cmd.Root.Long,
-	// TODO link ca correctement
-	// Version: config.Version,
-	Example: cmd.Root.Example,
-	PersistentPreRunE: func(cobra *cobra.Command, args []string) error {
-		if _, ok := cobra.Annotations[annotations.NODB]; ok {
-			return nil
-		}
-
-		db, err := mango.Init()
-		if err != nil {
-			return err
-		}
-
-		return cmdroot.Setup(db)
-
-	},
-	RunE: cmdroot.RunCmdRoot,
+	Use:               c.Name,
+	Short:             cmd.Root.Short,
+	Long:              cmd.Root.Long,
+	Version:           generatebuildinfo.Version,
+	Example:           cmd.Root.Example,
+	PersistentPreRunE: cmdroot.PersistentPreRunECmdRoot,
+	RunE:              cmdroot.RunECmdRoot,
 }
 
 func Execute() {

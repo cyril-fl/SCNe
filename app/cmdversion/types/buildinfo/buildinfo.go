@@ -26,6 +26,18 @@ func New(params InfoTemplate) BuildInfo {
 	}
 }
 
+func (b BuildInfo) GetVersion() string {
+	return b.version
+}
+
+func (b BuildInfo) GetCommit() string {
+	return b.commit
+}
+
+func (b BuildInfo) GetDate() string {
+	return b.date
+}
+
 func (b BuildInfo) String() string {
 	sb := strings.Builder{}
 
