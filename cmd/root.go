@@ -15,6 +15,7 @@ var c = config.GetConfig()
 var cmd = c.Commands
 
 var cmdRoot = &cobra.Command{
+	Deprecated:        "This command is deprecated and will be removed in a future version. Will be replaced by 'scne'.",
 	Use:               c.Name,
 	Short:             cmd.Root.Short,
 	Long:              cmd.Root.Long,

@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TEST
 func RunCmdServe(cobra *cobra.Command, args []string) error {
 	db := mango.GetDb()
 
