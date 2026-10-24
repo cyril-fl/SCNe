@@ -4,11 +4,27 @@ import (
 	"fmt"
 	"solopg/app/cmdrun/domain/card/attributes/stats"
 	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/services/i19n"
 	"strings"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
+
+// NewSection reads the session on every render, so player and location changes show up live.
+func NewSection(gameSession *session.GameSession) *navigation.Section {
+	return navigation.NewSection(navigation.TemplateSection{
+		ID: "metadata",
+		Content: func() string {
+			var content strings.Builder
+			GetCharacterInfo(&content, gameSession)
+			GetLocationInfo(&content, gameSession)
+			GetStatInfo(&content, gameSession)
+
+			return strings.TrimRight(content.String(), "\n")
+		},
+	})
+}
 
 func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession) {
 	var characterName = plumtransform.Uppercase(i19n.Localize("character"))

@@ -7,14 +7,12 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/tui/shortcut"
 	"solopg/app/cmdrun/tui/view/menucodex"
-	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
 	"solopg/app/shared/messages"
 	"solopg/app/shared/services/factory/millroll"
 	"solopg/app/shared/services/statemachine"
 	interfass "solopg/app/shared/types/interface"
-	"strings"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -87,22 +85,13 @@ func makeViewState(params UiParams) statemachine.ViewState[state] {
 }
 
 // Helpers
-func makeStatView(gameSession *session.GameSession) string {
-	var content strings.Builder
-	menumetadata.GetCharacterInfo(&content, gameSession)
-	menumetadata.GetLocationInfo(&content, gameSession)
-	menumetadata.GetStatInfo(&content, gameSession)
-
-	return strings.TrimRight(content.String(), "\n")
-}
-
-func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterface {
+func makePanelPart(gameSession *session.GameSession) []navigation.FocusableSectionInterface {
 	codex := gameSession.State.Codex
 	codex.EnsureInitialized()
 
-	list := []navigation.SectionInterface{}
-	row := []navigation.SectionInterface{
-		navigation.NewSection(navigation.TemplateSection[oracle.Oracle]{
+	list := []navigation.FocusableSectionInterface{}
+	row := []navigation.FocusableSectionInterface{
+		navigation.NewFocusableSection(navigation.TemplateFocusableSection[oracle.Oracle]{
 			ID:      "oracles",
 			Options: oracle.ListVisible(),
 			Footer:  []string{shortcut.THROW.String()},
@@ -111,7 +100,7 @@ func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterfa
 			},
 			Msg: messages.Rolled{},
 		}),
-		navigation.NewSection(navigation.TemplateSection[dice.Dice]{
+		navigation.NewFocusableSection(navigation.TemplateFocusableSection[dice.Dice]{
 			ID:      "dice",
 			Options: dice.List(),
 			Footer:  []string{shortcut.THROW.String()},
@@ -120,7 +109,7 @@ func makePanelPart(gameSession *session.GameSession) []navigation.SectionInterfa
 			},
 			Msg: messages.Rolled{},
 		}),
-		navigation.NewSection(navigation.TemplateSection[hint.Hint]{
+		navigation.NewFocusableSection(navigation.TemplateFocusableSection[hint.Hint]{
 			ID:      "hint",
 			Options: hint.List(),
 			Footer:  []string{shortcut.THROW.String()},

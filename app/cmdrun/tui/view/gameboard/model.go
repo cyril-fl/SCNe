@@ -2,6 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/form"
@@ -37,7 +38,7 @@ func NewModel(params UiParams) *model {
 	return &model{
 		state: makeViewState(params),
 		menu: navigation.New(navigation.Template{
-			Static:     []string{makeStatView(params.Session)},
+			Static:     []navigation.SectionInterface{menumetadata.NewSection(params.Session)},
 			Scrollable: makePanelPart(params.Session),
 		}),
 		session: params.Session,

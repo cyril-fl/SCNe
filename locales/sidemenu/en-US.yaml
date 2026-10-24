@@ -63,6 +63,10 @@ hint:
 location:
   other: "location"
 
+# --- Metadata ---
+metadata:
+  other: "metadata"
+
 # --- Oracles ---
 oracles:
   other: "oracles"

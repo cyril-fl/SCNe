@@ -7,6 +7,7 @@ import (
 )
 
 var _ SectionInterface = (*Section)(nil)
+var _ FocusableSectionInterface = (*FocusableSection)(nil)
 
 type testNamed string
 
@@ -14,7 +15,7 @@ func (v testNamed) GetName() string { return string(v) }
 
 func TestMenuEnterCallbackReceivesSelectedValue(t *testing.T) {
 	var selected testNamed
-	menu := NewSection(TemplateSection[testNamed]{
+	menu := NewFocusableSection(TemplateFocusableSection[testNamed]{
 		ID:      "test",
 		Options: []testNamed{"first", "second"},
 		HandleEnterInput: func(value testNamed) tea.Cmd {

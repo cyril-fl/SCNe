@@ -39,13 +39,13 @@ func (i *testItem) GetFooter() []string { return nil }
 func (i *testItem) HandleUpdate(tea.Msg) tea.Cmd { return nil }
 
 func newTestNavigation(contents []string, viewportHeight int) *Navigation {
-	parts := make([]SectionInterface, 0, len(contents))
+	parts := make([]FocusableSectionInterface, 0, len(contents))
 	for _, content := range contents {
 		parts = append(parts, newTestItem(content))
 	}
 
 	navigation := New(Template{
-		Static:     []string{"static"},
+		Static:     []SectionInterface{NewSection(TemplateSection{Content: func() string { return "static" }})},
 		Scrollable: parts,
 	})
 	navigation.SetSize(size.New(size.Template{

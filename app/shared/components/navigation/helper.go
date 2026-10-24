@@ -15,7 +15,7 @@ import (
 )
 
 // Helpers
-func makeNavigationContent(part []SectionInterface) (string, []int) {
+func makeNavigationContent(part []FocusableSectionInterface) (string, []int) {
 	blocks := make([]string, 0, len(part))
 	blockoffsets := make([]int, len(part))
 	offset := 0
@@ -30,7 +30,7 @@ func makeNavigationContent(part []SectionInterface) (string, []int) {
 	return strings.Join(blocks, "\n"), blockoffsets
 }
 
-func makeSectionModel[T pluminterface.Named](params TemplateSection[T]) list.Model {
+func makeSectionModel[T pluminterface.Named](params TemplateFocusableSection[T]) list.Model {
 	items := make([]list.Item, 0, len(params.Options))
 
 	for _, option := range params.Options {
@@ -45,7 +45,7 @@ func makeSectionModel[T pluminterface.Named](params TemplateSection[T]) list.Mod
 	return model
 }
 
-func makeEnterInputHandler[T pluminterface.Named](model *list.Model, params TemplateSection[T]) func() tea.Cmd {
+func makeEnterInputHandler[T pluminterface.Named](model *list.Model, params TemplateFocusableSection[T]) func() tea.Cmd {
 	if params.HandleEnterInput == nil {
 		return nil
 	}

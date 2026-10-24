@@ -10,15 +10,19 @@ import (
 type SectionInterface interface {
 	ID() string
 
-	SetFocus(bool)
-
-	GetList() *list.Model
-	SetList(*list.Model)
-
 	SetSize(size size.Size)
 
 	GetView() string
 	GetFooter() []string
 
 	HandleUpdate(tea.Msg) tea.Cmd
+}
+
+type FocusableSectionInterface interface {
+	SectionInterface
+
+	SetFocus(bool)
+
+	GetList() *list.Model
+	SetList(*list.Model)
 }

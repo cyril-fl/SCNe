@@ -18,8 +18,8 @@ type Navigation struct {
 	plumprimitive.Fallible
 	cache
 
-	static []string
-	scroll []SectionInterface
+	static []SectionInterface
+	scroll []FocusableSectionInterface
 	size   size.Size
 	view   viewport.Model
 }
@@ -29,8 +29,8 @@ type cache struct {
 }
 
 type Template struct {
-	Static     []string
-	Scrollable []SectionInterface
+	Static     []SectionInterface
+	Scrollable []FocusableSectionInterface
 }
 
 func New(template Template) *Navigation {
@@ -45,6 +45,7 @@ func New(template Template) *Navigation {
 func (n *Navigation) GetView() string {
 	content, contentoffsets := makeNavigationContent(n.scroll)
 
+	n.resizeView()
 	n.view.SetContent(content)
 	n.setOffset(contentoffsets)
 
@@ -63,12 +64,32 @@ func (n *Navigation) GetFooter() []string {
 }
 
 func (n *Navigation) getStaticView() string {
-	return strings.Join(n.static, "\n")
+	views := make([]string, 0, len(n.static))
+	for _, item := range n.static {
+		views = append(views, item.GetView())
+	}
+	return strings.Join(views, "\n")
 }
 
 func (n *Navigation) SetSize(newsize size.Size) {
 	n.size = newsize
 
+	w, h := n.resizeView()
+	itemsize := size.New(size.Template{
+		Width:  w,
+		Height: h,
+	})
+
+	for _, item := range n.static {
+		item.SetSize(itemsize)
+	}
+	for _, item := range n.scroll {
+		item.SetSize(itemsize)
+	}
+}
+
+// resizeView fits the viewport under the static sections, whose height can change with their content.
+func (n *Navigation) resizeView() (int, int) {
 	w := max(0, n.size.GetWidth()-style.Panel.GetHorizontalFrameSize())
 	h := max(0, n.size.GetHeight()-style.Panel.GetVerticalFrameSize())
 
@@ -81,12 +102,7 @@ func (n *Navigation) SetSize(newsize size.Size) {
 	n.view.SetWidth(w)
 	n.view.SetHeight(h)
 
-	for _, item := range n.scroll {
-		item.SetSize(size.New(size.Template{
-			Width:  w,
-			Height: h,
-		}))
-	}
+	return w, h
 }
 
 func (n *Navigation) setOffset(offsets []int) {
@@ -95,7 +111,7 @@ func (n *Navigation) setOffset(offsets []int) {
 	}
 }
 
-func (n *Navigation) getActiveItem() SectionInterface {
+func (n *Navigation) getActiveItem() FocusableSectionInterface {
 	if len(n.scroll) == 0 {
 		return nil
 	}
@@ -103,12 +119,12 @@ func (n *Navigation) getActiveItem() SectionInterface {
 }
 
 // Methods
-func (n *Navigation) Merge(items ...SectionInterface) *Navigation {
+func (n *Navigation) Merge(items ...FocusableSectionInterface) *Navigation {
 	n.scroll = append(n.scroll, items...)
 	return n
 }
 
-func (n *Navigation) Add(item SectionInterface) *Navigation {
+func (n *Navigation) Add(item FocusableSectionInterface) *Navigation {
 	n.scroll = append(n.scroll, item)
 	return n
 }
@@ -179,5 +195,5 @@ func (n *Navigation) makeBody() string {
 
 // Helpers
 type context struct {
-	section SectionInterface
+	section FocusableSectionInterface
 }

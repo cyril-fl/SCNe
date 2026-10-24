@@ -19,7 +19,7 @@ import (
 
 func NewSection(focused bool) *codexMenu {
 	return &codexMenu{
-		Section: navigation.NewSection(navigation.TemplateSection[*codexMenuItem]{
+		FocusableSection: navigation.NewFocusableSection(navigation.TemplateFocusableSection[*codexMenuItem]{
 			ID:      "codex",
 			Options: makeCodexList(),
 			Focused: focused,
@@ -33,7 +33,7 @@ type CodexMenuParams struct {
 }
 
 type codexMenu struct {
-	*navigation.Section
+	*navigation.FocusableSection
 	isSubviewOpen bool
 }
 
@@ -42,7 +42,7 @@ type codexMenu struct {
 // The Codex selector remains visible in the side panel; the selected page is
 // rendered separately by the gameboard state machine.
 func (m *codexMenu) GetView() string {
-	return m.Section.GetView()
+	return m.FocusableSection.GetView()
 }
 
 func (m *codexMenu) GetFooter() []string {
