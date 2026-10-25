@@ -20,6 +20,7 @@ const (
 	AltArrows  Command = "⌥↑↓"
 	CtrlPlus   Command = "^+"
 	Esc        Command = "⎋"
+	Alt        Command = "⌥"
 )
 
 type Template struct {

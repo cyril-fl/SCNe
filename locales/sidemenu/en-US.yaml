@@ -78,3 +78,15 @@ stats.entry:
   other: "Health: {{.health}} | Mental: {{.mental}} | Physical: {{.physical}} | Social: {{.social}} | Stamina: {{.stamina}}"
 stats.entry:unknown:
   other: "No stat"
+
+# --- Actions ---
+actions:
+  other: "actions"
+action.fight:
+  other: "fight"
+action.travel:
+  other: "travel"
+opponents:
+  other: "opponents"
+target:
+  other: "target"

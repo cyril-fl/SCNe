@@ -13,8 +13,6 @@
     - stat: social
       value: 0
   armor_set: adventurer
-  actions: [attack, defend]
-  intent: intent_aggressive
 - name: class.mage
   playable: true
   bonus:
@@ -29,8 +27,6 @@
     - stat: social
       value: 1
   armor_set: adventurer
-  actions: [attack, defend]
-  intent: intent_cautious
 - name: class.thief
   playable: true
   bonus:
@@ -45,16 +41,10 @@
     - stat: social
       value: 2
   armor_set: adventurer
-  actions: [attack, defend]
-  intent: intent_cautious
   
 # Non-playable races
 - name: class.merchant
   playable: false
-  actions: [attack, defend]
-  intent: intent_cautious
 - name: class.beast
   playable: false
-  actions: [attack, defend]
-  intent: intent_aggressive
 

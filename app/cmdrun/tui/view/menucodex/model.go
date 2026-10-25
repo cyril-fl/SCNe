@@ -4,15 +4,12 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/codex"
 	codexform "solopg/app/cmdrun/domain/gameplay/codex/form"
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/domain/gameplay/portal"
 	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/components/form"
 	formpage "solopg/app/shared/components/form/page"
 	"solopg/app/shared/components/models"
 	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/messages"
 	"solopg/app/shared/services/i19n"
 
 	"solopg/app/cmdrun/types/size"
@@ -20,9 +17,6 @@ import (
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
 )
-
-// COMBAT_PAGE is the gameboard page opened by the fight action.
-const COMBAT_PAGE = "combat"
 
 func NewSection(focused bool) *codexMenu {
 	return &codexMenu{
@@ -95,36 +89,11 @@ func (m *codexMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 func NewFormPages(gameSession *session.GameSession) map[string]*formpage.Page {
 	c := gameSession.State.Codex
 	return map[string]*formpage.Page{
-		"codex.locations": newpage(c.Locations, codexform.GetLocationForm, newTravelAction(gameSession)),
-		"codex.npcs":      newpage(c.Npcs, codexform.GetNpcForm, newFightAction(gameSession)),
+		"codex.locations": newpage(c.Locations, codexform.GetLocationForm, nil),
+		"codex.npcs":      newpage(c.Npcs, codexform.GetNpcForm, nil),
 		"codex.beastiary": newpage(c.Beastiary, codexform.GetBeastiaryForm, nil),
 		"codex.objects":   newpage(c.Objects, codexform.GetObjectForm, nil),
 		"codex.quest":     newpage(c.Quest, codexform.GetQuestForm, nil),
-	}
-}
-
-// newTravelAction sets the selected codex location as the session's current location.
-func newTravelAction(gameSession *session.GameSession) *formpage.Action {
-	return &formpage.Action{
-		Label: "travel",
-		Run: func(entryID id.ID) tea.Cmd {
-			portal.Travel(gameSession, entryID)
-			return nil
-		},
-	}
-}
-
-// newFightAction starts a combat against the selected codex NPC and opens the combat page.
-func newFightAction(gameSession *session.GameSession) *formpage.Action {
-	return &formpage.Action{
-		Label: "fight",
-		Run: func(entryID id.ID) tea.Cmd {
-			opponent := gameSession.State.Codex.Npcs.Find(entryID)
-			if err := gameSession.StartCombat(opponent); err != nil {
-				return messages.Fail(err)
-			}
-			return form.OpenPage(COMBAT_PAGE)
-		},
 	}
 }
 

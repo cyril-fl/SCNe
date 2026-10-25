@@ -5,7 +5,6 @@ import (
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
 	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/domain/gameplay/combat"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/logs"
 )
@@ -36,21 +35,14 @@ func (s *GameSession) UpdateLocation(newLocation *locations.Location) {
 	s.DiscoverLocation(newLocation)
 }
 
-// StartCombat starts a combat between the player and opponent.
-func (s *GameSession) StartCombat(opponent *characters.Character) error {
-	newCombat, err := combat.New(s.State.Player, opponent)
-	if err != nil {
-		return err
-	}
-
-	s.State.Combat = newCombat
-	logs.SilentInfo("combat:start", map[string]any{"Opponent": opponent.GetName()})
-	return nil
+// StartCombat sets the opponents of the combat.
+func (s *GameSession) StartCombat(opponents []*characters.Character) {
+	s.State.Opponents = opponents
 }
 
-// EndCombat leaves the current combat.
+// EndCombat clears the opponents.
 func (s *GameSession) EndCombat() {
-	s.State.Combat = nil
+	s.State.Opponents = nil
 }
 
 // GetAdventureJournal returns the adventure log.

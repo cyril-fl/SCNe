@@ -1,51 +1,5 @@
 # --- Combat ---
-combat:start:
-  other: "Combat started against {{.Opponent}}"
-combat.round:
-  other: "Round {{.Round}}"
-combat.fighter:
-  other: "{{.Fighter}} : {{.Health}} HP"
-combat.action:result:
-  other: "{{.Fighter}} · {{.Action}} · {{.Roll}} → {{.Outcome}}"
-combat.damage:
-  other: "{{.Fighter}} takes {{.Damage}} damage ({{.Health}} HP)"
-combat.hesitate:
-  other: "{{.Fighter}} hesitates"
-
-# End
-combat.end:victory:
-  other: "Victory!"
-combat.end:defeat:
-  other: "Defeat..."
-combat.end:draw:
-  other: "Both fighters fall."
-
-# Outcomes (oracle results)
-combat.outcome.miss:
-  other: "miss"
-combat.outcome.hit:
-  other: "hit"
-combat.outcome.critical:
-  other: "critical"
-combat.outcome.fail:
-  other: "fail"
-combat.outcome.success:
-  other: "success"
-
-# Actions
-actions.attack:
-  other: "Attack"
-actions.defend:
-  other: "Defend"
-
-# Errors
-combat.error:exhausted:
-  other: "{{.Fighter}} has no health left to fight"
-combat.error:no_action:
-  other: "{{.Fighter}} has no combat action (class without actions)"
-combat.error:no_intent:
-  other: "{{.Fighter}} has no combat intent (class without intent)"
-combat.error:unavailable:
-  other: "Action {{.Action}} is not available"
-combat.error:over:
-  other: "The combat is over"
+combat.roll:result:
+  other: "⚔ {{.Stat}} vs {{.Opponent}} · {{.Oracle}} · {{.Roll}}: {{.Value}}"
+combat.header:
+  other: "⚔ Combat: {{.Opponents}}"

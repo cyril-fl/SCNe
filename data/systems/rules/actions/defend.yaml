@@ -1,7 +1,0 @@
-id: defend
-oracle: combat_defend # result of the oracle = effect key
-effects:
-  success:
-    guard: 3
-  critical:
-    guard: 6

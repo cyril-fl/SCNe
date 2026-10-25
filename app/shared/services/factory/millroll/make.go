@@ -1,6 +1,8 @@
 package millroll
 
 import (
+	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
@@ -48,6 +50,34 @@ func Dice(value dice.Dice) Roller {
 type milldice struct {
 	plumprimitive.Mill
 	dice dice.Dice
+}
+
+// Fight returns a Roller that rolls the given oracle against target on stat and returns a localized message with the result.
+func Fight(target *characters.Character, stat stats.Stat, value oracle.Oracle) Roller {
+	return &millfight{target: target, stat: stat, oracle: value}
+}
+
+type millfight struct {
+	plumprimitive.Mill
+	target *characters.Character
+	stat   stats.Stat
+	oracle oracle.Oracle
+}
+
+// Roll rolls the oracle and returns a localized message naming the stat, the target and the result.
+func (m *millfight) Roll() (string, error) {
+	result, err := oracle.Roll[any](m.oracle)
+	if err != nil {
+		return "", err
+	}
+
+	return i19n.Localize("combat.roll:result", map[string]any{
+		"Stat":     "stat." + m.stat.String(),
+		"Opponent": m.target.GetName(),
+		"Oracle":   m.oracle.GetName(),
+		"Roll":     result.Roll,
+		"Value":    result.Result,
+	}), nil
 }
 
 // Roll returns a localized message for the given oracle, including the rolled value and critical status.

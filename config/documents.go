@@ -6,7 +6,6 @@ type structureDocument struct {
 }
 
 type structureFolders struct {
-	Actions    string `yaml:"actions"`
 	Characters string `yaml:"characters"`
 	Encounters string `yaml:"encounters"`
 	Hint       string `yaml:"hint"`
@@ -16,6 +15,7 @@ type structureFolders struct {
 
 type structureFiles struct {
 	Classes         string `yaml:"classes"`
+	Combat          string `yaml:"combat"`
 	Dice            string `yaml:"dice"`
 	ObjectsCategory string `yaml:"objects_category"`
 	Priorities      string `yaml:"priorities"`

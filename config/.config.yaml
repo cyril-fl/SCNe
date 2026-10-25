@@ -66,6 +66,7 @@ documents:
     dice: "data/systems/rules/dices/dice.yaml"
     objects_category: "data/systems/attributes/category.yaml"
     classes: "data/systems/attributes/class.yaml"
+    combat: "data/systems/rules/combat.yaml"
     priorities: "data/systems/attributes/priorities.yaml"
     ranks: "data/systems/attributes/ranks.yaml"
     races: "data/systems/attributes/races.yaml"
@@ -74,7 +75,6 @@ documents:
     stats: "data/systems/attributes/stats.yaml"
     variety: "data/systems/attributes/variety.yaml"
   folders:
-    actions: "data/systems/rules/actions"
     characters: "data/template/characters"
     encounters: "data/systems/rules/oracles/encounter"
     hint: "data/template/hint"

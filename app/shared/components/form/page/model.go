@@ -32,10 +32,9 @@ type Template struct {
 }
 
 // Action runs on the selected entry with Ctrl+Enter while the list is shown.
-// Run may return a command, e.g. to open another page.
 type Action struct {
 	Label string
-	Run   func(entryID id.ID) tea.Cmd
+	Run   func(entryID id.ID)
 }
 
 // Page shows a list of items and opens a form to create or edit one.

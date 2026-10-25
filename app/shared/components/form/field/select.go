@@ -63,8 +63,13 @@ func (f *selectField[T]) Blur() {
 	models.SetListFocus(&f.options, false)
 }
 
+// Value returns the selected option value, or nil when there is no option.
 func (f *selectField[T]) Value() any {
-	return f.options.SelectedItem().(models.Item[T]).Value()
+	item, ok := f.options.SelectedItem().(models.Item[T])
+	if !ok {
+		return nil
+	}
+	return item.Value()
 }
 
 func (f *selectField[T]) GetValueAsString() string {

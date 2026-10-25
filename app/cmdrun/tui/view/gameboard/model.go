@@ -2,6 +2,7 @@ package gameboard
 
 import (
 	"solopg/app/cmdrun/domain/gameplay/session"
+	"solopg/app/cmdrun/tui/view/combatboard"
 	"solopg/app/cmdrun/tui/view/menumetadata"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/chat"
@@ -22,11 +23,12 @@ import (
 type model struct {
 	plumprimitive.Fallible
 
-	state   statemachine.ViewState[state]
-	menu    *navigation.Navigation
-	session *session.GameSession
-	save    func() error
-	size    size.Size
+	state      statemachine.ViewState[state]
+	menu       *navigation.Navigation
+	combatMenu *navigation.Navigation
+	session    *session.GameSession
+	save       func() error
+	size       size.Size
 }
 
 type UiParams struct {
@@ -35,11 +37,21 @@ type UiParams struct {
 }
 
 func NewModel(params UiParams) *model {
+	mainchat := makeChat(params.Session)
+	combatpage := combatboard.NewModel(combatboard.UiParams{
+		Session: params.Session,
+		Main:    mainchat,
+	})
+
 	return &model{
-		state: makeViewState(params),
+		state: makeViewState(params, mainchat, combatpage),
 		menu: navigation.New(navigation.Template{
 			Static:     []navigation.SectionInterface{menumetadata.NewSection(params.Session)},
 			Scrollable: makePanelPart(params.Session),
+		}),
+		combatMenu: navigation.New(navigation.Template{
+			Static:     []navigation.SectionInterface{menumetadata.NewSection(params.Session), combatpage.GetTargetSection()},
+			Scrollable: makeCombatPanelPart(combatpage.GetOpponentSection(), combatpage.GetOracleSection()),
 		}),
 		session: params.Session,
 		save:    params.OnSave,
@@ -59,10 +71,17 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	_, ok := msg.(form.Close)
 	isCloseForm := ok
 	isChatSection := m.state.Current() == CHAT_SECTION
+	isCombatSection := m.state.Current() == COMBAT_SECTION
+
+	// form.Close always reaches the default panel so its sections forget the closed page.
+	menu := m.activeMenu()
+	if isCloseForm {
+		menu = m.menu
+	}
 
 	var menucmd tea.Cmd
-	if menumsg, ok := toMenuMsg(msg); ok && (isChatSection || isCloseForm) {
-		menucmd = m.menu.HandleUpdate(menumsg)
+	if menumsg, ok := toMenuMsg(msg); ok && (isChatSection || isCombatSection || isCloseForm) {
+		menucmd = menu.HandleUpdate(menumsg)
 	}
 
 	next, cmd := m.handleUpdate(msg)

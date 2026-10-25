@@ -27,10 +27,6 @@ var (
 		Command: CtrlEnter,
 		Label:   "open",
 	})
-	PLAY = NewShortcut(Template{
-		Command: CtrlEnter,
-		Label:   "play",
-	})
 	QUIT = NewShortcut(Template{
 		Command: CtrlQ,
 		Label:   "quit",

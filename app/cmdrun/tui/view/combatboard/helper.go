@@ -1,9 +1,19 @@
 package combatboard
 
 import (
+	"fmt"
+	"strings"
+
+	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/gameplay/combat"
+	"solopg/app/cmdrun/domain/gameplay/oracle"
+	"solopg/app/cmdrun/tui/shortcut"
+	"solopg/app/shared/components/chat"
 	"solopg/app/shared/components/form"
 	"solopg/app/shared/components/models"
+	"solopg/app/shared/messages"
+	"solopg/app/shared/services/factory/millroll"
 	"solopg/app/shared/services/i19n"
 
 	"charm.land/bubbles/v2/list"
@@ -15,75 +25,130 @@ import (
 // Input
 
 func (m *model) handleKeyPress(msg tea.KeyPressMsg) tea.Cmd {
-	switch plumtypes.Key(msg.String()) {
-	case plumtypes.KEY_ESC:
+	key := plumtypes.Key(msg.String())
+
+	if key == plumtypes.KEY_ESC {
 		return m.handleKeyEsc()
-	case plumtypes.CMD_CTRL_ENTER:
-		return m.handleCtrlEnter()
-	default:
-		return m.handleModelUpdate(msg)
 	}
+	if stat, ok := getStatShortcut(string(key)); ok {
+		return m.handleRoll(stat)
+	}
+	return m.chat.Update(msg)
 }
 
+// handleKeyEsc merges the combat thread into the main chat, then leaves the combat.
 func (m *model) handleKeyEsc() tea.Cmd {
+	for _, line := range m.buffer {
+		m.main.Amend(line)
+	}
+
+	m.buffer = nil
+	m.chat = m.makeChat()
 	m.session.EndCombat()
-	m.log = nil
+
 	return form.Send[form.Close]()
 }
 
-// handleCtrlEnter plays one round synchronously; a refused action is shown in the log.
-func (m *model) handleCtrlEnter() tea.Cmd {
-	current := m.session.State.Combat
-	if current == nil || current.IsOver() {
+// handleRoll rolls the selected oracle against the selected opponent, noting stat.
+func (m *model) handleRoll(stat stats.Stat) tea.Cmd {
+	target := m.getTarget()
+	selected, ok := m.oracles.GetList().SelectedItem().(models.Item[oracle.Oracle])
+	if target == nil || !ok {
 		return nil
 	}
 
-	list := m.GetList()
-	selected, ok := list.SelectedItem().(models.Item[combat.Action])
-	if !ok {
-		return nil
-	}
+	rolled := func() tea.Msg { return messages.Rolled{} }
+	roll := millroll.Execute(millroll.Fight(target, stat, selected.Value()))
 
-	events, err := current.Play(selected.Value().GetID())
-	if err != nil {
-		m.log = append(m.log, err.Error())
-		return nil
-	}
-
-	journal := m.session.GetAdventureJournal()
-	for _, event := range events {
-		journal.AddEntry("System", event)
-	}
-
-	m.log = append(m.log, events...)
-	return nil
-}
-
-func (m *model) handleModelUpdate(msg tea.Msg) tea.Cmd {
-	list := m.GetList()
-	newlist, cmd := list.Update(msg)
-	m.SetList(&newlist)
-	return cmd
+	return tea.Sequence(rolled, roll)
 }
 
 // Helpers
 
-func (m *model) initList() {
-	l := m.GetList()
-	*l = list.New(nil, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(l)
+func (m *model) getTarget() *characters.Character {
+	if item, ok := m.opponents.GetList().SelectedItem().(models.Item[*characters.Character]); ok {
+		return item.Value()
+	}
+	return nil
 }
 
-// refresh lists the player actions of the current combat.
-func (m *model) refresh() {
-	l := m.GetList()
-	listItems := make([]list.Item, 0)
-
-	if current := m.session.State.Combat; current != nil {
-		for _, action := range current.Player.Actions {
-			listItems = append(listItems, models.NewItem(i19n.Localize(action.GetName()), "", action))
-		}
+// makeChat returns a chat keeping its messages in the buffer until they are merged.
+func (m *model) makeChat() *chat.Chat {
+	author := "System"
+	if m.session.State.Player != nil {
+		author = m.session.State.Player.GetName()
 	}
 
-	l.SetItems(listItems)
+	return chat.New(chat.Template{
+		Author:  author,
+		History: []string{},
+		Register: func(_, message string) {
+			m.buffer = append(m.buffer, message)
+		},
+	})
+}
+
+// refresh lists the session opponents in the side panel and greets them in the combat chat.
+func (m *model) refresh() {
+	l := m.opponents.GetList()
+	items := make([]list.Item, 0, len(m.session.State.Opponents))
+	names := make([]string, 0, len(m.session.State.Opponents))
+
+	for _, opponent := range m.session.State.Opponents {
+		name := i19n.Localize(opponent.GetName())
+		items = append(items, models.NewItem(name, "", opponent))
+		names = append(names, name)
+	}
+
+	l.SetItems(items)
+	l.SetHeight(models.ListContentHeight(l))
+
+	if len(m.buffer) == 0 && len(names) > 0 {
+		m.chat.Amend(i19n.Localize("combat.header", map[string]any{"Opponents": strings.Join(names, ", ")}))
+	}
+}
+
+// makeStatFooter returns the plain roll and one roll shortcut per stat, shown while the oracle section is active.
+func makeStatFooter() []string {
+	footer := []string{shortcut.THROW.String()}
+	for index, stat := range stats.List() {
+		footer = append(footer, shortcut.NewShortcut(shortcut.Template{
+			Command: shortcut.Command(fmt.Sprintf("%s%d", shortcut.Alt, index+1)),
+			Label:   "stat." + stat.String(),
+		}).String())
+	}
+	return footer
+}
+
+// getTargetInfo writes the selected opponent name and its stats, one per line like the player stats.
+func (m *model) getTargetInfo() string {
+	target := m.getTarget()
+	if target == nil {
+		return ""
+	}
+
+	var content strings.Builder
+	content.WriteString(i19n.Localize(target.GetName()))
+	content.WriteString("\n")
+
+	for _, stat := range stats.List() {
+		label := i19n.Localize("stat." + stat.String())
+		fmt.Fprintf(&content, "%-10s %d\n", label, target.Stats[stat])
+	}
+
+	return strings.TrimRight(content.String(), "\n")
+}
+
+// getStatShortcut returns the stat bound to key: "alt+N", or the Nth configured shortcut, rolls the Nth stat of stats.yaml.
+func getStatShortcut(key string) (stats.Stat, bool) {
+	shortcuts := combat.GetShortcuts()
+
+	for index, stat := range stats.List() {
+		isAlt := key == fmt.Sprintf("alt+%d", index+1)
+		isAlias := index < len(shortcuts) && key == shortcuts[index]
+		if isAlt || isAlias {
+			return stat, true
+		}
+	}
+	return "", false
 }

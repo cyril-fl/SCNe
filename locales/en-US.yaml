@@ -22,8 +22,6 @@ travel:
   other: "travel"
 fight:
   other: "fight"
-play:
-  other: "play"
 leave:
   other: "leave"
 new:

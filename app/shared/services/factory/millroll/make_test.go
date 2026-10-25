@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/gameplay/dice"
 	"solopg/app/cmdrun/domain/gameplay/hint"
 	"solopg/app/cmdrun/domain/gameplay/oracle"
@@ -80,5 +81,21 @@ func TestRollReturnsDiceMessage(t *testing.T) {
 	}
 	if message == "" {
 		t.Fatal("expected a dice result message")
+	}
+}
+
+func TestRollReturnsFightMessage(t *testing.T) {
+	values := oracle.ListVisible()
+	if len(values) == 0 {
+		t.Skip("no visible oracles configured")
+	}
+	target := &characters.Character{}
+
+	message, err := Fight(target, "physical", values[0]).Roll()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if message == "" {
+		t.Fatal("expected a fight result message")
 	}
 }

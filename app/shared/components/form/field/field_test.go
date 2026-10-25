@@ -162,6 +162,20 @@ func TestSelectFieldSelectsDefaultValue(t *testing.T) {
 	}
 }
 
+func TestSelectFieldWithoutOptionsIsRequiredError(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	f := SelectField(SelectTemplate[string]{Template: Template[string]{ID: "choice", Required: true}})
+
+	if f.Value() != nil {
+		t.Fatalf("Value() = %#v, want nil", f.Value())
+	}
+	if err := f.Validate(); err == nil {
+		t.Fatal("Validate() = nil, want a required error")
+	}
+}
+
 func TestSelectFieldResetSelectsFirstOption(t *testing.T) {
 	f := testSelect(Template[string]{ID: "choice", Defaultvalue: "second"})
 	f.Focus()

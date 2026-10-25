@@ -15,8 +15,6 @@ type yamlConfig struct {
 	Playable bool             `yaml:"playable"`
 	Bonus    []stats.Modifier `yaml:"bonus"`
 	ArmorSet string           `yaml:"armor_set"`
-	Actions  []string         `yaml:"actions"`
-	Intent   string           `yaml:"intent"`
 }
 
 var filePath = config.GetConfig().Documents.Files.Classes
@@ -64,8 +62,6 @@ func AddInConfig(value Template) error {
 		Playable: value.Playable,
 		Bonus:    value.Bonus,
 		ArmorSet: value.EquipementName,
-		Actions:  value.Actions,
-		Intent:   value.Intent,
 	}
 
 	cachedConfig.Update(func(config *[]yamlConfig) {
@@ -159,7 +155,5 @@ func newFromYaml(config yamlConfig) Class {
 		playable:       config.Playable,
 		bonus:          config.Bonus,
 		equipementName: config.ArmorSet,
-		actions:        config.Actions,
-		intent:         config.Intent,
 	}
 }

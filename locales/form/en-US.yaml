@@ -28,3 +28,7 @@ field.race:
   other: "Race"
 field.title:
   other: "title"
+field.opponent:
+  other: "opponent"
+field.location:
+  other: "location"

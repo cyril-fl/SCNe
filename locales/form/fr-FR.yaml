@@ -28,3 +28,8 @@ field.race:
   other: "race"
 field.title:
   other: "titre"
+
+field.opponent:
+  other: "adversaire"
+field.location:
+  other: "lieu"

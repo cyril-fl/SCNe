@@ -241,7 +241,7 @@ func TestPageCtrlEnterRunsActionOnSelectedEntry(t *testing.T) {
 		Items:   func() []Item { return []Item{{ID: entryID, Name: "first"}} },
 		NewForm: testForm,
 		Save:    func(id.ID, map[string]string) error { return nil },
-		Action:  &Action{Run: func(selected id.ID) tea.Cmd { got = selected; return nil }},
+		Action:  &Action{Run: func(selected id.ID) { got = selected }},
 	})
 
 	page.Update(testKey(tea.KeyEnter, tea.ModCtrl))

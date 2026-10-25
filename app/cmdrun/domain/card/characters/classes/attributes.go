@@ -16,8 +16,6 @@ type Class struct {
 	playable       bool             `yaml:"playable"`
 	bonus          []stats.Modifier `yaml:"bonus"`
 	equipementName string           `yaml:"armor_set"`
-	actions        []string         `yaml:"actions"`
-	intent         string           `yaml:"intent"`
 }
 
 // Template configures a Class.
@@ -26,8 +24,6 @@ type Template = struct {
 	Playable       bool             `yaml:"playable"`
 	Bonus          []stats.Modifier `yaml:"bonus"`
 	EquipementName string           `yaml:"armor_set"`
-	Actions        []string         `yaml:"actions"`
-	Intent         string           `yaml:"intent"`
 }
 
 // New returns a Class.
@@ -37,8 +33,6 @@ func New(params Template) Class {
 		playable:       params.Playable,
 		bonus:          params.Bonus,
 		equipementName: params.EquipementName,
-		actions:        params.Actions,
-		intent:         params.Intent,
 	}
 }
 
@@ -62,16 +56,6 @@ func (c Class) GetEquipementName() string {
 	return c.equipementName
 }
 
-// GetActions returns the combat action IDs.
-func (c Class) GetActions() []string {
-	return c.actions
-}
-
-// GetIntent returns the oracle name rolling the class combat intent.
-func (c Class) GetIntent() string {
-	return c.intent
-}
-
 // GetHash returns a SHA-256 of every class field.
 func (c Class) GetHash() string {
 	encoded, _ := json.Marshal(Template{
@@ -79,8 +63,6 @@ func (c Class) GetHash() string {
 		Playable:       c.IsPlayable(),
 		Bonus:          c.GetBonus(),
 		EquipementName: c.GetEquipementName(),
-		Actions:        c.GetActions(),
-		Intent:         c.GetIntent(),
 	})
 	digest := sha256.Sum256(encoded)
 	return hex.EncodeToString(digest[:])
