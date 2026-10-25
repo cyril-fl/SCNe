@@ -54,9 +54,6 @@ func (s *Section) SetSize(size.Size) {}
 
 // GetView renders the content on every call so it reflects the latest state.
 func (s *Section) GetView() string {
-	title := plumtransform.Uppercase(i19n.Localize(s.id))
-	title = style.Title.Render(title)
-
 	content := ""
 	if s.content != nil {
 		content = s.content()
@@ -64,10 +61,14 @@ func (s *Section) GetView() string {
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		title,
+		s.title(),
 		"",
 		content,
 	)
+}
+
+func (s *Section) title() string {
+	return style.Title.Render(plumtransform.Uppercase(i19n.Localize(s.id)))
 }
 
 // GetFooter returns the section shortcuts.
@@ -125,6 +126,14 @@ func NewFocusableSection[T pluminterface.Named](params TemplateFocusableSection[
 }
 
 // Getters and Setters
+
+// GetView renders the title only while unfocused, so the panel reads as an accordion.
+func (s *FocusableSection) GetView() string {
+	if !s.focused {
+		return s.title()
+	}
+	return s.Section.GetView()
+}
 
 // SetFocus sets the list focus.
 func (s *FocusableSection) SetFocus(focused bool) {
