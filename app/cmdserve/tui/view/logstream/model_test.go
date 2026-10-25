@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 type fakeWatchable struct {

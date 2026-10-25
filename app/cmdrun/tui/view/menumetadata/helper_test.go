@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/domain/card"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/gameplay/session"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

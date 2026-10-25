@@ -4,12 +4,12 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/chat"
-	"solopg/app/shared/components/form"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/chat"
+	"scne/app/shared/components/form"
 
 	tea "charm.land/bubbletea/v2"
 )

@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"scne/app/cmdrun/domain/card/attributes/stats"
 	"slices"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
 )
 
 // - Class - //

@@ -1,10 +1,10 @@
 package races
 
 import (
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/shared/services/logs"
+	"scne/config"
 	"slices"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillload "github.com/cyril-fl/plum/services/factory/millload"

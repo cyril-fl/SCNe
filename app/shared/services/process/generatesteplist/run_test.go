@@ -3,7 +3,7 @@ package generatesteplist
 import (
 	"testing"
 
-	"solopg/app/shared/types/step"
+	"scne/app/shared/types/step"
 )
 
 func TestGeneratorAddAndInsert(t *testing.T) {

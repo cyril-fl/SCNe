@@ -6,13 +6,13 @@ import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"
 	plummillload "github.com/cyril-fl/plum/services/factory/millload"
-	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/slot"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/cmdrun/types/potency"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/objectcategory"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/slot"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/types/potency"
+	"scne/app/shared/services/logs"
 )
 
 // - Configuration & caching - //

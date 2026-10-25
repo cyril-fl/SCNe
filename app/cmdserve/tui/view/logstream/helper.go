@@ -1,7 +1,7 @@
 package logstream
 
 import (
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 func (m *model[T]) assertFilterFlag() {

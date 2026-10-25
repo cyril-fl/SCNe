@@ -2,10 +2,10 @@ package menumetadata
 
 import (
 	"fmt"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/shared/components/navigation"
+	"scne/app/shared/services/i19n"
 	"strings"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"

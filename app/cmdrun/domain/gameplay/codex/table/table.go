@@ -1,7 +1,7 @@
 package codextable
 
 import (
-	"solopg/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/id"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

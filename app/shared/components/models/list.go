@@ -1,7 +1,7 @@
 package models
 
 import (
-	"solopg/app/shared/services/style"
+	"scne/app/shared/services/style"
 
 	"charm.land/bubbles/v2/list"
 	"charm.land/lipgloss/v2"

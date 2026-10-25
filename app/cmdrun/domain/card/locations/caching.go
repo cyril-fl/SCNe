@@ -2,11 +2,11 @@ package locations
 
 import (
 	"errors"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/shared/services/logs"
+	"scne/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"

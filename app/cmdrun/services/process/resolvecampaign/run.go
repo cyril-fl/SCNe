@@ -1,16 +1,16 @@
 package resolvecampaign
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/characters/wallet"
-	"solopg/app/cmdrun/domain/card/objects"
-	"solopg/app/cmdrun/domain/card/objects/equipment"
-	cmdruntui "solopg/app/cmdrun/tui"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/characters/wallet"
+	"scne/app/cmdrun/domain/card/objects"
+	"scne/app/cmdrun/domain/card/objects/equipment"
+	cmdruntui "scne/app/cmdrun/tui"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

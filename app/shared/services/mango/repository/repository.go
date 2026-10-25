@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
 	mongodb "go.mongodb.org/mongo-driver/mongo"

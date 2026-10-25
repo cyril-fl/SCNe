@@ -3,13 +3,13 @@ package campaign
 import (
 	"fmt"
 
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/characters/races"
-	"solopg/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/card/locations"
 
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/cmdrun/types/timer"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/timer"
+	"scne/app/shared/services/i19n"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plumtransform "github.com/cyril-fl/plum/utils/transform"

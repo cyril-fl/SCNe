@@ -1,7 +1,7 @@
 package sidepanel
 
 import (
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

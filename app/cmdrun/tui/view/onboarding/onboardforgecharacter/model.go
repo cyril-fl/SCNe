@@ -1,8 +1,8 @@
 package onboardforgecharacter
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/shared/components/models"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/shared/components/models"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

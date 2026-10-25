@@ -3,11 +3,11 @@ package field
 import (
 	"fmt"
 	"reflect"
-	"solopg/app/cmdrun/types/direction"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/style"
+	"scne/app/cmdrun/types/direction"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/models"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/style"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

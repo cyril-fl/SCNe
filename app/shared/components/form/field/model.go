@@ -2,7 +2,7 @@ package field
 
 import (
 	"errors"
-	"solopg/app/shared/services/i19n"
+	"scne/app/shared/services/i19n"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )

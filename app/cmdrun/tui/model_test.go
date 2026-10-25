@@ -7,9 +7,9 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

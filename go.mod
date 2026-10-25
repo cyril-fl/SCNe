@@ -1,4 +1,4 @@
-module solopg
+module scne
 
 go 1.27.2
 

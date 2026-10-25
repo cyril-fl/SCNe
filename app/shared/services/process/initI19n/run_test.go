@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/shared/services/i19n"
+	"scne/app/shared/services/i19n"
 )
 
 func testConfig(t *testing.T) i19n.Config {

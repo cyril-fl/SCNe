@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/form/field"
+	"scne/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/form/field"
 
 	tea "charm.land/bubbletea/v2"
 )

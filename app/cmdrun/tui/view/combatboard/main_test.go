@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

@@ -2,10 +2,10 @@ package logs
 
 import (
 	"fmt"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 	"slices"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
 	"strings"
 	"time"
 

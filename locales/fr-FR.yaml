@@ -52,6 +52,6 @@ filter:
   other: "filtre"
 
 system.msg:init:
-  other: "Moteur de jeu initialisé. Bienvenue dans SoloPG !"
+  other: "Moteur de jeu initialisé. Bienvenue dans SCNe !"
 system.msg:quit:
   other: "Vous avez quitté le jeu."

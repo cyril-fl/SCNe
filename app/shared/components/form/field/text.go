@@ -2,9 +2,9 @@ package field
 
 import (
 	"fmt"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/style"
+	"scne/app/shared/components/form"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/style"
 	"strings"
 
 	"strconv"

@@ -3,13 +3,13 @@ package session
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 )
 
 func TestNewGameSessionStoresCampaignAndState(t *testing.T) {

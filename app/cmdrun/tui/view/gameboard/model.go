@@ -1,15 +1,15 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/tui/view/combatboard"
-	"solopg/app/cmdrun/tui/view/menumetadata"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/chat"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/statemachine"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/tui/view/combatboard"
+	"scne/app/cmdrun/tui/view/menumetadata"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/chat"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/navigation"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/statemachine"
 	"time"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

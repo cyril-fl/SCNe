@@ -1,11 +1,11 @@
 package onboardarchetype
 
 import (
-	"solopg/app/cmdrun/types/interfaces"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
+	"scne/app/cmdrun/types/interfaces"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
 
-	"solopg/app/shared/services/i19n"
+	"scne/app/shared/services/i19n"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

@@ -1,9 +1,9 @@
 package navigation
 
 import (
-	"solopg/app/cmdrun/types/direction"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/style"
+	"scne/app/cmdrun/types/direction"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/style"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

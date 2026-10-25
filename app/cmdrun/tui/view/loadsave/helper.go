@@ -1,10 +1,10 @@
 package loadsave
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/i19n"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

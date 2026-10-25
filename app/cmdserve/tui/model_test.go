@@ -6,8 +6,8 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
 )
 
 type testSubmodel struct {

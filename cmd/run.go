@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	src "solopg/app/cmdrun"
+	src "scne/app/cmdrun"
 
 	"github.com/spf13/cobra"
 )

@@ -1,11 +1,11 @@
 package portal
 
 import (
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 )
 
 // - Portal - //

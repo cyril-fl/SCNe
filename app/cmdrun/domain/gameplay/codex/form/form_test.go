@@ -3,7 +3,7 @@ package codexform
 import (
 	"testing"
 
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

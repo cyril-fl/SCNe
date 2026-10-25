@@ -1,8 +1,8 @@
 package logstream
 
 import (
-	"solopg/app/shared/services/factory/millfilterlog"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/factory/millfilterlog"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )

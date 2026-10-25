@@ -1,14 +1,14 @@
 package generatesession
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/services/process/resolvearchives"
-	"solopg/app/cmdrun/services/process/resolvecampaign"
-	"solopg/app/cmdrun/services/process/savestate"
-	cmdruntui "solopg/app/cmdrun/tui"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/services/process/resolvearchives"
+	"scne/app/cmdrun/services/process/resolvecampaign"
+	"scne/app/cmdrun/services/process/savestate"
+	cmdruntui "scne/app/cmdrun/tui"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

@@ -1,7 +1,7 @@
 package campaign
 
 import (
-	"solopg/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/id"
 	"time"
 )
 

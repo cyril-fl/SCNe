@@ -1,19 +1,19 @@
 package gameboard
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/cmdrun/domain/gameplay/hint"
-	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/tui/view/menuaction"
-	"solopg/app/cmdrun/tui/view/menucodex"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/factory/millroll"
-	"solopg/app/shared/services/statemachine"
-	interfass "solopg/app/shared/types/interface"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/cmdrun/domain/gameplay/hint"
+	"scne/app/cmdrun/domain/gameplay/oracle"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/tui/view/menuaction"
+	"scne/app/cmdrun/tui/view/menucodex"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/navigation"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/factory/millroll"
+	"scne/app/shared/services/statemachine"
+	interfass "scne/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )

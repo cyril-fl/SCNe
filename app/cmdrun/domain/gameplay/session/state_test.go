@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"solopg/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/campaign"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

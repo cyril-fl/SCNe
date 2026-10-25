@@ -3,8 +3,8 @@ package generatesession
 import (
 	"testing"
 
-	cmdruntui "solopg/app/cmdrun/tui"
-	"solopg/app/shared/services/mango"
+	cmdruntui "scne/app/cmdrun/tui"
+	"scne/app/shared/services/mango"
 )
 
 func TestProcessStoresDependencies(t *testing.T) {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango/repository"
 
 	pluminterface "github.com/cyril-fl/plum/interface"
 

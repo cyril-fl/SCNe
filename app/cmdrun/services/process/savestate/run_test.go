@@ -3,8 +3,8 @@ package savestate
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/shared/services/mango"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/shared/services/mango"
 )
 
 func TestProcessStoresDependencies(t *testing.T) {

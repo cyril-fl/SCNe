@@ -5,7 +5,7 @@ import (
 
 	"charm.land/bubbles/v2/list"
 
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 )
 
 func TestListedExposesTheProvidedList(t *testing.T) {

@@ -1,8 +1,8 @@
 package messages
 
 import (
-	"solopg/app/cmdrun/types/viewoptions"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/types/viewoptions"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )

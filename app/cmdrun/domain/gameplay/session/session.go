@@ -1,12 +1,12 @@
 package session
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/locations"
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/locations"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 )
 
 // GameSession is the in-memory aggregate for an active campaign.

@@ -1,8 +1,8 @@
 package cmdservetui
 
 import (
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
 
 	plumtypes "github.com/cyril-fl/plum/types"
 

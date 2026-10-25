@@ -3,7 +3,7 @@ package navigation
 import (
 	"testing"
 
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

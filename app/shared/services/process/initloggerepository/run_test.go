@@ -3,7 +3,7 @@ package initloggerepository
 import (
 	"testing"
 
-	"solopg/app/shared/services/mango"
+	"scne/app/shared/services/mango"
 )
 
 func TestProcessStoresDatabase(t *testing.T) {

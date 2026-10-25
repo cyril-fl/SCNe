@@ -1,8 +1,8 @@
 package gameboard
 
 import (
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
 	"time"
 
 	tea "charm.land/bubbletea/v2"

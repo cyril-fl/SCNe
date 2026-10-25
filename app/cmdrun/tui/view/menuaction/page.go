@@ -1,10 +1,10 @@
 package menuaction
 
 import (
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/messages"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/form"
+	"scne/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

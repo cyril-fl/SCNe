@@ -1,9 +1,9 @@
 package header
 
 import (
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

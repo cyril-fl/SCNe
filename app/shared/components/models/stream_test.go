@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"solopg/app/shared/messages"
+	"scne/app/shared/messages"
 )
 
 type testEvent string

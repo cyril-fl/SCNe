@@ -1,13 +1,13 @@
 package cmdroot
 
 import (
-	"solopg/app/shared/services/annotations"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/process/initI19n"
-	"solopg/app/shared/services/process/initloggerepository"
-	"solopg/config"
+	"scne/app/shared/services/annotations"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/process/initI19n"
+	"scne/app/shared/services/process/initloggerepository"
+	"scne/config"
 
-	"solopg/app/cmdversion/services/process/generatebuildinfo"
+	"scne/app/cmdversion/services/process/generatebuildinfo"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/cobra"

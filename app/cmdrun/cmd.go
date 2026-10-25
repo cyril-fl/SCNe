@@ -1,8 +1,8 @@
 package cmdrun
 
 import (
-	cmdrunrunsession "solopg/app/cmdrun/services/process/runsession"
-	"solopg/app/shared/services/mango"
+	cmdrunrunsession "scne/app/cmdrun/services/process/runsession"
+	"scne/app/shared/services/mango"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plumcleanui "github.com/cyril-fl/plum/utils/cleanui"

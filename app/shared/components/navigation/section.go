@@ -1,14 +1,14 @@
 package navigation
 
 import (
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
-	"solopg/app/shared/types/primitive"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
+	"scne/app/shared/types/primitive"
 
 	pluminterface "github.com/cyril-fl/plum/interface"
 
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/models"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/models"
 
 	"charm.land/lipgloss/v2"
 

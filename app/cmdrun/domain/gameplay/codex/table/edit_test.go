@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"solopg/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/id"
 )
 
 func TestSimpleTablesEditEntryInPlace(t *testing.T) {

@@ -1,12 +1,12 @@
 package articles
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/cmdrun/domain/card/objects"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/objectcategory"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/objects"
+	"scne/app/shared/services/logs"
 
 	plummillload "github.com/cyril-fl/plum/services/factory/millload"
 )

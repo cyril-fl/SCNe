@@ -4,7 +4,7 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"solopg/app/shared/services/style"
+	"scne/app/shared/services/style"
 )
 
 // View renders the fields stacked vertically, followed by the form error if any.

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	src "solopg/app/cmdserve"
+	src "scne/app/cmdserve"
 
 	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"

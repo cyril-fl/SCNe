@@ -3,9 +3,9 @@ package milltable
 import (
 	"testing"
 
-	"solopg/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/id"
 
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
 )
 
 type testTable struct {

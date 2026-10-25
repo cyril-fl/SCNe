@@ -3,8 +3,8 @@ package cmdrunrunsession
 import (
 	"testing"
 
-	cmdruntui "solopg/app/cmdrun/tui"
-	"solopg/app/shared/services/logs"
+	cmdruntui "scne/app/cmdrun/tui"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

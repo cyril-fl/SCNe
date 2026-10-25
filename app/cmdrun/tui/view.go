@@ -3,9 +3,9 @@ package cmdruntui
 import (
 	"errors"
 	"os"
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )

@@ -3,9 +3,9 @@ package hint
 import (
 	"errors"
 
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/shared/services/logs"
+	"scne/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"

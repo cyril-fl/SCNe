@@ -2,11 +2,11 @@ package navigation
 
 import (
 	pluminterface "github.com/cyril-fl/plum/interface"
-	"solopg/app/cmdrun/types/direction"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/types/direction"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 	"strings"
 
 	"charm.land/bubbles/v2/list"

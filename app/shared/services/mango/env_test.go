@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"solopg/config"
+	"scne/config"
 )
 
 func TestReadEnvTrimsMongoValues(t *testing.T) {

@@ -3,7 +3,7 @@ package cmdserverunsession
 import (
 	"testing"
 
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/shared/services/mango/repository"
 
 	"github.com/spf13/pflag"
 )

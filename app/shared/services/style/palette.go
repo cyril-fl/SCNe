@@ -1,7 +1,7 @@
 package style
 
 import (
-	"solopg/config"
+	"scne/config"
 
 	"charm.land/lipgloss/v2"
 )

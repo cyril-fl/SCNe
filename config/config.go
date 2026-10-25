@@ -3,8 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 	"strings"
 
 	"charm.land/lipgloss/v2"

@@ -1,10 +1,10 @@
 package cmdserve
 
 import (
-	"solopg/app/cmdserve/service/process/cmdserverunsession"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/cmdserve/service/process/cmdserverunsession"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/mango/repository"
 
 	"charm.land/lipgloss/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"

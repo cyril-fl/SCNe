@@ -3,12 +3,12 @@ package codextable
 import (
 	"errors"
 	"os"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/services/factory/millstats"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 	"slices"
-	"solopg/app/cmdrun/domain/card/characters/races"
-	"solopg/app/cmdrun/services/factory/millstats"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
 	"time"
 
 	plumtypes "github.com/cyril-fl/plum/types"

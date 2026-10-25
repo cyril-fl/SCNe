@@ -1,8 +1,8 @@
 package shortcut
 
 import (
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
