@@ -1,9 +1,9 @@
 package cmdlogs
 
 import (
-	cmdlogssession "solopg/app/cmdlogs/services/process/filterlogs"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/mango/repository"
+	cmdlogssession "scne/app/cmdlogs/services/process/filterlogs"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/mango/repository"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/cobra"

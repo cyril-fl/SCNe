@@ -1,14 +1,14 @@
 package navigation
 
 import (
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
-	"solopg/app/shared/types/primitive"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
+	"scne/app/shared/types/primitive"
 
 	pluminterface "github.com/cyril-fl/plum/interface"
 
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/models"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/models"
 
 	"charm.land/lipgloss/v2"
 
@@ -67,7 +67,7 @@ func (s *Section) GetView() string {
 }
 
 func (s *Section) title() string {
-	return style.Title.Render(s.label())
+	return style.Title().Render(s.label())
 }
 
 func (s *Section) label() string {
@@ -133,7 +133,7 @@ func NewFocusableSection[T pluminterface.Named](params TemplateFocusableSection[
 // GetView renders the title only while unfocused, so the panel reads as an accordion.
 func (s *FocusableSection) GetView() string {
 	if !s.focused {
-		return style.Collapsed.Render(s.label())
+		return style.Collapsed().Render(s.label())
 	}
 	return s.Section.GetView()
 }

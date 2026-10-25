@@ -1,18 +1,18 @@
 package menucodex
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	codexform "solopg/app/cmdrun/domain/gameplay/codex/form"
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/shared/components/form"
-	formpage "solopg/app/shared/components/form/page"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	codexform "scne/app/cmdrun/domain/gameplay/codex/form"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/shared/components/form"
+	formpage "scne/app/shared/components/form/page"
+	"scne/app/shared/components/models"
+	"scne/app/shared/components/navigation"
+	"scne/app/shared/services/i19n"
 
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

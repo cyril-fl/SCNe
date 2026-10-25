@@ -1,7 +1,7 @@
 package section
 
 import (
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"

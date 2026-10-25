@@ -1,8 +1,8 @@
 package priority
 
 import (
-	"solopg/app/shared/services/logs"
-	"solopg/config"
+	"scne/app/shared/services/logs"
+	"scne/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillload "github.com/cyril-fl/plum/services/factory/millload"

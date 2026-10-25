@@ -3,7 +3,7 @@ package cmdruntui
 import (
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 // Handlers

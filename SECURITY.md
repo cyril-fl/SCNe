@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in SoloPG, please report it privately rather than opening a public GitHub issue.
+If you discover a security vulnerability in SCNe, please report it privately rather than opening a public GitHub issue.
 
 You can report a vulnerability by opening a [private security advisory](../../security/advisories/new).
 
@@ -17,6 +17,6 @@ Please allow some time for the issue to be reviewed before making it public.
 
 ## Supported Versions
 
-SoloPG does not currently maintain a formal security-support policy for specific versions.
+SCNe does not currently maintain a formal security-support policy for specific versions.
 
 Security fixes will be applied to the current development/release version when appropriate.

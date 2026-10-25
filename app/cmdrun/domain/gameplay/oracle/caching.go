@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillentries "github.com/cyril-fl/plum/services/factory/millentries"

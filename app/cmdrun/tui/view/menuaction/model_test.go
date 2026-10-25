@@ -3,9 +3,9 @@ package menuaction
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	"scne/app/cmdrun/domain/gameplay/session"
 )
 
 func TestFindOpponentsResolvesEntryIDsOnce(t *testing.T) {

@@ -1,7 +1,7 @@
 package layout
 
 import (
-	"solopg/app/shared/components/layout/footer"
+	"scne/app/shared/components/layout/footer"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

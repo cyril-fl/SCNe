@@ -1,13 +1,13 @@
 package combatboard
 
 import (
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/shared/components/chat"
-	"solopg/app/shared/components/navigation"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/factory/millroll"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/gameplay/oracle"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/shared/components/chat"
+	"scne/app/shared/components/navigation"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/factory/millroll"
 
 	tea "charm.land/bubbletea/v2"
 )

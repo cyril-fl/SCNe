@@ -2,7 +2,7 @@ package buildinfo
 
 import (
 	"fmt"
-	"solopg/config"
+	"scne/config"
 	"strings"
 )
 

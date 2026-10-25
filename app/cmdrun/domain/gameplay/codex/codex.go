@@ -1,7 +1,7 @@
 package codex
 
 import (
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
 )
 
 type Codex struct {

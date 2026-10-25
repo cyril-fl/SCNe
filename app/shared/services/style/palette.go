@@ -1,19 +1,18 @@
 package style
 
 import (
-	"solopg/config"
+	"image/color"
+
+	"scne/app/shared/services/theme"
 
 	"charm.land/lipgloss/v2"
 )
 
-var theme = config.GetConfig().Theme
+// Palette shared by every style, read from the current theme at call time; never inline a color.
 
-// Palette shared by every style, set by the theme block of the config; never inline a color.
-var (
-	ColorAccent  = lipgloss.Color(theme.Accent)
-	ColorText    = lipgloss.Color(theme.Text)
-	ColorMuted   = lipgloss.Color(theme.Muted)
-	ColorSubtle  = lipgloss.Color(theme.Subtle)
-	ColorError   = lipgloss.Color(theme.Error)
-	ColorSuccess = lipgloss.Color(theme.Success)
-)
+func ColorAccent() color.Color  { return lipgloss.Color(theme.Get().Accent) }
+func ColorText() color.Color    { return lipgloss.Color(theme.Get().Text) }
+func ColorMuted() color.Color   { return lipgloss.Color(theme.Get().Muted) }
+func ColorSubtle() color.Color  { return lipgloss.Color(theme.Get().Subtle) }
+func ColorError() color.Color   { return lipgloss.Color(theme.Get().Error) }
+func ColorSuccess() color.Color { return lipgloss.Color(theme.Get().Success) }

@@ -1,7 +1,7 @@
 package loadsave
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/campaign"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

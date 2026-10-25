@@ -1,9 +1,9 @@
 package onboardlocation
 
 import (
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/gameplay/portal"
-	"solopg/app/shared/components/models"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/gameplay/portal"
+	"scne/app/shared/components/models"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

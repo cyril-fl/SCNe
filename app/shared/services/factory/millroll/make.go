@@ -1,17 +1,17 @@
 package millroll
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/cmdrun/domain/gameplay/hint"
-	"solopg/app/cmdrun/domain/gameplay/oracle"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/cmdrun/domain/gameplay/hint"
+	"scne/app/cmdrun/domain/gameplay/oracle"
 
-	"solopg/app/shared/messages"
+	"scne/app/shared/messages"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 
-	"solopg/app/shared/services/i19n"
+	"scne/app/shared/services/i19n"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

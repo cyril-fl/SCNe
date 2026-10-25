@@ -1,7 +1,7 @@
 package models
 
 import (
-	"solopg/app/shared/messages"
+	"scne/app/shared/messages"
 	"testing"
 )
 

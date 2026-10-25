@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"

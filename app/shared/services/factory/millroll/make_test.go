@@ -4,11 +4,11 @@ import (
 	"errors"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/cmdrun/domain/gameplay/hint"
-	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/shared/messages"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/cmdrun/domain/gameplay/hint"
+	"scne/app/cmdrun/domain/gameplay/oracle"
+	"scne/app/shared/messages"
 )
 
 type testRoller struct {

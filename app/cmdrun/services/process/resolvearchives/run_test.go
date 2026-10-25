@@ -3,9 +3,9 @@ package resolvearchives
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

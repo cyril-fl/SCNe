@@ -1,13 +1,13 @@
 package resolvearchives
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/mango/repository"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

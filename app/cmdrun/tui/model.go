@@ -1,14 +1,14 @@
 package cmdruntui
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters/classes"
-	"solopg/app/cmdrun/domain/card/characters/races"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/shared/components/layout"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/shared/components/layout"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 )

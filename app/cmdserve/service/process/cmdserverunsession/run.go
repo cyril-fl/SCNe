@@ -6,12 +6,12 @@ import (
 	"os"
 	"os/signal"
 
-	cmdservetui "solopg/app/cmdserve/tui"
-	"solopg/app/cmdserve/tui/view/logstream"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process/generatesteplist"
+	cmdservetui "scne/app/cmdserve/tui"
+	"scne/app/cmdserve/tui/view/logstream"
+	"scne/app/shared/components/models"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango/repository"
+	"scne/app/shared/services/process/generatesteplist"
 
 	tea "charm.land/bubbletea/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"

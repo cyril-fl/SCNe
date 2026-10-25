@@ -1,8 +1,8 @@
 package onboardename
 
 import (
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/layout/header"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/layout/header"
 
 	tea "charm.land/bubbletea/v2"
 )

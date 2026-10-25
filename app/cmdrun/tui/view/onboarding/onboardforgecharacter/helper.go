@@ -1,8 +1,8 @@
 package onboardforgecharacter
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/services/factory/millstats"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/services/factory/millstats"
 )
 
 func drowBuild() ([]stats.Modifier, error) {

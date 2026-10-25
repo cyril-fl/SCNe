@@ -6,7 +6,7 @@ type commands struct {
 	Config  plumcliconfig.Cmdparams `yaml:"config"`
 	Logs    plumcliconfig.Cmdparams `yaml:"logs"`
 	Root    plumcliconfig.Cmdparams `yaml:"root"`
-	Run     plumcliconfig.Cmdparams `yaml:"run"`
+	Play    plumcliconfig.Cmdparams `yaml:"play"`
 	Serve   plumcliconfig.Cmdparams `yaml:"serve"`
 	Try     plumcliconfig.Cmdparams `yaml:"try"`
 	Version plumcliconfig.Cmdparams `yaml:"version"`

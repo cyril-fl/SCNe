@@ -1,7 +1,7 @@
 package main
 
 import (
-	"solopg/cmd"
+	"scne/cmd"
 )
 
 func main() {

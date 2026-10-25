@@ -4,7 +4,7 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"solopg/app/shared/services/style"
+	"scne/app/shared/services/style"
 )
 
 // View renders the fields stacked vertically, followed by the form error if any.
@@ -16,7 +16,7 @@ func (m *Form) View() tea.View {
 	}
 
 	if m.HasErr() {
-		err := style.Error.Render("\n" + m.GetErr().Error())
+		err := style.Error().Render("\n" + m.GetErr().Error())
 
 		contents = append(contents, "\n"+err)
 	}
@@ -41,7 +41,7 @@ func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 		}
 
 		if m.HasErr() {
-			err := style.Error.Width(viewport.Width()).Render("\n" + m.GetErr().Error())
+			err := style.Error().Width(viewport.Width()).Render("\n" + m.GetErr().Error())
 
 			height += lipgloss.Height(err)
 		}

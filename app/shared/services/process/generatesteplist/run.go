@@ -1,8 +1,8 @@
 package generatesteplist
 
 import (
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/step"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"

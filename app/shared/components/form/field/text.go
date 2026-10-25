@@ -2,9 +2,9 @@ package field
 
 import (
 	"fmt"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/style"
+	"scne/app/shared/components/form"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/style"
 	"strings"
 
 	"strconv"
@@ -51,7 +51,7 @@ func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
 func (m *textField[T]) View() tea.View {
 	err := ""
 	if m.GetError() != nil {
-		err = style.Error.Render(m.GetError().Error())
+		err = style.Error().Render(m.GetError().Error())
 	}
 
 	if m.nolabel {
@@ -78,7 +78,7 @@ func (m *textField[T]) getNoLabelView(input, err string) tea.View {
 }
 
 func (m *textField[T]) getLabelView(input, err string) tea.View {
-	title := style.Title.Render(m.Label())
+	title := style.Title().Render(m.Label())
 
 	return tea.NewView(
 		lipgloss.JoinVertical(

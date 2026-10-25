@@ -1,14 +1,14 @@
 package equipment
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/slot"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/cmdrun/domain/card/objects"
-	"solopg/app/cmdrun/types/potency"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/objectcategory"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/slot"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/objects"
+	"scne/app/cmdrun/types/potency"
+	"scne/app/shared/services/logs"
 )
 
 // - Equipment - //

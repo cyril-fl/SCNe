@@ -3,8 +3,8 @@ package quest
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/priority"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/attributes/priority"
+	"scne/app/cmdrun/domain/card/attributes/variety"
 )
 
 func TestNewFallsBackToQuestVarietyWhenInvalid(t *testing.T) {

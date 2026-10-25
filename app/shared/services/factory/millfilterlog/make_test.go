@@ -3,7 +3,7 @@ package millfilterlog
 import (
 	"testing"
 
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 
 	"github.com/spf13/pflag"
 )

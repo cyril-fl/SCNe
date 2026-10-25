@@ -1,7 +1,7 @@
 package millfilterlog
 
 import (
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

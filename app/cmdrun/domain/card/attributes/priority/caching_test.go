@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 type cachingTestLogRegistry struct{}

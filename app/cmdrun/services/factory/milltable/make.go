@@ -1,7 +1,7 @@
 package milltable
 
 import (
-	codextable "solopg/app/cmdrun/domain/gameplay/codex/table"
+	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

@@ -1,9 +1,9 @@
 package loadsave
 
 import (
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/layout/header"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/layout/header"
 
 	tea "charm.land/bubbletea/v2"
 )

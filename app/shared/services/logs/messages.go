@@ -3,7 +3,7 @@ package logs
 import (
 	"errors"
 	"fmt"
-	"solopg/app/shared/services/i19n"
+	"scne/app/shared/services/i19n"
 )
 
 // Success

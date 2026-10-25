@@ -2,9 +2,9 @@ package onboardforgecharacter
 
 import (
 	"fmt"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/layout/header"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/layout/header"
+	"scne/app/shared/services/i19n"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

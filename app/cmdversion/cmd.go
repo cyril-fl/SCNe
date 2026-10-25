@@ -2,7 +2,7 @@ package cmdversion
 
 import (
 	"fmt"
-	"solopg/app/cmdversion/services/process/generatebuildinfo"
+	"scne/app/cmdversion/services/process/generatebuildinfo"
 
 	"github.com/spf13/cobra"
 )

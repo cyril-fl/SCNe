@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/characters/classes"
-	"solopg/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
 )
 
 func TestBeastiaryEditReplacesRaceInConfig(t *testing.T) {

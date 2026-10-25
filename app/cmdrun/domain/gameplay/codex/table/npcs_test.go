@@ -3,10 +3,10 @@ package codextable
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/characters/classes"
-	"solopg/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
 )
 
 func newTestNpcs(t *testing.T, class, race string) (*NpcsTable, map[string]string) {

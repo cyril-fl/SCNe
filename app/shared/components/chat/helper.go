@@ -1,9 +1,9 @@
 package chat
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/dice"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/gameplay/dice"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
 	"strconv"
 	"strings"
 

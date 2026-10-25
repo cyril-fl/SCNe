@@ -1,8 +1,8 @@
 package layout
 
 import (
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/layout/sidepanel"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/layout/sidepanel"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"

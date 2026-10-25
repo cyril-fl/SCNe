@@ -3,8 +3,8 @@ package resolvecampaign
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/campaign"
-	cmdruntui "solopg/app/cmdrun/tui"
+	"scne/app/cmdrun/domain/campaign"
+	cmdruntui "scne/app/cmdrun/tui"
 )
 
 func TestRunIdentifiesNewCampaign(t *testing.T) {

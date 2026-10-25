@@ -1,12 +1,12 @@
 package quest
 
 import (
-	"solopg/app/cmdrun/domain/card"
-	"solopg/app/cmdrun/domain/card/attributes/priority"
-	"solopg/app/cmdrun/domain/card/attributes/rank"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card"
+	"scne/app/cmdrun/domain/card/attributes/priority"
+	"scne/app/cmdrun/domain/card/attributes/rank"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/shared/services/logs"
 )
 
 type Quest struct {

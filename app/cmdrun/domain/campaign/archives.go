@@ -1,9 +1,9 @@
 package campaign
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/cmdrun/types/interfaces"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	"scne/app/cmdrun/types/id"
+	"scne/app/cmdrun/types/interfaces"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 

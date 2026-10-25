@@ -3,10 +3,10 @@ package millstats
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters/classes"
-	"solopg/app/cmdrun/domain/card/characters/races"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/shared/services/logs"
 )
 
 type testLogRegistrar struct{}

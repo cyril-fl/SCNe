@@ -2,11 +2,11 @@ package statemachine
 
 import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/layout/footer"
+	"scne/app/shared/services/logs"
+	interfass "scne/app/shared/types/interface"
 	"slices"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/layout/footer"
-	"solopg/app/shared/services/logs"
-	interfass "solopg/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )

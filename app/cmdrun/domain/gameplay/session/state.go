@@ -1,11 +1,11 @@
 package session
 
 import (
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/types/timer"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	"scne/app/cmdrun/types/timer"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

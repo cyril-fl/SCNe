@@ -2,11 +2,11 @@ package cmdtry
 
 import (
 	"fmt"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/mango/repository"
-	"solopg/app/shared/services/process/initI19n"
-	"solopg/config"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/mango/repository"
+	"scne/app/shared/services/process/initI19n"
+	"scne/config"
 
 	"github.com/spf13/cobra"
 )

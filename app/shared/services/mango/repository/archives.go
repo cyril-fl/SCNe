@@ -3,10 +3,10 @@ package repository
 import (
 	"errors"
 	"os"
-	"solopg/app/cmdrun/domain/campaign"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
+	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

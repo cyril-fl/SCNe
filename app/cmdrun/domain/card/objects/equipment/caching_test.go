@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/objectcategory"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/attributes/objectcategory"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/variety"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 )
 
 type cachingTestLogRegistry struct{}

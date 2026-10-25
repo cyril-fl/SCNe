@@ -2,7 +2,7 @@ package mango
 
 import (
 	"os"
-	"solopg/config"
+	"scne/config"
 	"strings"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"

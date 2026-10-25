@@ -2,8 +2,8 @@ package generatebuildinfo
 
 import (
 	"os/exec"
-	"solopg/app/cmdversion/types/buildinfo"
-	"solopg/config"
+	"scne/app/cmdversion/types/buildinfo"
+	"scne/config"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

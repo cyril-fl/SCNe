@@ -1,11 +1,11 @@
 package locations
 
 import (
-	"solopg/app/cmdrun/domain/card"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/shared/services/logs"
 )
 
 // Location is a location card with its effects.

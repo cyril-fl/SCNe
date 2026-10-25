@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/shared/services/logs"
 )
 
 type cachingTestLogRegistry struct{}

@@ -1,16 +1,16 @@
 package chat
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/form/field"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/style"
-	"solopg/app/shared/types/primitive"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/form/field"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/style"
+	"scne/app/shared/types/primitive"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
@@ -127,9 +127,9 @@ func (c *Chat) Amend(content string) {
 func (c *Chat) makeViewport() string {
 	tojoin := []string{}
 	row := []string{
-		style.Muted.Render(makeHistory(c)),
+		style.Muted().Render(makeHistory(c)),
 
-		style.Accent.Render(makeWelcomeMessage(c)),
+		style.Accent().Render(makeWelcomeMessage(c)),
 
 		lipgloss.NewStyle().
 			Render(strings.Join(c.session, "\n")),
@@ -159,9 +159,9 @@ func (c *Chat) makeViewport() string {
 
 func (c *Chat) makeNotification() string {
 	if c.IsNotifying() {
-		s := style.Accent.Render(c.GetSpinnerView())
+		s := style.Accent().Render(c.GetSpinnerView())
 
-		m := style.Muted.Render(i19n.Localize(c.GetNotification()))
+		m := style.Muted().Render(i19n.Localize(c.GetNotification()))
 
 		return lipgloss.JoinHorizontal(
 			lipgloss.Left,
@@ -222,7 +222,7 @@ func amendChat(c *Chat, message string) {
 
 	c.register(c.author, message)
 
-	authorstyle := style.Accent.Render(c.author + ": ")
+	authorstyle := style.Accent().Render(c.author + ": ")
 
 	cloredmsg := authorstyle + message
 	c.session = append(c.session, cloredmsg)

@@ -1,10 +1,10 @@
 package savestate
 
 import (
-	"solopg/app/cmdrun/domain/gameplay/session"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
+	"scne/app/shared/services/mango/repository"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

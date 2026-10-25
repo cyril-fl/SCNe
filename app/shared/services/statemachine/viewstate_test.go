@@ -3,9 +3,9 @@ package statemachine
 import (
 	"testing"
 
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/logs"
-	interfass "solopg/app/shared/types/interface"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/logs"
+	interfass "scne/app/shared/types/interface"
 
 	tea "charm.land/bubbletea/v2"
 )

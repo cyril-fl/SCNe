@@ -2,10 +2,10 @@ package stats
 
 import (
 	"fmt"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/config"
 	"slices"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

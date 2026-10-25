@@ -1,10 +1,10 @@
 package onboardename
 
 import (
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/form/field"
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/form/field"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

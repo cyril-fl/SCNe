@@ -3,8 +3,8 @@ package logstream
 import (
 	"context"
 
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/shared/components/models"
+	"scne/app/shared/services/mango/repository"
 
 	pluminterface "github.com/cyril-fl/plum/interface"
 	"github.com/spf13/pflag"

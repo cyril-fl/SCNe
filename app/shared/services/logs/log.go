@@ -2,10 +2,10 @@ package logs
 
 import (
 	"fmt"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 	"slices"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
 	"strings"
 	"time"
 
@@ -75,7 +75,7 @@ func New(params Template) *Log {
 // -- Methods -- //
 func (l Log) String() string {
 	kind := kindStyles[l.Type].Bold(true).Width(8).Render(strings.ToUpper(string(l.Type)))
-	return fmt.Sprintf("%s %s%s %s", style.Muted.Render(l.GetFormattedUpdated(time.DateTime)), kind, style.Muted.Render(l.Author), l.Message)
+	return fmt.Sprintf("%s %s%s %s", style.Muted().Render(l.GetFormattedUpdated(time.DateTime)), kind, style.Muted().Render(l.Author), l.Message)
 }
 
 func (l *Log) Touch() {

@@ -1,7 +1,7 @@
 package races
 
 import (
-	"solopg/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/attributes/stats"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )

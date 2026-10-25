@@ -3,9 +3,9 @@ package dice
 import (
 	"math/rand"
 
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
-	"solopg/config"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/config"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	plummillload "github.com/cyril-fl/plum/services/factory/millload"

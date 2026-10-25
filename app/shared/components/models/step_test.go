@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/types/step"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )

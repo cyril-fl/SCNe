@@ -1,10 +1,10 @@
 package formpage
 
 import (
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/messages"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/components/form"
+	"scne/app/shared/components/models"
+	"scne/app/shared/messages"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

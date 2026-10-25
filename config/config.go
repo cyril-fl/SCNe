@@ -3,8 +3,9 @@ package config
 import (
 	"fmt"
 	"os"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/theme"
 	"strings"
 
 	"charm.land/lipgloss/v2"
@@ -18,7 +19,7 @@ type config struct {
 	I18n      i19n.Config       `yaml:"i18n"`
 	Commands  commands          `yaml:"commands"`
 	Documents structureDocument `yaml:"documents"`
-	Theme     theme             `yaml:"theme"`
+	Theme     theme.Config      `yaml:"theme"`
 }
 
 var current config

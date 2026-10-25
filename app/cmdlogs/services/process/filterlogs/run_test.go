@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango/repository"
 
 	"github.com/spf13/pflag"
 	"go.mongodb.org/mongo-driver/bson"

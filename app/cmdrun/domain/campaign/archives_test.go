@@ -4,13 +4,13 @@ import (
 	"os"
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/attributes/rarity"
-	"solopg/app/cmdrun/domain/card/attributes/variety"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/domain/card/quest"
-	"solopg/app/cmdrun/domain/gameplay/codex"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/card/quest"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/logs"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

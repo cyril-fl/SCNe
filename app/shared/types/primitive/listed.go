@@ -1,7 +1,7 @@
 package primitive
 
 import (
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 
 	"charm.land/bubbles/v2/list"
 )

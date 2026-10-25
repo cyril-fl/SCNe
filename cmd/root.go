@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"solopg/app/cmdroot"
-	"solopg/app/cmdversion/services/process/generatebuildinfo"
-	"solopg/app/shared/services/mango"
-	"solopg/config"
+	"scne/app/cmdroot"
+	"scne/app/cmdversion/services/process/generatebuildinfo"
+	"scne/app/shared/services/mango"
+	"scne/config"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,6 @@ var c = config.GetConfig()
 var cmd = c.Commands
 
 var cmdRoot = &cobra.Command{
-	Deprecated:        "This command is deprecated and will be removed in a future version. Will be replaced by 'scne'.",
 	Use:               c.Name,
 	Short:             cmd.Root.Short,
 	Long:              cmd.Root.Long,

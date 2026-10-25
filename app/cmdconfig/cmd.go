@@ -1,7 +1,7 @@
 package cmdconfig
 
 import (
-	"solopg/config"
+	"scne/config"
 
 	plumdebug "github.com/cyril-fl/plum/utils/debug"
 

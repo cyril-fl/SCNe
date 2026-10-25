@@ -1,9 +1,9 @@
 package filterlogs
 
 import (
-	"solopg/app/shared/services/factory/millfilterlog"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango/repository"
+	"scne/app/shared/services/factory/millfilterlog"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango/repository"
 
 	"charm.land/lipgloss/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"

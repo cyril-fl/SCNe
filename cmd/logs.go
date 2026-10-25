@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"solopg/app/cmdlogs"
+	"scne/app/cmdlogs"
 
 	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"

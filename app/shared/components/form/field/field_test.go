@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/shared/components/models"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/components/models"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 )

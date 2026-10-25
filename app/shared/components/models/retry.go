@@ -1,9 +1,9 @@
 package models
 
 import (
-	"solopg/app/shared/messages"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/messages"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"

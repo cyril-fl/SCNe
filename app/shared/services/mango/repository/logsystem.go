@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"solopg/app/shared/services/logs"
-	"solopg/app/shared/services/mango"
+	"scne/app/shared/services/logs"
+	"scne/app/shared/services/mango"
 
 	"go.mongodb.org/mongo-driver/bson"
 )

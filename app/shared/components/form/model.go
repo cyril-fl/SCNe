@@ -4,7 +4,7 @@ import (
 	"errors"
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"maps"
-	"solopg/app/shared/services/logs"
+	"scne/app/shared/services/logs"
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"

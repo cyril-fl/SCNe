@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	src "solopg/app/cmdtry"
-	"solopg/app/shared/services/annotations"
-	"solopg/config"
+	src "scne/app/cmdtry"
+	"scne/app/shared/services/annotations"
+	"scne/config"
 
 	"github.com/spf13/cobra"
 )

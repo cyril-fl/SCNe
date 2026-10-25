@@ -1,7 +1,7 @@
 package session
 
 import (
-	"solopg/app/cmdrun/types/timer"
+	"scne/app/cmdrun/types/timer"
 	"time"
 )
 

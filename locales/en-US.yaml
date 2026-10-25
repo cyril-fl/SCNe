@@ -52,6 +52,6 @@ filter:
   other: "filter"
 
 system.msg:init:
-  other: "Game engine initialized. Welcome to SoloPG!"
+  other: "Game engine initialized. Welcome to SCNe!"
 system.msg:quit:
   other: "You have exited the game."

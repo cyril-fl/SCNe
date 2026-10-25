@@ -1,6 +1,6 @@
 package interfaces
 
-import "solopg/app/cmdrun/domain/card/attributes/stats"
+import "scne/app/cmdrun/domain/card/attributes/stats"
 
 type Archetype interface {
 	GetName() string

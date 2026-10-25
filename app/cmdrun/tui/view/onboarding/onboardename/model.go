@@ -1,8 +1,8 @@
 package onboardename
 
 import (
-	"solopg/app/shared/components/form"
-	"solopg/app/shared/messages"
+	"scne/app/shared/components/form"
+	"scne/app/shared/messages"
 
 	tea "charm.land/bubbletea/v2"
 )

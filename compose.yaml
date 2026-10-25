@@ -1,7 +1,7 @@
 services:
   app:
     image: golang:latest
-    container_name: solopg-app
+    container_name: scne-app
     working_dir: /app
     volumes:
       - .:/app
@@ -14,8 +14,8 @@ services:
 
   mongo:
     image: mongo:latest
-    container_name: solopg-mongo
-    hostname: solopg-mongo
+    container_name: scne-mongo
+    hostname: scne-mongo
     # Si c'est le comportement attendu, retierer ça en DEV mais mettre en PROD ?
     # A voir si justifier pour un CLI?
     # restart: unless-stopped
@@ -27,7 +27,7 @@ services:
         - CMD-SHELL
         - >
           mongosh --quiet --eval
-          "try { rs.status().myState } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'solopg-mongo:27017'}]}); 0 }"
+          "try { rs.status().myState } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'scne-mongo:27017'}]}); 0 }"
           | grep -q 1
       interval: 5s
       timeout: 10s
@@ -42,7 +42,7 @@ services:
 
   compooss:
     image: abdullahmia/compooss:latest
-    container_name: solopg-compooss
+    container_name: scne-compooss
     ports:
       - "6969:3000"
     depends_on:

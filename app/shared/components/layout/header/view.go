@@ -1,9 +1,9 @@
 package header
 
 import (
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/style"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -94,8 +94,8 @@ func (p Header) getTitleGroup() string {
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		style.Title.Render(i19n.Localize(p.title)),
-		style.Muted.Render(i19n.Localize(p.subtitle)),
+		style.Title().Render(i19n.Localize(p.title)),
+		style.Muted().Render(i19n.Localize(p.subtitle)),
 		"",
 	)
 }

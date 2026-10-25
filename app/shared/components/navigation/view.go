@@ -1,9 +1,9 @@
 package navigation
 
 import (
-	"solopg/app/cmdrun/types/direction"
-	"solopg/app/cmdrun/types/size"
-	"solopg/app/shared/services/style"
+	"scne/app/cmdrun/types/direction"
+	"scne/app/cmdrun/types/size"
+	"scne/app/shared/services/style"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
@@ -57,7 +57,7 @@ func (n *Navigation) GetView() string {
 	n.view.SetContent(content)
 	n.setOffset(contentoffsets)
 
-	return style.Panel.
+	return style.Panel().
 		Width(n.size.GetWidth()).
 		Height(n.size.GetHeight()).
 		Render(n.makeBody())
@@ -100,8 +100,8 @@ func (n *Navigation) SetSize(newsize size.Size) {
 
 // resizeView fits the viewport under the static sections, whose height can change with their content.
 func (n *Navigation) resizeView() (int, int) {
-	w := max(0, n.size.GetWidth()-style.Panel.GetHorizontalFrameSize())
-	h := max(0, n.size.GetHeight()-style.Panel.GetVerticalFrameSize())
+	w := max(0, n.size.GetWidth()-style.Panel().GetHorizontalFrameSize())
+	h := max(0, n.size.GetHeight()-style.Panel().GetVerticalFrameSize())
 
 	if static := n.getStaticView(); static != "" && len(n.scroll) > 0 {
 		// +2 for the line break and the blank line of sectionGap.

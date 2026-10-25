@@ -3,9 +3,9 @@ package initI19n
 import (
 	"fmt"
 	"path/filepath"
+	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/logs"
 	"slices"
-	"solopg/app/shared/services/i19n"
-	"solopg/app/shared/services/logs"
 	"strings"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

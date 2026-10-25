@@ -1,8 +1,8 @@
 package combatboard
 
 import (
-	"solopg/app/cmdrun/tui/shortcut"
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/types/size"
 )
 
 // Getters & Setters

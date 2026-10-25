@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"solopg/app/cmdrun/types/size"
+	"scne/app/cmdrun/types/size"
 
 	tea "charm.land/bubbletea/v2"
 )

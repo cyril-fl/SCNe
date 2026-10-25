@@ -3,11 +3,11 @@ package millstats
 import (
 	"errors"
 	"os"
-	"solopg/app/cmdrun/domain/card/attributes/stats"
-	"solopg/app/cmdrun/domain/card/characters/classes"
-	"solopg/app/cmdrun/domain/card/characters/races"
-	"solopg/app/cmdrun/domain/gameplay/oracle"
-	"solopg/app/shared/services/logs"
+	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/gameplay/oracle"
+	"scne/app/shared/services/logs"
 	"strconv"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"

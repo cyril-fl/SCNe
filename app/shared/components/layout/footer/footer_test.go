@@ -3,6 +3,8 @@ package footer
 import (
 	"testing"
 
+	"scne/app/shared/services/style"
+
 	tea "charm.land/bubbletea/v2"
 )
 
@@ -19,7 +21,7 @@ func (testModel) GetFooter() []string { return []string{"plugin"} }
 func TestFooterView(t *testing.T) {
 	f := New("a", "b").Merge(testModel{})
 
-	if got, want := f.View(), "a"+separator+"b"+separator+"plugin"; got != want {
+	if got, want := f.View(), "a"+style.Muted().Render(separator)+"b"+style.Muted().Render(separator)+"plugin"; got != want {
 		t.Fatalf("View() = %q, want %q", got, want)
 	}
 	if got := f.GetSize().GetWidth(); got != len("a - b - plugin") {
@@ -30,7 +32,7 @@ func TestFooterView(t *testing.T) {
 func TestFooterMergeReplacesPreviousPlugins(t *testing.T) {
 	f := New("a").Merge(testModel{}).Merge(testModel{})
 
-	if got, want := f.View(), "a"+separator+"plugin"; got != want {
+	if got, want := f.View(), "a"+style.Muted().Render(separator)+"plugin"; got != want {
 		t.Fatalf("View() = %q, want %q", got, want)
 	}
 }

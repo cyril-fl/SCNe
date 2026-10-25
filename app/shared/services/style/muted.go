@@ -2,5 +2,7 @@ package style
 
 import "charm.land/lipgloss/v2"
 
-var Muted = lipgloss.NewStyle().
-	Foreground(ColorMuted)
+func Muted() lipgloss.Style {
+	return lipgloss.NewStyle().
+		Foreground(ColorMuted())
+}

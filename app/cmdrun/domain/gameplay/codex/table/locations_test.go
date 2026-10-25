@@ -3,7 +3,7 @@ package codextable
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/domain/card/locations"
 )
 
 func TestLocationEffectsRoundTrip(t *testing.T) {

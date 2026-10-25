@@ -3,11 +3,11 @@ package campaign
 import (
 	"testing"
 
-	"solopg/app/cmdrun/domain/card"
-	"solopg/app/cmdrun/domain/card/characters"
-	"solopg/app/cmdrun/domain/card/locations"
-	"solopg/app/cmdrun/types/id"
-	"solopg/app/shared/services/i19n"
+	"scne/app/cmdrun/domain/card"
+	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/locations"
+	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
