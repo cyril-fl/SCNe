@@ -1,10 +1,10 @@
 # Loading
 error.loading:
-  other: "Failed to load oracle:\n{{.Error}}"
+  other: "Failed to load \"{{.Subject}}\":\n{{.Error}}"
 error.loading:file:
-  other: "Error loading oracle file {{.File}}:\n{{.Error}}"
+  other: "Error loading \"{{.Subject}}\" file {{.File}}:\n{{.Error}}"
 error.loading:folder:
-  other: "Error loading oracle folder {{.Folder}}:\n{{.Error}}"
+  other: "Error loading \"{{.Subject}}\" folder {{.Folder}}:\n{{.Error}}"
 error.loading:campaign:
   other: "Error loading campaign save {{.ID}}:\n{{.Error}}"
 
@@ -17,6 +17,8 @@ error.invalid:new:
   other: "Failed to create \"{{.Subject}}\":\n{{.Error}}"
 error.invalid:already_exists:
   other: "\"{{.Subject}}\" already exists: {{.Value}}"
+error.invalid:transition:
+  other: "Transition not allowed"
 
 # Not found
 error.not_found:
@@ -29,6 +31,10 @@ error.not_found:on_save:
   other: "Save function is not configured"
 error.not_implemented:
   other: "{{.Function}} function is not configured for \"{{.Subject}}\""
+
+# Saving
+error.saving:race:
+  other: "Failed to save race \"{{.Name}}\":\n{{.Error}}"
 
 # Required
 error.required:
@@ -44,7 +50,7 @@ error.unexpected:action:
 error.unexpected:save:
   other: "Save error:\n{{.Error}}"
 error.unexpected:value:
-  other: "Unexpected \"{{.Subject}}\" value type: {{.Type}}"
+  other: "Unexpected \"{{.Subject}}\" value type, expected: {{.Expected}}, received: {{.Value}}"
 
 # Unexpected actions
 unexpected:action.build_engine:

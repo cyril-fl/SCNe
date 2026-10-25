@@ -49,3 +49,17 @@ func TestChatSubmitIgnoresEmptyMessage(t *testing.T) {
 		t.Fatal("empty message was registered")
 	}
 }
+
+func TestChatAmendKeepsTypedMessage(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	c := New(Template{Register: func(string, string) {}})
+
+	c.Update(tea.KeyPressMsg{Code: 'h', Text: "h"})
+	c.Amend("rolled 4")
+
+	if got := c.form.GetFieldValue("message"); got != "h" {
+		t.Fatalf("message after Amend = %q, want h", got)
+	}
+}

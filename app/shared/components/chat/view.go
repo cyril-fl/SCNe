@@ -226,7 +226,6 @@ func amendChat(c *Chat, message string) {
 
 	cloredmsg := authorstyle + message
 	c.session = append(c.session, cloredmsg)
-	c.form.Reset()
 }
 
 // func (c *Chat) handleCursorBlink(msg cursor.BlinkMsg) tea.Cmd {

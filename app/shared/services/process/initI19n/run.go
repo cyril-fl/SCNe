@@ -65,7 +65,7 @@ func (p *run) Run() {
 
 // GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
-	logs.SilentWarning("error:not_implemented", map[string]any{
+	logs.SilentWarning("error.not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "init:i19n",
 	})

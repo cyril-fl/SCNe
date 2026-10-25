@@ -126,7 +126,7 @@ func GetByName(name string) (*Oracle, error) {
 	}
 
 	return nil, logs.Error("error.not_found.id", map[string]any{
-		"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
+		"Subject": plumtransform.Capitalize(i19n.Localize("oracles")),
 		"ID":      name,
 	})
 }
@@ -158,7 +158,7 @@ func List() []Oracle {
 	if err != nil {
 		cachedConfig.ReportError(func(err error) {
 			logs.Error("error.loading", map[string]any{
-				"Subject": plumtransform.Capitalize(i19n.Localize("oracle")),
+				"Subject": plumtransform.Capitalize(i19n.Localize("oracles")),
 				"Error":   err,
 			})
 		})

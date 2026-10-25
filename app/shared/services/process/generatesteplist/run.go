@@ -34,7 +34,7 @@ func (p *run[T]) Run(model tea.Model, opts ...tea.ProgramOption) {
 
 // GetResult is not implemented; it only logs a warning.
 func (p *run[T]) GetResult() {
-	logs.SilentWarning("error:not_implemented", map[string]any{
+	logs.SilentWarning("error.not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})

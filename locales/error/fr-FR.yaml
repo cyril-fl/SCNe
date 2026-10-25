@@ -17,6 +17,8 @@ error.invalid:new:
   other: "\"{{.Subject}}\" n'a pas pu être créé :\n{{.Error}}"
 error.invalid:already_exists:
   other: "\"{{.Subject}}\" existe déjà : {{.Value}}"
+error.invalid:transition:
+  other: "Transition non autorisée"
 
 # Not found
 error.not_found:
@@ -29,6 +31,10 @@ error.not_found:on_save:
   other: "Fonction de sauvegarde non configurée"
 error.not_implemented:
   other: "Fonction de {{.Function}} non configurée pour \"{{.Subject}}\""
+
+# Saving
+error.saving:race:
+  other: "Échec de l'enregistrement de la race \"{{.Name}}\" :\n{{.Error}}"
 
 # Required
 error.required:

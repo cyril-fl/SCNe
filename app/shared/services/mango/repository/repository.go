@@ -150,6 +150,14 @@ func (r *MongoRepository) watchCollection[T any](ctx context.Context) (<-chan T,
 				return
 			}
 		}
+
+		// A dropped stream would otherwise end the watch without a trace.
+		if err := stream.Err(); err != nil && ctx.Err() == nil {
+			logs.SilentError("error.loading", map[string]any{
+				"Subject": r.collection,
+				"Error":   err,
+			})
+		}
 	}()
 
 	return out, nil

@@ -17,7 +17,6 @@ type Archives struct {
 	CampaignID id.ID        `bson:"campaignId" json:"campaignId"`
 	Codex      *codex.Codex `bson:"codex" json:"codex"`
 	Journal    *Journal     `bson:"journal" json:"journal"`
-	Log        *Journal     `bson:"log" json:"log"`
 }
 
 // ArchivesTemplate configures Archives.
@@ -25,7 +24,6 @@ type ArchivesTemplate struct {
 	CampaignID id.ID
 	Codex      *codex.Codex
 	Journal    *Journal
-	Log        *Journal
 }
 
 // NewArchives returns dated Archives.
@@ -36,7 +34,6 @@ func NewArchives(params ArchivesTemplate) *Archives {
 		CampaignID: params.CampaignID,
 		Codex:      params.Codex,
 		Journal:    params.Journal,
-		Log:        params.Log,
 	}
 }
 
@@ -47,7 +44,7 @@ func (a *Archives) Filter() bson.M {
 	}
 }
 
-// EnsureInitialized creates the missing codex, journal and log.
+// EnsureInitialized creates the missing codex and journal.
 func (a *Archives) EnsureInitialized() {
 	if a.Codex == nil {
 		a.Codex = codex.New()
@@ -57,14 +54,9 @@ func (a *Archives) EnsureInitialized() {
 		a.Journal = NewJournal([]Entry{})
 	}
 
-	if a.Log == nil {
-		a.Log = NewJournal([]Entry{})
-	}
-
 	list := []interfaces.Initializable{
 		a.Codex,
 		a.Journal,
-		a.Log,
 	}
 
 	for _, archive := range list {

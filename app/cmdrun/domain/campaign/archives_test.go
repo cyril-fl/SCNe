@@ -30,16 +30,14 @@ func TestNewArchives(t *testing.T) {
 	campaignID := id.New()
 	codexValue := &codex.Codex{}
 	journal := NewJournal(nil)
-	log := NewJournal(nil)
 
 	archives := NewArchives(ArchivesTemplate{
 		CampaignID: campaignID,
 		Codex:      codexValue,
 		Journal:    journal,
-		Log:        log,
 	})
 
-	if archives.CampaignID != campaignID || archives.Codex != codexValue || archives.Journal != journal || archives.Log != log {
+	if archives.CampaignID != campaignID || archives.Codex != codexValue || archives.Journal != journal {
 		t.Fatal("NewArchives did not copy its template")
 	}
 	if archives.GetcreatedAt().IsZero() || archives.GetupdatedAt().IsZero() {
@@ -60,10 +58,10 @@ func TestArchivesEnsureInitialized(t *testing.T) {
 	archives := &Archives{}
 	archives.EnsureInitialized()
 
-	if archives.Codex == nil || archives.Journal == nil || archives.Log == nil {
+	if archives.Codex == nil || archives.Journal == nil {
 		t.Fatal("EnsureInitialized did not create archive components")
 	}
-	if archives.Journal.Entries == nil || archives.Log.Entries == nil {
+	if archives.Journal.Entries == nil {
 		t.Fatal("EnsureInitialized did not initialize journal entries")
 	}
 }
@@ -91,7 +89,6 @@ func TestArchivesBSONRoundTripPreservesCodexEntries(t *testing.T) {
 		CampaignID: id.New(),
 		Codex:      codex.New(),
 		Journal:    NewJournal([]Entry{}),
-		Log:        NewJournal([]Entry{}),
 	})
 	archives.Codex.Locations.Add(location)
 	archives.Codex.Quest.Add(newQuest)

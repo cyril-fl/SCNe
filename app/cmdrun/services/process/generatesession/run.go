@@ -89,6 +89,10 @@ func (p *run) makeSession() {
 }
 
 func (p *run) makeAuthor() {
+	if p.HasErr() {
+		return
+	}
+
 	logs.SetAuthor(p.cache.resolvedCampaign.ID.Base64())
 }
 

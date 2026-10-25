@@ -73,14 +73,14 @@ func New(params Template) (*Character, error) {
 	if !classes.Assert(params.Class) {
 		return nil, logs.Error("error.invalid", map[string]any{
 			"Subject": "class",
-			"Receive": params.Class,
+			"Value":   params.Class,
 		})
 	}
 
 	if !races.Assert(params.Race) {
 		return nil, logs.Error("error.invalid", map[string]any{
 			"Subject": "race",
-			"Receive": params.Race,
+			"Value":   params.Race,
 		})
 	}
 

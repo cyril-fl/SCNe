@@ -27,7 +27,7 @@ func TestEnsureArchivesCreatesAndInitializesArchives(t *testing.T) {
 	if archives.CampaignID != p.campaignID {
 		t.Fatal("archives campaign ID does not match process campaign ID")
 	}
-	if archives.Codex == nil || archives.Journal == nil || archives.Log == nil {
+	if archives.Codex == nil || archives.Journal == nil {
 		t.Fatal("expected archives components to be initialized")
 	}
 }

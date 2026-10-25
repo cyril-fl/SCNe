@@ -1,6 +1,7 @@
 package mango
 
 import (
+	"net/url"
 	"os"
 	"scne/config"
 	"strings"
@@ -59,7 +60,8 @@ func (env *MongoEnvironment) getCredentials() string {
 	if env.username == "" || env.password == "" {
 		return ""
 	}
-	return plumtransform.CleanJoin(":", env.username, env.password)
+	// Escapes "@", ":", "/" and "%" that would break the URI.
+	return url.UserPassword(env.username, env.password).String()
 }
 
 func (env *MongoEnvironment) getHostAt() string {

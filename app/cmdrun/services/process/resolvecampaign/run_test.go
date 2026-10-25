@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"scne/app/cmdrun/domain/campaign"
+	"scne/app/cmdrun/domain/card/characters/races"
 	cmdruntui "scne/app/cmdrun/tui"
 )
 
@@ -23,5 +24,17 @@ func TestRunKeepsSelectedCampaign(t *testing.T) {
 	}
 	if p.HasErr() {
 		t.Fatalf("unexpected error: %v", p.GetErr())
+	}
+}
+
+func TestRunRejectsIncompleteOnboarding(t *testing.T) {
+	p := Process(&cmdruntui.Context{SelectedRace: &races.Race{}})
+	p.Run()
+
+	if !p.HasErr() {
+		t.Fatal("missing class and location should fail")
+	}
+	if p.GetResult() != nil {
+		t.Fatal("no campaign should be built from an incomplete onboarding")
 	}
 }

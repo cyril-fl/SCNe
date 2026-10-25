@@ -73,7 +73,6 @@ func (p *run) ensureArchives() {
 		CampaignID: p.campaignID,
 		Codex:      codex.New(),
 		Journal:    campaign.NewJournal([]campaign.Entry{}),
-		Log:        campaign.NewJournal([]campaign.Entry{}),
 	})
 }
 
@@ -83,7 +82,7 @@ func (p *run) ensureArchivesInitialized() {
 	}
 
 	if p.cache.loadedArchives == nil {
-		err := logs.CeaseError("error:unexpected:action", map[string]any{
+		err := logs.CeaseError("error.unexpected:action", map[string]any{
 			"Action": "unexpected:action.load_archives",
 			"Error": i19n.Localize("error.not_found", map[string]any{
 				"Subject": "archives",

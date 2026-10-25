@@ -4,6 +4,7 @@ import (
 	"context"
 	"scne/app/shared/services/logs"
 	"scne/app/shared/services/mango"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -17,7 +18,8 @@ type logsystemrepository struct {
 
 func LogSystem() *logsystemrepository {
 	return &logsystemrepository{
-		New(LoggingCollection),
+		// Logs are written synchronously from the TUI loop: a down Mongo must not freeze it for 10s.
+		New(LoggingCollection).setTimeout(time.Second),
 	}
 }
 

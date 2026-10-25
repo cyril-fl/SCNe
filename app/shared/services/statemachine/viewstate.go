@@ -80,7 +80,7 @@ func (s *ViewState[T]) HandleTransition(to T) {
 	}
 
 	if !slices.Contains(s.transition[s.current], to) {
-		s.SetErr(logs.MildError("Transition pas autorise"))
+		s.SetErr(logs.MildError("error.invalid:transition"))
 		return
 	}
 

@@ -173,7 +173,7 @@ func makeModifiersFromOracle(id string) ([]stats.Modifier, error) {
 	rules, err := oracle.GetByName(id)
 	if err != nil {
 
-		return nil, logs.Error("error.invalid:new: %w", map[string]any{
+		return nil, logs.Error("error.invalid:new", map[string]any{
 			"Subject": "stat",
 			"Error":   err,
 		})

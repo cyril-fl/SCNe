@@ -28,6 +28,8 @@ func (c *Chat) handleSubmit() tea.Cmd {
 	}
 
 	amendChat(c, message)
+	// Reset only here: Amend also feeds roll results and must keep the text being typed.
+	c.form.Reset()
 	return nil
 }
 

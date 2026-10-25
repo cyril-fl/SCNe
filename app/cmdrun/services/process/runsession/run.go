@@ -56,7 +56,7 @@ func (p *run) Run() {
 
 // GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
-	logs.SilentWarning("error:not_implemented", map[string]any{
+	logs.SilentWarning("error.not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})
@@ -77,7 +77,7 @@ func (p *run) makeSelectsaveStep() {
 	if err != nil {
 		err := logs.Error("error.unexpected:action", map[string]any{
 			"Action": "unexpected:action.load_campaigns",
-			"Value":  err.Error(),
+			"Error":  err.Error(),
 		})
 
 		p.SetErr(err)

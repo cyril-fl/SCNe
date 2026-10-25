@@ -14,7 +14,7 @@ func Success(id string, data ...map[string]any) string {
 
 func SilentSuccess(id string, data ...map[string]any) {
 	registerFromTemplate(Template{
-		Type:    INFO,
+		Type:    SUCC,
 		Message: i19n.Unlocalize(id, data...),
 	})
 }

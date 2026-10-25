@@ -61,17 +61,9 @@ func (p *run) isNewCampaign() bool {
 }
 
 func (p *run) assertContext() {
-	isValid := false
 	c := p.ctx
 
-	for _, v := range []any{c.SelectedRace, c.SelectedClass, c.SelectedLocation} {
-		if v == nil {
-			continue
-		}
-		isValid = true
-		break
-	}
-
+	isValid := c.SelectedRace != nil && c.SelectedClass != nil && c.SelectedLocation != nil
 	if isValid {
 		return
 	}

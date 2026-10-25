@@ -49,7 +49,7 @@ func (p *run) Run() {
 
 // GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
-	logs.SilentWarning("error:not_implemented", map[string]any{
+	logs.SilentWarning("error.not_implemented", map[string]any{
 		"Function": "GetResult",
 		"Subject":  "session",
 	})
@@ -57,7 +57,8 @@ func (p *run) GetResult() {
 
 // Methods
 func (p *run) makeList() {
-	list, err := p.getList(nil)
+	// Without a sort Mongo does not guarantee order, and --tail must keep the newest logs.
+	list, err := p.getList(nil, repository.WithSort(bson.D{{Key: "datable.createdAt", Value: 1}}))
 	if err != nil {
 		p.SetErr(err)
 		return

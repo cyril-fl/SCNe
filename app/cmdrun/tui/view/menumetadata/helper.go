@@ -70,7 +70,7 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 
 	switch {
 	case isPlayerNil:
-		content.WriteString(i19n.Localize("stats.entry:unknowns"))
+		content.WriteString(i19n.Localize("stats.entry:unknown"))
 	default:
 		for _, stat := range stats.List() {
 			key := "stat." + string(stat)

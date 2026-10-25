@@ -10,6 +10,8 @@ import (
 )
 
 func (m *model) handleSaveInput(msg messages.Saved) (*model, tea.Cmd) {
+	// SetErr accumulates: without this, one failed save (or roll) marks every later save as failed.
+	m.ClearErr()
 	m.SetErr(msg.Err)
 
 	if m.HasErr() {
@@ -44,7 +46,9 @@ func (m *model) handleCommand(msg tea.KeyPressMsg) (*model, tea.Cmd) {
 	switch plumtypes.Key(msg.String()) {
 	case plumtypes.CMD_CTRL_S:
 		if m.state.Current() == CHAT_SECTION {
-			return m, messages.Save(m.save)
+			// Save inside Update: a tea.Cmd runs on another goroutine while Update mutates the session.
+			saved := messages.Save(m.save)()
+			return m, func() tea.Msg { return saved }
 		}
 	}
 

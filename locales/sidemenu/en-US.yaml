@@ -6,6 +6,8 @@ sidemenu.close:
   other: "Closing {{.Subject}} \"{{.Submenu}}\""
 form.submitted:
   other: "Form {{.Form}} submitted"
+form.error:
+  other: "Form {{.Form}} error:\n{{.Error}}"
 form.post:
   other: "Form {{.Form}} sent"
 
@@ -62,6 +64,8 @@ hint:
 # --- Location ---
 location:
   other: "location"
+unknown_place:
+  other: "unknown place"
 
 # --- Metadata ---
 metadata:
