@@ -26,7 +26,9 @@ build:
 # 	go run -ldflags "$(LDFLAGS)" .
 
 test:
-	@CONFIG_FILE=$(CURDIR)/config/.config.yaml \
+	@HOME=$$(mktemp -d) \
+	GOMODCACHE=$$(go env GOMODCACHE) \
+	GOENV=$$(go env GOENV) \
 	GOCACHE=$${GOCACHE:-/tmp/scne-go-cache} \
 	go test -exec "sh -c 'cd \"$(CURDIR)\" && exec \"\$$@\"' sh" $(ARGS)
 

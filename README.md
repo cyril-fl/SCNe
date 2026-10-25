@@ -60,9 +60,6 @@ L'application nécessite un fichier d'environnement (voir [`.env.example`](./.en
 # MongoDB
 MONGO_HOST=localhost
 MONGO_PORT=27017
-
-# Config
-CONFIG_FILE=./config/.config.yaml
 ```
 
 Le nom du fichier dépend du mode d'exécution :
@@ -72,7 +69,15 @@ Le nom du fichier dépend du mode d'exécution :
 
 #### Fichier de configuration
 
-Le fichier [`config/.config.yaml`](./config/.config.yaml) regroupe :
+Le fichier [`config/.config.yaml`](./config/.config.yaml) est la config par défaut, embarquée dans le binaire. Le joueur peut surcharger `i18n`, `documents` et `theme` dans sa propre config, ouverte dans son éditeur (`$VISUAL`, `$EDITOR`, sinon `vi`) avec :
+
+```bash
+scne config edit
+```
+
+Elle se trouve dans le dossier de config de l'OS (`~/Library/Application Support/scne/config.yaml` sur macOS, `~/.config/scne/config.yaml` sur Linux). Chaque clé absente garde sa valeur par défaut, et les locales ajoutées s'ajoutent à celles par défaut.
+
+La config par défaut regroupe :
 
 - `theme` — couleurs de l'interface (`accent`, `text`, `muted`, `subtle`, `error`, `success`), en hexadécimal ou en code ANSI. Ce bloc surcharge le thème par défaut défini dans `app/shared/services/theme` ; une couleur vide garde la valeur par défaut.
 

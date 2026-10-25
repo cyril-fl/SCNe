@@ -1,0 +1,27 @@
+# SCNe player configuration.
+# Uncomment and change only what you need: every key left out keeps its default value.
+
+# i18n:
+#   default: "fr"
+#   # Added to the built-in locales (en, fr); a locale with an existing code replaces it.
+#   locales:
+#     - code: zh
+#       iso: "zh-CN"
+#       name: "中文"
+#       file: "zh-CN.yaml"
+
+# theme:
+#   accent: "#C9A26B"
+#   text: "#E3DED6"
+#   muted: "#8C877F"
+#   subtle: "#4B4843"
+#   error: "#D0614C"
+#   success: "#8FB573"
+
+# documents:
+#   files:
+#     dice: "data/systems/rules/dices/dice.yaml"
+#     combat: "data/systems/rules/combat.yaml"
+#   folders:
+#     characters: "data/template/characters"
+#     locations: "data/template/locations"

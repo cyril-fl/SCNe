@@ -23,6 +23,10 @@ commands:
   config: 
     use: "config"
     short: "Display the configuration of SCNe"
+  config_edit: 
+    use: "edit"
+    short: "Edit the player configuration of SCNe in the default editor"
+    example: "scne config edit"
   logs: 
     use: "logs"
     short: "Display application logs"

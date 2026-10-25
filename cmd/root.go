@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"scne/app/cmdroot"
 	"scne/app/cmdversion/services/process/generatebuildinfo"
@@ -25,8 +24,8 @@ var cmdRoot = &cobra.Command{
 }
 
 func Execute() {
+	// cobra already prints the error and the usage.
 	if err := cmdRoot.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }

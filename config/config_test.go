@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/theme"
 	"testing"
 
 	"gopkg.in/yaml.v3"
@@ -50,7 +51,7 @@ func TestLoadPublicOverridesOnlyPublicKeys(t *testing.T) {
 	cfg.Theme.Muted = "#222222"
 	cfg.Documents.Files.Dice = "private/dice.yaml"
 
-	loadPublic(&cfg, writeConfigFile(t, `
+	err := loadPublic(&cfg, writeConfigFile(t, `
 name: other
 i18n:
   default: zh
@@ -60,6 +61,9 @@ i18n:
 theme:
   accent: "#000000"
 `))
+	if err != nil {
+		t.Fatalf("loadPublic() error = %v", err)
+	}
 
 	if cfg.Name != "scne" {
 		t.Fatalf("Name = %q, want private value %q", cfg.Name, "scne")
@@ -75,14 +79,58 @@ theme:
 	}
 }
 
-func TestLoadPublicPanicsOnInvalidYAML(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Fatal("loadPublic() did not panic on invalid YAML")
-		}
-	}()
+func TestLoadPublicRejectsInvalidYAML(t *testing.T) {
+	if err := loadPublic(&config{}, writeConfigFile(t, "theme: [unclosed")); err == nil {
+		t.Fatal("loadPublic() error = nil, want unmarshal error")
+	}
+}
 
-	loadPublic(&config{}, writeConfigFile(t, "theme: [unclosed"))
+func TestLoadPublicIgnoresMissingFile(t *testing.T) {
+	cfg := config{Name: "scne"}
+	cfg.Theme.Accent = "#111111"
+
+	if err := loadPublic(&cfg, filepath.Join(t.TempDir(), "missing.yaml")); err != nil {
+		t.Fatalf("loadPublic() error = %v, want nil", err)
+	}
+	if cfg.Theme.Accent != "#111111" {
+		t.Fatalf("Accent = %q, want unchanged %q", cfg.Theme.Accent, "#111111")
+	}
+}
+
+func TestPublicTemplateChangesNothing(t *testing.T) {
+	var public Public
+	if err := yaml.Unmarshal(publicTemplate, &public); err != nil {
+		t.Fatalf("Unmarshal(publicTemplate) error = %v", err)
+	}
+	if public.I18n.Default != "" || len(public.I18n.Locales) != 0 || public.Theme != (theme.Config{}) {
+		t.Fatalf("publicTemplate sets values: %+v", public)
+	}
+}
+
+func TestEnsurePublicFileCreatesTemplate(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "scne", "config.yaml")
+
+	if err := EnsurePublicFile(path); err != nil {
+		t.Fatalf("EnsurePublicFile() error = %v", err)
+	}
+
+	got, err := os.ReadFile(path)
+	if err != nil || string(got) != string(publicTemplate) {
+		t.Fatalf("file = %q, %v; want the template", got, err)
+	}
+}
+
+func TestEnsurePublicFileKeepsExistingFile(t *testing.T) {
+	path := writeConfigFile(t, "theme:\n  accent: \"#000000\"\n")
+
+	if err := EnsurePublicFile(path); err != nil {
+		t.Fatalf("EnsurePublicFile() error = %v", err)
+	}
+
+	got, _ := os.ReadFile(path)
+	if string(got) != "theme:\n  accent: \"#000000\"\n" {
+		t.Fatalf("file = %q, want unchanged", got)
+	}
 }
 
 // Helpers

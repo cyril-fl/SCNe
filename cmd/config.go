@@ -16,6 +16,16 @@ var configCmd = &cobra.Command{
 	Run:         cmdconfig.RunCmdConfig,
 }
 
+var configEditCmd = &cobra.Command{
+	Use:         cmd.ConfigEdit.Use,
+	Short:       cmd.ConfigEdit.Short,
+	Long:        cmd.ConfigEdit.Long,
+	Example:     cmd.ConfigEdit.Example,
+	Annotations: annotations.Set(annotations.NODB, ""),
+	RunE:        cmdconfig.RunECmdConfigEdit,
+}
+
 func init() {
+	configCmd.AddCommand(configEditCmd)
 	cmdRoot.AddCommand(configCmd)
 }
