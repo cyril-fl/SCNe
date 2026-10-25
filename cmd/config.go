@@ -4,6 +4,7 @@ import (
 	"scne/app/cmdconfig"
 	"scne/app/shared/services/annotations"
 
+	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +14,7 @@ var configCmd = &cobra.Command{
 	Long:        cmd.Config.Long,
 	Example:     cmd.Config.Example,
 	Annotations: annotations.Set(annotations.NODB, ""),
-	Run:         cmdconfig.RunCmdConfig,
+	RunE:        cmdconfig.RunECmdConfig,
 }
 
 var configEditCmd = &cobra.Command{
@@ -26,6 +27,9 @@ var configEditCmd = &cobra.Command{
 }
 
 func init() {
+	plumcliutilsargs.Makeflags(configCmd, cmd.Config.Flags)
+	configCmd.MarkFlagsMutuallyExclusive("yaml", "json")
+
 	configCmd.AddCommand(configEditCmd)
 	cmdRoot.AddCommand(configCmd)
 }

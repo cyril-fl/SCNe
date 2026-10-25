@@ -28,16 +28,16 @@ var privateFile []byte
 var publicTemplate []byte
 
 type config struct {
-	Name     string   `yaml:"name"`
-	Commands commands `yaml:"commands"`
+	Name     string   `yaml:"name" json:"name"`
+	Commands commands `yaml:"commands" json:"commands"`
 	Public   `yaml:",inline"`
 }
 
 // Public holds what the public file may override.
 type Public struct {
 	I18n      i19n.Config       `yaml:"i18n"`
-	Documents structureDocument `yaml:"documents"`
-	Theme     theme.Config      `yaml:"theme"`
+	Documents structureDocument `yaml:"documents" json:"documents"`
+	Theme     theme.Config      `yaml:"theme" json:"theme"`
 }
 
 var current config

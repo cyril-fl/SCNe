@@ -54,10 +54,10 @@ func SetCache(i19n *Translator) {
 
 // Locale describes an available language and its message file.
 type Locale struct {
-	Code string `yaml:"code"`
-	ISO  string `yaml:"iso"`
-	Name string `yaml:"name"`
-	File string `yaml:"file"`
+	Code string `yaml:"code" json:"code"`
+	ISO  string `yaml:"iso" json:"iso"`
+	Name string `yaml:"name" json:"name"`
+	File string `yaml:"file" json:"file"`
 }
 
 // ParseTag parses the locale ISO code.
@@ -89,10 +89,10 @@ var FormatValidExtensions = map[format][]string{
 
 // Config is the i18n configuration.
 type Config struct {
-	Default string   `yaml:"default"`
-	Dir     string   `yaml:"dir"`
-	Format  format   `yaml:"format"`
-	Locales []Locale `yaml:"locales"`
+	Default string   `yaml:"default" json:"default"`
+	Dir     string   `yaml:"dir" json:"dir"`
+	Format  format   `yaml:"format" json:"format"`
+	Locales []Locale `yaml:"locales" json:"locales"`
 }
 
 // GetDefaultLocale returns the locale with code defaultLocale.

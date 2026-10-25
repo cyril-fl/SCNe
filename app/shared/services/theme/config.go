@@ -4,12 +4,12 @@ package theme
 
 // Config holds the UI colors, as hex or ANSI codes.
 type Config struct {
-	Accent  string `yaml:"accent"`
-	Text    string `yaml:"text"`
-	Muted   string `yaml:"muted"`
-	Subtle  string `yaml:"subtle"`
-	Error   string `yaml:"error"`
-	Success string `yaml:"success"`
+	Accent  string `yaml:"accent" json:"accent"`
+	Text    string `yaml:"text" json:"text"`
+	Muted   string `yaml:"muted" json:"muted"`
+	Subtle  string `yaml:"subtle" json:"subtle"`
+	Error   string `yaml:"error" json:"error"`
+	Success string `yaml:"success" json:"success"`
 }
 
 // Default is the theme used until SetCache is called, and for every color the config leaves empty.

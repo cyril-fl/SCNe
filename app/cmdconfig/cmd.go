@@ -11,8 +11,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func RunCmdConfig(cobra *cobra.Command, args []string) {
-	plumdebug.Json(config.GetConfig())
+// RunECmdConfig prints the full config as YAML, or as JSON with --json.
+func RunECmdConfig(cobra *cobra.Command, args []string) error {
+	asJSON, err := cobra.Flags().GetBool("json")
+	if err != nil {
+		return err
+	}
+
+	// --yaml is the default format, so it needs no case of its own.
+	switch {
+	case asJSON:
+		plumdebug.Json(config.GetConfig())
+	default:
+		plumdebug.Yaml(config.GetConfig())
+	}
+
+	return nil
 }
 
 // RunECmdConfigEdit opens the public config file in the user editor, then validates it.
