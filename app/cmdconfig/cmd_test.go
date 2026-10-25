@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/charmbracelet/x/ansi"
 	plumcliconfig "github.com/cyril-fl/plum/cli/config"
 	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"
@@ -30,12 +31,18 @@ func TestEditorPrefersVisualThenEditorThenVi(t *testing.T) {
 	}
 }
 
-func TestRunECmdConfigPrintsYAMLByDefaultAndJSONWithFlag(t *testing.T) {
+func TestRunECmdConfigPrintsEachFormat(t *testing.T) {
 	if got := runConfig(t); !strings.HasPrefix(got, "name: ") {
 		t.Fatalf("default output = %q, want YAML", got)
 	}
 	if got := runConfig(t, "--json"); !strings.HasPrefix(got, "{\n  \"name\": ") {
 		t.Fatalf("--json output = %q, want JSON with yaml key names", got)
+	}
+	if got := ansi.Strip(runConfig(t, "--pretty")); !strings.HasPrefix(got, "name: ") {
+		t.Fatalf("--pretty output = %q, want YAML", got)
+	}
+	if got := ansi.Strip(runConfig(t, "--json", "--pretty")); !strings.HasPrefix(got, "{\n  \"name\": ") {
+		t.Fatalf("--json --pretty output = %q, want JSON", got)
 	}
 }
 
@@ -45,7 +52,7 @@ func runConfig(t *testing.T, args ...string) string {
 	t.Helper()
 
 	cmd := &cobra.Command{}
-	plumcliutilsargs.Makeflags(cmd, []plumcliconfig.Cmdflags{{Name: "yaml", Type: "bool"}, {Name: "json", Type: "bool"}})
+	plumcliutilsargs.Makeflags(cmd, []plumcliconfig.Cmdflags{{Name: "yaml", Type: "bool"}, {Name: "json", Type: "bool"}, {Name: "pretty", Type: "bool"}})
 	if err := cmd.ParseFlags(args); err != nil {
 		t.Fatal(err)
 	}

@@ -35,6 +35,11 @@ commands:
         value: ""
         usage: "Display the configuration as JSON"
         type: "bool"
+      - name: "pretty"
+        shorthand: ""
+        value: ""
+        usage: "Color the YAML or JSON output with the theme"
+        type: "bool"
   config_edit: 
     use: "edit"
     short: "Edit the player configuration of SCNe in the default editor"

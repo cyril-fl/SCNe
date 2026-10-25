@@ -3,29 +3,47 @@ package cmdconfig
 import (
 	"os"
 	"os/exec"
+	"scne/app/shared/services/style"
 	"scne/config"
 	"strings"
 
+	"charm.land/lipgloss/v2"
+	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	plumdebug "github.com/cyril-fl/plum/utils/debug"
 
 	"github.com/spf13/cobra"
 )
 
-// RunECmdConfig prints the full config as YAML, or as JSON with --json.
+// RunECmdConfig prints the full config as YAML, or as JSON with --json; --pretty adds the theme colors.
 func RunECmdConfig(cobra *cobra.Command, args []string) error {
-	asJSON, err := cobra.Flags().GetBool("json")
+	var asJSON, asYAML, asPretty bool
+	if err := plumcliutilsargs.GetBoolFlags(cobra, map[string]*bool{"json": &asJSON, "yaml": &asYAML, "pretty": &asPretty}); err != nil {
+		return err
+	}
+
+	switch {
+	case asJSON:
+		return printConfig(asPretty, plumdebug.Json, style.Json)
+	case asYAML:
+		return printConfig(asPretty, plumdebug.Yaml, style.Yaml)
+	default:
+		return printConfig(asPretty, plumdebug.Yaml, style.Yaml)
+	}
+}
+
+// printConfig prints the config with plain, or with colored when pretty; lipgloss drops the colors when stdout is not a terminal.
+func printConfig(pretty bool, plain func(any), colored func(any) (string, error)) error {
+	if !pretty {
+		plain(config.GetConfig())
+		return nil
+	}
+
+	out, err := colored(config.GetConfig())
 	if err != nil {
 		return err
 	}
 
-	// --yaml is the default format, so it needs no case of its own.
-	switch {
-	case asJSON:
-		plumdebug.Json(config.GetConfig())
-	default:
-		plumdebug.Yaml(config.GetConfig())
-	}
-
+	lipgloss.Fprintln(os.Stdout, out)
 	return nil
 }
 
