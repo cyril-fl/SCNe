@@ -1,6 +1,8 @@
 package variety
 
 import (
+	"errors"
+	"io/fs"
 	"slices"
 	"solopg/app/shared/services/logs"
 	"solopg/config"
@@ -11,7 +13,8 @@ import (
 
 // - Configuration & caching - //
 type yamlConfig struct {
-	Values []Variety `yaml:"values"`
+	Values  []Variety `yaml:"values"`
+	Default Variety   `yaml:"default"`
 }
 
 var fileConfigPath = config.GetConfig().Documents.Files.Variety
@@ -19,8 +22,16 @@ var fileConfigPath = config.GetConfig().Documents.Files.Variety
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 func loadFromFile() (yamlConfig, error) {
+	// variety is optional: no configured or existing file means no values, not an error.
+	if fileConfigPath == "" {
+		return yamlConfig{}, nil
+	}
+
 	loader := plummillload.New(fileConfigPath)
 	params := loader.LoadFromFile[yamlConfig]()
+	if errors.Is(loader.GetErr(), fs.ErrNotExist) {
+		return yamlConfig{}, nil
+	}
 	if loader.HasErr() {
 		return yamlConfig{}, logs.RawError("%w", loader.GetErr())
 	}
@@ -71,15 +82,18 @@ func (r Variety) Validate() bool {
 	return slices.Contains(List(), r)
 }
 
-// Default returns the first configured variety, or registers "card" when none.
+// Default returns the configured default variety, or registers "card" when unset or invalid.
 func Default() Variety {
-	list := List()
-
-	if len(list) == 0 {
+	config, err := cachedConfig.Load(loadFromFile)
+	if err != nil {
 		return MakeDefault("card")
 	}
 
-	return list[0]
+	if config.Default == "" || !config.Default.Validate() {
+		return MakeDefault("card")
+	}
+
+	return config.Default
 }
 
 // MakeDefault adds defaultValue to the cached values when missing and returns it.

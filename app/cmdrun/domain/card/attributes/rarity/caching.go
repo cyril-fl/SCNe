@@ -1,6 +1,8 @@
 package rarity
 
 import (
+	"errors"
+	"io/fs"
 	"slices"
 	"solopg/app/shared/services/logs"
 	"solopg/config"
@@ -20,8 +22,16 @@ var fileConfigPath = config.GetConfig().Documents.Files.Rarity
 var cachedConfig = plumprimitive.NewCache[yamlConfig]()
 
 func loadFromFile() (yamlConfig, error) {
+	// rarity is optional: no configured or existing file means no values, not an error.
+	if fileConfigPath == "" {
+		return yamlConfig{}, nil
+	}
+
 	loader := plummillload.New(fileConfigPath)
 	params := loader.LoadFromFile[yamlConfig]()
+	if errors.Is(loader.GetErr(), fs.ErrNotExist) {
+		return yamlConfig{}, nil
+	}
 	if loader.HasErr() {
 		return yamlConfig{}, logs.RawError("%w", loader.GetErr())
 	}

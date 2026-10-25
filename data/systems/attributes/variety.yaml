@@ -5,3 +5,4 @@ values:
   - event_card
   - location_card
   - article_card
+default: character_card

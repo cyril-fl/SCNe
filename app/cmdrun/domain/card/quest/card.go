@@ -30,7 +30,6 @@ type Template struct {
 }
 
 func New(params Template) (*Quest, error) {
-	// CHECK cpparce que nil ca a l'ai de passer
 	if !params.Variety.Validate() {
 		params.Variety = variety.MakeDefault("quest_card")
 	}
