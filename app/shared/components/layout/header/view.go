@@ -92,14 +92,12 @@ func (p Header) getTitleGroup() string {
 		return ""
 	}
 
-	view := lipgloss.JoinVertical(
+	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		i19n.Localize(p.title),
-		i19n.Localize(p.subtitle),
+		style.Title.Render(i19n.Localize(p.title)),
+		style.Muted.Render(i19n.Localize(p.subtitle)),
 		"",
 	)
-
-	return style.Title.Render(view)
 }
 
 func (p *Header) getTitleGroupHeight() int {

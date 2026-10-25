@@ -51,8 +51,7 @@ func makeItems(data []campaign.Campaign) []list.Item {
 
 func makeModel(data []campaign.Campaign) list.Model {
 	items := makeItems(data)
-	model := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(&model)
+	model := models.NewList(items, 0, 0)
 
 	return model
 }

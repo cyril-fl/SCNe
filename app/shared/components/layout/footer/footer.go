@@ -2,11 +2,14 @@ package footer
 
 import (
 	"solopg/app/cmdrun/types/size"
+	"solopg/app/shared/services/style"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
+
+var separator = style.Muted.Render(" · ")
 
 // Footer renders a one-line shortcut bar: its own parts, then those of the merged model.
 type Footer struct {
@@ -34,10 +37,10 @@ func Nil() *Footer {
 	}
 }
 
-// View joins the parts with " | ".
+// View joins the parts with a muted " · ".
 func (f *Footer) View() string {
 	footerparts := append(f.parts, f.plugins...)
-	return strings.Join(footerparts, " | ")
+	return strings.Join(footerparts, separator)
 }
 
 // Getters & Setters

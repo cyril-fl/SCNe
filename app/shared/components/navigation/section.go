@@ -62,13 +62,16 @@ func (s *Section) GetView() string {
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		s.title(),
-		"",
 		content,
 	)
 }
 
 func (s *Section) title() string {
-	return style.Title.Render(plumtransform.Uppercase(i19n.Localize(s.id)))
+	return style.Title.Render(s.label())
+}
+
+func (s *Section) label() string {
+	return plumtransform.Uppercase(i19n.Localize(s.id))
 }
 
 // GetFooter returns the section shortcuts.
@@ -130,7 +133,7 @@ func NewFocusableSection[T pluminterface.Named](params TemplateFocusableSection[
 // GetView renders the title only while unfocused, so the panel reads as an accordion.
 func (s *FocusableSection) GetView() string {
 	if !s.focused {
-		return s.title()
+		return style.Collapsed.Render(s.label())
 	}
 	return s.Section.GetView()
 }

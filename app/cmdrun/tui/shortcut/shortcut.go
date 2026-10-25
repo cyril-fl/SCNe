@@ -1,8 +1,8 @@
 package shortcut
 
 import (
-	"fmt"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/style"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
@@ -41,5 +41,5 @@ type Shortcut struct {
 }
 
 func (a Shortcut) String() string {
-	return fmt.Sprintf("[%s] %s", a.command, plumtransform.Capitalize(i19n.Localize(a.label)))
+	return style.Key.Render(string(a.command)) + " " + style.Muted.Render(plumtransform.Capitalize(i19n.Localize(a.label)))
 }

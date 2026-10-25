@@ -20,3 +20,15 @@ func TestConfigureListHidesOptionalElements(t *testing.T) {
 		t.Fatal("list optional elements were not hidden")
 	}
 }
+
+func TestListContentHeightFitsDescriptions(t *testing.T) {
+	compact := NewList([]list.Item{NewItem("a", "", 1), NewItem("b", "", 2)}, 0, 0)
+	if got := ListContentHeight(&compact); got != 2 {
+		t.Fatalf("ListContentHeight() without descriptions = %d, want 2", got)
+	}
+
+	described := NewList([]list.Item{NewItem("a", "desc", 1), NewItem("b", "", 2)}, 0, 0)
+	if got := ListContentHeight(&described); got != 6 {
+		t.Fatalf("ListContentHeight() with a description = %d, want 6", got)
+	}
+}

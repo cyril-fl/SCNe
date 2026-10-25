@@ -18,6 +18,7 @@ type config struct {
 	I18n      i19n.Config       `yaml:"i18n"`
 	Commands  commands          `yaml:"commands"`
 	Documents structureDocument `yaml:"documents"`
+	Theme     theme             `yaml:"theme"`
 }
 
 var current config

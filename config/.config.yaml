@@ -1,4 +1,11 @@
 name: "solopg"
+theme:
+  accent: "#C9A26B"
+  text: "#E3DED6"
+  muted: "#8C877F"
+  subtle: "#4B4843"
+  error: "#D0614C"
+  success: "#8FB573"
 i18n: 
   default: "fr"
   dir: "locales"

@@ -93,7 +93,7 @@ func NewOptionsModel(options rerollOptions) list.Model {
 		NewItem(falseLabel(options), "", false),
 	}
 
-	return newConfiguredList(items, 0, 0)
+	return NewList(items, 0, 0)
 }
 
 func makeConfirmationModel(m list.Model) list.Model {
@@ -101,13 +101,7 @@ func makeConfirmationModel(m list.Model) list.Model {
 		NewItem(trueLabel(DefaultRerollOptions), "", true),
 	}
 
-	return newConfiguredList(items, m.Width(), m.Height())
-}
-
-func newConfiguredList(items []list.Item, width, height int) list.Model {
-	model := list.New(items, list.NewDefaultDelegate(), width, height)
-	ConfigureList(&model)
-	return model
+	return NewList(items, m.Width(), m.Height())
 }
 
 func trueLabel(options rerollOptions) string {

@@ -48,6 +48,7 @@ type Page struct {
 
 	form    *form.Form
 	entryID id.ID
+	focused bool
 }
 
 // TODO regardader pour adopter cette pholosipheio ou c'est possible
@@ -59,6 +60,7 @@ func New(template Template) *Page {
 		newForm: template.NewForm,
 		save:    template.Save,
 		action:  template.Action,
+		focused: true,
 	}
 
 	p.intList()
@@ -130,6 +132,7 @@ func (p *Page) isSelectedLocked() bool {
 
 // SetFocus sets the list focus.
 func (p *Page) SetFocus(focused bool) {
+	p.focused = focused
 	models.SetListFocus(p.GetList(), focused)
 }
 

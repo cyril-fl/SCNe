@@ -43,8 +43,7 @@ func NewModel[T interfaces.Archetype](name string, data []T) *model {
 		items = append(items, models.NewItem(label, "", i))
 	}
 
-	listModel := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(&listModel)
+	listModel := models.NewList(items, 0, 0)
 
 	return &model{
 		name: name,

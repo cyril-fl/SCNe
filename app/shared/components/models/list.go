@@ -1,8 +1,10 @@
 package models
 
 import (
-	"charm.land/bubbles/v2/list"
 	"solopg/app/shared/services/style"
+
+	"charm.land/bubbles/v2/list"
+	"charm.land/lipgloss/v2"
 )
 
 // Item is a list entry carrying a typed value.
@@ -43,25 +45,22 @@ func ConfigureList(menu *list.Model) {
 	menu.SetShowTitle(false)
 }
 
-// SetListFocus styles the selected item as active or inactive.
-func SetListFocus(menu *list.Model, focused bool) {
-	delegate := list.NewDefaultDelegate()
-	if !focused {
-		inactiveColor := style.Inactive.GetForeground()
-		delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.
-			Foreground(inactiveColor).
-			BorderForeground(inactiveColor)
-		delegate.Styles.SelectedDesc = delegate.Styles.SelectedDesc.
-			Foreground(inactiveColor).
-			BorderForeground(inactiveColor)
-	}
+// NewList returns a focused, configured list whose delegate fits items.
+func NewList(items []list.Item, width, height int) list.Model {
+	model := list.New(items, newDelegate(items, true), width, height)
+	ConfigureList(&model)
+	return model
+}
 
-	menu.SetDelegate(delegate)
+// SetListFocus styles the selected item as active or inactive.
+// The delegate is rebuilt from the current items, so call it again after SetItems.
+func SetListFocus(menu *list.Model, focused bool) {
+	menu.SetDelegate(newDelegate(menu.Items(), focused))
 }
 
 // ListContentHeight returns the height needed to show every visible item, one item when empty.
 func ListContentHeight(menu *list.Model) int {
-	delegate := list.NewDefaultDelegate()
+	delegate := newDelegate(menu.Items(), false)
 	itemCount := len(menu.VisibleItems())
 
 	if itemCount == 0 {
@@ -69,4 +68,43 @@ func ListContentHeight(menu *list.Model) int {
 	}
 
 	return itemCount * (delegate.Height() + delegate.Spacing())
+}
+
+// newDelegate shows descriptions, and spaces items, only when one item has a description.
+func newDelegate(items []list.Item, focused bool) list.DefaultDelegate {
+	delegate := list.NewDefaultDelegate()
+	delegate.ShowDescription = hasDescription(items)
+	if !delegate.ShowDescription {
+		delegate.SetHeight(1)
+		delegate.SetSpacing(0)
+	}
+
+	marker, selected := style.ColorAccent, style.ColorText
+	if !focused {
+		marker, selected = style.ColorMuted, style.ColorMuted
+	}
+
+	normal := lipgloss.NewStyle().Foreground(style.ColorText).PaddingLeft(2)
+	chevron := lipgloss.NewStyle().
+		Border(lipgloss.Border{Left: "›"}, false, false, false, true).
+		BorderForeground(marker).
+		PaddingLeft(1)
+
+	delegate.Styles.NormalTitle = normal
+	delegate.Styles.NormalDesc = normal.Foreground(style.ColorMuted)
+	delegate.Styles.SelectedTitle = chevron.Foreground(selected).Bold(focused)
+	delegate.Styles.SelectedDesc = normal.Foreground(style.ColorMuted)
+	delegate.Styles.DimmedTitle = normal.Foreground(style.ColorMuted)
+	delegate.Styles.DimmedDesc = normal.Foreground(style.ColorSubtle)
+
+	return delegate
+}
+
+func hasDescription(items []list.Item) bool {
+	for _, item := range items {
+		if item, ok := item.(list.DefaultItem); ok && item.Description() != "" {
+			return true
+		}
+	}
+	return false
 }

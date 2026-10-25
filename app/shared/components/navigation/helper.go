@@ -24,10 +24,11 @@ func makeNavigationContent(part []FocusableSectionInterface) (string, []int) {
 		block := item.GetView()
 		blockoffsets[i] = offset
 		blocks = append(blocks, block)
-		offset += max(1, lipgloss.Height(block))
+		// +1 for the blank line of sectionGap.
+		offset += max(1, lipgloss.Height(block)) + 1
 	}
 
-	return strings.Join(blocks, "\n"), blockoffsets
+	return strings.Join(blocks, sectionGap), blockoffsets
 }
 
 func makeSectionModel[T pluminterface.Named](params TemplateFocusableSection[T]) list.Model {
@@ -38,8 +39,7 @@ func makeSectionModel[T pluminterface.Named](params TemplateFocusableSection[T])
 		items = append(items, models.NewItem(names, "", option))
 	}
 
-	model := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(&model)
+	model := models.NewList(items, 0, 0)
 	model.SetSize(0, models.ListContentHeight(&model))
 
 	return model

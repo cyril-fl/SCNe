@@ -22,7 +22,7 @@ func (s testSection) HandleUpdate(tea.Msg) tea.Cmd { return nil }
 
 func TestMakeNavigationContentTracksBlockOffsets(t *testing.T) {
 	content, offsets := makeNavigationContent([]FocusableSectionInterface{testSection{view: "a"}, testSection{view: "bb"}})
-	if content != "a\nbb" || len(offsets) != 2 || offsets[0] != 0 || offsets[1] != 1 {
+	if content != "a\n\nbb" || len(offsets) != 2 || offsets[0] != 0 || offsets[1] != 2 {
 		t.Fatalf("got content %q and offsets %v", content, offsets)
 	}
 }

@@ -14,6 +14,9 @@ import (
 	plumtypes "github.com/cyril-fl/plum/types"
 )
 
+// sectionGap leaves one blank line between sections.
+const sectionGap = "\n\n"
+
 // Navigation is a panel of static sections above scrollable focusable ones.
 type Navigation struct {
 	plumprimitive.Fallible
@@ -74,7 +77,7 @@ func (n *Navigation) getStaticView() string {
 	for _, item := range n.static {
 		views = append(views, item.GetView())
 	}
-	return strings.Join(views, "\n")
+	return strings.Join(views, sectionGap)
 }
 
 // SetSize sets the panel size and resizes every section.
@@ -101,7 +104,8 @@ func (n *Navigation) resizeView() (int, int) {
 	h := max(0, n.size.GetHeight()-style.Panel.GetVerticalFrameSize())
 
 	if static := n.getStaticView(); static != "" && len(n.scroll) > 0 {
-		h -= lipgloss.Height(static) + 1
+		// +2 for the line break and the blank line of sectionGap.
+		h -= lipgloss.Height(static) + 2
 	}
 
 	h = max(0, h)
@@ -202,7 +206,7 @@ func (n *Navigation) makeBody() string {
 		return static
 	}
 
-	return static + "\n" + body
+	return static + sectionGap + body
 }
 
 // Helpers

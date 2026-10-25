@@ -112,8 +112,7 @@ func (p *Page) handleCtrlE() tea.Cmd {
 
 func (p *Page) intList() {
 	l := p.GetList()
-	*l = list.New(nil, list.NewDefaultDelegate(), 0, 0)
-	models.ConfigureList(l)
+	*l = models.NewList(nil, 0, 0)
 }
 
 func (p *Page) refresh() {
@@ -124,4 +123,5 @@ func (p *Page) refresh() {
 		listItems = append(listItems, models.NewItem(item.Name, item.Description, item))
 	}
 	l.SetItems(listItems)
+	models.SetListFocus(l, p.focused)
 }
