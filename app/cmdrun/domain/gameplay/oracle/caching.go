@@ -33,6 +33,7 @@ type interval struct {
 	Result   any  `yaml:"result"`
 }
 
+// Result is an oracle roll and the result of its interval.
 type Result[T any] struct {
 	Roll     int  `yaml:"roll"`
 	Critical bool `yaml:"critical"`
@@ -94,6 +95,8 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 }
 
 // - Oracle - //
+
+// Oracle maps dice roll intervals to results.
 type Oracle struct {
 	name      string
 	dice      int
@@ -112,6 +115,7 @@ func newFromYamlConfig(config yamlConfig) Oracle {
 	}
 }
 
+// GetByName returns the oracle named name, or an error.
 func GetByName(name string) (*Oracle, error) {
 	oracles := List()
 
@@ -127,15 +131,19 @@ func GetByName(name string) (*Oracle, error) {
 	})
 }
 
+// GetName returns the oracle translation key, "oracles.<name>".
 func (o Oracle) GetName() string {
 	return fmt.Sprintf("oracles.%s", o.name)
 }
 
+// IsVisible reports whether the oracle is shown to the player.
 func (o Oracle) IsVisible() bool {
 	return o.visible
 }
 
 // - Collection - //
+
+// ListWithError returns the oracles loaded from the oracle folder, once.
 func ListWithError() ([]Oracle, error) {
 	configs, err := cachedConfig.Load(loadFromSource)
 	if err != nil {
@@ -144,6 +152,7 @@ func ListWithError() ([]Oracle, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Oracle {
 	oracles, err := ListWithError()
 	if err != nil {
@@ -158,6 +167,7 @@ func List() []Oracle {
 	return oracles
 }
 
+// ListVisible returns the visible oracles.
 func ListVisible() []Oracle {
 	oracles := List()
 	visibleOracles := make([]Oracle, 0)
@@ -170,6 +180,7 @@ func ListVisible() []Oracle {
 	return visibleOracles
 }
 
+// ListFromFolder returns the oracle names of the files in path, uncached.
 func ListFromFolder(path string) ([]string, error) {
 	entries := plummillentries.New()
 	list := entries.GetFolderFiles(path)
@@ -209,6 +220,9 @@ func makeSet(configs []yamlConfig) []Oracle {
 }
 
 // - Helpers - //
+
+// Roll rolls o and returns the matching interval result as T.
+// It fails when no interval matches or the result is not a T.
 func Roll[T any](o Oracle) (*Result[T], error) {
 	value := dice.Roll(o.dice)
 	for _, interval := range o.intervals {

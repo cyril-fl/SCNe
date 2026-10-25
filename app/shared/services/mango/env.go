@@ -8,6 +8,7 @@ import (
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
+// MongoEnvironment holds the MONGO_* connection settings.
 type MongoEnvironment struct {
 	username string
 	password string
@@ -25,10 +26,12 @@ const (
 	PORT = "27017"
 )
 
+// NewEnvironment returns empty settings; call ReadEnv to fill them.
 func NewEnvironment() *MongoEnvironment {
 	return &MongoEnvironment{}
 }
 
+// ReadEnv reads the MONGO_* environment variables.
 func (env *MongoEnvironment) ReadEnv() {
 	env.username = strings.TrimSpace(os.Getenv("MONGO_USERNAME"))
 	env.password = strings.TrimSpace(os.Getenv("MONGO_PASSWORD"))
@@ -37,11 +40,13 @@ func (env *MongoEnvironment) ReadEnv() {
 	env.dbname = strings.TrimSpace(os.Getenv("MONGO_DBNAME"))
 }
 
+// GetEnvURI returns the connection URI; credentials are added only when both are set.
 func (env *MongoEnvironment) GetEnvURI() string {
 	uri := plumtransform.CleanJoin("@", env.getCredentials(), env.getHostAt())
 	return plumtransform.CleanJoin("", "mongodb://", uri)
 }
 
+// GetEnvDBName returns MONGO_DBNAME, defaulting to the app name.
 func (env *MongoEnvironment) GetEnvDBName() string {
 	if env.dbname == "" {
 		env.dbname = config.GetConfig().Name

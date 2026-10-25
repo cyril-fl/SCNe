@@ -18,12 +18,14 @@ type textareaField struct {
 	input textarea.Model
 }
 
+// TextareaTemplate configures a TextareaField; Height is at least one line.
 type TextareaTemplate struct {
 	Template[string]
 	Placeholder string
 	Height      int
 }
 
+// TextareaField returns a multi-line input field; alt+enter inserts a new line.
 func TextareaField(template TextareaTemplate) *textareaField {
 	input := makeTextarea(template.Placeholder, template.Height)
 	input.SetValue(template.Defaultvalue)

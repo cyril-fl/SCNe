@@ -20,6 +20,8 @@ import (
 /*
 LOW Modifier Object table pour quelle prenne des card weapon / article en fonction de et creer la bonne factory pour aller avec
 */
+
+// ObjectsTable lists the objects of the campaign.
 type ObjectsTable struct {
 	*Data[objectentry] `bson:",inline"`
 }
@@ -32,6 +34,7 @@ type objectentry struct {
 
 var tableobject = "codex.objects"
 
+// NewObjects returns a object table with entries.
 func NewObjects(entries ...objectentry) *ObjectsTable {
 	return &ObjectsTable{
 		Data: new(i19n.Localize(tableobject), entries),
@@ -41,6 +44,8 @@ func NewObjects(entries ...objectentry) *ObjectsTable {
 // Getters & Setters
 
 // Methods
+
+// AddFromMap creates a object from form values and appends it.
 func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 	object, err := tb.objectFromMap(values)
 	if err != nil {
@@ -86,6 +91,7 @@ func (tb *ObjectsTable) objectFromMap(values map[string]string) (*objects.Object
 	return object, nil
 }
 
+// Add appends a new object entry.
 func (tb *ObjectsTable) Add(object *objects.Object) {
 	tb.Entries = append(tb.Entries, objectentry{
 		ID:        id.New(),
@@ -94,6 +100,7 @@ func (tb *ObjectsTable) Add(object *objects.Object) {
 	})
 }
 
+// FormEntries returns the entries as form page rows.
 func (tb *ObjectsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 
@@ -113,6 +120,7 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 	return entries
 }
 
+// SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *ObjectsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry objectentry) bool { return entry.ID == entryID })
 	if entryID.IsZero() || index < 0 {
@@ -161,6 +169,7 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) {
 	*/
 }
 
+// Ensure initializes the table when missing.
 func (tb *ObjectsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobject), &tb.Data)
 }

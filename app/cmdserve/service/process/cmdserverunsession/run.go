@@ -31,11 +31,13 @@ type cache[T pluminterface.Stringable] struct {
 	repository repository.Watchable[T]
 }
 
+// ProcessTemplate provides the watched repository and the command flags.
 type ProcessTemplate[T pluminterface.Stringable] struct {
 	GetRepository func() repository.Watchable[T]
 	GetFlags      func() *pflag.FlagSet
 }
 
+// Process returns a process streaming the repository in a TUI.
 func Process[T pluminterface.Stringable](
 	params ProcessTemplate[T],
 ) *run[T] {
@@ -45,6 +47,7 @@ func Process[T pluminterface.Stringable](
 	}
 }
 
+// Run runs the log stream TUI until interrupted.
 func (p *run[T]) Run() {
 	p.makeRepository()
 	p.makeTuiView()
@@ -52,6 +55,8 @@ func (p *run[T]) Run() {
 }
 
 // Getters & Setters
+
+// GetResult is not implemented; it only logs a warning.
 func (p *run[T]) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",

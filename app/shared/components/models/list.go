@@ -5,12 +5,14 @@ import (
 	"solopg/app/shared/services/style"
 )
 
+// Item is a list entry carrying a typed value.
 type Item[T any] struct {
 	title       string
 	description string
 	value       T
 }
 
+// NewItem returns an Item; title is also its filter value.
 func NewItem[T any](title, description string, value T) Item[T] {
 	return Item[T]{
 		title:       title,
@@ -19,11 +21,19 @@ func NewItem[T any](title, description string, value T) Item[T] {
 	}
 }
 
-func (i Item[T]) Title() string       { return i.title }
-func (i Item[T]) Description() string { return i.description }
-func (i Item[T]) FilterValue() string { return i.title }
-func (i Item[T]) Value() T            { return i.value }
+// Title returns the item title.
+func (i Item[T]) Title() string { return i.title }
 
+// Description returns the item description.
+func (i Item[T]) Description() string { return i.description }
+
+// FilterValue returns the title.
+func (i Item[T]) FilterValue() string { return i.title }
+
+// Value returns the carried value.
+func (i Item[T]) Value() T { return i.value }
+
+// ConfigureList hides the title, filter, pagination, help and status bar of menu.
 func ConfigureList(menu *list.Model) {
 	menu.Title = ""
 	menu.SetShowFilter(false)
@@ -33,6 +43,7 @@ func ConfigureList(menu *list.Model) {
 	menu.SetShowTitle(false)
 }
 
+// SetListFocus styles the selected item as active or inactive.
 func SetListFocus(menu *list.Model, focused bool) {
 	delegate := list.NewDefaultDelegate()
 	if !focused {
@@ -48,6 +59,7 @@ func SetListFocus(menu *list.Model, focused bool) {
 	menu.SetDelegate(delegate)
 }
 
+// ListContentHeight returns the height needed to show every visible item, one item when empty.
 func ListContentHeight(menu *list.Model) int {
 	delegate := list.NewDefaultDelegate()
 	itemCount := len(menu.VisibleItems())

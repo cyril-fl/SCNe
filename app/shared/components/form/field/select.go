@@ -22,11 +22,13 @@ type selectField[T any] struct {
 	options list.Model
 }
 
+// SelectTemplate configures a SelectField.
 type SelectTemplate[T any] struct {
 	Template[T]
 	Options []models.Item[T]
 }
 
+// SelectField returns a list field preselecting the option equal to Defaultvalue.
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	items := make([]list.Item, 0, len(template.Options))
 	for _, option := range template.Options {
@@ -69,6 +71,7 @@ func (f *selectField[T]) GetValueAsString() string {
 	return plumtransform.ParseAsString(f.Value())
 }
 
+// Reset clears errors and selects the first option.
 func (f *selectField[T]) Reset() {
 	f.ResetError()
 	f.Blur()

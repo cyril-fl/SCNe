@@ -14,6 +14,7 @@ import (
 	plumtypes "github.com/cyril-fl/plum/types"
 )
 
+// Navigation is a panel of static sections above scrollable focusable ones.
 type Navigation struct {
 	plumprimitive.Fallible
 	cache
@@ -28,11 +29,13 @@ type cache struct {
 	active int
 }
 
+// Template configures a Navigation.
 type Template struct {
 	Static     []SectionInterface
 	Scrollable []FocusableSectionInterface
 }
 
+// New returns a Navigation.
 func New(template Template) *Navigation {
 	return &Navigation{
 		static: template.Static,
@@ -42,6 +45,8 @@ func New(template Template) *Navigation {
 }
 
 // Getters & Setters
+
+// GetView renders the panel, scrolled to the active section.
 func (n *Navigation) GetView() string {
 	content, contentoffsets := makeNavigationContent(n.scroll)
 
@@ -55,6 +60,7 @@ func (n *Navigation) GetView() string {
 		Render(n.makeBody())
 }
 
+// GetFooter returns the shortcuts of the active section.
 func (n *Navigation) GetFooter() []string {
 	footer := []string{}
 	if current := n.getActiveItem(); current != nil {
@@ -71,6 +77,7 @@ func (n *Navigation) getStaticView() string {
 	return strings.Join(views, "\n")
 }
 
+// SetSize sets the panel size and resizes every section.
 func (n *Navigation) SetSize(newsize size.Size) {
 	n.size = newsize
 
@@ -119,16 +126,21 @@ func (n *Navigation) getActiveItem() FocusableSectionInterface {
 }
 
 // Methods
+
+// Merge appends scrollable sections.
 func (n *Navigation) Merge(items ...FocusableSectionInterface) *Navigation {
 	n.scroll = append(n.scroll, items...)
 	return n
 }
 
+// Add appends a scrollable section.
 func (n *Navigation) Add(item FocusableSectionInterface) *Navigation {
 	n.scroll = append(n.scroll, item)
 	return n
 }
 
+// HandleUpdate moves to the adjacent section on up/down past the list edge,
+// then forwards msg to the section that was active.
 func (n *Navigation) HandleUpdate(msg tea.Msg) tea.Cmd {
 	current := n.getActiveItem()
 	if current == nil {

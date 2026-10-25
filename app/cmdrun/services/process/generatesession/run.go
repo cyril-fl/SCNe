@@ -29,6 +29,7 @@ type cache struct {
 	err error
 }
 
+// Process returns a process building the game session from the onboarding ctx.
 func Process(db *mango.Mongo, ctx *cmdruntui.Context) *run {
 	return &run{
 		db:  db,
@@ -36,6 +37,8 @@ func Process(db *mango.Mongo, ctx *cmdruntui.Context) *run {
 	}
 }
 
+// Run resolves the campaign and its archives, then starts the session.
+// A new campaign is saved right away.
 func (p *run) Run() {
 	p.makeCampaign()
 	p.makeArchives()
@@ -45,6 +48,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult returns the session, nil when it could not be built.
 func (p *run) GetResult() *session.GameSession {
 	return p.cache.session
 }

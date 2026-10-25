@@ -9,6 +9,7 @@ import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
+// Version, Commit and Date are set with -ldflags in production builds.
 var (
 	Version = ""
 	Commit  = ""
@@ -28,15 +29,19 @@ type cache struct {
 
 type shellcmd = string
 
+// Shell commands reading the build info from git in development.
 const (
 	GET_COMMIT  = "git rev-parse --short HEAD 2>/dev/null || echo none"
 	GET_DATE    = "date -u +%Y-%m-%dT%H:%M:%SZ"
 	GET_VERSION = "git describe --tags --always --dirty 2>/dev/null || echo dev"
 )
 
+// Process returns a process collecting the build info.
 func Process() *run {
 	return &run{}
 }
+
+// Run reads the build info from git in development, from the ldflags variables otherwise.
 func (p *run) Run() {
 	executeByEnv(executablenv{
 		devfunc:  p.makeDevEnv,
@@ -45,6 +50,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult returns the collected build info.
 func (p *run) GetResult() buildinfo.BuildInfo {
 	infos := buildinfo.New(buildinfo.InfoTemplate{
 		Version: p.cache.version,

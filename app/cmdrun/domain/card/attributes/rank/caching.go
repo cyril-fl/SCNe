@@ -35,8 +35,11 @@ func (c *yamlConfig) addValue(value Rank) {
 }
 
 // - Rank - //
+
+// Rank is a value from the rank config file.
 type Rank string
 
+// ListWithError returns a copy of the configured values; the file is loaded once.
 func ListWithError() ([]Rank, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -46,6 +49,7 @@ func ListWithError() ([]Rank, error) {
 	return append([]Rank(nil), config.Values...), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Rank {
 	values, err := ListWithError()
 	if err != nil {
@@ -62,10 +66,12 @@ func List() []Rank {
 	return values
 }
 
+// Validate reports whether r is a configured value.
 func (r Rank) Validate() bool {
 	return slices.Contains(List(), r)
 }
 
+// Default returns the first configured rank, or registers "side" when none.
 func Default() Rank {
 	list := List()
 
@@ -76,6 +82,7 @@ func Default() Rank {
 	return list[0]
 }
 
+// MakeDefault adds defaultValue to the cached values when missing and returns it.
 func MakeDefault(defaultValue string) Rank {
 	_, _ = ListWithError()
 	cachedConfig.Update(func(config *yamlConfig) {
@@ -84,6 +91,7 @@ func MakeDefault(defaultValue string) Rank {
 	return Rank(defaultValue)
 }
 
+// AssertWithDefault returns provided when valid, otherwise Default.
 func AssertWithDefault(provided string) Rank {
 	if Assert(provided) {
 		return Rank(provided)
@@ -92,10 +100,12 @@ func AssertWithDefault(provided string) Rank {
 	return Default()
 }
 
+// Assert reports whether provided is a configured value.
 func Assert(provided string) bool {
 	return Rank(provided).Validate()
 }
 
+// String returns r as a string.
 func (r Rank) String() string {
 	return string(r)
 }

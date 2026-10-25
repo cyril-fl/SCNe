@@ -24,6 +24,7 @@ type cache struct {
 	loadedArchives *campaign.Archives
 }
 
+// Process returns a process loading the archives of campaignID.
 func Process(db *mango.Mongo, campaignID id.ID) *run {
 	return &run{
 		db:         db,
@@ -31,6 +32,7 @@ func Process(db *mango.Mongo, campaignID id.ID) *run {
 	}
 }
 
+// Run loads the archives, creating empty ones when none are saved.
 func (p *run) Run() {
 	p.loadArchives()
 	p.ensureArchives()
@@ -38,6 +40,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult returns the archives, nil on error.
 func (p *run) GetResult() *campaign.Archives {
 	return p.cache.loadedArchives
 }

@@ -7,6 +7,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// View renders the received logs filtered by --filter.
 func (m *model[T]) View() tea.View {
 	mill := millfilterlog.New(millfilterlog.Template{
 		LogList: logs.ConvertStringablesToList(m.stream.GetEvents()),

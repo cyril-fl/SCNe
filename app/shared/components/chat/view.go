@@ -23,6 +23,7 @@ import (
 	plumtypes "github.com/cyril-fl/plum/types"
 )
 
+// Chat shows the session history and a message input with notifications.
 type Chat struct {
 	plumprimitive.Fallible
 	primitive.Notifier
@@ -40,12 +41,14 @@ type cache struct {
 	session []string
 }
 
+// Template configures a Chat; Register is called for each sent message.
 type Template struct {
 	Author   string
 	History  []string
 	Register func(author, message string)
 }
 
+// New returns a chat with a focused message input.
 func New(params Template) *Chat {
 	return &Chat{
 		Notifier: primitive.NewNotifier(),
@@ -59,6 +62,8 @@ func New(params Template) *Chat {
 }
 
 // Getters & Setters
+
+// GetView renders the messages, the notification and the input.
 func (c *Chat) GetView() string {
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
@@ -70,18 +75,23 @@ func (c *Chat) GetView() string {
 	)
 }
 
+// GetFooter returns the chat shortcuts.
 func (m Chat) GetFooter() []string {
 	return []string{
 		shortcut.SEND.String(),
 	}
 }
 
+// SetSize sets the chat size and the input width.
 func (c *Chat) SetSize(size size.Size) {
 	c.size = size
 	c.form.SetWidth(size.GetWidth())
 }
 
 // Methods
+
+// Update sends the message on form.Validate, shows save and roll notifications,
+// and forwards other messages to the input.
 func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case form.NextField, form.PreviousField:
@@ -109,6 +119,7 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	}
 }
 
+// Amend registers content as a message from the chat author; empty content is ignored.
 func (c *Chat) Amend(content string) {
 	amendChat(c, content)
 }

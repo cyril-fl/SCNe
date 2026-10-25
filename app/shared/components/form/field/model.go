@@ -22,6 +22,7 @@ type field[T any] struct {
 
 type kind string
 
+// Template holds the options shared by every field kind.
 type Template[T any] struct {
 	ID           string
 	Label        string
@@ -32,15 +33,15 @@ type Template[T any] struct {
 }
 
 const (
-	// FieldTypeInput represents a text input field.
+	// INPUT is a text input field.
 	INPUT kind = "input"
-	// FieldTypeSelect represents a select field.
+	// SELECT is a select field.
 	SELECT kind = "select"
-	// FieldTypeTextarea represents a multi-line text field.
+	// TEXTAREA is a multi-line text field.
 	TEXTAREA kind = "textarea"
 )
 
-// newField creates a form field with an automatically generated identifier.
+// newField creates the base state shared by every field kind.
 func newField[T any](id, label string, kind kind, value T, validator func(T) error, required, nolabel bool) field[T] {
 	return field[T]{
 		id:           id,

@@ -7,11 +7,14 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
+// Localize translates id in the user locale; string data values are translated too.
+// It returns "{{id}}" before init and id when the message is missing.
 func Localize(id string, data ...map[string]any) string {
 	ensureCache()
 	return lookupMessage(cache.local, id, data...)
 }
 
+// Unlocalize is Localize in English, used for logs.
 func Unlocalize(id string, data ...map[string]any) string {
 	ensureCache()
 	return lookupMessage(cache.localcatalog, id, data...)

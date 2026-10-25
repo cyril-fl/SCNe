@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// Mill filters logs from the --filter and --tail flags.
 type Mill = mill
 
 type mill struct {
@@ -18,11 +19,13 @@ type mill struct {
 	flags *pflag.FlagSet
 }
 
+// Template holds the logs and the flags to read.
 type Template struct {
 	LogList []logs.Log
 	Flags   *pflag.FlagSet
 }
 
+// New returns a Mill over params.LogList.
 func New(params Template) *mill {
 	return &mill{
 		list:  params.LogList,
@@ -31,10 +34,13 @@ func New(params Template) *mill {
 }
 
 // Getters & Setters
+
+// GetList returns the current logs.
 func (m *mill) GetList() []logs.Log {
 	return m.list
 }
 
+// GetStringList returns the logs formatted one per entry.
 func (m *mill) GetStringList() []string {
 	strings := make([]string, len(m.list))
 	for i, log := range m.list {
@@ -43,11 +49,14 @@ func (m *mill) GetStringList() []string {
 	return strings
 }
 
+// GetJoinedStringList returns the logs formatted one per line.
 func (m *mill) GetJoinedStringList() string {
 	return strings.Join(m.GetStringList(), "\n")
 }
 
 // Handlers
+
+// Filter keeps the logs of the --filter kind; an empty or unknown kind keeps all.
 func (m *mill) Filter() *mill {
 	if m.HasErr() {
 		return m
@@ -80,6 +89,7 @@ func (m *mill) Filter() *mill {
 	return m
 }
 
+// Tail keeps the last --tail logs; a value out of range keeps all.
 func (m *mill) Tail() *mill {
 	if m.HasErr() {
 		return m

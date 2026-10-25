@@ -16,6 +16,7 @@ type run struct {
 	session *session.GameSession
 }
 
+// Process returns a process saving gameSession.
 func Process(db *mango.Mongo, gameSession *session.GameSession) *run {
 	return &run{
 		db:      db,
@@ -23,12 +24,15 @@ func Process(db *mango.Mongo, gameSession *session.GameSession) *run {
 	}
 }
 
+// Run saves the campaign and the archives.
 func (p *run) Run() {
 	p.saveCampaign()
 	p.saveArchives()
 }
 
 // Getters & Setters
+
+// GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",

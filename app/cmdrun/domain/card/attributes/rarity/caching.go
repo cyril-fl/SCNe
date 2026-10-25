@@ -36,8 +36,11 @@ func (c *yamlConfig) addValue(value Rarity) {
 }
 
 // - Rarity - //
+
+// Rarity is a value from the rarity config file.
 type Rarity string
 
+// ListWithError returns a copy of the configured values; the file is loaded once.
 func ListWithError() ([]Rarity, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -47,6 +50,7 @@ func ListWithError() ([]Rarity, error) {
 	return append([]Rarity(nil), config.Values...), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Rarity {
 	values, err := ListWithError()
 	if err != nil {
@@ -63,6 +67,7 @@ func List() []Rarity {
 	return values
 }
 
+// Default returns the configured default rarity, or registers "" when unset or invalid.
 func Default() Rarity {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -76,10 +81,12 @@ func Default() Rarity {
 	return config.Default
 }
 
+// Validate reports whether r is a configured value.
 func (r Rarity) Validate() bool {
 	return slices.Contains(List(), r)
 }
 
+// MakeDefault adds defaultValue to the cached values when missing and returns it.
 func MakeDefault(defaultValue string) Rarity {
 	_, _ = ListWithError()
 	cachedConfig.Update(func(config *yamlConfig) {
@@ -88,6 +95,7 @@ func MakeDefault(defaultValue string) Rarity {
 	return Rarity(defaultValue)
 }
 
+// AssertWithDefault returns provided when valid, otherwise Default.
 func AssertWithDefault(provided string) Rarity {
 	if Assert(provided) {
 		return Rarity(provided)
@@ -96,10 +104,12 @@ func AssertWithDefault(provided string) Rarity {
 	return Default()
 }
 
+// Assert reports whether provided is a configured value.
 func Assert(provided string) bool {
 	return Rarity(provided).Validate()
 }
 
+// String returns r as a string.
 func (r Rarity) String() string {
 	return string(r)
 }

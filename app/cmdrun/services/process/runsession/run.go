@@ -37,12 +37,14 @@ type cache struct {
 	view *generatesteplist.Generator[cmdruntui.Context]
 }
 
+// Process returns the process running the game TUI.
 func Process(db *mango.Mongo) *run {
 	return &run{
 		db: db,
 	}
 }
 
+// Run builds the save selection and onboarding steps and runs the TUI.
 func (p *run) Run() {
 	p.makeTuiView()
 	p.makeSelectsaveStep()
@@ -51,6 +53,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",

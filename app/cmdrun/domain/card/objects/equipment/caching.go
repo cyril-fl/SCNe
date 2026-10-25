@@ -87,6 +87,9 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 }
 
 // - Collection - //
+
+// ListWithError returns the gears loaded from the armor sets folder, once.
+// Invalid gears are logged and skipped.
 func ListWithError() ([]Gear, error) {
 	configs, err := cachedConfig.Load(loadFromSource)
 	if err != nil {
@@ -95,6 +98,7 @@ func ListWithError() ([]Gear, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Gear {
 	gears, err := ListWithError()
 	if err != nil {
@@ -145,6 +149,7 @@ func newFromYaml(config yamlConfig) *Gear {
 	return newGear
 }
 
+// FindEquipementByName returns the gears of the armor set name.
 func FindEquipementByName(name string) []Gear {
 	configs, err := cachedConfig.Load(loadFromSource)
 	if err != nil {

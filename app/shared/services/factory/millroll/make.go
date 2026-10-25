@@ -20,8 +20,6 @@ type Roller interface {
 	Roll() (string, error)
 }
 
-// ResultMsg is a message type that contains the result of a roll operation.
-
 // Oracles returns a Roller that rolls the given oracle and returns a localized message with the result.
 func Oracles(value oracle.Oracle) Roller {
 	return &milloracle{oracle: value}
@@ -87,7 +85,7 @@ func (m *milldice) Roll() (string, error) {
 	}), nil
 }
 
-// Roll returns a localized message for the given oracle, including the rolled value and critical status.
+// Execute returns a command emitting the roll result, or messages.Failed on error.
 func Execute(roller Roller) tea.Cmd {
 	return func() tea.Msg {
 		content, err := roller.Roll()

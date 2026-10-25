@@ -22,12 +22,14 @@ type textField[T stringOrInt] struct {
 	input textinput.Model
 }
 
+// TextTemplate configures a TextField.
 type TextTemplate[T stringOrInt] struct {
 	Template[T]
 	Input       textinput.Model
 	Placeholder string
 }
 
+// TextField returns a single-line input field for a string or int value.
 func TextField[T stringOrInt](template TextTemplate[T]) *textField[T] {
 	input := makeInput(template.Placeholder)
 	setValue(&input, template.Defaultvalue)

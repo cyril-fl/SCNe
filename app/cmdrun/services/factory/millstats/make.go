@@ -21,10 +21,12 @@ type mill struct {
 	oraclesId string
 }
 
+// New returns a stats generator without form values.
 func New() *mill {
 	return NewWithValues(nil)
 }
 
+// NewWithValues returns a stats generator reading values (stats, class, race, encounter).
 func NewWithValues(values map[string]string) *mill {
 	return &mill{
 		values:    values,
@@ -33,16 +35,20 @@ func NewWithValues(values map[string]string) *mill {
 }
 
 // Getters & Setters
+
+// GetStats returns the base stats with the generated modifiers applied.
 func (m *mill) GetStats() stats.Stats {
 	s := stats.GetBasic()
 	s.ApplyModifiers(m.modifiers)
 	return s
 }
 
+// GetModifiers returns the generated modifiers.
 func (m *mill) GetModifiers() []stats.Modifier {
 	return m.modifiers
 }
 
+// SetOracleId sets the oracle used for random modifiers.
 func (m *mill) SetOracleId(entropy string) *mill {
 	m.oraclesId = entropy
 	return m
@@ -60,6 +66,7 @@ func (m *mill) GenerateFromValues(params FromValuesParams) {
 	}
 }
 
+// GenerateFromOracle replaces the modifiers with random ones from the oracle.
 func (m *mill) GenerateFromOracle() {
 	m.reset()
 	m.makeRandomModifiersFromOracleValue()
@@ -122,6 +129,7 @@ func GetBonus(class, race string) []stats.Modifier {
 	return bonus
 }
 
+// FromValuesParams configures GenerateFromValues; Randomness adds oracle modifiers.
 type FromValuesParams struct {
 	Randomness bool
 }

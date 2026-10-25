@@ -19,6 +19,8 @@ import (
 )
 
 // - NPC Form - //
+
+// GetNpcForm returns the NPC form prefilled with values.
 func GetNpcForm(values map[string]string) *form.Form {
 	statsFields := getFormStatsFields(values, "")
 	encounter := values["encounter"]
@@ -38,6 +40,8 @@ func GetNpcForm(values map[string]string) *form.Form {
 }
 
 // - Beast Form - //
+
+// GetBeastiaryForm returns the beast form prefilled with values.
 func GetBeastiaryForm(values map[string]string) *form.Form {
 	statsFields := getFormStatsFields(values, "")
 	encounter := values["encounter"]
@@ -55,6 +59,8 @@ func GetBeastiaryForm(values map[string]string) *form.Form {
 }
 
 // - Location Form - //
+
+// GetLocationForm returns the location form prefilled with values, with repeatable effects.
 func GetLocationForm(values map[string]string) *form.Form {
 	return form.New(
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
@@ -89,6 +95,8 @@ func getEffectFields(values map[string]string, index int) []form.Field {
 }
 
 // - Object Form - //
+
+// GetObjectForm returns the object form prefilled with values.
 func GetObjectForm(values map[string]string) *form.Form {
 	var categoryItems []models.Item[string]
 
@@ -108,6 +116,8 @@ func GetObjectForm(values map[string]string) *form.Form {
 }
 
 // - Objectif Form - //
+
+// GetQuestForm returns the quest form prefilled with values.
 func GetQuestForm(values map[string]string) *form.Form {
 	if len(priority.List()) == 0 {
 		priority.MakeDefault("priority.medium")

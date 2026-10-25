@@ -14,6 +14,7 @@ type cache struct {
 	size *tea.WindowSizeMsg
 }
 
+// Resolve returns a model that resolves as completed on Init.
 func Resolve() model {
 	return model{}
 }

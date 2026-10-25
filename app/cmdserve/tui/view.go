@@ -9,6 +9,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// View renders the current step; step errors are logged silently.
 func (m *model) View() tea.View {
 	if m.steps.HasErr() {
 		cwd, cwderr := os.Getwd()

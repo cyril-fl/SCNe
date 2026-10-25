@@ -10,20 +10,24 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+// Header renders a localized title and subtitle.
 type Header struct {
 	title    string
 	subtitle string
 }
 
+// Template holds the header translation keys.
 type Template struct {
 	Title    string
 	Subtitle string
 }
 
+// HasHeader is implemented by models that provide a header.
 type HasHeader interface {
 	GetHeader() Template
 }
 
+// New returns a header from params.
 func New(params Template) *Header {
 	return &Header{
 		title:    params.Title,
@@ -31,6 +35,7 @@ func New(params Template) *Header {
 	}
 }
 
+// Nil returns an empty header.
 func Nil() *Header {
 	return &Header{
 		title:    "",
@@ -38,6 +43,7 @@ func Nil() *Header {
 	}
 }
 
+// View renders the title group, or an empty string without a title.
 func (p *Header) View() string {
 	v := strings.Builder{}
 
@@ -52,6 +58,8 @@ func (p *Header) View() string {
 }
 
 // Getters & Setters
+
+// SetHeader copies the model header when it implements HasHeader.
 func (p *Header) SetHeader(model tea.Model) {
 	if view, ok := model.(HasHeader); ok {
 		template := view.GetHeader()
@@ -61,14 +69,17 @@ func (p *Header) SetHeader(model tea.Model) {
 	}
 }
 
+// GetHeight returns the rendered height.
 func (p *Header) GetHeight() int {
 	return lipgloss.Height(p.View())
 }
 
+// GetWidth returns the rendered width.
 func (p *Header) GetWidth() int {
 	return lipgloss.Width(p.View())
 }
 
+// GetSize returns the rendered size.
 func (p *Header) GetSize() size.Size {
 	return size.New(size.Template{
 		Height: p.GetHeight(),

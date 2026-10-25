@@ -5,10 +5,12 @@ import (
 	"time"
 )
 
+// Journal is an ordered list of authored entries.
 type Journal struct {
 	Entries []Entry
 }
 
+// Entry is a journal message.
 type Entry struct {
 	ID        id.ID
 	Author    string
@@ -16,12 +18,14 @@ type Entry struct {
 	Timestamp time.Time
 }
 
+// NewJournal returns a Journal with entries.
 func NewJournal(entries []Entry) *Journal {
 	return &Journal{
 		Entries: entries,
 	}
 }
 
+// EnsureInitialized replaces nil Entries with an empty slice; it does nothing on a nil j.
 func (j *Journal) EnsureInitialized() {
 	if j == nil {
 		j = NewJournal([]Entry{})
@@ -32,6 +36,7 @@ func (j *Journal) EnsureInitialized() {
 	}
 }
 
+// AddEntry appends a UTC-timestamped entry and returns it.
 func (j *Journal) AddEntry(author, message string) *Entry {
 	entry := &Entry{
 		ID:        id.New(),
@@ -44,7 +49,7 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 	return entry
 }
 
-// String format for the entry in the journal, shown in gamebord view
+// String formats the entry as a gameboard journal line.
 func (e *Entry) String() string {
 	return e.Timestamp.Format("Jan 02 15:04") + " - (" + e.Author + ") " + e.Message
 }

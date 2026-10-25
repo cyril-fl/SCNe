@@ -32,6 +32,7 @@ type cache struct {
 	files []string
 }
 
+// Process returns a process loading the i18n catalog in locale, the default one when empty.
 func Process(cfg i19n.Config, locale string) *run {
 	return &run{
 		cfg:    cfg,
@@ -39,6 +40,8 @@ func Process(cfg i19n.Config, locale string) *run {
 	}
 }
 
+// Run validates cfg, loads the message files and installs the Translator.
+// Any error is stored and leaves an empty Translator.
 func (p *run) Run() {
 	// Set env
 	p.reset()
@@ -59,6 +62,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",

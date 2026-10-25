@@ -14,6 +14,7 @@ type GameSession struct {
 	State      *SessionState
 }
 
+// NewGameSession returns a session for campaignID.
 func NewGameSession(campaignID id.ID, state *SessionState) *GameSession {
 	return &GameSession{
 		CampaignID: campaignID,
@@ -21,20 +22,25 @@ func NewGameSession(campaignID id.ID, state *SessionState) *GameSession {
 	}
 }
 
+// Initialize discovers the current location.
 func (s *GameSession) Initialize() {
 	logs.SilentInfo("system.msg:init")
 	s.DiscoverLocation(s.State.CurrentLocation)
 }
 
+// UpdateLocation moves the player to newLocation and discovers it.
 func (s *GameSession) UpdateLocation(newLocation *locations.Location) {
 	s.State.CurrentLocation = newLocation
 	s.DiscoverLocation(newLocation)
 }
 
+// GetAdventureJournal returns the adventure log.
 func (s GameSession) GetAdventureJournal() *campaign.Journal {
 	return s.State.AdventureLog
 }
 
+// DiscoverLocation adds newLocation to the codex when it is not there yet.
+// It does nothing when the session, codex or location is nil.
 func (s *GameSession) DiscoverLocation(newLocation *locations.Location) {
 	if s == nil ||
 		s.State == nil ||
@@ -62,6 +68,7 @@ func (s *GameSession) DiscoverLocation(newLocation *locations.Location) {
 	logs.SilentInfo(key, map[string]any{"Location": newLocation.GetName()})
 }
 
+// ExportArchives returns the archives to save.
 func (s *GameSession) ExportArchives() *campaign.Archives {
 	return &campaign.Archives{
 		Datable:    s.State.Metadata.Archive.GetAge(),
@@ -71,6 +78,7 @@ func (s *GameSession) ExportArchives() *campaign.Archives {
 	}
 }
 
+// ExportCampaign returns the campaign to save, with the time played this session.
 func (s *GameSession) ExportCampaign() *campaign.Campaign {
 	return &campaign.Campaign{
 		Datable:         s.State.Metadata.Campaign.GetAge(),

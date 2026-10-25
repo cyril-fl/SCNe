@@ -13,11 +13,13 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// StreamModelTemplate configures a StreamModel.
 type StreamModelTemplate[T pluminterface.Stringable] struct {
 	Context    context.Context
 	Repository repository.Watchable[T]
 }
 
+// StreamModel collects the events watched from a repository.
 type StreamModel[T pluminterface.Stringable] struct {
 	ctx        context.Context
 	repository repository.Watchable[T]
@@ -26,6 +28,7 @@ type StreamModel[T pluminterface.Stringable] struct {
 	stream <-chan T
 }
 
+// NewStreamModel returns a model watching params.Repository.
 func NewStreamModel[T pluminterface.Stringable](params StreamModelTemplate[T]) *StreamModel[T] {
 	return &StreamModel[T]{
 		ctx:        params.Context,
@@ -33,10 +36,13 @@ func NewStreamModel[T pluminterface.Stringable](params StreamModelTemplate[T]) *
 	}
 }
 
+// Init starts watching the repository.
 func (m *StreamModel[T]) Init() tea.Cmd {
 	return startWatch(m.ctx, m.repository)
 }
 
+// Update appends each event and waits for the next one.
+// It resolves with an error when the watch fails or the stream closes.
 func (m *StreamModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case streamReadyMsg[T]:
@@ -56,6 +62,7 @@ func (m *StreamModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// View renders one event per line.
 func (m *StreamModel[T]) View() tea.View {
 	lines := make([]string, 0, len(m.events))
 	for _, event := range m.events {
@@ -66,6 +73,8 @@ func (m *StreamModel[T]) View() tea.View {
 }
 
 // Getters & Setters
+
+// GetEvents returns the received events.
 func (m *StreamModel[T]) GetEvents() []T {
 	return m.events
 }

@@ -104,6 +104,9 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 }
 
 // - Collection - //
+
+// ListWithError returns the characters loaded from the characters folder, once.
+// Invalid cards are logged and skipped.
 func ListWithError() ([]Character, error) {
 	config, err := cachedConfig.Load(loadFromSource)
 	if err != nil {
@@ -113,6 +116,7 @@ func ListWithError() ([]Character, error) {
 	return makeSet(config.Configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Character {
 	characters, err := ListWithError()
 	if err != nil {

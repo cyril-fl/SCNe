@@ -11,12 +11,14 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// TemplateViewState configures a ViewState: start state, allowed transitions and views.
 type TemplateViewState[T comparable] struct {
 	Base       T
 	Transition map[T][]T
 	Views      map[T]interfass.Viewable
 }
 
+// ViewState shows the view of its current state and only moves along allowed transitions.
 type ViewState[T comparable] struct {
 	plumprimitive.Fallible
 
@@ -26,6 +28,7 @@ type ViewState[T comparable] struct {
 	size       size.Size
 }
 
+// NewView returns a ViewState in template.Base.
 func NewView[T comparable](template TemplateViewState[T]) ViewState[T] {
 	return ViewState[T]{
 		current:    template.Base,
@@ -35,10 +38,13 @@ func NewView[T comparable](template TemplateViewState[T]) ViewState[T] {
 }
 
 // Getters & Setters
+
+// Current returns the current state.
 func (s ViewState[T]) Current() T {
 	return s.current
 }
 
+// GetView renders the current view, or "" without one.
 func (s ViewState[T]) GetView() string {
 	if view := s.view[s.current]; view == nil {
 		return ""
@@ -47,6 +53,7 @@ func (s ViewState[T]) GetView() string {
 	return s.view[s.current].GetView()
 }
 
+// SetSize stores value and resizes the current view.
 func (s *ViewState[T]) SetSize(value size.Size) {
 	s.size = value
 	if view := s.view[s.current]; view != nil {
@@ -55,6 +62,8 @@ func (s *ViewState[T]) SetSize(value size.Size) {
 }
 
 // Methods
+
+// Update forwards msg to the current view.
 func (s *ViewState[T]) Update(msg tea.Msg) tea.Cmd {
 	if view := s.view[s.current]; view == nil {
 		return nil
@@ -63,6 +72,8 @@ func (s *ViewState[T]) Update(msg tea.Msg) tea.Cmd {
 	return s.view[s.current].Update(msg)
 }
 
+// HandleTransition moves to state to and resizes its view.
+// A disallowed transition stores an error and keeps the current state.
 func (s *ViewState[T]) HandleTransition(to T) {
 	if to == s.current {
 		return
@@ -83,12 +94,15 @@ func (s *ViewState[T]) HandleTransition(to T) {
 // Helpers
 
 // Interface implementation
+
+// Amend forwards content to the current view when it is Amandable.
 func (s ViewState[T]) Amend(content string) {
 	if view, ok := s.view[s.current].(interfass.Amandable); ok {
 		view.Amend(content)
 	}
 }
 
+// GetFooter returns the current view shortcuts.
 func (s ViewState[T]) GetFooter() []string {
 	var f []string
 	if view, ok := s.view[s.current].(footer.HasFooter); ok {

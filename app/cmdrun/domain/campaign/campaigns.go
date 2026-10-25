@@ -16,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// Campaign is a saved game: the player, the current location and the time played.
 type Campaign struct {
 	plumprimitive.Datable
 
@@ -25,11 +26,13 @@ type Campaign struct {
 	TimeHistory     []timer.Record        `bson:"timeHistory" json:"timeHistory"`
 }
 
+// Template configures a Campaign.
 type Template struct {
 	Player          *characters.Character
 	CurrentLocation *locations.Location
 }
 
+// New returns a dated Campaign with a new ID.
 func New(params Template) *Campaign {
 	return &Campaign{
 		Datable: plumprimitive.Dated(),
@@ -40,6 +43,7 @@ func New(params Template) *Campaign {
 	}
 }
 
+// Title returns "name | race | class" of the player.
 func (c *Campaign) Title() string {
 	return fmt.Sprintf("%s | %s | %s",
 		c.Player.GetName(),
@@ -48,6 +52,7 @@ func (c *Campaign) Title() string {
 	)
 }
 
+// Description returns the localized location and last update.
 func (c *Campaign) Description() string {
 	return i19n.Localize("campaign.description", map[string]any{
 		"Location": c.CurrentLocation.GetName(),
@@ -55,6 +60,7 @@ func (c *Campaign) Description() string {
 	})
 }
 
+// Filter returns the MongoDB filter matching the campaign.
 func (c *Campaign) Filter() bson.M {
 	return bson.M{
 		"Id": c.ID,

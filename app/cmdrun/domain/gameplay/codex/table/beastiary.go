@@ -16,6 +16,8 @@ import (
 )
 
 // - Table --//
+
+// BeastiaryTable lists the races met in the campaign, template races included.
 type BeastiaryTable struct {
 	*Data[beastentry] `bson:",inline"`
 }
@@ -28,6 +30,7 @@ type beastentry struct {
 
 var tablebeast = "codex.beastiary"
 
+// NewBeastiary returns a beastiary table with entries plus the missing template races.
 func NewBeastiary(entries ...beastentry) *BeastiaryTable {
 	entries = superChargeEntries(entries)
 
@@ -39,6 +42,8 @@ func NewBeastiary(entries ...beastentry) *BeastiaryTable {
 // Getters & Setters
 
 // Methods
+
+// Add appends a new beast entry.
 func (tb *BeastiaryTable) Add(race *races.Race) {
 	tb.Entries = append(tb.Entries, beastentry{
 		ID:        id.New(),
@@ -47,6 +52,7 @@ func (tb *BeastiaryTable) Add(race *races.Race) {
 	})
 }
 
+// AddFromMap creates a beast from form values and appends it.
 func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
 	raw, err := tb.templateFromMap(values)
 	if err != nil {
@@ -73,6 +79,7 @@ func (tb *BeastiaryTable) AddFromMap(values map[string]string) error {
 	return nil
 }
 
+// FormEntries returns the entries as form page rows.
 func (tb *BeastiaryTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 	for _, entry := range tb.Entries {
@@ -92,6 +99,7 @@ func (tb *BeastiaryTable) FormEntries() []Entry {
 	return entries
 }
 
+// SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *BeastiaryTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry beastentry) bool { return entry.ID == entryID })
 
@@ -188,6 +196,8 @@ func (tb *BeastiaryTable) assertEntry(entry map[string]string) {
 	}
 }
 
+// Ensure initializes the table, adds the missing template races and registers
+// every entry race in the races config.
 func (tb *BeastiaryTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablebeast), &tb.Data)
 	tb.Entries = superChargeEntries(tb.Entries)

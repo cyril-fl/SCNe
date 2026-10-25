@@ -67,6 +67,8 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 }
 
 // - Hint - //
+
+// Hint is a named list of hint words.
 type Hint struct {
 	name   string
 	values []string
@@ -79,6 +81,7 @@ func newFromYamlConfig(config yamlConfig) Hint {
 	}
 }
 
+// GetByName returns the hint named name, or an error.
 func GetByName(name string) (*Hint, error) {
 	hints := List()
 
@@ -94,14 +97,19 @@ func GetByName(name string) (*Hint, error) {
 	})
 }
 
+// GetName returns the hint name.
 func (o Hint) GetName() string {
 	return o.name
 }
+
+// Values returns a copy of the hint words.
 func (o Hint) Values() []string {
 	return append([]string(nil), o.values...)
 }
 
 // - Collection - //
+
+// ListWithError returns the hints loaded from the hint folder, once.
 func ListWithError() ([]Hint, error) {
 	configs, err := cachedConfig.Load(loadFromSource)
 	if err != nil {
@@ -110,6 +118,7 @@ func ListWithError() ([]Hint, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Hint {
 	hints, err := ListWithError()
 	if err != nil {
@@ -135,6 +144,8 @@ func makeSet(configs []yamlConfig) []Hint {
 }
 
 // - Helpers - //
+
+// Roll returns three random words of hint, repeats allowed, or nil when it has none.
 func Roll(hint Hint) []string {
 	res := []string{}
 	values := hint.Values()

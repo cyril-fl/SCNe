@@ -10,6 +10,7 @@ import (
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 )
 
+// SessionState is the mutable state of a running session.
 type SessionState struct {
 	Player          *characters.Character
 	CurrentLocation *locations.Location
@@ -20,16 +21,19 @@ type SessionState struct {
 	Metadata        Metadata
 }
 
+// Metadata keeps the dates of the loaded documents.
 type Metadata struct {
 	Archive  plumprimitive.Datable
 	Campaign plumprimitive.Datable
 }
 
+// SessionData holds the documents a session is loaded from.
 type SessionData struct {
 	Campaign *campaign.Campaign
 	Archives *campaign.Archives
 }
 
+// NewSessionState builds the state from data with a new stopwatch.
 func NewSessionState(data SessionData) *SessionState {
 	return &SessionState{
 		Player:          data.Campaign.Player,

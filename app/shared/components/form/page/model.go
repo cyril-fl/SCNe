@@ -21,6 +21,7 @@ type Item struct {
 	Locked      bool
 }
 
+// Template configures a Page.
 type Template struct {
 	Items   func() []Item
 	NewForm func(values map[string]string) *form.Form
@@ -36,6 +37,7 @@ type Action struct {
 	Run   func(entryID id.ID)
 }
 
+// Page shows a list of items and opens a form to create or edit one.
 type Page struct {
 	primitive.List
 
@@ -49,6 +51,8 @@ type Page struct {
 }
 
 // TODO regardader pour adopter cette pholosipheio ou c'est possible
+
+// New returns a page listing template.Items.
 func New(template Template) *Page {
 	p := &Page{
 		items:   template.Items,
@@ -65,6 +69,8 @@ func New(template Template) *Page {
 
 // TODO la page a un décallage et ne s'affiche pas nickel
 // Getters & Setters
+
+// GetView renders the open form, or the list when none is open.
 func (p *Page) GetView() string {
 	if p.form != nil {
 		return p.form.View().Content
@@ -73,10 +79,12 @@ func (p *Page) GetView() string {
 	return li.View()
 }
 
+// GetForm returns the open form, or nil.
 func (p *Page) GetForm() *form.Form {
 	return p.form
 }
 
+// GetFooter returns the shortcuts available in the current state.
 func (p *Page) GetFooter() []string {
 	isFormOpen := p.IsFormOpen()
 	isLocked := p.isSelectedLocked()
@@ -120,10 +128,12 @@ func (p *Page) isSelectedLocked() bool {
 	return true
 }
 
+// SetFocus sets the list focus.
 func (p *Page) SetFocus(focused bool) {
 	models.SetListFocus(p.GetList(), focused)
 }
 
+// SetSize sets the list width; its height fits the content.
 func (p *Page) SetSize(s size.Size) {
 	list := p.GetList()
 	p.SetListSize(size.Template{
@@ -132,11 +142,15 @@ func (p *Page) SetSize(s size.Size) {
 	})
 }
 
+// IsFormOpen reports whether a form is open.
 func (p *Page) IsFormOpen() bool {
 	return p.form != nil
 }
 
 // Methods
+
+// Update validates and saves the form on form.Validate, and routes other messages
+// to the open form or the list.
 func (p *Page) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case form.Validate:
@@ -148,16 +162,20 @@ func (p *Page) Update(msg tea.Msg) tea.Cmd {
 	}
 }
 
+// Close discards the open form.
 func (p *Page) Close() {
 	p.form = nil
 	p.entryID = id.ID{}
 }
 
+// EditNewItem opens an empty form for a new entry.
 func (p *Page) EditNewItem() {
 	p.entryID = id.ID{}
 	p.form = p.newForm(nil)
 }
 
+// EditItem opens the form for the selected entry.
+// It returns false when nothing is selected or the entry is locked.
 func (p *Page) EditItem() bool {
 	list := p.GetList()
 
@@ -176,6 +194,7 @@ func (p *Page) EditItem() bool {
 	return true
 }
 
+// HandleEscape closes the open form and reports whether one was open.
 func (p *Page) HandleEscape() bool {
 	if p.form != nil {
 		p.form = nil

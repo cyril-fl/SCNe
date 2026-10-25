@@ -26,6 +26,7 @@ func NewSection(gameSession *session.GameSession) *navigation.Section {
 	})
 }
 
+// GetCharacterInfo writes the player name line to content.
 func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession) {
 	var characterName = plumtransform.Uppercase(i19n.Localize("character"))
 
@@ -42,6 +43,7 @@ func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession
 	content.WriteString("\n")
 }
 
+// GetLocationInfo writes the current location line to content.
 func GetLocationInfo(content *strings.Builder, gameSession *session.GameSession) {
 	var locationName = plumtransform.Uppercase(i19n.Localize("location"))
 
@@ -58,6 +60,7 @@ func GetLocationInfo(content *strings.Builder, gameSession *session.GameSession)
 	content.WriteString("\n")
 }
 
+// GetStatInfo writes the player stats to content, one per line.
 func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 	content.WriteString(plumtransform.Uppercase(i19n.Localize("stats")))
 	content.WriteString("\n")

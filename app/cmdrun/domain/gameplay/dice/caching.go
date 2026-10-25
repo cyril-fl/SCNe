@@ -31,6 +31,8 @@ func loadFromFile() ([]yamlConfig, error) {
 }
 
 // - Dice - //
+
+// Dice is a configured die.
 type Dice struct {
 	name  string
 	sides int
@@ -43,6 +45,7 @@ func new(config yamlConfig) Dice {
 	}
 }
 
+// GetName returns the configured name, or a localized default from the sides.
 func (d Dice) GetName() string {
 	if d.name != "" {
 		return d.name
@@ -52,15 +55,19 @@ func (d Dice) GetName() string {
 	})
 }
 
+// GetSides returns the number of sides.
 func (d Dice) GetSides() int {
 	return d.sides
 }
 
+// Roll rolls the die.
 func (d Dice) Roll() int {
 	return Roll(d.sides)
 }
 
 // - Collection - //
+
+// ListWithError returns the configured dice; the file is loaded once.
 func ListWithError() ([]Dice, error) {
 	configs, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -69,6 +76,7 @@ func ListWithError() ([]Dice, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Dice {
 	dice, err := ListWithError()
 	if err != nil {
@@ -95,6 +103,8 @@ func makeSet(configs []yamlConfig) []Dice {
 }
 
 // - Helpers - //
+
+// Roll returns a random value in [1, sides], or 0 when sides is not positive.
 func Roll(sides int) int {
 	if sides <= 0 {
 		return 0

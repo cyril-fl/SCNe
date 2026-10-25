@@ -11,6 +11,8 @@ import (
 )
 
 // - Translator - //
+
+// Translator holds the i18n bundle with the user and English localizers.
 type Translator struct {
 	bundle       *i18n.Bundle
 	local        *i18n.Localizer
@@ -19,6 +21,7 @@ type Translator struct {
 
 var cache *Translator
 
+// New returns an empty Translator; lookups then return "{{id}}".
 func New() *Translator {
 	return &Translator{
 		bundle:       nil,
@@ -27,23 +30,29 @@ func New() *Translator {
 	}
 }
 
+// SetBundle sets the message bundle.
 func (t *Translator) SetBundle(b *i18n.Bundle) {
 	t.bundle = b
 }
 
+// SetLocale sets the localizer used by Localize.
 func (t *Translator) SetLocale(l *i18n.Localizer) {
 	t.local = l
 }
 
+// SetLocalerror sets the localizer used by Unlocalize.
 func (t *Translator) SetLocalerror(l *i18n.Localizer) {
 	t.localcatalog = l
 }
 
+// SetCache sets the Translator used by the package functions.
 func SetCache(i19n *Translator) {
 	cache = i19n
 }
 
 // - Locale - //
+
+// Locale describes an available language and its message file.
 type Locale struct {
 	Code string `yaml:"code"`
 	ISO  string `yaml:"iso"`
@@ -51,6 +60,7 @@ type Locale struct {
 	File string `yaml:"file"`
 }
 
+// ParseTag parses the locale ISO code.
 func (locale *Locale) ParseTag() (language.Tag, error) {
 	tag, err := language.Parse(locale.ISO)
 	if err != nil {
@@ -63,17 +73,21 @@ func (locale *Locale) ParseTag() (language.Tag, error) {
 // - format - //
 type format string
 
+// Supported message file formats.
 const (
 	FORMAT_JSON format = "json"
 	FORMAT_YAML format = "yaml"
 )
 
+// FormatValidExtensions lists the file extensions accepted per format.
 var FormatValidExtensions = map[format][]string{
 	FORMAT_JSON: {".json"},
 	FORMAT_YAML: {".yaml", ".yml"},
 }
 
 // - Config - //
+
+// Config is the i18n configuration.
 type Config struct {
 	Default string   `yaml:"default"`
 	Dir     string   `yaml:"dir"`
@@ -81,10 +95,12 @@ type Config struct {
 	Locales []Locale `yaml:"locales"`
 }
 
+// GetDefaultLocale returns the locale with code defaultLocale.
 func (cfg Config) GetDefaultLocale(defaultLocale string) (*Locale, error) {
 	return cfg.GetLocaleByCode(defaultLocale)
 }
 
+// GetLocaleByCode returns the locale with code, or an error.
 func (cfg Config) GetLocaleByCode(code string) (*Locale, error) {
 	for index := range cfg.Locales {
 		if cfg.Locales[index].Code == code {
@@ -95,6 +111,7 @@ func (cfg Config) GetLocaleByCode(code string) (*Locale, error) {
 	return nil, fmt.Errorf("locale '%s' not found", code)
 }
 
+// GetLocaleByISO returns the locale with iso, or an error.
 func (cfg Config) GetLocaleByISO(iso string) (*Locale, error) {
 	for index := range cfg.Locales {
 		if cfg.Locales[index].ISO == iso {
@@ -105,6 +122,7 @@ func (cfg Config) GetLocaleByISO(iso string) (*Locale, error) {
 	return nil, fmt.Errorf("locale '%s' not found", iso)
 }
 
+// Validate checks the directory, the format, the locales and that Default is one of them.
 func (cfg Config) Validate() error {
 	if err := isDirectoryValid(cfg.Dir); err != nil {
 		return err

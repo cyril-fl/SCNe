@@ -19,6 +19,7 @@ type model struct {
 	context Context
 }
 
+// Context gathers the save selection and the onboarding choices.
 type Context struct {
 	SelectedSave     *campaign.Campaign
 	SelectedName     string
@@ -28,6 +29,7 @@ type Context struct {
 	SelectedLocation *locations.Location
 }
 
+// NewModel returns the game TUI running steps inside the layout.
 func NewModel(steps *models.ContextStepList[Context]) model {
 	return model{
 		layout: layout.New(),
@@ -35,6 +37,7 @@ func NewModel(steps *models.ContextStepList[Context]) model {
 	}
 }
 
+// Init starts the current step.
 func (m model) Init() tea.Cmd {
 	if submodel := m.steps.GetCurrentSubmodel(); submodel != nil {
 		return submodel.Init()
@@ -43,6 +46,8 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
+// Update quits on ctrl+q, and on esc unless the step handles it,
+// and forwards other messages to the current step.
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -59,6 +64,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 }
 
+// EscapeSupport is implemented by steps that may consume esc instead of quitting.
 type EscapeSupport interface {
 	HandlesEscape() bool
 }

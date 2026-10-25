@@ -45,10 +45,12 @@ func loadFromFile() ([]yamlConfig, error) {
 	return params, nil
 }
 
+// Has reports whether a race with value.ID is configured.
 func Has(value Template) bool {
 	return FindByID(value.ID) != nil
 }
 
+// AddInConfig adds value to the cached races; it fails when its ID exists.
 func AddInConfig(value Template) error {
 	if _, err := ListWithError(); err != nil {
 		reportLoadError()
@@ -106,6 +108,8 @@ func ReplaceInConfig(id string, value Template) error {
 }
 
 // - Collection - //
+
+// ListWithError returns the configured races; the file is loaded once.
 func ListWithError() ([]Race, error) {
 	config, err := cachedConfig.Load(func() (cacheValue, error) {
 		configs, err := loadFromFile()
@@ -127,6 +131,7 @@ func ListWithError() ([]Race, error) {
 	return makeSet(config.Configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Race {
 	races, err := ListWithError()
 	if err != nil {
@@ -193,6 +198,7 @@ func IsLocked(id string) bool {
 	return ok
 }
 
+// FindByID returns the race with id, or nil.
 func FindByID(id string) *Race {
 	for _, i := range List() {
 		if i.GetID() == id {

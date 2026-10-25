@@ -10,6 +10,7 @@ import (
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
+// RerollModel holds a rolled value the user can accept or reroll up to Limit attempts.
 type RerollModel[T any] struct {
 	Attempt int
 	Limit   int
@@ -18,6 +19,7 @@ type RerollModel[T any] struct {
 	Roll    func() (T, error)
 }
 
+// NewRerollModel rolls the first value and panics if handleRoll fails.
 func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), limit int) RerollModel[T] {
 	value, err := handleRoll()
 
@@ -37,6 +39,8 @@ func NewRerollModel[T any](options list.Model, handleRoll func() (T, error), lim
 	}
 }
 
+// Reroll rolls a new value and panics if the roll fails.
+// Once the limit is reached, only the accept option remains.
 func (s *RerollModel[T]) Reroll() {
 	value, err := s.Roll()
 
@@ -61,10 +65,12 @@ func (s *RerollModel[T]) checkAttemptLimit() {
 	s.Choice = makeConfirmationModel(s.Choice)
 }
 
+// IsOutOfLimit reports whether no reroll is left.
 func (s *RerollModel[T]) IsOutOfLimit() bool {
 	return s.Attempt >= s.Limit
 }
 
+// HandleEnterInput resolves with the value when accepted or out of rerolls, otherwise rerolls.
 func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	isSelected, ok := s.Choice.SelectedItem().(Item[bool])
 	if !ok {
@@ -80,6 +86,7 @@ func (s *RerollModel[T]) HandleEnterInput() tea.Cmd {
 	return nil
 }
 
+// NewOptionsModel returns the accept/reroll choice list.
 func NewOptionsModel(options rerollOptions) list.Model {
 	items := []list.Item{
 		NewItem(trueLabel(options), "", true),
@@ -116,6 +123,7 @@ type rerollOptions struct {
 	false string
 }
 
+// DefaultRerollOptions holds the accept and reroll translation keys.
 var DefaultRerollOptions = rerollOptions{
 	true:  "accept",
 	false: "reroll",

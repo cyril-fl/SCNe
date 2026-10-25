@@ -33,26 +33,33 @@ func loadFromFile() (yamlConfig, error) {
 }
 
 // - Stats & Effects - //
+
+// Stat is a stat name from the stats config file.
 type Stat string
 
+// Stats maps each stat to its value.
 type Stats map[Stat]int
 
+// Modifier adds Value to Stat.
 type Modifier struct {
 	Stat  Stat `yaml:"stat"`
 	Value int  `yaml:"value"`
 }
 
+// Effect is a described Modifier.
 type Effect struct {
 	plumprimitive.Descriptible `yaml:"description"`
 	Modifier                   Modifier `yaml:"modifier"`
 }
 
+// New returns stats built from mods.
 func New(mods []Modifier) Stats {
 	s := make(Stats)
 	s.ApplyModifiers(mods)
 	return s
 }
 
+// GetBasicWithError returns a copy of the configured base stats.
 func GetBasicWithError() (Stats, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -68,6 +75,7 @@ func GetBasicWithError() (Stats, error) {
 	return copy, nil
 }
 
+// GetBasic is GetBasicWithError that logs the load error once and returns nil on failure.
 func GetBasic() Stats {
 	values, err := GetBasicWithError()
 	if err != nil {
@@ -83,6 +91,7 @@ func GetBasic() Stats {
 	return values
 }
 
+// ApplyModifier adds mod to s; an unknown stat is logged and ignored.
 func (s *Stats) ApplyModifier(mod Modifier) {
 	if s == nil {
 		return
@@ -104,12 +113,14 @@ func (s *Stats) ApplyModifier(mod Modifier) {
 	(*s)[mod.Stat] += mod.Value
 }
 
+// ApplyModifiers applies each of mods.
 func (s *Stats) ApplyModifiers(mods []Modifier) {
 	for _, mod := range mods {
 		s.ApplyModifier(mod)
 	}
 }
 
+// RemoveModifiers reverts each of mods.
 func (s *Stats) RemoveModifiers(mods []Modifier) {
 	for _, mod := range mods {
 		mod.Value = -mod.Value
@@ -117,10 +128,12 @@ func (s *Stats) RemoveModifiers(mods []Modifier) {
 	}
 }
 
+// Validate reports whether s is a configured stat.
 func (s Stat) Validate() bool {
 	return slices.Contains(List(), s)
 }
 
+// String formats s as "{stat: value, ...}" in no particular order.
 func (s Stats) String() string {
 	if s == nil {
 		return ""
@@ -134,6 +147,7 @@ func (s Stats) String() string {
 	return fmt.Sprintf("{%s}", strings.Join(result, ", "))
 }
 
+// MappedString returns s keyed by stat name, for templates.
 func (s Stats) MappedString() map[string]any {
 	m := make(map[string]any)
 	for stat, value := range s {
@@ -142,15 +156,19 @@ func (s Stats) MappedString() map[string]any {
 	return m
 }
 
+// String returns s as a string.
 func (s Stat) String() string {
 	return string(s)
 }
 
+// String formats m as "stat: value".
 func (m Modifier) String() string {
 	return fmt.Sprintf("%s: %d", m.Stat, m.Value)
 }
 
 // - Collection - //
+
+// ListWithError returns a copy of the configured stat names; the file is loaded once.
 func ListWithError() ([]Stat, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -160,6 +178,7 @@ func ListWithError() ([]Stat, error) {
 	return append([]Stat(nil), config.Names...), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Stat {
 	values, err := ListWithError()
 	if err != nil {

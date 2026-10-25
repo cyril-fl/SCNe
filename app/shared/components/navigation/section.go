@@ -18,18 +18,22 @@ import (
 )
 
 // - Section - //
+
+// Section is a static navigation block with a localized title.
 type Section struct {
 	id      string
 	footer  []string
 	content func() string
 }
 
+// TemplateSection configures a Section.
 type TemplateSection struct {
 	ID      string
 	Footer  []string
 	Content func() string
 }
 
+// NewSection returns a Section.
 func NewSection(params TemplateSection) *Section {
 	return &Section{
 		id:      params.ID,
@@ -39,10 +43,13 @@ func NewSection(params TemplateSection) *Section {
 }
 
 // Getters and Setters
+
+// ID returns the section ID, also its title key.
 func (s *Section) ID() string {
 	return s.id
 }
 
+// SetSize does nothing.
 func (s *Section) SetSize(size.Size) {}
 
 // GetView renders the content on every call so it reflects the latest state.
@@ -63,16 +70,21 @@ func (s *Section) GetView() string {
 	)
 }
 
+// GetFooter returns the section shortcuts.
 func (s *Section) GetFooter() []string {
 	return s.footer
 }
 
 // Methods
+
+// HandleUpdate does nothing.
 func (s *Section) HandleUpdate(tea.Msg) tea.Cmd {
 	return nil
 }
 
 // - Focusable Section - //
+
+// FocusableSection is a Section listing selectable options.
 type FocusableSection struct {
 	*Section
 	primitive.List
@@ -82,6 +94,8 @@ type FocusableSection struct {
 	sendMsg           func() tea.Cmd
 }
 
+// TemplateFocusableSection configures a FocusableSection.
+// On shift/ctrl+enter, HandleEnterInput gets the selected option and Msg is sent.
 type TemplateFocusableSection[T pluminterface.Named] struct {
 	ID               string
 	Options          []T
@@ -91,6 +105,7 @@ type TemplateFocusableSection[T pluminterface.Named] struct {
 	Msg              tea.Msg
 }
 
+// NewFocusableSection returns a section listing params.Options.
 func NewFocusableSection[T pluminterface.Named](params TemplateFocusableSection[T]) *FocusableSection {
 	model := makeSectionModel(params)
 	s := &FocusableSection{
@@ -110,18 +125,23 @@ func NewFocusableSection[T pluminterface.Named](params TemplateFocusableSection[
 }
 
 // Getters and Setters
+
+// SetFocus sets the list focus.
 func (s *FocusableSection) SetFocus(focused bool) {
 	s.focused = focused
 	models.SetListFocus(s.GetList(), focused)
 
 }
 
+// SetSize sets the list width; its height fits the content.
 func (s *FocusableSection) SetSize(size size.Size) {
 	list := s.GetList()
 	list.SetSize(size.GetWidth(), models.ListContentHeight(list))
 }
 
 // Methods
+
+// HandleUpdate runs the enter handler and sends Msg on shift/ctrl+enter.
 func (s *FocusableSection) HandleUpdate(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:

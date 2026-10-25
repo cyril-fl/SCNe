@@ -21,6 +21,8 @@ import (
 )
 
 // - Table --//
+
+// NpcsTable lists the NPCs of the campaign.
 type NpcsTable struct {
 	*Data[npcsentry] `bson:",inline"`
 }
@@ -32,6 +34,7 @@ type npcsentry struct {
 
 var tablenpcs = "codex.npcs"
 
+// NewNpcs returns a NPC table with entries.
 func NewNpcs(entries ...npcsentry) *NpcsTable {
 	return &NpcsTable{
 		Data: new(i19n.Localize(tablenpcs), entries),
@@ -41,6 +44,8 @@ func NewNpcs(entries ...npcsentry) *NpcsTable {
 // Getters & Setters
 
 // Methods
+
+// Add appends a new NPC entry.
 func (tb *NpcsTable) Add(character *characters.Character) {
 	tb.Entries = append(tb.Entries, npcsentry{
 		ID:        id.New(),
@@ -49,6 +54,7 @@ func (tb *NpcsTable) Add(character *characters.Character) {
 	})
 }
 
+// AddFromMap creates a NPC from form values and appends it.
 func (tb *NpcsTable) AddFromMap(values map[string]string) error {
 	if err := tb.checkEntry(values); err != nil {
 		return err
@@ -88,6 +94,7 @@ func (tb *NpcsTable) AddFromMap(values map[string]string) error {
 	return nil
 }
 
+// FormEntries returns the entries as form page rows.
 func (tb *NpcsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 	for _, entry := range tb.Entries {
@@ -112,6 +119,7 @@ func (tb *NpcsTable) FormEntries() []Entry {
 	return entries
 }
 
+// SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *NpcsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry npcsentry) bool { return entry.ID == entryID })
 	if entryID.IsZero() || index < 0 {
@@ -186,6 +194,7 @@ func (tb *NpcsTable) assertEntry(entry map[string]string) {
 	}
 }
 
+// Ensure initializes the table when missing.
 func (tb *NpcsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablenpcs), &tb.Data)
 }

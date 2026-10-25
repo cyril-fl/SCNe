@@ -7,6 +7,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// SectionInterface is a navigation block.
 type SectionInterface interface {
 	ID() string
 
@@ -18,6 +19,7 @@ type SectionInterface interface {
 	HandleUpdate(tea.Msg) tea.Cmd
 }
 
+// FocusableSectionInterface is a navigation block with a selectable list.
 type FocusableSectionInterface interface {
 	SectionInterface
 

@@ -7,6 +7,7 @@ import (
 	"solopg/app/shared/services/style"
 )
 
+// View renders the fields stacked vertically, followed by the form error if any.
 func (m *Form) View() tea.View {
 	contents := make([]string, 0, len(m.fields))
 
@@ -25,6 +26,8 @@ func (m *Form) View() tea.View {
 	)
 }
 
+// GetFieldScrollArea returns the top offset and height of the focused field in viewport.
+// It returns -1, 0 when no field is focused.
 func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 	top := 0
 

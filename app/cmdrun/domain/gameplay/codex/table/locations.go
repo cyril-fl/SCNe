@@ -20,6 +20,8 @@ import (
 )
 
 // - Table --//
+
+// LocationsTable lists the locations of the campaign.
 type LocationsTable struct {
 	*Data[locationsentry] `bson:",inline"`
 }
@@ -32,6 +34,7 @@ type locationsentry struct {
 
 var tablelocations = "codex.locations"
 
+// NewLocations returns a location table with entries.
 func NewLocations(entries ...locationsentry) *LocationsTable {
 	return &LocationsTable{
 		Data: new(i19n.Localize(tablelocations), entries),
@@ -41,6 +44,8 @@ func NewLocations(entries ...locationsentry) *LocationsTable {
 // Getters & Setters
 
 // Methods
+
+// AddFromMap creates a location from form values and appends it.
 func (tb *LocationsTable) AddFromMap(values map[string]string) error {
 	location, err := tb.locationFromMap(values)
 	if err != nil {
@@ -111,6 +116,7 @@ func effectsFromValues(values map[string]string) []stats.Effect {
 	}
 }
 
+// Add appends a new location entry.
 func (tb *LocationsTable) Add(location *locations.Location) {
 	tb.Entries = append(tb.Entries, locationsentry{
 		ID:        id.New(),
@@ -119,6 +125,7 @@ func (tb *LocationsTable) Add(location *locations.Location) {
 	})
 }
 
+// FormEntries returns the entries as form page rows.
 func (tb *LocationsTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 	for _, entry := range tb.Entries {
@@ -141,6 +148,7 @@ func (tb *LocationsTable) FormEntries() []Entry {
 	return entries
 }
 
+// Find returns the location of the entry with entryID, or nil.
 func (tb *LocationsTable) Find(entryID id.ID) *locations.Location {
 	index := slices.IndexFunc(tb.Entries, func(entry locationsentry) bool { return entry.ID == entryID })
 	if index < 0 {
@@ -149,6 +157,7 @@ func (tb *LocationsTable) Find(entryID id.ID) *locations.Location {
 	return tb.Entries[index].Location
 }
 
+// SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *LocationsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry locationsentry) bool { return entry.ID == entryID })
 	if entryID.IsZero() || index < 0 {
@@ -185,6 +194,7 @@ func (tb *LocationsTable) assertEntry(values map[string]string) {
 	}
 }
 
+// Ensure initializes the table when missing.
 func (tb *LocationsTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tablelocations), &tb.Data)
 }

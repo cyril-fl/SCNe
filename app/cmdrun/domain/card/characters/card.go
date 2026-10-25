@@ -13,6 +13,7 @@ import (
 	"solopg/app/shared/services/logs"
 )
 
+// Character is a character card with its class, race, stats and belongings.
 type Character struct {
 	card.Card
 
@@ -30,6 +31,7 @@ type Character struct {
 	*/
 }
 
+// Template configures a Character.
 type Template struct {
 	Name        string
 	Description string
@@ -43,6 +45,8 @@ type Template struct {
 	Inventory   []objects.Object
 }
 
+// New returns a Character, defaulting an invalid variety or rarity.
+// It fails on an invalid card, class or race.
 func New(params Template) (*Character, error) {
 	if !params.Variety.Validate() {
 		params.Variety = variety.MakeDefault("character_card")
@@ -91,12 +95,14 @@ func New(params Template) (*Character, error) {
 	}, nil
 }
 
+// EquipEquipement equips each of gears; a gear for a taken slot is ignored.
 func (character *Character) EquipEquipement(gears []equipment.Gear) {
 	for _, gear := range gears {
 		character.Equipment.AddGear(gear)
 	}
 }
 
+// EquipGear equips gear unless its slot is taken.
 func (character *Character) EquipGear(gear equipment.Gear) {
 	character.Equipment.AddGear(gear)
 }

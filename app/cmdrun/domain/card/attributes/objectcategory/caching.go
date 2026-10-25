@@ -35,8 +35,11 @@ func (c *yamlConfig) addValue(value Category) {
 }
 
 // - Category - //
+
+// Category is a value from the objectcategory config file.
 type Category string
 
+// ListWithError returns a copy of the configured values; the file is loaded once.
 func ListWithError() ([]Category, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -46,6 +49,7 @@ func ListWithError() ([]Category, error) {
 	return append([]Category(nil), config.Values...), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Category {
 	values, err := ListWithError()
 	if err != nil {
@@ -62,6 +66,7 @@ func List() []Category {
 	return values
 }
 
+// MakeDefault adds defaultValue to the cached values when missing and returns it.
 func MakeDefault(defaultValue string) Category {
 	_, _ = ListWithError()
 	cachedConfig.Update(func(config *yamlConfig) {
@@ -70,6 +75,7 @@ func MakeDefault(defaultValue string) Category {
 	return Category(defaultValue)
 }
 
+// AssertWithDefault returns provided when valid, otherwise the "object" category.
 func AssertWithDefault(provided string) Category {
 	if Category(provided).Validate() {
 		return Category(provided)
@@ -78,10 +84,12 @@ func AssertWithDefault(provided string) Category {
 	return MakeDefault("object")
 }
 
+// Validate reports whether r is a configured value.
 func (r Category) Validate() bool {
 	return slices.Contains(List(), r)
 }
 
+// String returns r as a string.
 func (r Category) String() string {
 	return string(r)
 }

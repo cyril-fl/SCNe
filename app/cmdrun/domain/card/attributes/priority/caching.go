@@ -28,6 +28,7 @@ func loadFromFile() ([]yamlConfig, error) {
 	return params, nil
 }
 
+// Has reports whether a priority named value.Name is configured.
 func Has(value Template) bool {
 	for _, priority := range List() {
 		if priority.GetName() == value.Name {
@@ -37,6 +38,7 @@ func Has(value Template) bool {
 	return false
 }
 
+// AddInConfig adds value to the cached priorities; it fails when the name exists.
 func AddInConfig(value Template) error {
 	priorities, err := ListWithError()
 	if err != nil {
@@ -63,6 +65,7 @@ func AddInConfig(value Template) error {
 	return nil
 }
 
+// ListWithError returns the configured priorities; the file is loaded once.
 func ListWithError() ([]Priority, error) {
 	configs, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -72,6 +75,7 @@ func ListWithError() ([]Priority, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Priority {
 	priorities, err := ListWithError()
 	if err != nil {
@@ -109,6 +113,8 @@ func reportLoadError() {
 }
 
 // - Collection - //
+
+// ListNames returns the configured priority names.
 func ListNames() []string {
 	priorities := List()
 	list := make([]string, 0, len(priorities))
@@ -119,6 +125,7 @@ func ListNames() []string {
 	return list
 }
 
+// FindByName returns the priority named name, or nil.
 func FindByName(name string) *Priority {
 	for _, priority := range List() {
 		if priority.GetName() == name {

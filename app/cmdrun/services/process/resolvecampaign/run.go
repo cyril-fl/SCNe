@@ -30,12 +30,14 @@ type cache struct {
 	err error
 }
 
+// Process returns a process resolving the campaign from the onboarding ctx.
 func Process(ctx *cmdruntui.Context) *run {
 	return &run{
 		ctx: ctx,
 	}
 }
 
+// Run returns the selected save, or builds a new campaign from the onboarding choices.
 func (p *run) Run() {
 	if p.isNewCampaign() {
 		p.assertContext()
@@ -47,6 +49,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult returns the campaign, nil on error.
 func (p *run) GetResult() *campaign.Campaign {
 	return p.cache.campaign
 }

@@ -31,6 +31,7 @@ func loadFromFile() ([]yamlConfig, error) {
 	return params, nil
 }
 
+// Has reports whether a class identical to value is configured.
 func Has(value Template) bool {
 	new := New(value)
 
@@ -42,6 +43,7 @@ func Has(value Template) bool {
 	return false
 }
 
+// AddInConfig adds value to the cached classes; it fails when an identical class exists.
 func AddInConfig(value Template) error {
 	if _, err := ListWithError(); err != nil {
 		reportLoadError()
@@ -70,6 +72,8 @@ func AddInConfig(value Template) error {
 }
 
 // - Collection - //
+
+// ListWithError returns the configured classes; the file is loaded once.
 func ListWithError() ([]Class, error) {
 	configs, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -79,6 +83,7 @@ func ListWithError() ([]Class, error) {
 	return makeSet(configs), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Class {
 	classes, err := ListWithError()
 	if err != nil {
@@ -99,6 +104,7 @@ func reportLoadError() {
 	})
 }
 
+// ListNames returns the configured class names.
 func ListNames() []string {
 	var list []string
 	for _, i := range List() {
@@ -107,6 +113,7 @@ func ListNames() []string {
 	return list
 }
 
+// FindByName returns the class named name, or nil.
 func FindByName(name string) *Class {
 	for _, i := range List() {
 		if i.GetName() == name {
@@ -116,6 +123,7 @@ func FindByName(name string) *Class {
 	return nil
 }
 
+// InsertIfIsnt returns the class named name, adding it as playable when missing.
 func InsertIfIsnt(name string) (*Class, error) {
 	if class := FindByName(name); class != nil {
 		return class, nil

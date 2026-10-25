@@ -10,6 +10,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// View renders the current step in the layout; step errors are logged silently.
 func (m model) View() tea.View {
 	m.layout.SetSize(size.NewFromWindow(m.steps.GetSize()))
 	m.layout.SetFooter(shortcut.QUIT.String())

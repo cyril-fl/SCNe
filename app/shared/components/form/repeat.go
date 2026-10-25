@@ -20,6 +20,7 @@ type repeatField struct {
 	err   error
 }
 
+// RepeatTemplate configures a Repeat field.
 type RepeatTemplate struct {
 	ID    string
 	Label string
@@ -29,6 +30,8 @@ type RepeatTemplate struct {
 	Make func(index int) []Field
 }
 
+// Repeat returns a field repeating the group built by template.Make.
+// Ctrl+"+" adds a new group and focuses it.
 func Repeat(template RepeatTemplate) *repeatField {
 	r := &repeatField{
 		id:    template.ID,

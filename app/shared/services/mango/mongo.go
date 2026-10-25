@@ -14,6 +14,8 @@ import (
 var env = NewEnvironment()
 
 // -- Mongo & Database -- //
+
+// Mongo is a MongoDB connection to the app database.
 type Mongo struct {
 	plumprimitive.Fallible
 
@@ -21,11 +23,14 @@ type Mongo struct {
 	instance *mongo.Database
 }
 
+// New returns an unconnected Mongo.
 func New() *Mongo {
 	return &Mongo{}
 }
 
 // Getters & Setters
+
+// GetCollection returns collection from the app database.
 func (db *Mongo) GetCollection(collection Collection) *mongo.Collection {
 	return db.instance.Collection(collection.String())
 }
@@ -39,6 +44,8 @@ func (db *Mongo) setInstance(client *mongo.Client) {
 }
 
 // Methods
+
+// Connect connects and pings within 10 seconds, storing any error.
 func (db *Mongo) Connect() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -63,6 +70,7 @@ func (db *Mongo) Connect() {
 	db.setInstance(client)
 }
 
+// Disconnect closes the connection, if any.
 func (db *Mongo) Disconnect() {
 	if db.client == nil {
 		return
@@ -71,6 +79,8 @@ func (db *Mongo) Disconnect() {
 }
 
 // Helpers
+
+// Init reads the environment and returns a connected Mongo.
 func Init() (db *Mongo, err error) {
 	env.ReadEnv()
 

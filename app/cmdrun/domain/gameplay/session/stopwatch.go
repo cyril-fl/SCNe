@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Stopwatch records the play time as start/stop periods.
 type Stopwatch struct {
 	init      bool
 	running   bool
@@ -12,6 +13,7 @@ type Stopwatch struct {
 	timeRun   []int64
 }
 
+// NewStopwatch returns a stopped Stopwatch.
 func NewStopwatch() *Stopwatch {
 	return &Stopwatch{
 		init:      false,
@@ -21,6 +23,7 @@ func NewStopwatch() *Stopwatch {
 	}
 }
 
+// GetHistory returns the periods, the running one ending now.
 func (t *Stopwatch) GetHistory() []timer.Record {
 	if !t.init {
 		return []timer.Record{}
@@ -58,6 +61,7 @@ func (t *Stopwatch) makeHistory() []timer.Record {
 	return history
 }
 
+// GetLastTimeStop returns the end of the last period in unix ms, now when running.
 func (t *Stopwatch) GetLastTimeStop() int64 {
 	if !t.init {
 		return 0
@@ -69,6 +73,7 @@ func (t *Stopwatch) GetLastTimeStop() int64 {
 	return getlast(t.timeStart) + getlast(t.timeRun)
 }
 
+// Start starts the first period; later calls do nothing.
 func (t *Stopwatch) Start() {
 	if t.init {
 		return
@@ -78,6 +83,7 @@ func (t *Stopwatch) Start() {
 	t.timeStart = append(t.timeStart, getNow())
 }
 
+// Pause ends the running period.
 func (t *Stopwatch) Pause() {
 	if !t.init {
 		return
@@ -90,6 +96,7 @@ func (t *Stopwatch) Pause() {
 	t.running = false
 }
 
+// Resume starts a new period when paused.
 func (t *Stopwatch) Resume() {
 	if !t.init {
 		return

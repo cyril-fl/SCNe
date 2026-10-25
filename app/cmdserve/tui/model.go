@@ -9,18 +9,21 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+// Context is the empty step context of the serve TUI.
 type Context struct{}
 
 type model struct {
 	steps models.StepModel[Context]
 }
 
+// NewModel returns the serve TUI running steps.
 func NewModel(steps *models.ContextStepList[Context]) model {
 	return model{
 		steps: models.NewStepModel(steps),
 	}
 }
 
+// Init starts the current step.
 func (m *model) Init() tea.Cmd {
 	if submodel := m.steps.GetCurrentSubmodel(); submodel != nil {
 		return submodel.Init()
@@ -29,6 +32,7 @@ func (m *model) Init() tea.Cmd {
 	return nil
 }
 
+// Update quits on ctrl+c or ctrl+q and forwards other messages to the current step.
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:

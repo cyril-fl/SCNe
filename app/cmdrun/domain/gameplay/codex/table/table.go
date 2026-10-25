@@ -7,6 +7,8 @@ import (
 )
 
 // - Table - //
+
+// Table is a Codex table editable through a form page.
 type Table interface {
 	AddFromMap(values map[string]string) error
 	SaveFromMap(entryID id.ID, values map[string]string) error
@@ -44,7 +46,7 @@ func ensureEmbeddedTable[E any](name string, table **Data[E]) {
 
 // - Entry - //
 
-// Entry
+// Entry is a table row as listed and edited by a form page.
 type Entry struct {
 	plumprimitive.Descriptible
 
@@ -69,6 +71,8 @@ func newEntry(entryID id.ID, name, description string, values map[string]string,
 }
 
 // Helpers
+
+// FindEntryByName returns the entry named name, or nil.
 func FindEntryByName(entries []Entry, name string) *Entry {
 	for i := range entries {
 		if entries[i].GetName() == name {

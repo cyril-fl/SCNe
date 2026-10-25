@@ -17,12 +17,14 @@ type model[T pluminterface.Stringable] struct {
 	flags  *pflag.FlagSet
 }
 
+// UiParams configures the log stream view.
 type UiParams[T pluminterface.Stringable] struct {
 	Context    context.Context
 	Repository repository.Watchable[T]
 	Flags      *pflag.FlagSet
 }
 
+// NewModel returns a view streaming params.Repository.
 func NewModel[T pluminterface.Stringable](params UiParams[T]) *model[T] {
 	stream := models.NewStreamModel(models.StreamModelTemplate[T]{
 		Context:    params.Context,
@@ -35,11 +37,13 @@ func NewModel[T pluminterface.Stringable](params UiParams[T]) *model[T] {
 	}
 }
 
+// Init checks the --filter flag and starts the stream.
 func (m *model[T]) Init() tea.Cmd {
 	m.assertFilterFlag()
 	return m.stream.Init()
 }
 
+// Update forwards msg to the stream.
 func (m *model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	_, cmd = m.stream.Update(msg)

@@ -35,8 +35,11 @@ func (c *yamlConfig) addValue(value Variety) {
 }
 
 // - Variety - //
+
+// Variety is a value from the variety config file.
 type Variety string
 
+// ListWithError returns a copy of the configured values; the file is loaded once.
 func ListWithError() ([]Variety, error) {
 	config, err := cachedConfig.Load(loadFromFile)
 	if err != nil {
@@ -46,6 +49,7 @@ func ListWithError() ([]Variety, error) {
 	return append([]Variety(nil), config.Values...), nil
 }
 
+// List is ListWithError that logs the load error once and returns nil on failure.
 func List() []Variety {
 	values, err := ListWithError()
 	if err != nil {
@@ -62,10 +66,12 @@ func List() []Variety {
 	return values
 }
 
+// Validate reports whether r is a configured value.
 func (r Variety) Validate() bool {
 	return slices.Contains(List(), r)
 }
 
+// Default returns the first configured variety, or registers "card" when none.
 func Default() Variety {
 	list := List()
 
@@ -76,6 +82,7 @@ func Default() Variety {
 	return list[0]
 }
 
+// MakeDefault adds defaultValue to the cached values when missing and returns it.
 func MakeDefault(defaultValue string) Variety {
 	_, _ = ListWithError()
 	cachedConfig.Update(func(config *yamlConfig) {
@@ -84,6 +91,7 @@ func MakeDefault(defaultValue string) Variety {
 	return Variety(defaultValue)
 }
 
+// AssertWithDefault returns provided when valid, otherwise Default.
 func AssertWithDefault(provided string) Variety {
 	if Assert(provided) {
 		return Variety(provided)
@@ -92,10 +100,12 @@ func AssertWithDefault(provided string) Variety {
 	return Default()
 }
 
+// Assert reports whether provided is a configured value.
 func Assert(provided string) bool {
 	return Variety(provided).Validate()
 }
 
+// String returns r as a string.
 func (r Variety) String() string {
 	return string(r)
 }

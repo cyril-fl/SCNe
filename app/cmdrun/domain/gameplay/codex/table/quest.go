@@ -17,6 +17,8 @@ import (
 )
 
 // - Table --//
+
+// QuestTable lists the quests of the campaign.
 type QuestTable struct {
 	*Data[questentry] `bson:",inline"`
 }
@@ -28,6 +30,7 @@ type questentry struct {
 
 var tableobjectives = "codex.quest"
 
+// NewQuests returns a quest table with entries.
 func NewQuests(entries ...questentry) *QuestTable {
 	return &QuestTable{
 		Data: new(i19n.Localize(tableobjectives), entries),
@@ -37,6 +40,8 @@ func NewQuests(entries ...questentry) *QuestTable {
 // Getters & Setters
 
 // Methods
+
+// Add appends a new quest entry.
 func (tb *QuestTable) Add(quest *quest.Quest) {
 	tb.Entries = append(tb.Entries, questentry{
 		ID:        id.New(),
@@ -45,6 +50,7 @@ func (tb *QuestTable) Add(quest *quest.Quest) {
 	})
 }
 
+// AddFromMap creates a quest from form values and appends it.
 func (tb *QuestTable) AddFromMap(values map[string]string) error {
 	quest, err := tb.questFromMap(values)
 	if err != nil {
@@ -91,6 +97,7 @@ func (tb *QuestTable) questFromMap(values map[string]string) (*quest.Quest, erro
 	return quest, nil
 }
 
+// FormEntries returns the entries as form page rows.
 func (tb *QuestTable) FormEntries() []Entry {
 	entries := make([]Entry, 0, len(tb.Entries))
 
@@ -113,6 +120,7 @@ func (tb *QuestTable) FormEntries() []Entry {
 	return entries
 }
 
+// SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *QuestTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry questentry) bool { return entry.ID == entryID })
 	if entryID.IsZero() || index < 0 {
@@ -148,6 +156,7 @@ func (tb *QuestTable) assertEntry(values map[string]string) {
 	}
 }
 
+// Ensure initializes the table when missing.
 func (tb *QuestTable) Ensure() {
 	ensureEmbeddedTable(i19n.Localize(tableobjectives), &tb.Data)
 }

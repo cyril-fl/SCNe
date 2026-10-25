@@ -24,11 +24,13 @@ type cache struct {
 	list []logs.Log
 }
 
+// ProcessTemplate provides the log source and the command flags.
 type ProcessTemplate struct {
 	GetList  func(filter bson.M, opts ...repository.FindOption) ([]logs.Log, error)
 	GetFlags func() *pflag.FlagSet
 }
 
+// Process returns a process printing the logs filtered by the flags.
 func Process(params ProcessTemplate) *run {
 	return &run{
 		getList:  params.GetList,
@@ -36,6 +38,7 @@ func Process(params ProcessTemplate) *run {
 	}
 }
 
+// Run loads the logs, applies --tail then --filter and prints them.
 func (p *run) Run() {
 	p.makeList()
 	p.makeMill()
@@ -43,6 +46,8 @@ func (p *run) Run() {
 }
 
 // Getters & Setters
+
+// GetResult is not implemented; it only logs a warning.
 func (p *run) GetResult() {
 	logs.SilentWarning("error:not_implemented", map[string]any{
 		"Function": "GetResult",

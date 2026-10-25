@@ -12,11 +12,12 @@ import (
 )
 
 // - Equipment - //
-// Set
+// Equipment is a set of gears holding at most one gear per slot.
 type Equipment struct {
 	List []Gear
 }
 
+// NewSet returns an Equipment with gears, keeping the first gear per slot.
 func NewSet(gears []Gear) Equipment {
 	set := Equipment{
 		List: []Gear{},
@@ -29,12 +30,14 @@ func NewSet(gears []Gear) Equipment {
 	return set
 }
 
+// AddGear adds gear unless its slot is taken.
 func (set *Equipment) AddGear(gear Gear) {
 	if !set.hasSlot(gear.Slot) {
 		set.List = append(set.List, gear)
 	}
 }
 
+// Gears returns the equipped gears.
 func (set *Equipment) Gears() []Gear {
 	return set.List
 }
@@ -48,7 +51,7 @@ func (set *Equipment) hasSlot(slot slot.Slot) bool {
 	return false
 }
 
-// Gear
+// Gear is an object equipped in a slot.
 type Gear struct {
 	objects.Object
 
@@ -56,6 +59,7 @@ type Gear struct {
 	Slot    slot.Slot
 }
 
+// Template configures a Gear.
 type Template struct {
 	Name        string
 	Description string
@@ -68,6 +72,7 @@ type Template struct {
 	Slot        slot.Slot
 }
 
+// NewGear returns a Gear, or an error when the object or slot is invalid.
 func NewGear(params Template) (*Gear, error) {
 	// Check Card
 	newItem, err := objects.New(objects.Template{
