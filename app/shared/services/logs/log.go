@@ -5,9 +5,11 @@ import (
 	"slices"
 	"solopg/app/cmdrun/types/id"
 	"solopg/app/shared/services/i19n"
+	"solopg/app/shared/services/style"
 	"strings"
 	"time"
 
+	"charm.land/lipgloss/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -30,6 +32,13 @@ func AssertKind(kind Kind) bool {
 		WARN,
 	}
 	return slices.Contains(kinds, kind)
+}
+
+var kindStyles = map[Kind]lipgloss.Style{
+	SUCC: lipgloss.NewStyle().Foreground(lipgloss.Color("2")),
+	ERR:  lipgloss.NewStyle().Foreground(lipgloss.Color("1")),
+	INFO: lipgloss.NewStyle().Foreground(lipgloss.Color("4")),
+	WARN: lipgloss.NewStyle().Foreground(lipgloss.Color("3")),
 }
 
 // -- Log -- //
@@ -65,7 +74,8 @@ func New(params Template) *Log {
 
 // -- Methods -- //
 func (l Log) String() string {
-	return fmt.Sprintf("%s - [%s] - (%s) : \"%s\"", l.GetFormattedUpdated(time.RFC3339), strings.ToUpper(string(l.Type)), l.Author, l.Message)
+	kind := kindStyles[l.Type].Bold(true).Width(8).Render(strings.ToUpper(string(l.Type)))
+	return fmt.Sprintf("%s %s%s %s", style.Muted.Render(l.GetFormattedUpdated(time.DateTime)), kind, style.Muted.Render(l.Author), l.Message)
 }
 
 func (l *Log) Touch() {
@@ -90,6 +100,11 @@ func SystemLog(id string, data ...map[string]any) string {
 }
 
 func registerFromTemplate(params Template) {
+	// Package init() (e.g. config) can log before logs.Init sets the registrable.
+	if cache_registrable == nil {
+		return
+	}
+
 	log := New(params)
 	cache_registrable.Register(log)
 }

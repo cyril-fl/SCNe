@@ -1,11 +1,11 @@
 package filterlogs
 
 import (
-	"fmt"
 	"solopg/app/shared/services/factory/millfilterlog"
 	"solopg/app/shared/services/logs"
 	"solopg/app/shared/services/mango/repository"
 
+	"charm.land/lipgloss/v2"
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"github.com/spf13/pflag"
 	"go.mongodb.org/mongo-driver/bson"
@@ -95,7 +95,7 @@ func (p *run) displayResult() {
 		GetList()
 
 	for _, log := range result {
-		fmt.Println(log.String())
+		lipgloss.Println(log.String())
 	}
 }
 
