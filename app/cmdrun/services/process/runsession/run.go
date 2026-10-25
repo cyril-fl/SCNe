@@ -86,28 +86,14 @@ func (p *run) makeSelectsaveStep() {
 	}
 
 	p.cache.view.Add(
-		models.Step[cmdruntui.Context]{
-			Submodel: loadsave.NewModel(campaigns),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-
-				selected, ok := value.(*campaign.Campaign)
-				if !ok {
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "campaign",
-						"Expected": "*campaign.Campaign",
-						"Value":    value,
-					})
-				}
-
+		models.Bind(loadsave.NewModel(campaigns), "campaign",
+			func(ctx *cmdruntui.Context, selected *campaign.Campaign) {
 				ctx.SelectedSave = selected
 				if ctx.SelectedSave == nil {
 					onboardingSteps := makeOnboardingSteps()
 					p.cache.view.Insert(onboardingSteps...)
 				}
-
-				return nil
-			},
-		})
+			}))
 }
 
 func (p *run) makeResolveStep() {
@@ -154,38 +140,17 @@ func (p *run) runTuiView() {
 // Helpers
 func makeOnboardingSteps() []models.Step[cmdruntui.Context] {
 	return []models.Step[cmdruntui.Context]{
-		{
-			Submodel: onboardename.NewModel(),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				name, ok := value.(string)
-				if !ok {
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "name",
-						"Expected": "string",
-						"Value":    value,
-					})
-				}
+		models.Bind(onboardename.NewModel(), "name",
+			func(ctx *cmdruntui.Context, name string) {
 				ctx.SelectedName = name
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "name",
 					"Value":   name,
 				})
-
-				return nil
-			},
-		},
-		{
-			Submodel: onboardarchetype.NewModel("races", races.List()),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				selected, ok := value.(models.Item[races.Race])
-				if !ok {
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "race",
-						"Expected": "models.Item[races.Race]",
-						"Value":    value,
-					})
-				}
+			}),
+		models.Bind(onboardarchetype.NewModel("races", races.List()), "race",
+			func(ctx *cmdruntui.Context, selected models.Item[races.Race]) {
 				race := selected.Value()
 				ctx.SelectedRace = &race
 
@@ -193,21 +158,9 @@ func makeOnboardingSteps() []models.Step[cmdruntui.Context] {
 					"Subject": "race",
 					"Value":   race.GetName(),
 				})
-
-				return nil
-			},
-		},
-		{
-			Submodel: onboardarchetype.NewModel("classes", classes.List()),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				selected, ok := value.(models.Item[classes.Class])
-				if !ok {
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "class",
-						"Expected": "models.Item[classes.Class]",
-						"Value":    value,
-					})
-				}
+			}),
+		models.Bind(onboardarchetype.NewModel("classes", classes.List()), "class",
+			func(ctx *cmdruntui.Context, selected models.Item[classes.Class]) {
 				class := selected.Value()
 				ctx.SelectedClass = &class
 
@@ -215,52 +168,24 @@ func makeOnboardingSteps() []models.Step[cmdruntui.Context] {
 					"Subject": "class",
 					"Value":   class.GetName(),
 				})
-
-				return nil
-			},
-		},
-		{
-			Submodel: onboardforgecharacter.NewModel(),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				build, ok := value.([]stats.Modifier)
-				if !ok {
-
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "build",
-						"Expected": "[]stats.Modifier",
-						"Value":    value,
-					})
-				}
+			}),
+		models.Bind(onboardforgecharacter.NewModel(), "build",
+			func(ctx *cmdruntui.Context, build []stats.Modifier) {
 				ctx.SelectedBuild = build
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "build",
 					"Value":   build,
 				})
-
-				return nil
-			},
-		},
-		{
-			Submodel: onboardlocation.NewModel(),
-			Resolve: func(ctx *cmdruntui.Context, value any) error {
-				location, ok := value.(*locations.Location)
-				if !ok {
-					return logs.Error("error.unexpected:value", map[string]any{
-						"Subject":  "location",
-						"Expected": "*locations.Location",
-						"Value":    value,
-					})
-				}
+			}),
+		models.Bind(onboardlocation.NewModel(), "location",
+			func(ctx *cmdruntui.Context, location *locations.Location) {
 				ctx.SelectedLocation = location
 
 				logs.SilentInfo("onboarding.selected", map[string]any{
 					"Subject": "location",
 					"Value":   location,
 				})
-
-				return nil
-			},
-		},
+			}),
 	}
 }

@@ -2,13 +2,26 @@ package models
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"solopg/app/shared/messages"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
 )
+
+type testLogRegistrar struct{}
+
+func (testLogRegistrar) Register(*logs.Log) error { return nil }
+
+func TestMain(m *testing.M) {
+	logs.Init(testLogRegistrar{})
+	code := m.Run()
+	logs.Init(nil)
+	os.Exit(code)
+}
 
 type testStepModel struct{}
 
@@ -34,5 +47,16 @@ func TestStepModelResolutionErrorQuits(t *testing.T) {
 	cmd := m.ResolveSubmodel(messages.Resolved{Err: errors.New("failed"), Completed: true})
 	if cmd == nil || !m.HasErr() {
 		t.Fatal("resolution error was not stored")
+	}
+}
+
+func TestBind(t *testing.T) {
+	s := Bind(testStepModel{}, "name", func(ctx *string, v string) { *ctx = v })
+	ctx := ""
+	if err := s.Resolve(&ctx, "ok"); err != nil || ctx != "ok" {
+		t.Fatal("bound value was not applied to the context")
+	}
+	if err := s.Resolve(&ctx, 42); err == nil || ctx != "ok" {
+		t.Fatal("wrong value type should fail without touching the context")
 	}
 }

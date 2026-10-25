@@ -1,8 +1,11 @@
 package models
 
 import (
+	"reflect"
+
 	plumprimitive "github.com/cyril-fl/plum/primitive"
 	"solopg/app/shared/messages"
+	"solopg/app/shared/services/logs"
 	"solopg/app/shared/types/step"
 
 	tea "charm.land/bubbletea/v2"
@@ -126,3 +129,22 @@ func (m *StepModel[T]) handleResolution(value any) error {
 }
 
 // Helpers
+
+// Bind returns a step whose resolved value, asserted as V, is applied to ctx by set.
+func Bind[T, V any](submodel tea.Model, subject string, set func(ctx *T, v V)) Step[T] {
+	return Step[T]{
+		Submodel: submodel,
+		Resolve: func(ctx *T, value any) error {
+			v, ok := value.(V)
+			if !ok {
+				return logs.Error("error.unexpected:value", map[string]any{
+					"Subject":  subject,
+					"Expected": reflect.TypeFor[V]().String(),
+					"Value":    value,
+				})
+			}
+			set(ctx, v)
+			return nil
+		},
+	}
+}
