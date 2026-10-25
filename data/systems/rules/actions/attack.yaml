@@ -1,0 +1,7 @@
+id: attack
+oracle: combat_attack # result of the oracle = effect key
+effects:
+  hit:
+    damage: 3
+  critical:
+    damage: 6

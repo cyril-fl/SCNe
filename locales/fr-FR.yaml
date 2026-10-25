@@ -20,6 +20,12 @@ navigate:
   other: "naviguer"
 travel:
   other: "voyager"
+fight:
+  other: "combattre"
+play:
+  other: "jouer"
+leave:
+  other: "quitter"
 new:
   other: "nouveau"
 

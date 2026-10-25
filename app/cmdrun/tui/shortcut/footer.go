@@ -11,6 +11,10 @@ var (
 		Command: CtrlE,
 		Label:   "edit",
 	})
+	LEAVE = NewShortcut(Template{
+		Command: Esc,
+		Label:   "leave",
+	})
 	NAVIGATE = NewShortcut(Template{
 		Command: AltArrows,
 		Label:   "navigate",
@@ -22,6 +26,10 @@ var (
 	OPEN = NewShortcut(Template{
 		Command: CtrlEnter,
 		Label:   "open",
+	})
+	PLAY = NewShortcut(Template{
+		Command: CtrlEnter,
+		Label:   "play",
 	})
 	QUIT = NewShortcut(Template{
 		Command: CtrlQ,

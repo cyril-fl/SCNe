@@ -1,0 +1,17 @@
+name: "combat_defend"
+dice: 20
+type: "action" # Oracle / Action / Test / Roll
+visible: false
+intervals:
+  - min: 1
+    max: 9
+    critical: false
+    result: "fail"
+  - min: 10
+    max: 19
+    critical: false
+    result: "success"
+  - min: 20
+    max: 20
+    critical: true
+    result: "critical"

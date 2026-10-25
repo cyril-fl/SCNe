@@ -5,6 +5,7 @@ import (
 	"solopg/app/cmdrun/domain/card/characters"
 	"solopg/app/cmdrun/domain/card/locations"
 	"solopg/app/cmdrun/domain/gameplay/codex"
+	"solopg/app/cmdrun/domain/gameplay/combat"
 	"solopg/app/cmdrun/types/timer"
 
 	plumprimitive "github.com/cyril-fl/plum/primitive"
@@ -19,6 +20,7 @@ type SessionState struct {
 	TimeHistory     []timer.Record
 	Stopwatch       *Stopwatch
 	Metadata        Metadata
+	Combat          *combat.Combat
 }
 
 // Metadata keeps the dates of the loaded documents.

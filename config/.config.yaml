@@ -74,6 +74,7 @@ documents:
     stats: "data/systems/attributes/stats.yaml"
     variety: "data/systems/attributes/variety.yaml"
   folders:
+    actions: "data/systems/rules/actions"
     characters: "data/template/characters"
     encounters: "data/systems/rules/oracles/encounter"
     hint: "data/template/hint"

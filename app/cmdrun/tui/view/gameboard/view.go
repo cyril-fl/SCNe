@@ -6,6 +6,7 @@ import (
 	"solopg/app/cmdrun/domain/gameplay/oracle"
 	"solopg/app/cmdrun/domain/gameplay/session"
 	"solopg/app/cmdrun/tui/shortcut"
+	"solopg/app/cmdrun/tui/view/combatboard"
 	"solopg/app/cmdrun/tui/view/menucodex"
 	"solopg/app/cmdrun/types/size"
 	"solopg/app/shared/components/navigation"
@@ -20,6 +21,8 @@ import (
 type state = string
 
 const CHAT_SECTION state = "chat"
+
+const COMBAT_SECTION state = menucodex.COMBAT_PAGE
 
 func (m model) View() tea.View {
 	msg := "404 - Not Found"
@@ -66,15 +69,23 @@ func makeViewState(params UiParams) statemachine.ViewState[state] {
 
 	codexpage := menucodex.NewFormPages(params.Session)
 
-	views := map[state]interfass.Viewable{CHAT_SECTION: makeChat(params.Session)}
+	combatpage := combatboard.NewModel(combatboard.UiParams{Session: params.Session})
 
-	transitions := map[state][]state{CHAT_SECTION: {}}
+	views := map[state]interfass.Viewable{
+		CHAT_SECTION:   makeChat(params.Session),
+		COMBAT_SECTION: combatpage,
+	}
+
+	transitions := map[state][]state{
+		CHAT_SECTION:   {},
+		COMBAT_SECTION: {CHAT_SECTION},
+	}
 
 	for id, page := range codexpage {
 		step := state(id)
 		views[step] = page
 		transitions[CHAT_SECTION] = append(transitions[CHAT_SECTION], step)
-		transitions[step] = []state{CHAT_SECTION}
+		transitions[step] = []state{CHAT_SECTION, COMBAT_SECTION}
 	}
 
 	return statemachine.NewView(statemachine.TemplateViewState[state]{

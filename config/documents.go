@@ -6,6 +6,7 @@ type structureDocument struct {
 }
 
 type structureFolders struct {
+	Actions    string `yaml:"actions"`
 	Characters string `yaml:"characters"`
 	Encounters string `yaml:"encounters"`
 	Hint       string `yaml:"hint"`

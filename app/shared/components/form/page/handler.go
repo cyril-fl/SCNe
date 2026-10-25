@@ -99,8 +99,7 @@ func (p *Page) handleCtrlEnter() tea.Cmd {
 		return nil
 	}
 
-	p.action.Run(selected.Value().ID)
-	return nil
+	return p.action.Run(selected.Value().ID)
 }
 
 func (p *Page) handleCtrlE() tea.Cmd {

@@ -119,6 +119,15 @@ func (tb *NpcsTable) FormEntries() []Entry {
 	return entries
 }
 
+// Find returns the character of the entry with entryID, or nil.
+func (tb *NpcsTable) Find(entryID id.ID) *characters.Character {
+	index := slices.IndexFunc(tb.Entries, func(entry npcsentry) bool { return entry.ID == entryID })
+	if index < 0 {
+		return nil
+	}
+	return tb.Entries[index].Character
+}
+
 // SaveFromMap edits the entry with entryID, or adds one when it is zero or unknown.
 func (tb *NpcsTable) SaveFromMap(entryID id.ID, values map[string]string) error {
 	index := slices.IndexFunc(tb.Entries, func(entry npcsentry) bool { return entry.ID == entryID })
