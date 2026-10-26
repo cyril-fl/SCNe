@@ -1,0 +1,17 @@
+name: location.catacombs
+description: location.catacombs.description
+rarity: C
+variety: location_card
+effects:
+  - description:
+      name: Restless dead
+      description: Decreases mental by 1
+    modifier:
+      stat: mental
+      value: -1
+  - description:
+      name: Grave dust
+      description: Increases physical by 1
+    modifier:
+      stat: physical
+      value: 1

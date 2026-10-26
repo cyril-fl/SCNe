@@ -1,0 +1,17 @@
+name: location.wyvern_nest
+description: location.wyvern_nest.description
+rarity: A
+variety: location_card
+effects:
+  - description:
+      name: Fear of the skies
+      description: Decreases mental by 1
+    modifier:
+      stat: mental
+      value: -1
+  - description:
+      name: Adrenaline
+      description: Increases physical by 2
+    modifier:
+      stat: physical
+      value: 2

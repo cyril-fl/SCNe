@@ -1,0 +1,17 @@
+name: location.frozen_tundra
+description: location.frozen_tundra.description
+rarity: C
+variety: location_card
+effects:
+  - description:
+      name: Biting cold
+      description: Decreases stamina by 1
+    modifier:
+      stat: stamina
+      value: -1
+  - description:
+      name: Endurance
+      description: Increases health by 1
+    modifier:
+      stat: health
+      value: 1

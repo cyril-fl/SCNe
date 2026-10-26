@@ -25,3 +25,15 @@ race.slime:
 race.slime.description:
   other: "Les slimes sont des créatures amorphes qui peuvent prendre diverses formes."
   
+
+# Halflings
+race.halfling:
+  other: "halfelin"
+race.halfling.description:
+  other: "Les halfelins sont un petit peuple jovial qui aime le confort et la bonne chère. Leur chance et leur agilité les tirent souvent des pires situations."
+
+# Orcs
+race.orc:
+  other: "orque"
+race.orc.description:
+  other: "Les orques sont des guerriers fiers et farouches venus des steppes sauvages. Craints pour leur force, ils placent l'honneur gagné au combat au-dessus de tout."

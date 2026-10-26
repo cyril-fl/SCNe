@@ -1,0 +1,17 @@
+name: location.mage_library
+description: location.mage_library.description
+rarity: B
+variety: location_card
+effects:
+  - description:
+      name: Forbidden tomes
+      description: Increases mental by 2
+    modifier:
+      stat: mental
+      value: 2
+  - description:
+      name: Sleepless nights
+      description: Decreases stamina by 1
+    modifier:
+      stat: stamina
+      value: -1

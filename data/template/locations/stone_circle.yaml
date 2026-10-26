@@ -1,0 +1,17 @@
+name: location.stone_circle
+description: location.stone_circle.description
+rarity: C
+variety: location_card
+effects:
+  - description:
+      name: Ley lines
+      description: Increases mental by 1
+    modifier:
+      stat: mental
+      value: 1
+  - description:
+      name: Ley lines
+      description: Increases stamina by 1
+    modifier:
+      stat: stamina
+      value: 1

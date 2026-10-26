@@ -41,3 +41,93 @@ location.village:
   other: "Village"
 location.village.description:
   other: "Un village paisible où les voyageurs peuvent se reposer, commercer et recue"
+
+# Swamp
+location.swamp:
+  other: "Marais"
+location.swamp.description:
+  other: "Un marécage fétide où le sol engloutit les imprudents et où les feux follets égarent les voyageurs."
+
+# Catacombs
+location.catacombs:
+  other: "Catacombes"
+location.catacombs.description:
+  other: "D'interminables tunnels d'ossuaires sous la ville, où les morts ne reposent pas toujours en paix."
+
+# Citadel
+location.citadel:
+  other: "Citadelle"
+location.citadel.description:
+  other: "Une forteresse de pierre grise perchée au-dessus de la vallée, gardée par un ordre de chevaliers vétérans."
+
+# Mage Library
+location.mage_library:
+  other: "Bibliothèque des mages"
+location.mage_library.description:
+  other: "Des rayonnages vertigineux de grimoires dont les livres murmurent à ceux qui s'attardent trop."
+
+# Fairy Forest
+location.fairy_forest:
+  other: "Forêt féerique"
+location.fairy_forest.description:
+  other: "Un bois lumineux où le temps s'écoule étrangement et où les fées marchandent avec les mortels."
+
+# Stone Circle
+location.stone_circle:
+  other: "Cercle de menhirs"
+location.stone_circle.description:
+  other: "D'anciens menhirs qui vibrent d'un pouvoir oublié sous la pleine lune."
+
+# Monastery
+location.monastery:
+  other: "Monastère"
+location.monastery.description:
+  other: "Une retraite silencieuse dans la montagne où des moines cultivent des herbes et gardent de vieux secrets."
+
+# Dwarven Mine
+location.dwarven_mine:
+  other: "Mine naine"
+location.dwarven_mine.description:
+  other: "Des galeries profondes creusées par les nains, riches en minerai et hantées par ce qu'ils ont trouvé trop profond."
+
+# Ash Desert
+location.ash_desert:
+  other: "Désert de cendres"
+location.ash_desert.description:
+  other: "Une étendue grise laissée par une ancienne guerre de dragons, où le vent charrie encore des braises."
+
+# Frozen Tundra
+location.frozen_tundra:
+  other: "Toundra gelée"
+location.frozen_tundra.description:
+  other: "Une étendue blanche sans fin où rôdent les géants du givre et où le soleil se lève à peine."
+
+# Wyvern Nest
+location.wyvern_nest:
+  other: "Nid de wyverne"
+location.wyvern_nest.description:
+  other: "Une falaise battue par les vents, jonchée d'os et des œufs d'une wyverne jalouse."
+
+# Market
+location.market:
+  other: "Marché"
+location.market.description:
+  other: "Un bazar bondé d'épices, de rumeurs et de marchandises volées vendues avec le sourire."
+
+# Battlefield
+location.battlefield:
+  other: "Champ de bataille"
+location.battlefield.description:
+  other: "Une plaine boueuse de bannières brisées où les corbeaux festoient et où les pillards fouillent les morts."
+
+# Elven Sanctuary
+location.elven_sanctuary:
+  other: "Sanctuaire elfique"
+location.elven_sanctuary.description:
+  other: "Une clairière cachée aux arbres d'argent où les elfes gardent la mémoire du premier âge."
+
+# Necromancer Tower
+location.necromancer_tower:
+  other: "Tour du nécromancien"
+location.necromancer_tower.description:
+  other: "Une flèche noire enveloppée de brume, où une liche plie les morts à sa volonté."

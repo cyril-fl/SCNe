@@ -1,0 +1,17 @@
+name: location.swamp
+description: location.swamp.description
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Bog fever
+      description: Decreases health by 1
+    modifier:
+      stat: health
+      value: -1
+  - description:
+      name: Hidden paths
+      description: Increases mental by 1
+    modifier:
+      stat: mental
+      value: 1

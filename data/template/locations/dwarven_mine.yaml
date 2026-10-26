@@ -1,0 +1,17 @@
+name: location.dwarven_mine
+description: location.dwarven_mine.description
+rarity: C
+variety: location_card
+effects:
+  - description:
+      name: Hard labor
+      description: Increases physical by 1
+    modifier:
+      stat: physical
+      value: 1
+  - description:
+      name: Stale air
+      description: Decreases stamina by 1
+    modifier:
+      stat: stamina
+      value: -1

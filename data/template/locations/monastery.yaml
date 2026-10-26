@@ -1,0 +1,17 @@
+name: location.monastery
+description: location.monastery.description
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Meditation
+      description: Increases mental by 1
+    modifier:
+      stat: mental
+      value: 1
+  - description:
+      name: Healing herbs
+      description: Increases health by 1
+    modifier:
+      stat: health
+      value: 1

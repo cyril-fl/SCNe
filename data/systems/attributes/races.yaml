@@ -44,6 +44,36 @@
     - stat: social
       value: -1
 
+- name: race.halfling
+  description: "race.halfling.description"
+  playable: true
+  bonus:
+    - stat: health
+      value: 0
+    - stat: physical
+      value: 0
+    - stat: mental
+      value: 1
+    - stat: stamina
+      value: 2
+    - stat: social
+      value: 2
+
+- name: race.orc
+  description: "race.orc.description"
+  playable: true
+  bonus:
+    - stat: health
+      value: 3
+    - stat: physical
+      value: 3
+    - stat: mental
+      value: -1
+    - stat: stamina
+      value: 1
+    - stat: social
+      value: -1
+
 # Non-playable
 - name: race.slime
   description: "race.slime.description"

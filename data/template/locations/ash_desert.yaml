@@ -1,0 +1,17 @@
+name: location.ash_desert
+description: location.ash_desert.description
+rarity: B
+variety: location_card
+effects:
+  - description:
+      name: Scorching sun
+      description: Decreases health by 2
+    modifier:
+      stat: health
+      value: -2
+  - description:
+      name: Survivor
+      description: Increases stamina by 1
+    modifier:
+      stat: stamina
+      value: 1

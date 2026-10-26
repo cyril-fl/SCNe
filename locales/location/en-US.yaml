@@ -40,3 +40,93 @@ location.village:
   other: "Village"
 location.village.description:
   other: " A peaceful village where travelers can rest, trade, and gather information."
+
+# Swamp
+location.swamp:
+  other: "Swamp"
+location.swamp.description:
+  other: "A fetid marsh where the ground swallows the careless and will-o'-wisps lure travelers astray."
+
+# Catacombs
+location.catacombs:
+  other: "Catacombs"
+location.catacombs.description:
+  other: "Endless ossuary tunnels beneath the city, where the dead do not always stay at rest."
+
+# Citadel
+location.citadel:
+  other: "Citadel"
+location.citadel.description:
+  other: "A fortress of grey stone perched above the valley, guarded by an order of veteran knights."
+
+# Mage Library
+location.mage_library:
+  other: "Mage Library"
+location.mage_library.description:
+  other: "Towering shelves of grimoires where the books whisper to those who linger too long."
+
+# Fairy Forest
+location.fairy_forest:
+  other: "Fairy Forest"
+location.fairy_forest.description:
+  other: "A luminous wood where time flows strangely and the fey bargain with mortals."
+
+# Stone Circle
+location.stone_circle:
+  other: "Stone Circle"
+location.stone_circle.description:
+  other: "Ancient menhirs humming with forgotten power under the full moon."
+
+# Monastery
+location.monastery:
+  other: "Monastery"
+location.monastery.description:
+  other: "A silent mountain retreat where monks tend herb gardens and guard old secrets."
+
+# Dwarven Mine
+location.dwarven_mine:
+  other: "Dwarven Mine"
+location.dwarven_mine.description:
+  other: "Deep galleries carved by dwarves, rich in ore and haunted by what they dug too deep to find."
+
+# Ash Desert
+location.ash_desert:
+  other: "Ash Desert"
+location.ash_desert.description:
+  other: "A grey wasteland left by an ancient dragon war, where the wind still carries embers."
+
+# Frozen Tundra
+location.frozen_tundra:
+  other: "Frozen Tundra"
+location.frozen_tundra.description:
+  other: "An endless white expanse where frost giants roam and the sun barely rises."
+
+# Wyvern Nest
+location.wyvern_nest:
+  other: "Wyvern Nest"
+location.wyvern_nest.description:
+  other: "A wind-lashed cliff littered with bones and the eggs of a jealous wyvern."
+
+# Market
+location.market:
+  other: "Market"
+location.market.description:
+  other: "A crowded bazaar of spices, rumors and stolen goods sold with a smile."
+
+# Battlefield
+location.battlefield:
+  other: "Battlefield"
+location.battlefield.description:
+  other: "A muddy plain of broken banners where crows feast and scavengers search the fallen."
+
+# Elven Sanctuary
+location.elven_sanctuary:
+  other: "Elven Sanctuary"
+location.elven_sanctuary.description:
+  other: "A hidden glade of silver trees where elves keep the memory of the first age."
+
+# Necromancer Tower
+location.necromancer_tower:
+  other: "Necromancer Tower"
+location.necromancer_tower.description:
+  other: "A black spire wrapped in fog, where a lich bends the dead to its will."

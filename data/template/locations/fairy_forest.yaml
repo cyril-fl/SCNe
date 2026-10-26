@@ -1,0 +1,17 @@
+name: location.fairy_forest
+description: location.fairy_forest.description
+rarity: A
+variety: location_card
+effects:
+  - description:
+      name: Fey blessing
+      description: Increases stamina by 2
+    modifier:
+      stat: stamina
+      value: 2
+  - description:
+      name: Glamour
+      description: Increases social by 1
+    modifier:
+      stat: social
+      value: 1

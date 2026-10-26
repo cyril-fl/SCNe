@@ -1,0 +1,17 @@
+name: location.necromancer_tower
+description: location.necromancer_tower.description
+rarity: S
+variety: location_card
+effects:
+  - description:
+      name: Deathly aura
+      description: Decreases health by 2
+    modifier:
+      stat: health
+      value: -2
+  - description:
+      name: Dark knowledge
+      description: Increases mental by 2
+    modifier:
+      stat: mental
+      value: 2

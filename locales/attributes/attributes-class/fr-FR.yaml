@@ -11,3 +11,9 @@ class.merchant:
   other: "marchand"
 class.beast:
   other: "bête"
+class.paladin:
+  other: "paladin"
+class.ranger:
+  other: "rôdeur"
+class.cleric:
+  other: "clerc"

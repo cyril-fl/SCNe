@@ -24,3 +24,15 @@ race.slime:
   other: "slime"
 race.slime.description:
   other: "Slimes are amorphous creatures that can take on various shapes and sizes."
+
+# Halflings
+race.halfling:
+  other: "halfling"
+race.halfling.description:
+  other: "Halflings are small, cheerful folk who love comfort and good food. Their luck and nimbleness often get them out of the worst situations."
+
+# Orcs
+race.orc:
+  other: "orc"
+race.orc.description:
+  other: "Orcs are fierce and proud warriors from the wild steppes. Feared for their strength, they value honor earned in battle above all else."

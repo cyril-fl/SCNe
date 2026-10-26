@@ -1,2 +1,205 @@
 hint.roll:result:
   other: "Indices: {{.Value}}"
+
+hint.fantasy:
+  other: "Fantasy"
+hint.fantasy.dragon:
+  other: "dragon"
+hint.fantasy.grimoire:
+  other: "grimoire"
+hint.fantasy.enchanter:
+  other: "enchanteur"
+hint.fantasy.gargoyle:
+  other: "gargouille"
+hint.fantasy.unicorn:
+  other: "licorne"
+hint.fantasy.palace:
+  other: "palais"
+hint.fantasy.catacombs:
+  other: "catacombes"
+hint.fantasy.fairy_forest:
+  other: "forêt féerique"
+hint.fantasy.golem:
+  other: "golem"
+hint.fantasy.amulet:
+  other: "amulette"
+hint.fantasy.necromancer:
+  other: "nécromancien"
+hint.fantasy.citadel:
+  other: "citadelle"
+hint.fantasy.wyvern:
+  other: "wyverne"
+hint.fantasy.druid:
+  other: "druide"
+hint.fantasy.menhir:
+  other: "menhir"
+hint.fantasy.swamp:
+  other: "marais"
+hint.fantasy.phylactery:
+  other: "phylactère"
+hint.fantasy.kobold:
+  other: "kobold"
+hint.fantasy.oracle:
+  other: "oracle"
+hint.fantasy.curse:
+  other: "malédiction"
+hint.fantasy.griffin:
+  other: "griffon"
+hint.fantasy.monastery:
+  other: "monastère"
+hint.fantasy.rune:
+  other: "rune"
+hint.fantasy.giant:
+  other: "géant"
+hint.fantasy.portal:
+  other: "portail"
+hint.fantasy.witch:
+  other: "sorcière"
+hint.fantasy.basilisk:
+  other: "basilic"
+hint.fantasy.tavern:
+  other: "taverne"
+hint.fantasy.covenant:
+  other: "pacte"
+hint.fantasy.elf:
+  other: "elfe"
+hint.fantasy.castle:
+  other: "château"
+hint.fantasy.specter:
+  other: "spectre"
+hint.fantasy.rune_sword:
+  other: "épée runique"
+hint.fantasy.fountain:
+  other: "fontaine"
+hint.fantasy.demon:
+  other: "démon"
+hint.fantasy.caravan:
+  other: "caravane"
+hint.fantasy.potion:
+  other: "potion"
+hint.fantasy.vampire:
+  other: "vampire"
+hint.fantasy.sanctuary:
+  other: "sanctuaire"
+hint.fantasy.familiar:
+  other: "familier"
+hint.fantasy.labyrinth:
+  other: "labyrinthe"
+hint.fantasy.paladin:
+  other: "paladin"
+hint.fantasy.hydra:
+  other: "hydre"
+hint.fantasy.crown:
+  other: "couronne"
+hint.fantasy.prophecy:
+  other: "prophétie"
+hint.fantasy.village:
+  other: "village"
+hint.fantasy.dryad:
+  other: "dryade"
+hint.fantasy.tomb:
+  other: "tombeau"
+hint.fantasy.spell:
+  other: "sortilège"
+hint.fantasy.minotaur:
+  other: "minotaure"
+hint.fantasy.observatory:
+  other: "observatoire"
+hint.fantasy.barbarian:
+  other: "barbare"
+hint.fantasy.phoenix:
+  other: "phénix"
+hint.fantasy.crypt:
+  other: "crypte"
+hint.fantasy.relic:
+  other: "relique"
+hint.fantasy.goblin:
+  other: "gobelin"
+hint.fantasy.barrel:
+  other: "tonneau"
+hint.fantasy.mermaid:
+  other: "sirène"
+hint.fantasy.magic_tower:
+  other: "tour magique"
+hint.fantasy.priest:
+  other: "prêtre"
+hint.fantasy.wyrm:
+  other: "guivre"
+hint.fantasy.library:
+  other: "bibliothèque"
+hint.fantasy.dagger:
+  other: "dague"
+hint.fantasy.stone_giant:
+  other: "géant de pierre"
+hint.fantasy.fairy:
+  other: "fée"
+hint.fantasy.altar:
+  other: "autel"
+hint.fantasy.knight:
+  other: "chevalier"
+hint.fantasy.medallion:
+  other: "médaillon"
+hint.fantasy.banshee:
+  other: "banshee"
+hint.fantasy.forge:
+  other: "forge"
+hint.fantasy.dwarves:
+  other: "nains"
+hint.fantasy.mine:
+  other: "mine"
+hint.fantasy.crystal:
+  other: "cristal"
+hint.fantasy.djinn:
+  other: "djinn"
+hint.fantasy.cemetery:
+  other: "cimetière"
+hint.fantasy.herbalist:
+  other: "herboriste"
+hint.fantasy.scar:
+  other: "cicatrice"
+hint.fantasy.throne:
+  other: "trône"
+hint.fantasy.raven:
+  other: "corbeau"
+hint.fantasy.fog:
+  other: "brouillard"
+hint.fantasy.ruins:
+  other: "ruines"
+hint.fantasy.assassin:
+  other: "assassin"
+hint.fantasy.mandrake:
+  other: "mandragore"
+hint.fantasy.bridge:
+  other: "pont"
+hint.fantasy.stone_circle:
+  other: "cercle de pierres"
+hint.fantasy.mercenary:
+  other: "mercenaire"
+hint.fantasy.leviathan:
+  other: "léviathan"
+hint.fantasy.scroll:
+  other: "parchemin"
+hint.fantasy.mask:
+  other: "masque"
+hint.fantasy.famine:
+  other: "famine"
+hint.fantasy.ball:
+  other: "bal"
+hint.fantasy.fortress:
+  other: "forteresse"
+hint.fantasy.astrolabe:
+  other: "astrolabe"
+hint.fantasy.hunt:
+  other: "chasse"
+hint.fantasy.lightning:
+  other: "foudre"
+hint.fantasy.oath:
+  other: "serment"
+hint.fantasy.pack:
+  other: "meute"
+hint.fantasy.ritual:
+  other: "rituel"
+hint.fantasy.apparition:
+  other: "apparition"
+hint.fantasy.eclipse:
+  other: "éclipse"

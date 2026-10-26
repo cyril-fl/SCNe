@@ -1,2 +1,205 @@
 hint.roll:result:
   other: "Hint: {{.Value}}"
+
+hint.fantasy:
+  other: "Fantasy"
+hint.fantasy.dragon:
+  other: "dragon"
+hint.fantasy.grimoire:
+  other: "grimoire"
+hint.fantasy.enchanter:
+  other: "enchanter"
+hint.fantasy.gargoyle:
+  other: "gargoyle"
+hint.fantasy.unicorn:
+  other: "unicorn"
+hint.fantasy.palace:
+  other: "palace"
+hint.fantasy.catacombs:
+  other: "catacombs"
+hint.fantasy.fairy_forest:
+  other: "fairy forest"
+hint.fantasy.golem:
+  other: "golem"
+hint.fantasy.amulet:
+  other: "amulet"
+hint.fantasy.necromancer:
+  other: "necromancer"
+hint.fantasy.citadel:
+  other: "citadel"
+hint.fantasy.wyvern:
+  other: "wyvern"
+hint.fantasy.druid:
+  other: "druid"
+hint.fantasy.menhir:
+  other: "menhir"
+hint.fantasy.swamp:
+  other: "swamp"
+hint.fantasy.phylactery:
+  other: "phylactery"
+hint.fantasy.kobold:
+  other: "kobold"
+hint.fantasy.oracle:
+  other: "oracle"
+hint.fantasy.curse:
+  other: "curse"
+hint.fantasy.griffin:
+  other: "griffin"
+hint.fantasy.monastery:
+  other: "monastery"
+hint.fantasy.rune:
+  other: "rune"
+hint.fantasy.giant:
+  other: "giant"
+hint.fantasy.portal:
+  other: "portal"
+hint.fantasy.witch:
+  other: "witch"
+hint.fantasy.basilisk:
+  other: "basilisk"
+hint.fantasy.tavern:
+  other: "tavern"
+hint.fantasy.covenant:
+  other: "covenant"
+hint.fantasy.elf:
+  other: "elf"
+hint.fantasy.castle:
+  other: "castle"
+hint.fantasy.specter:
+  other: "specter"
+hint.fantasy.rune_sword:
+  other: "rune sword"
+hint.fantasy.fountain:
+  other: "fountain"
+hint.fantasy.demon:
+  other: "demon"
+hint.fantasy.caravan:
+  other: "caravan"
+hint.fantasy.potion:
+  other: "potion"
+hint.fantasy.vampire:
+  other: "vampire"
+hint.fantasy.sanctuary:
+  other: "sanctuary"
+hint.fantasy.familiar:
+  other: "familiar"
+hint.fantasy.labyrinth:
+  other: "labyrinth"
+hint.fantasy.paladin:
+  other: "paladin"
+hint.fantasy.hydra:
+  other: "hydra"
+hint.fantasy.crown:
+  other: "crown"
+hint.fantasy.prophecy:
+  other: "prophecy"
+hint.fantasy.village:
+  other: "village"
+hint.fantasy.dryad:
+  other: "dryad"
+hint.fantasy.tomb:
+  other: "tomb"
+hint.fantasy.spell:
+  other: "spell"
+hint.fantasy.minotaur:
+  other: "minotaur"
+hint.fantasy.observatory:
+  other: "observatory"
+hint.fantasy.barbarian:
+  other: "barbarian"
+hint.fantasy.phoenix:
+  other: "phoenix"
+hint.fantasy.crypt:
+  other: "crypt"
+hint.fantasy.relic:
+  other: "relic"
+hint.fantasy.goblin:
+  other: "goblin"
+hint.fantasy.barrel:
+  other: "barrel"
+hint.fantasy.mermaid:
+  other: "mermaid"
+hint.fantasy.magic_tower:
+  other: "magic tower"
+hint.fantasy.priest:
+  other: "priest"
+hint.fantasy.wyrm:
+  other: "wyrm"
+hint.fantasy.library:
+  other: "library"
+hint.fantasy.dagger:
+  other: "dagger"
+hint.fantasy.stone_giant:
+  other: "stone giant"
+hint.fantasy.fairy:
+  other: "fairy"
+hint.fantasy.altar:
+  other: "altar"
+hint.fantasy.knight:
+  other: "knight"
+hint.fantasy.medallion:
+  other: "medallion"
+hint.fantasy.banshee:
+  other: "banshee"
+hint.fantasy.forge:
+  other: "forge"
+hint.fantasy.dwarves:
+  other: "dwarves"
+hint.fantasy.mine:
+  other: "mine"
+hint.fantasy.crystal:
+  other: "crystal"
+hint.fantasy.djinn:
+  other: "djinn"
+hint.fantasy.cemetery:
+  other: "cemetery"
+hint.fantasy.herbalist:
+  other: "herbalist"
+hint.fantasy.scar:
+  other: "scar"
+hint.fantasy.throne:
+  other: "throne"
+hint.fantasy.raven:
+  other: "raven"
+hint.fantasy.fog:
+  other: "fog"
+hint.fantasy.ruins:
+  other: "ruins"
+hint.fantasy.assassin:
+  other: "assassin"
+hint.fantasy.mandrake:
+  other: "mandrake"
+hint.fantasy.bridge:
+  other: "bridge"
+hint.fantasy.stone_circle:
+  other: "stone circle"
+hint.fantasy.mercenary:
+  other: "mercenary"
+hint.fantasy.leviathan:
+  other: "leviathan"
+hint.fantasy.scroll:
+  other: "scroll"
+hint.fantasy.mask:
+  other: "mask"
+hint.fantasy.famine:
+  other: "famine"
+hint.fantasy.ball:
+  other: "ball"
+hint.fantasy.fortress:
+  other: "fortress"
+hint.fantasy.astrolabe:
+  other: "astrolabe"
+hint.fantasy.hunt:
+  other: "hunt"
+hint.fantasy.lightning:
+  other: "lightning"
+hint.fantasy.oath:
+  other: "oath"
+hint.fantasy.pack:
+  other: "pack"
+hint.fantasy.ritual:
+  other: "ritual"
+hint.fantasy.apparition:
+  other: "apparition"
+hint.fantasy.eclipse:
+  other: "eclipse"

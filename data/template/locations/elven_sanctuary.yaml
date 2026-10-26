@@ -1,0 +1,17 @@
+name: location.elven_sanctuary
+description: location.elven_sanctuary.description
+rarity: S
+variety: location_card
+effects:
+  - description:
+      name: Starlight
+      description: Increases mental by 2
+    modifier:
+      stat: mental
+      value: 2
+  - description:
+      name: Elven grace
+      description: Increases social by 1
+    modifier:
+      stat: social
+      value: 1

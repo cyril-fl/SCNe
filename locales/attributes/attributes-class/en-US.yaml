@@ -13,3 +13,9 @@ class.beast:
   other: "beast"
 
   
+class.paladin:
+  other: "paladin"
+class.ranger:
+  other: "ranger"
+class.cleric:
+  other: "cleric"

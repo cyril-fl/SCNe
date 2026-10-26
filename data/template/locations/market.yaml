@@ -1,0 +1,11 @@
+name: location.market
+description: location.market.description
+rarity: E
+variety: location_card
+effects:
+  - description:
+      name: Haggling
+      description: Increases social by 2
+    modifier:
+      stat: social
+      value: 2

@@ -1,0 +1,11 @@
+name: location.citadel
+description: location.citadel.description
+rarity: B
+variety: location_card
+effects:
+  - description:
+      name: Garrison drills
+      description: Increases physical by 2
+    modifier:
+      stat: physical
+      value: 2

@@ -41,7 +41,49 @@
     - stat: social
       value: 2
   armor_set: adventurer
-  
+- name: class.paladin
+  playable: true
+  bonus:
+    - stat: health
+      value: 3
+    - stat: physical
+      value: 2
+    - stat: mental
+      value: 1
+    - stat: stamina
+      value: 0
+    - stat: social
+      value: 2
+  armor_set: adventurer
+- name: class.ranger
+  playable: true
+  bonus:
+    - stat: health
+      value: 1
+    - stat: physical
+      value: 3
+    - stat: mental
+      value: 1
+    - stat: stamina
+      value: 3
+    - stat: social
+      value: -1
+  armor_set: adventurer
+- name: class.cleric
+  playable: true
+  bonus:
+    - stat: health
+      value: 2
+    - stat: physical
+      value: -1
+    - stat: mental
+      value: 3
+    - stat: stamina
+      value: 1
+    - stat: social
+      value: 2
+  armor_set: adventurer
+
 # Non-playable races
 - name: class.merchant
   playable: false

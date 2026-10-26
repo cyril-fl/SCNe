@@ -1,0 +1,17 @@
+name: location.battlefield
+description: location.battlefield.description
+rarity: D
+variety: location_card
+effects:
+  - description:
+      name: Scars of war
+      description: Decreases health by 1
+    modifier:
+      stat: health
+      value: -1
+  - description:
+      name: Battle-hardened
+      description: Increases physical by 1
+    modifier:
+      stat: physical
+      value: 1
