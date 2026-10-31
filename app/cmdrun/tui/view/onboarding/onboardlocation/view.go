@@ -40,9 +40,7 @@ func (m *model) SetSectionSize(size size.Size) {
 }
 
 func (m *model) GetSidepanel() []string {
-	return []string{
-		"Sidepanel content",
-	}
+	return []string{}
 }
 
 func (m *model) GetFooter() []string {
