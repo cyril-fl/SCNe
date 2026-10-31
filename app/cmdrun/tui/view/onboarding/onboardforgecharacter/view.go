@@ -2,6 +2,7 @@ package onboardforgecharacter
 
 import (
 	"fmt"
+	"scne/app/cmdrun/tui/shortcut"
 	"scne/app/cmdrun/types/size"
 	"scne/app/shared/components/layout/header"
 	"scne/app/shared/services/i19n"
@@ -44,7 +45,7 @@ func (m *model) GetSidepanel() []string {
 
 func (m *model) GetFooter() []string {
 	return []string{
-		"Enter: select",
+		shortcut.SELECT.String(),
 	}
 }
 
