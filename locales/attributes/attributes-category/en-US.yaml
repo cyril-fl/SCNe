@@ -1,0 +1,8 @@
+category.object:
+  other: "object"
+category.weapon:
+  other: "weapon"
+category.armor:
+  other: "armor"
+category.potion:
+  other: "potion"

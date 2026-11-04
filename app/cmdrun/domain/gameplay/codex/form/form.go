@@ -105,7 +105,7 @@ func GetObjectForm(values map[string]string) *form.Form {
 	}
 
 	for _, i := range objectcategory.List() {
-		categoryItems = append(categoryItems, models.NewItem(i19n.Localize(i.String()), "", i.String()))
+		categoryItems = append(categoryItems, models.NewItem(i19n.Localize("category."+i.String()), "", i.String()))
 	}
 
 	return form.New(
