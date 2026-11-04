@@ -3,6 +3,7 @@ package form
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 	"testing"
 
@@ -176,6 +177,48 @@ func TestFormGetFieldScrollArea(t *testing.T) {
 	f.focusOnIndex(1)
 	if top, height := f.GetFieldScrollArea(vp); top != 1 || height != 1 {
 		t.Fatalf("GetFieldScrollArea() = %d, %d; want 1, 1", top, height)
+	}
+}
+
+func TestFormScrollsToFocusedField(t *testing.T) {
+	f := New(&testField{id: "a"}, &testField{id: "b"}, &testField{id: "c"}, Repeat(RepeatTemplate{
+		ID: "effect",
+		Make: func(index int) []Field {
+			return []Field{&testField{id: fmt.Sprintf("group%d", index)}}
+		},
+		Count: 2,
+	})).SetHeight(2).Focus()
+
+	for _, step := range []struct {
+		msg  tea.Msg
+		want []string
+	}{
+		{nil, []string{"view:a", "view:b"}},
+		{NextField{}, []string{"view:a", "view:b"}},
+		{NextField{}, []string{"view:b", "view:c"}},
+		{NextField{}, []string{"view:c", "view:group0"}},
+		{NextField{}, []string{"view:group0", "view:group1"}},
+		{PreviousField{}, []string{"view:group0", "view:group1"}},
+		{PreviousField{}, []string{"view:c", "view:group0"}},
+	} {
+		if step.msg != nil {
+			f.Update(step.msg)
+		}
+		lines := strings.Split(f.View().Content, "\n")
+		for i := range lines {
+			lines[i] = strings.TrimSpace(lines[i])
+		}
+		if !slices.Equal(lines, step.want) {
+			t.Fatalf("after %#v view = %q, want %q", step.msg, lines, step.want)
+		}
+	}
+}
+
+func TestFormWithoutHeightShowsEveryField(t *testing.T) {
+	f, _, _ := testForm()
+
+	if got := strings.Count(f.View().Content, "view:"); got != 2 {
+		t.Fatalf("view shows %d fields, want 2", got)
 	}
 }
 

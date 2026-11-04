@@ -6,6 +6,7 @@ import (
 	"maps"
 	"scne/app/shared/services/logs"
 
+	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
 )
@@ -18,6 +19,8 @@ type Form struct {
 	sendKey    plumtypes.Key
 	fields     []Field
 	autoSubmit bool
+	height     int
+	view       viewport.Model
 }
 
 // Makefunc builds a form prefilled from a value map keyed by field ID.
@@ -32,6 +35,7 @@ func new() *Form {
 	return &Form{
 		fields:     make([]Field, 0),
 		autoSubmit: true,
+		view:       viewport.New(),
 	}
 }
 
@@ -77,6 +81,12 @@ func (m *Form) SetWidth(width int) *Form {
 			resizable.SetWidth(width)
 		}
 	}
+	return m
+}
+
+// SetHeight sets the visible height: a taller form scrolls to its focused field.
+func (m *Form) SetHeight(height int) *Form {
+	m.height = height
 	return m
 }
 

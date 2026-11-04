@@ -60,7 +60,7 @@ func (p *actionPage) SetSize(s size.Size) {
 	if p.form == nil {
 		p.form = p.newForm()
 	}
-	p.form.SetWidth(s.GetWidth())
+	p.form.SetWidth(s.GetWidth()).SetHeight(s.GetHeight())
 }
 
 // Methods

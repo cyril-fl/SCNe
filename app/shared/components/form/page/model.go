@@ -136,13 +136,16 @@ func (p *Page) SetFocus(focused bool) {
 	models.SetListFocus(p.GetList(), focused)
 }
 
-// SetSize sets the list width; its height fits the content.
+// SetSize sets the list width and the open form height; the list height fits its content.
 func (p *Page) SetSize(s size.Size) {
 	list := p.GetList()
 	p.SetListSize(size.Template{
 		Width:  s.GetWidth(),
 		Height: models.ListContentHeight(list),
 	})
+	if p.form != nil {
+		p.form.SetHeight(s.GetHeight())
+	}
 }
 
 // IsFormOpen reports whether a form is open.

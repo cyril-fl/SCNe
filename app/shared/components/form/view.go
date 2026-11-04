@@ -22,8 +22,26 @@ func (m *Form) View() tea.View {
 	}
 
 	return tea.NewView(
-		lipgloss.JoinVertical(lipgloss.Left, contents...),
+		m.scrollToFocus(lipgloss.JoinVertical(lipgloss.Left, contents...)),
 	)
+}
+
+// scrollToFocus returns content cut to the form height, moved only as far as needed to show the focused field.
+func (m *Form) scrollToFocus(content string) string {
+	if m.height <= 0 || lipgloss.Height(content) <= m.height {
+		return content
+	}
+
+	m.view.SetWidth(lipgloss.Width(content))
+	m.view.SetHeight(m.height)
+	m.view.SetContent(content)
+
+	if top, height := m.GetFieldScrollArea(m.view); top >= 0 {
+		// The top wins when the field is taller than the form.
+		m.view.SetYOffset(min(top, max(m.view.YOffset(), top+height-m.height)))
+	}
+
+	return m.view.View()
 }
 
 // GetFieldScrollArea returns the top offset and height of the focused field in viewport.
@@ -38,6 +56,11 @@ func (m *Form) GetFieldScrollArea(viewport viewport.Model) (int, int) {
 		if !field.IsFocused() {
 			top += height
 			continue
+		}
+
+		if repeat, ok := field.(*repeatField); ok {
+			innerTop, innerHeight := repeat.group.GetFieldScrollArea(viewport)
+			return top + innerTop, innerHeight
 		}
 
 		if m.HasErr() {
