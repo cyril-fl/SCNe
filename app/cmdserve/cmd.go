@@ -2,6 +2,7 @@ package cmdserve
 
 import (
 	"scne/app/cmdserve/service/process/cmdserverunsession"
+	"scne/app/shared/services/i19n"
 	"scne/app/shared/services/logs"
 	"scne/app/shared/services/mango"
 	"scne/app/shared/services/mango/repository"
@@ -16,7 +17,7 @@ func RunCmdServe(cobra *cobra.Command, args []string) error {
 
 	log := logs.New(logs.Template{
 		Type:    logs.SUCC,
-		Message: "🥭 DB MongoDB connected successfully.",
+		Message: i19n.Localize("succes.mongo:connect"),
 	})
 	lipgloss.Println(log.String())
 
