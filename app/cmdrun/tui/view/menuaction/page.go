@@ -74,6 +74,10 @@ func (p *actionPage) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case form.Validate:
 		return p.handleValidate()
+	case form.Close:
+		// A render before this message rebuilds the form through SetSize: drop it so the next opening is fresh.
+		p.form = nil
+		return nil
 	case tea.KeyPressMsg:
 		return p.handleKeyPress(msg)
 	default:

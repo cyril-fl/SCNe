@@ -1,6 +1,7 @@
 package menuaction
 
 import (
+	"strings"
 	"testing"
 
 	"scne/app/cmdrun/types/size"
@@ -52,6 +53,31 @@ func TestPageValidateSubmitsAndCloses(t *testing.T) {
 	}
 	if cmd == nil || page.GetView() != "" {
 		t.Fatal("expected a close command and the form to be dropped")
+	}
+}
+
+func TestPageReopensWithCurrentOptions(t *testing.T) {
+	option := "first"
+	page := newPage(PageTemplate{
+		NewForm: func() *form.Form {
+			return form.New(
+				field.SelectField(field.SelectTemplate[string]{Template: field.Template[string]{ID: "choice", Required: true}, Options: []models.Item[string]{models.NewItem(option, "", option)}}),
+			).Focus()
+		},
+	})
+	pageSize := size.New(size.Template{Width: 40, Height: 20})
+	page.SetSize(pageSize)
+
+	closing := page.Update(tea.KeyPressMsg{Code: tea.KeyEscape})
+	// The layout resizes the current view on each render, before form.Close is handled.
+	page.SetSize(pageSize)
+	page.Update(closing())
+
+	option = "second"
+	page.SetSize(pageSize)
+
+	if view := page.GetView(); !strings.Contains(view, "Second") {
+		t.Fatalf("reopened form does not list the new option:\n%s", view)
 	}
 }
 
