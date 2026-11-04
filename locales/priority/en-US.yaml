@@ -2,6 +2,6 @@ priority.low:
   other: "Low"
 priority.medium:
   other: "Medium"
-priority.hight:
+priority.high:
   other: "High"
 
