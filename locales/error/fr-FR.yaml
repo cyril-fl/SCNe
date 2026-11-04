@@ -75,3 +75,39 @@ unexpected:action.load_campaigns:
   other: "chargement des campagnes"
 unexpected:action.roll:
   other: "lancer de dés"
+
+# Subjects
+archives:
+  other: "archives"
+article:
+  other: "article"
+category:
+  other: "catégorie"
+encounter:
+  other: "rencontre"
+field:
+  other: "champ"
+gear:
+  other: "équipement"
+item:
+  other: "objet"
+list:
+  other: "liste"
+npcs:
+  other: "PNJ"
+objectives:
+  other: "objectifs"
+priority:
+  other: "priorité"
+rank:
+  other: "rang"
+rarity:
+  other: "rareté"
+slot:
+  other: "emplacement"
+stat:
+  other: "statistique"
+string:
+  other: "texte"
+variety:
+  other: "variété"

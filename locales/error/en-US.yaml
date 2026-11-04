@@ -75,3 +75,39 @@ unexpected:action.load_campaigns:
   other: "loading campaigns"
 unexpected:action.roll:
   other: "rolling dice"
+
+# Subjects
+archives:
+  other: "archives"
+article:
+  other: "article"
+category:
+  other: "category"
+encounter:
+  other: "encounter"
+field:
+  other: "field"
+gear:
+  other: "gear"
+item:
+  other: "item"
+list:
+  other: "list"
+npcs:
+  other: "NPCs"
+objectives:
+  other: "objectives"
+priority:
+  other: "priority"
+rank:
+  other: "rank"
+rarity:
+  other: "rarity"
+slot:
+  other: "slot"
+stat:
+  other: "stat"
+string:
+  other: "text"
+variety:
+  other: "variety"
