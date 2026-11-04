@@ -26,6 +26,8 @@ leave:
   other: "quitter"
 new:
   other: "nouveau"
+edit:
+  other: "modifier"
 
 # Options
 accept:

@@ -26,6 +26,8 @@ leave:
   other: "leave"
 new:
   other: "new"
+edit:
+  other: "edit"
 
 # Options
 accept:
