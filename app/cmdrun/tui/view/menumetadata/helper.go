@@ -3,6 +3,7 @@ package menumetadata
 import (
 	"fmt"
 	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/characters/races"
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/shared/components/navigation"
 	"scne/app/shared/services/i19n"
@@ -19,6 +20,7 @@ func NewSection(gameSession *session.GameSession) *navigation.Section {
 			var content strings.Builder
 			GetCharacterInfo(&content, gameSession)
 			GetLocationInfo(&content, gameSession)
+			GetWalletInfo(&content, gameSession)
 			GetStatInfo(&content, gameSession)
 
 			return strings.TrimRight(content.String(), "\n")
@@ -26,57 +28,63 @@ func NewSection(gameSession *session.GameSession) *navigation.Section {
 	})
 }
 
-// GetCharacterInfo writes the player name line to content.
+// GetCharacterInfo writes the player name, class and race lines to content.
 func GetCharacterInfo(content *strings.Builder, gameSession *session.GameSession) {
-	var characterName = plumtransform.Uppercase(i19n.Localize("character"))
-
-	state := getState(gameSession)
-	isPlayerNil := state.Player == nil
-
-	switch {
-	case isPlayerNil:
-		fmt.Fprintf(content, "%s", characterName)
-	default:
-		fmt.Fprintf(content, "%s %s", characterName, i19n.Localize(state.Player.GetName()))
+	player := getState(gameSession).Player
+	if player == nil {
+		return
 	}
 
-	content.WriteString("\n")
+	writeLine(content, "name", i19n.Localize(player.GetName()))
+	writeLine(content, "class", plumtransform.Capitalize(i19n.Localize(player.Class)))
+	writeLine(content, "race", plumtransform.Capitalize(i19n.Localize(races.NameOf(player.Race))))
 }
 
 // GetLocationInfo writes the current location line to content.
 func GetLocationInfo(content *strings.Builder, gameSession *session.GameSession) {
-	var locationName = plumtransform.Uppercase(i19n.Localize("location"))
-
-	state := getState(gameSession)
-	isLocationNil := state.CurrentLocation == nil
-
-	switch {
-	case isLocationNil:
-		fmt.Fprintf(content, "%s %s", locationName, plumtransform.Capitalize(i19n.Localize("unknown_place")))
-	default:
-		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(state.CurrentLocation.GetName()))
+	location := getState(gameSession).CurrentLocation
+	if location == nil {
+		writeLine(content, "location", plumtransform.Capitalize(i19n.Localize("unknown_place")))
+		return
 	}
 
-	content.WriteString("\n")
+	writeLine(content, "location", i19n.Localize(location.GetName()))
 }
 
-// GetStatInfo writes the player stats to content, one per line.
+// GetWalletInfo writes the player wallet line to content.
+func GetWalletInfo(content *strings.Builder, gameSession *session.GameSession) {
+	player := getState(gameSession).Player
+	if player == nil {
+		return
+	}
+
+	writeLine(content, "wallet", i19n.Localize("wallet.entry", map[string]any{
+		"Gold":   player.Wallet.Gold,
+		"Silver": player.Wallet.Silver,
+		"Copper": player.Wallet.Copper,
+	}))
+}
+
+// GetStatInfo writes the player stats to content, two per line.
 func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
-	content.WriteString(plumtransform.Uppercase(i19n.Localize("stats")))
+	content.WriteString("\n")
+	content.WriteString(plumtransform.Capitalize(i19n.Localize("stats")))
 	content.WriteString("\n")
 
-	state := getState(gameSession)
-	isPlayerNil := state.Player == nil
-
-	switch {
-	case isPlayerNil:
+	player := getState(gameSession).Player
+	if player == nil {
 		content.WriteString(i19n.Localize("stats.entry:unknown"))
-	default:
-		for _, stat := range stats.List() {
-			key := "stat." + string(stat)
-			label := plumtransform.Capitalize(i19n.Localize(key))
-			fmt.Fprintf(content, "%-10s %d\n", label, state.Player.Stats[stat])
+		return
+	}
+
+	for i, stat := range stats.List() {
+		if i%2 == 1 {
+			content.WriteString("   ")
+		} else if i > 0 {
+			content.WriteString("\n")
 		}
+		label := plumtransform.Capitalize(i19n.Localize("stat." + string(stat)))
+		fmt.Fprintf(content, "%-10s%2d", label, player.Stats[stat])
 	}
 }
 
@@ -89,4 +97,8 @@ func getState(gameSession *session.GameSession) *session.SessionState {
 		return &session.SessionState{}
 	}
 	return gameSession.State
+}
+
+func writeLine(content *strings.Builder, labelID, value string) {
+	fmt.Fprintf(content, "%-9s%s\n", plumtransform.Capitalize(i19n.Localize(labelID)), value)
 }

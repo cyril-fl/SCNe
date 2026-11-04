@@ -71,6 +71,12 @@ unknown_place:
 metadata:
   other: "métadonnées"
 
+# --- Wallet ---
+wallet:
+  other: "bourse"
+wallet.entry:
+  other: "{{.Gold}} po · {{.Silver}} pa · {{.Copper}} pc"
+
 # --- Oracles ---
 oracles:
   other: "oracles"
