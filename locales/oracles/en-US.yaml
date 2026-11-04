@@ -3,7 +3,7 @@ oracles.roll:result:
 
 # --- Name ---
 # Base
-oracle.likely:
+oracles.likely:
   other: "Likely"
 oracles.unlikely:
   other: "Unlikely"
