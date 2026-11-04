@@ -55,6 +55,8 @@ error.unexpected:value:
 # Unexpected actions
 unexpected:action.build_engine:
   other: "construction du moteur"
+unexpected:action.build_session:
+  other: "construction de la session"
 property.name:
   other: "nom"
 property.description:

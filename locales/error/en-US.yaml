@@ -63,6 +63,8 @@ property.race:
   other: "race"
 property.class:
   other: "class"
+unexpected:action.build_session:
+  other: "building session"
 unexpected:action.logs:filter:
   other: "logs filter"
 unexpected:action.logs:display:
