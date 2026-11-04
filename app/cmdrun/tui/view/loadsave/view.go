@@ -4,12 +4,13 @@ import (
 	"scne/app/cmdrun/tui/shortcut"
 	"scne/app/cmdrun/types/size"
 	"scne/app/shared/components/layout/header"
+	"scne/app/shared/services/i19n"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 func (m model) View() tea.View {
-	msg := "404 - Not Found"
+	msg := i19n.Localize("view.not_found")
 	return tea.NewView(msg)
 }
 

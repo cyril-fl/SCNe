@@ -55,3 +55,5 @@ system.msg:init:
   other: "Moteur de jeu initialisé. Bienvenue dans SCNe !"
 system.msg:quit:
   other: "Vous avez quitté le jeu."
+view.not_found:
+  other: "404 - Page introuvable"

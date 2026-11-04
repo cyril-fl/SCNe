@@ -12,6 +12,7 @@ import (
 	"scne/app/shared/components/navigation"
 	"scne/app/shared/messages"
 	"scne/app/shared/services/factory/millroll"
+	"scne/app/shared/services/i19n"
 	"scne/app/shared/services/statemachine"
 	interfass "scne/app/shared/types/interface"
 
@@ -25,7 +26,7 @@ const CHAT_SECTION state = "chat"
 const COMBAT_SECTION state = menuaction.COMBAT_PAGE
 
 func (m model) View() tea.View {
-	msg := "404 - Not Found"
+	msg := i19n.Localize("view.not_found")
 	return tea.NewView(msg)
 }
 

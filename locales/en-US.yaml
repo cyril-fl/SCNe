@@ -55,3 +55,5 @@ system.msg:init:
   other: "Game engine initialized. Welcome to SCNe!"
 system.msg:quit:
   other: "You have exited the game."
+view.not_found:
+  other: "404 - Not Found"

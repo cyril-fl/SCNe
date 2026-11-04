@@ -15,7 +15,7 @@ import (
 )
 
 func (m model) View() tea.View {
-	msg := "404 - Not Found"
+	msg := i19n.Localize("view.not_found")
 	return tea.NewView(msg)
 }
 
