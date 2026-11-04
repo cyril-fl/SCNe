@@ -33,3 +33,5 @@ field.opponent:
   other: "adversaire"
 field.location:
   other: "lieu"
+field.none:
+  other: "Aucune"

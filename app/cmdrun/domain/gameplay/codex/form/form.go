@@ -223,5 +223,5 @@ func getFormClassOptions() []models.Item[string] {
 	for _, value := range classes.List() {
 		items = append(items, models.NewItem(i19n.Localize(value.GetName()), "", value.GetName()))
 	}
-	return append(items, models.NewItem("None", "", ""))
+	return append(items, models.NewItem(i19n.Localize("field.none"), "", ""))
 }
