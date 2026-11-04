@@ -9,6 +9,8 @@ campaign:success:
   other: "Sauvegarde réussie à {{.Time}}"
 campaign.description:
   other: "Lieu : {{.Location}} | Mis à jour : {{.Updated}}"
+journal.date:format:
+  other: "02/01 15:04"
 campaign.location:discover:
   other: "Nouveau lieu découvert : {{.Location}}"
 campaign.location:move:

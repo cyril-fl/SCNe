@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
 	"time"
 )
 
@@ -51,5 +52,5 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 
 // String formats the entry as a gameboard journal line.
 func (e *Entry) String() string {
-	return e.Timestamp.Format("Jan 02 15:04") + " - (" + e.Author + ") " + e.Message
+	return e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - (" + e.Author + ") " + e.Message
 }

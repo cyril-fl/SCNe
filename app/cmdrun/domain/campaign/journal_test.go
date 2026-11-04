@@ -5,6 +5,10 @@ import (
 	"time"
 
 	"scne/app/cmdrun/types/id"
+	"scne/app/shared/services/i19n"
+
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
 
 func TestJournalEnsureInitialized(t *testing.T) {
@@ -29,9 +33,16 @@ func TestJournalAddEntry(t *testing.T) {
 }
 
 func TestEntryString(t *testing.T) {
+	bundle := i18n.NewBundle(language.English)
+	bundle.AddMessages(language.English, &i18n.Message{ID: "journal.date:format", Other: "02/01 15:04"})
+	translator := i19n.New()
+	translator.SetLocale(i18n.NewLocalizer(bundle, "en"))
+	i19n.SetCache(translator)
+	t.Cleanup(func() { i19n.SetCache(nil) })
+
 	entry := Entry{Author: "gm", Message: "An event", Timestamp: time.Date(2026, time.January, 2, 15, 4, 0, 0, time.UTC)}
 
-	if got, want := entry.String(), "Jan 02 15:04 - (gm) An event"; got != want {
+	if got, want := entry.String(), "02/01 15:04 - (gm) An event"; got != want {
 		t.Fatalf("String() = %q, want %q", got, want)
 	}
 }
