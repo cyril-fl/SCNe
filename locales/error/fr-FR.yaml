@@ -55,6 +55,14 @@ error.unexpected:value:
 # Unexpected actions
 unexpected:action.build_engine:
   other: "construction du moteur"
+property.name:
+  other: "nom"
+property.description:
+  other: "description"
+property.race:
+  other: "race"
+property.class:
+  other: "classe"
 unexpected:action.logs:filter:
   other: "filtrage des logs"
 unexpected:action.logs:display:
