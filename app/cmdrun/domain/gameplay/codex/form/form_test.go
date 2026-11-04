@@ -1,6 +1,7 @@
 package codexform
 
 import (
+	"strings"
 	"testing"
 
 	"scne/app/shared/services/logs"
@@ -22,6 +23,14 @@ func TestValidateStatAcceptsIntegersOrEmpty(t *testing.T) {
 	for _, value := range []string{"abc", "1.5", " 3"} {
 		if err := validateStat(value); err == nil {
 			t.Fatalf("validateStat(%q) = nil, want an error", value)
+		}
+	}
+}
+
+func TestStatFieldsUseStatLabelKeys(t *testing.T) {
+	for _, f := range getFormStatsFields(nil, "") {
+		if !strings.Contains(f.Label(), "stat."+f.ID()) {
+			t.Fatalf("field %q has label %q", f.ID(), f.Label())
 		}
 	}
 }

@@ -188,7 +188,7 @@ func getFormStatsFields(values map[string]string, prefix string) []form.Field {
 	for _, value := range stats.List() {
 		fields = append(fields, field.TextField(field.TextTemplate[string]{
 			ID:           prefix + value.String(),
-			Label:        i19n.Localize(value.String()),
+			Label:        "stat." + value.String(),
 			Defaultvalue: values[prefix+value.String()],
 			Validator:    validateStat,
 		}))
