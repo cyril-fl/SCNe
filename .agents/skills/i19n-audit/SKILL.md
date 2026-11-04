@@ -50,13 +50,13 @@ oracle names against `oracles.<name>`.
   `setup`, so i19n is not initialized unless the command does it itself.
 - **Technical strings:** field names, collections, key bindings, colors, and
   formats with no words, such as `"%s | %s"`.
-- **Technical log subjects** (`"gear"`, `"savestate"`) that only reach the logs.
+- **Subjects that only reach the logs** (`Silent*` calls, such as `"savestate"`).
+- **The CLI help** in `config/.config.yaml`, which stays in English.
 
 ## Ask before changing
 
 - **Stored values:** a translated string saved to the database freezes its language.
-  Store the key and translate on display (`"System"` as a journal author is the
-  known case).
+  Store a stable value and translate on display, as `campaign.DisplayAuthor` does.
 - **`logs.RawError` to `logs.Error`:** this drops the `%w` chain, which breaks
   `errors.Is`.
 - **Renaming a key used as a data name:** saved games may reference it.
