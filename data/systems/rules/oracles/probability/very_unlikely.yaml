@@ -1,4 +1,4 @@
-name: "very_unlikly"
+name: "very_unlikely"
 dice: 20
 type: "oracle" # Oracle / Action / Test / Roll
 visible: true 

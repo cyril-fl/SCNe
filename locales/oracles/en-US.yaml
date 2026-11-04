@@ -11,7 +11,7 @@ oracles.neutral:
   other: "Neutral"
 oracles.very_likely:
   other: "Very likely"
-oracles.very_unlikly:
+oracles.very_unlikely:
   other: "Very unlikely"
 
 # Encouter
