@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"scne/app/cmdrun/domain/campaign"
 	"scne/app/cmdrun/domain/card/attributes/stats"
 	"scne/app/cmdrun/domain/card/characters"
 	"scne/app/cmdrun/domain/gameplay/combat"
@@ -74,7 +75,7 @@ func (m *model) getTarget() *characters.Character {
 
 // makeChat returns a chat keeping its messages in the buffer until they are merged.
 func (m *model) makeChat() *chat.Chat {
-	author := "System"
+	author := campaign.SYSTEM_AUTHOR
 	if m.session.State.Player != nil {
 		author = m.session.State.Player.GetName()
 	}

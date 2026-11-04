@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// SYSTEM_AUTHOR is the author saved for system entries, translated only on display.
+const SYSTEM_AUTHOR = "System"
+
 // Journal is an ordered list of authored entries.
 type Journal struct {
 	Entries []Entry
@@ -52,5 +55,13 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 
 // String formats the entry as a gameboard journal line.
 func (e *Entry) String() string {
-	return e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - (" + e.Author + ") " + e.Message
+	return e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - (" + DisplayAuthor(e.Author) + ") " + e.Message
+}
+
+// DisplayAuthor returns the name to show for author.
+func DisplayAuthor(author string) string {
+	if author == SYSTEM_AUTHOR {
+		return i19n.Localize("author.system")
+	}
+	return author
 }

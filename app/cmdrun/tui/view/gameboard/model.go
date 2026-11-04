@@ -1,6 +1,7 @@
 package gameboard
 
 import (
+	"scne/app/cmdrun/domain/campaign"
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/tui/view/combatboard"
 	"scne/app/cmdrun/tui/view/menumetadata"
@@ -142,7 +143,7 @@ func makeChat(gameSession *session.GameSession) *chat.Chat {
 }
 
 func initAuthor(gameSession *session.GameSession) string {
-	author := "System"
+	author := campaign.SYSTEM_AUTHOR
 	if gameSession.State.Player != nil {
 		author = gameSession.State.Player.GetName()
 	}

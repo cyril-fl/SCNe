@@ -9,6 +9,8 @@ campaign:success:
   other: "Saved successfully at {{.Time}}"
 campaign.description:
   other: "Location: {{.Location}} | Updated: {{.Updated}}"
+author.system:
+  other: "System"
 journal.date:format:
   other: "Jan 02 15:04"
 campaign.location:discover:

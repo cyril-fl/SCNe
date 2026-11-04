@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"scne/app/cmdrun/domain/campaign"
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/tui/shortcut"
 	"scne/app/cmdrun/types/size"
@@ -222,7 +223,7 @@ func amendChat(c *Chat, message string) {
 
 	c.register(c.author, message)
 
-	authorstyle := style.Accent().Render(c.author + ": ")
+	authorstyle := style.Accent().Render(campaign.DisplayAuthor(c.author) + ": ")
 
 	cloredmsg := authorstyle + message
 	c.session = append(c.session, cloredmsg)
