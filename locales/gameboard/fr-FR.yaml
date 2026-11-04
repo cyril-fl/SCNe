@@ -25,6 +25,8 @@ chat.msg:processing:
   other: "Traitement en cours..."
 chat.msg:save:
   other: "Sauvegarde en cours..."
+chat.message:
+  other: "message du chat"
 chat.msg:welcome:
   other: "Bienvenue dans le chat !\nÉcrivez un message puis appuyez sur Entrée pour l'envoyer."
 chat.placeholder:

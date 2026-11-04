@@ -26,6 +26,8 @@ chat.msg:processing:
   other: "Processing..."
 chat.msg:save:
   other: "Save your game progress"
+chat.message:
+  other: "chat message"
 chat.msg:welcome:
   other: "Welcome to the chat room!\nType a message and press Enter to send."
 chat.placeholder:
