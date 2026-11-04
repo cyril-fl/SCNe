@@ -17,7 +17,7 @@ const (
 	ShiftEnter Command = "⇧↳"
 	CtrlEnter  Command = "^↳"
 	Enter      Command = "↳"
-	AltArrows  Command = "⌥↑↓"
+	Arrows     Command = "↑↓"
 	CtrlPlus   Command = "^+"
 	Esc        Command = "⎋"
 	Alt        Command = "⌥"

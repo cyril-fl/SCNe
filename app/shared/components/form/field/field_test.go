@@ -390,3 +390,19 @@ func TestSelectFieldCapitalizesOptionTitles(t *testing.T) {
 		t.Fatalf("got title %q and value %q", item.Title(), item.Value())
 	}
 }
+
+func TestTextareaFieldMovesLinesWithAltArrowsOnly(t *testing.T) {
+	f := TextareaField(TextareaTemplate{Template: Template[string]{ID: "message", Defaultvalue: "one\ntwo"}, Height: 3})
+	f.Focus()
+	line := f.input.Line()
+
+	f.Update(tea.KeyPressMsg{Code: tea.KeyUp})
+	if got := f.input.Line(); got != line {
+		t.Fatalf("plain up moved the cursor to line %d", got)
+	}
+
+	f.Update(tea.KeyPressMsg{Code: tea.KeyUp, Mod: tea.ModAlt})
+	if got := f.input.Line(); got != line-1 {
+		t.Fatalf("alt+up moved the cursor to line %d, want %d", got, line-1)
+	}
+}

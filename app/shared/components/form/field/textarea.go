@@ -172,6 +172,9 @@ func makeTextarea(placeholder string, height int) textarea.Model {
 	input.KeyMap.InsertNewline.SetKeys(string(plumtypes.CMD_ALT_ENTER))
 	input.KeyMap.WordForward.SetKeys("alt+right", "alt+f", "ctrl+right")
 	input.KeyMap.WordBackward.SetKeys("alt+left", "alt+b", "ctrl+left")
+	// Plain arrows navigate the menu next to the chat.
+	input.KeyMap.LinePrevious.SetKeys(string(plumtypes.KEY_ALT_UP), "ctrl+p")
+	input.KeyMap.LineNext.SetKeys(string(plumtypes.KEY_ALT_DOWN), "ctrl+n")
 
 	styles := input.Styles()
 	styles.Focused.CursorLine = lipgloss.NewStyle()

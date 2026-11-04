@@ -113,7 +113,7 @@ func (m *model) handleUpdate(msg tea.Msg) (*model, tea.Cmd) {
 	return m, nil
 }
 
-// toMenuMsg keeps plain arrows for the chat textarea and maps alt+arrows to menu navigation.
+// toMenuMsg sends plain arrows to the menu and keeps alt+arrows for the chat textarea.
 func toMenuMsg(msg tea.Msg) (tea.Msg, bool) {
 	key, ok := msg.(tea.KeyPressMsg)
 	if !ok {
@@ -121,12 +121,8 @@ func toMenuMsg(msg tea.Msg) (tea.Msg, bool) {
 	}
 
 	switch plumtypes.Key(key.String()) {
-	case plumtypes.KEY_UP, plumtypes.KEY_DOWN:
+	case plumtypes.KEY_ALT_UP, plumtypes.KEY_ALT_DOWN:
 		return nil, false
-	case plumtypes.KEY_ALT_UP:
-		return tea.KeyPressMsg{Code: tea.KeyUp}, true
-	case plumtypes.KEY_ALT_DOWN:
-		return tea.KeyPressMsg{Code: tea.KeyDown}, true
 	}
 
 	return msg, true

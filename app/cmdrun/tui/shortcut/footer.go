@@ -16,7 +16,7 @@ var (
 		Label:   "leave",
 	})
 	NAVIGATE = NewShortcut(Template{
-		Command: AltArrows,
+		Command: Arrows,
 		Label:   "navigate",
 	})
 	NEW = NewShortcut(Template{
