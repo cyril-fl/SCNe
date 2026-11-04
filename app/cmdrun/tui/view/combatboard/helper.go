@@ -20,6 +20,7 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // - Handlers - //
@@ -133,7 +134,7 @@ func (m *model) getTargetInfo() string {
 	content.WriteString("\n")
 
 	for _, stat := range stats.List() {
-		label := i19n.Localize("stat." + stat.String())
+		label := plumtransform.Capitalize(i19n.Localize("stat." + stat.String()))
 		fmt.Fprintf(&content, "%-10s %d\n", label, target.Stats[stat])
 	}
 

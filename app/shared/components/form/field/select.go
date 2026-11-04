@@ -32,7 +32,7 @@ type SelectTemplate[T any] struct {
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	items := make([]list.Item, 0, len(template.Options))
 	for _, option := range template.Options {
-		items = append(items, option)
+		items = append(items, models.NewItem(plumtransform.Capitalize(option.Title()), option.Description(), option.Value()))
 	}
 	// FIXME Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
 	options := models.NewList(items, 15, 10)

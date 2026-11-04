@@ -381,3 +381,12 @@ func TestTextareaFieldCtrlLeftMovesByWord(t *testing.T) {
 		t.Fatalf("value after ctrl+left = %q, want %q", got, "hello Xworld")
 	}
 }
+
+func TestSelectFieldCapitalizesOptionTitles(t *testing.T) {
+	f := SelectField(SelectTemplate[string]{Options: []models.Item[string]{models.NewItem("first", "", "first")}})
+
+	item := f.options.Items()[0].(models.Item[string])
+	if item.Title() != "First" || item.Value() != "first" {
+		t.Fatalf("got title %q and value %q", item.Title(), item.Value())
+	}
+}

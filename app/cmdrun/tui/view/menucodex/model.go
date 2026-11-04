@@ -16,6 +16,7 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 func NewSection(focused bool) *codexMenu {
@@ -107,8 +108,8 @@ func newpage(table codextable.Table, makeForm form.Makefunc, action *formpage.Ac
 			for _, entry := range entries {
 				items = append(items, formpage.Item{
 					ID:          entry.ID,
-					Name:        i19n.Localize(entry.GetName()),
-					Description: i19n.Localize(entry.GetDescription()),
+					Name:        plumtransform.Capitalize(i19n.Localize(entry.GetName())),
+					Description: plumtransform.Capitalize(i19n.Localize(entry.GetDescription())),
 					Values:      entry.Values,
 					Locked:      entry.Locked,
 				})

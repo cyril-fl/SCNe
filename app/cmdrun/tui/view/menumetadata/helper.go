@@ -52,7 +52,7 @@ func GetLocationInfo(content *strings.Builder, gameSession *session.GameSession)
 
 	switch {
 	case isLocationNil:
-		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize("unknown_place"))
+		fmt.Fprintf(content, "%s %s", locationName, plumtransform.Capitalize(i19n.Localize("unknown_place")))
 	default:
 		fmt.Fprintf(content, "%s %s", locationName, i19n.Localize(state.CurrentLocation.GetName()))
 	}
@@ -74,7 +74,7 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 	default:
 		for _, stat := range stats.List() {
 			key := "stat." + string(stat)
-			label := i19n.Localize(key)
+			label := plumtransform.Capitalize(i19n.Localize(key))
 			fmt.Fprintf(content, "%-10s %d\n", label, state.Player.Stats[stat])
 		}
 	}

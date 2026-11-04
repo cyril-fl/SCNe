@@ -67,7 +67,7 @@ func (m *model) makeInformationView() string {
 
 	for i, modifier := range m.reroll.Value {
 		key := "stat." + string(modifier.Stat)
-		label := i19n.Localize(key)
+		label := plumtransform.Capitalize(i19n.Localize(key))
 		buildsChoiceStr[i] = fmt.Sprintf("%s: %d", label, modifier.Value)
 	}
 

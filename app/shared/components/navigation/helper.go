@@ -12,6 +12,7 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
 // Helpers
@@ -35,7 +36,7 @@ func makeSectionModel[T pluminterface.Named](params TemplateFocusableSection[T])
 	items := make([]list.Item, 0, len(params.Options))
 
 	for _, option := range params.Options {
-		names := i19n.Localize(option.GetName())
+		names := plumtransform.Capitalize(i19n.Localize(option.GetName()))
 		items = append(items, models.NewItem(names, "", option))
 	}
 

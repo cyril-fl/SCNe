@@ -35,7 +35,7 @@ codex.locations:
 
 # NPCs
 codex.npcs:
-  other: "pnj"
+  other: "PNJ"
 codex.npcs:entry:
   other: "{{.Name}} - {{.Race}} - {{.Class}}"
 
