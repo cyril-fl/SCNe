@@ -70,6 +70,25 @@ func ListContentHeight(menu *list.Model) int {
 	return itemCount * (delegate.Height() + delegate.Spacing())
 }
 
+// FitList sizes menu to its widest and tallest content, showing at most
+// maxItems items; maxItems <= 0 means no limit.
+func FitList(menu *list.Model, maxItems int) {
+	delegate := newDelegate(menu.Items(), false)
+	height := ListContentHeight(menu)
+	if maxItems > 0 {
+		height = min(height, maxItems*(delegate.Height()+delegate.Spacing()))
+	}
+
+	width := 0
+	for _, item := range menu.Items() {
+		if item, ok := item.(list.DefaultItem); ok {
+			width = max(width, lipgloss.Width(item.Title()), lipgloss.Width(item.Description()))
+		}
+	}
+
+	menu.SetSize(width+delegate.Styles.NormalTitle.GetHorizontalFrameSize(), height)
+}
+
 // newDelegate shows descriptions, and spaces items, only when one item has a description.
 func newDelegate(items []list.Item, focused bool) list.DefaultDelegate {
 	delegate := list.NewDefaultDelegate()

@@ -26,7 +26,12 @@ type selectField[T any] struct {
 type SelectTemplate[T any] struct {
 	Template[T]
 	Options []models.Item[T]
+	// MaxVisible is the number of options shown before scrolling, DEFAULT_MAX_VISIBLE when 0.
+	MaxVisible int
 }
+
+// DEFAULT_MAX_VISIBLE is the number of options a select shows by default.
+const DEFAULT_MAX_VISIBLE = 5
 
 // SelectField returns a list field preselecting the option equal to Defaultvalue.
 func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
@@ -34,8 +39,12 @@ func SelectField[T any](template SelectTemplate[T]) *selectField[T] {
 	for _, option := range template.Options {
 		items = append(items, models.NewItem(plumtransform.Capitalize(option.Title()), option.Description(), option.Value()))
 	}
-	// FIXME Mettre des taille c'est juste un fix tempraire, ca le le rend pas "flex"
-	options := models.NewList(items, 15, 10)
+	maxVisible := template.MaxVisible
+	if maxVisible <= 0 {
+		maxVisible = DEFAULT_MAX_VISIBLE
+	}
+	options := models.NewList(items, 0, 0)
+	models.FitList(&options, maxVisible)
 	models.SetListFocus(&options, false)
 	for i, option := range template.Options {
 		if reflect.DeepEqual(option.Value(), template.Defaultvalue) {

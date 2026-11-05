@@ -32,3 +32,21 @@ func TestListContentHeightFitsDescriptions(t *testing.T) {
 		t.Fatalf("ListContentHeight() with a description = %d, want 6", got)
 	}
 }
+
+func TestFitListCapsHeightAndFitsWidth(t *testing.T) {
+	short := NewList([]list.Item{NewItem("a", "", 1), NewItem("longest", "", 2)}, 0, 0)
+	FitList(&short, 5)
+	if short.Height() != 2 || short.Width() != len("longest")+2 {
+		t.Fatalf("FitList() short = %dx%d, want %dx2", short.Width(), short.Height(), len("longest")+2)
+	}
+
+	items := make([]list.Item, 0, 8)
+	for i := range 8 {
+		items = append(items, NewItem("x", "", i))
+	}
+	long := NewList(items, 0, 0)
+	FitList(&long, 5)
+	if long.Height() != 5 {
+		t.Fatalf("FitList() long height = %d, want 5", long.Height())
+	}
+}
