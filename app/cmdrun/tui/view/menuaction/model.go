@@ -105,7 +105,7 @@ func newFightPage(gameSession *session.GameSession) *actionPage {
 						}
 					},
 				}),
-			).Focus()
+			).DisableAutoSubmit().Focus()
 		},
 		Submit: func(values *form.Form) tea.Cmd {
 			opponents := findOpponents(gameSession, values.GetValuesAsMappedString())
