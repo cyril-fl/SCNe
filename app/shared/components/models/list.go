@@ -98,19 +98,20 @@ func newDelegate(items []list.Item, focused bool) list.DefaultDelegate {
 		delegate.SetSpacing(0)
 	}
 
-	marker, selected := style.ColorAccent(), style.ColorText()
+	// Unfocused lists step every color down one shade, keeping the selection readable.
+	marker, selected, other := style.ColorAccent(), style.ColorText(), style.ColorMuted()
 	if !focused {
-		marker, selected = style.ColorMuted(), style.ColorMuted()
+		marker, selected, other = style.ColorSubtle(), style.ColorMuted(), style.ColorSubtle()
 	}
 
-	normal := lipgloss.NewStyle().Foreground(style.ColorText()).PaddingLeft(2)
+	normal := lipgloss.NewStyle().Foreground(other).PaddingLeft(2)
 	chevron := lipgloss.NewStyle().
 		Border(lipgloss.Border{Left: "›"}, false, false, false, true).
 		BorderForeground(marker).
 		PaddingLeft(1)
 
 	delegate.Styles.NormalTitle = normal
-	delegate.Styles.NormalDesc = normal.Foreground(style.ColorMuted())
+	delegate.Styles.NormalDesc = normal.Foreground(style.ColorSubtle())
 	delegate.Styles.SelectedTitle = chevron.Foreground(selected).Bold(focused)
 	delegate.Styles.SelectedDesc = normal.Foreground(style.ColorMuted())
 	delegate.Styles.DimmedTitle = normal.Foreground(style.ColorMuted())
