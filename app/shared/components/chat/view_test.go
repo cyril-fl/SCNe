@@ -6,8 +6,11 @@ import (
 
 	"scne/app/shared/components/form"
 	"scne/app/shared/services/logs"
+	"scne/app/shared/services/style"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/x/ansi"
 )
 
 type testLogRegistrar struct{}
@@ -61,5 +64,31 @@ func TestChatAmendKeepsTypedMessage(t *testing.T) {
 
 	if got := c.form.GetFieldValue("message"); got != "h" {
 		t.Fatalf("message after Amend = %q, want h", got)
+	}
+}
+
+func TestStyleRollHighlightsResultAndCritical(t *testing.T) {
+	plain := lipgloss.NewStyle()
+	tests := []struct {
+		line   string
+		result string
+		mark   string
+	}{
+		{line: "hello", result: ""},
+		{line: "Probable · 19 → Oui", result: "Oui"},
+		{line: "Probable · 20 → Oui ✦ critique", result: "Oui", mark: "✦ critique"},
+	}
+
+	for _, tt := range tests {
+		got := styleRoll(tt.line, plain)
+		if ansi.Strip(got) != tt.line {
+			t.Fatalf("styleRoll(%q) text = %q, want unchanged", tt.line, ansi.Strip(got))
+		}
+		if tt.result != "" && !strings.Contains(got, style.Accent().Bold(true).Render(tt.result)) {
+			t.Fatalf("styleRoll(%q) = %q, want highlighted %q", tt.line, got, tt.result)
+		}
+		if tt.mark != "" && !strings.Contains(got, style.Error().Render(tt.mark)) {
+			t.Fatalf("styleRoll(%q) = %q, want critical mark %q", tt.line, got, tt.mark)
+		}
 	}
 }

@@ -128,7 +128,7 @@ func (c *Chat) Amend(content string) {
 func (c *Chat) makeViewport() string {
 	tojoin := []string{}
 	row := []string{
-		style.Muted().Render(makeHistory(c)),
+		makeHistory(c),
 
 		style.Accent().Render(makeWelcomeMessage(c)),
 
@@ -199,7 +199,30 @@ func makeWelcomeMessage(m *Chat) string {
 }
 
 func makeHistory(c *Chat) string {
-	return strings.Join(c.history, "\n")
+	lines := make([]string, 0, len(c.history))
+	for _, line := range c.history {
+		lines = append(lines, styleRoll(line, style.Muted()))
+	}
+	return strings.Join(lines, "\n")
+}
+
+// styleRoll mutes a roll's context and highlights its result after the last
+// " → ", with a trailing "✦" critical mark in the error color. Other lines get
+// plain.
+// shortcut: any line containing " → " is styled as a roll, store an entry kind
+// in the journal if players start typing arrows.
+func styleRoll(line string, plain lipgloss.Style) string {
+	i := strings.LastIndex(line, " → ")
+	if i < 0 {
+		return plain.Render(line)
+	}
+
+	result, critical, isCritical := strings.Cut(line[i+len(" → "):], " ✦ ")
+	styled := style.Muted().Render(line[:i]+" →") + " " + style.Accent().Bold(true).Render(result)
+	if isCritical {
+		styled += " " + style.Error().Render("✦ "+critical)
+	}
+	return styled
 }
 
 func initHistory(gameSession *session.GameSession) []string {
@@ -225,7 +248,7 @@ func amendChat(c *Chat, message string) {
 
 	authorstyle := style.Accent().Render(campaign.DisplayAuthor(c.author) + ": ")
 
-	cloredmsg := authorstyle + message
+	cloredmsg := authorstyle + styleRoll(message, lipgloss.NewStyle())
 	c.session = append(c.session, cloredmsg)
 }
 
