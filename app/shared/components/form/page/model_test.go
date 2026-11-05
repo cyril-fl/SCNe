@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"scne/app/cmdrun/tui/shortcut"
 	"scne/app/cmdrun/types/id"
 	"scne/app/cmdrun/types/size"
 	"scne/app/shared/components/form"
@@ -250,5 +251,19 @@ func TestPageCtrlEnterRunsActionOnSelectedEntry(t *testing.T) {
 	}
 	if page.IsFormOpen() {
 		t.Fatal("expected Ctrl+Enter not to open a form")
+	}
+}
+
+func TestPageFooterHidesEditWhenListIsEmpty(t *testing.T) {
+	page := New(Template{
+		Items:   func() []Item { return nil },
+		NewForm: testForm,
+		Save:    func(id.ID, map[string]string) error { return nil },
+		Action:  &Action{Label: "run", Run: func(id.ID) {}},
+	})
+
+	footer := page.GetFooter()
+	if len(footer) != 1 || footer[0] != shortcut.NEW.String() {
+		t.Fatalf("expected only the new shortcut, got %v", footer)
 	}
 }

@@ -97,6 +97,9 @@ func (p *Page) GetFooter() []string {
 		return []string{shortcut.SAVEFORM.String(), shortcut.ADD.String()}
 	case isFormOpen:
 		return []string{shortcut.SAVEFORM.String()}
+	case p.GetList().SelectedItem() == nil:
+		// Edit and the action both need a selected entry.
+		return []string{shortcut.NEW.String()}
 	case isLocked && hasAction:
 		return []string{shortcut.NEW.String(), p.getActionFooter()}
 	case isLocked:
