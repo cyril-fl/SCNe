@@ -53,9 +53,13 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 	return entry
 }
 
-// String formats the entry as a gameboard journal line.
+// String formats the entry as a gameboard journal line, without author when it has none.
 func (e *Entry) String() string {
-	return e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - (" + DisplayAuthor(e.Author) + ") " + e.Message
+	date := e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - "
+	if e.Author == "" {
+		return date + e.Message
+	}
+	return date + "(" + DisplayAuthor(e.Author) + ") " + e.Message
 }
 
 // DisplayAuthor returns the name to show for author.

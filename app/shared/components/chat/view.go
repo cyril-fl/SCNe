@@ -206,18 +206,25 @@ func makeHistory(c *Chat) string {
 	return strings.Join(lines, "\n")
 }
 
+const rollArrow = " → "
+
+// isRoll reports whether message is a roll result; rolls are shown without author.
+func isRoll(message string) bool {
+	return strings.Contains(message, rollArrow)
+}
+
 // styleRoll mutes a roll's context and highlights its result after the last
 // " → ", with a trailing "✦" critical mark in the error color. Other lines get
 // plain.
 // shortcut: any line containing " → " is styled as a roll, store an entry kind
 // in the journal if players start typing arrows.
 func styleRoll(line string, plain lipgloss.Style) string {
-	i := strings.LastIndex(line, " → ")
+	i := strings.LastIndex(line, rollArrow)
 	if i < 0 {
 		return plain.Render(line)
 	}
 
-	result, critical, isCritical := strings.Cut(line[i+len(" → "):], " ✦ ")
+	result, critical, isCritical := strings.Cut(line[i+len(rollArrow):], " ✦ ")
 	styled := style.Muted().Render(line[:i]+" →") + " " + style.Accent().Bold(true).Render(result)
 	if isCritical {
 		styled += " " + style.Error().Render("✦ "+critical)
@@ -244,12 +251,16 @@ func amendChat(c *Chat, message string) {
 		"Form": "chat",
 	})
 
+	if isRoll(message) {
+		c.register("", message)
+		c.session = append(c.session, styleRoll(message, lipgloss.NewStyle()))
+		return
+	}
+
 	c.register(c.author, message)
 
 	authorstyle := style.Accent().Render(campaign.DisplayAuthor(c.author) + ": ")
-
-	cloredmsg := authorstyle + styleRoll(message, lipgloss.NewStyle())
-	c.session = append(c.session, cloredmsg)
+	c.session = append(c.session, authorstyle+message)
 }
 
 // func (c *Chat) handleCursorBlink(msg cursor.BlinkMsg) tea.Cmd {

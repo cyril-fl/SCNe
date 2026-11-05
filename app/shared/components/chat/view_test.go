@@ -92,3 +92,22 @@ func TestStyleRollHighlightsResultAndCritical(t *testing.T) {
 		}
 	}
 }
+
+func TestChatAmendRegistersRollWithoutAuthor(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	author := "unset"
+	c := New(Template{
+		Author:   "Ada",
+		Register: func(a, _ string) { author = a },
+	})
+
+	c.Amend("d20 → 14")
+	if author != "" {
+		t.Fatalf("Register author = %q, want empty for a roll", author)
+	}
+	if got := ansi.Strip(c.session[0]); got != "d20 → 14" {
+		t.Fatalf("session line = %q, want the roll without author", got)
+	}
+}

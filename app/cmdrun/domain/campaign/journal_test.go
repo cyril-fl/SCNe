@@ -50,6 +50,10 @@ func TestEntryString(t *testing.T) {
 	if got, want := entry.String(), "02/01 15:04 - (gm) An event"; got != want {
 		t.Fatalf("String() = %q, want %q", got, want)
 	}
+	entry.Author = ""
+	if got, want := entry.String(), "02/01 15:04 - An event"; got != want {
+		t.Fatalf("String() without author = %q, want %q", got, want)
+	}
 }
 
 func TestDisplayAuthor(t *testing.T) {
