@@ -1,2 +1,2 @@
 hint.roll:result:
-  other: "Indices: {{.Value}}"
+  other: "Indices → {{.Value}}"

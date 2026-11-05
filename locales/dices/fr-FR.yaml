@@ -2,4 +2,4 @@ dice.default:
   other: "Dé {{.sides}}"
 
 dice.roll:result:
-  other: "{{.Dice}} : {{.Value}}"
+  other: "{{.Dice}} → {{.Value}}"

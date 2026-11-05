@@ -1,5 +1,5 @@
 # --- Combat ---
 combat.roll:result:
-  other: "⚔ {{.Stat}} vs {{.Opponent}} · {{.Oracle}} · {{.Roll}}: {{.Value}}"
+  other: "⚔ {{.Stat}} vs {{.Opponent}} · {{.Oracle}} · {{.Roll}} → {{.Value}}"
 combat.header:
   other: "⚔ Combat: {{.Opponents}}"

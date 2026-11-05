@@ -1,5 +1,5 @@
 oracles.roll:result:
-  other: "Oracle lancé : {{.Roll}}, Résultat : {{.Value}}, Critique : {{.Critical}}"
+  other: "{{.Oracle}} · {{.Roll}} → {{.Value}}{{if .Critical}} ✦ critique{{end}}"
 
 # --- Name ---
 # Base

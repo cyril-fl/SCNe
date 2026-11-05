@@ -88,6 +88,7 @@ func (m *milloracle) Roll() (string, error) {
 	}
 
 	return i19n.Localize("oracles.roll:result", map[string]any{
+		"Oracle":   m.oracle.GetName(),
 		"Roll":     result.Roll,
 		"Value":    result.Result,
 		"Critical": result.Critical,
@@ -103,7 +104,7 @@ func (m *millhint) Roll() (string, error) {
 	}
 
 	return i19n.Localize("hint.roll:result", map[string]any{
-		"Value": strings.Join(localized, ", "),
+		"Value": strings.Join(localized, " · "),
 	}), nil
 }
 
