@@ -7,11 +7,9 @@ import (
 	"scne/app/shared/components/form"
 	"scne/app/shared/components/models"
 	"scne/app/shared/services/logs"
-	"scne/app/shared/services/style"
 
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 	plumtypes "github.com/cyril-fl/plum/types"
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
@@ -145,23 +143,7 @@ func (m *selectField[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *selectField[T]) View() tea.View {
-	title := style.Title().Render(m.Label())
-
-	options := m.options.View()
-
-	err := ""
-	if m.GetError() != nil {
-		err = style.Error().Render(m.GetError().Error())
-	}
-
-	return tea.NewView(
-		lipgloss.JoinVertical(
-			lipgloss.Left,
-			title,
-			err,
-			options,
-		),
-	)
+	return m.labelView(m.options.View())
 }
 
 // - Helper - //

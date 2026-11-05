@@ -57,7 +57,7 @@ func (m *textField[T]) View() tea.View {
 	if m.nolabel {
 		return m.getNoLabelView(m.input.View(), err)
 	} else {
-		return m.getLabelView(m.input.View(), err)
+		return m.labelView(m.input.View())
 
 	}
 }
@@ -71,19 +71,6 @@ func (m *textField[T]) getNoLabelView(input, err string) tea.View {
 	return tea.NewView(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
-			err,
-			input,
-		),
-	)
-}
-
-func (m *textField[T]) getLabelView(input, err string) tea.View {
-	title := style.Title().Render(m.Label())
-
-	return tea.NewView(
-		lipgloss.JoinVertical(
-			lipgloss.Left,
-			title,
 			err,
 			input,
 		),

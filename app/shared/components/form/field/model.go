@@ -3,7 +3,10 @@ package field
 import (
 	"errors"
 	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
 )
 
@@ -100,4 +103,26 @@ func (f *field[T]) validate(value T) error {
 
 func (f *field[T]) IsFocused() bool {
 	return f.focus
+}
+
+// labelView renders the label (accent when focused, "*" when required), the
+// error if any and input, indented and followed by a blank line.
+func (f *field[T]) labelView(input string) tea.View {
+	label := style.Muted().Render(f.Label())
+	if f.focus {
+		label = style.Accent().Bold(true).Render(f.Label())
+	}
+	if f.required {
+		label += " " + style.Error().Render("*")
+	}
+
+	rows := []string{label}
+	if err := f.GetError(); err != nil {
+		rows = append(rows, style.Error().Render(err.Error()))
+	}
+	rows = append(rows, input)
+
+	return tea.NewView(
+		lipgloss.NewStyle().PaddingLeft(2).MarginBottom(1).Render(lipgloss.JoinVertical(lipgloss.Left, rows...)),
+	)
 }
