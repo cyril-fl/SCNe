@@ -1,0 +1,13 @@
+## New race: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name or translation key, e.g. "race.orc". Must be unique.
+# name: ""
+## Text or translation key.
+# description: ""
+## Whether a player can pick this race.
+# playable: true
+## Stat modifiers. Stats: health, physical, mental, stamina, social.
+# bonus:
+#   - stat: health
+#     value: 0

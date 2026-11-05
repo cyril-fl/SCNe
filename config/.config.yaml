@@ -20,6 +20,48 @@ i18n:
       name: Français
       file: "fr-FR.yaml"
 commands: 
+  add:
+    use: "add"
+    short: "Add a template (class, race, character...) from a commented file in the default editor"
+    example: |
+      scne add --class
+      scne add --location
+  import:
+    use: "import <file>..."
+    short: "Validate the template files, then add their entries (a file holds one entry or a list)"
+    example: |
+      scne import --race ./races.yaml
+      scne import --character ./goblin.yaml ./orc.yaml --force
+    args:
+      - name: "force"
+        shorthand: ""
+        value: ""
+        usage: "Replace the entries that already exist"
+        type: "bool"
+  export:
+    use: "export <name>"
+    short: "Print a template entry as YAML"
+    example: "scne export --class class.mage > mage.yaml"
+  edit:
+    use: "edit <name>"
+    short: "Edit a template entry in the default editor"
+    example: "scne edit --class class.mage --force"
+    args:
+      - name: "force"
+        shorthand: ""
+        value: ""
+        usage: "Confirm the change of an existing entry"
+        type: "bool"
+  delete:
+    use: "delete <name>"
+    short: "Delete a template entry"
+    example: "scne delete --race race.orc --force"
+    args:
+      - name: "force"
+        shorthand: ""
+        value: ""
+        usage: "Confirm the deletion of an existing entry"
+        type: "bool"
   config: 
     use: "config"
     short: "Display the configuration of SCNe"

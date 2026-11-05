@@ -1,0 +1,21 @@
+## New oracle: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name, e.g. "weather". Must be unique.
+# name: ""
+## Sides of the die rolled.
+# dice: 20
+## Oracle / Action / Test / Roll
+# type: oracle
+## Whether the player can roll it from the menu.
+# visible: true
+## Results by roll range, covering 1 to dice.
+# intervals:
+#   - min: 1
+#     max: 10
+#     critical: false
+#     result: ""
+#   - min: 11
+#     max: 20
+#     critical: false
+#     result: ""

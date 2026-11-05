@@ -1,0 +1,13 @@
+## New class: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name or translation key, e.g. "class.ranger". Must be unique.
+# name: ""
+## Whether a player can pick this class.
+# playable: true
+## Stat modifiers. Stats: health, physical, mental, stamina, social.
+# bonus:
+#   - stat: health
+#     value: 0
+## Armor set given to the character, e.g. "adventurer".
+# armor_set: adventurer

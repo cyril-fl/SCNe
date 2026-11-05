@@ -1,0 +1,8 @@
+## New hint list: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name or translation key, e.g. "hint.horror". Must be unique.
+# name: ""
+## Words drawn when rolling this hint, as text or translation keys.
+# values:
+#   - ""

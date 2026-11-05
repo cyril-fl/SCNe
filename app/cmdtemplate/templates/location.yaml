@@ -1,0 +1,17 @@
+## New location: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name or translation key, e.g. "location.cave". Must be unique.
+# name: ""
+# description: ""
+## Rarity, e.g. F, E, D, C, B, A, S.
+# rarity: E
+# variety: location_card
+## Effects applied in this location. Delete the list if there is none.
+# effects:
+#   - description:
+#       name: ""
+#       description: ""
+#     modifier:
+#       stat: social
+#       value: 0

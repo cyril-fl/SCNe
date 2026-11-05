@@ -1,0 +1,16 @@
+template.added:
+  other: "{{.Kind}} \"{{.Name}}\" ajouté dans {{.Path}}"
+template.imported:
+  other: "{{.Count}} {{.Kind}} importé(s) dans {{.Path}}"
+template.updated:
+  other: "{{.Kind}} \"{{.Name}}\" modifié dans {{.Path}}"
+template.deleted:
+  other: "{{.Kind}} \"{{.Name}}\" supprimé de {{.Path}}"
+template.cancelled:
+  other: "Rien n'a été enregistré"
+template.error:exists:
+  other: "{{.Kind}} \"{{.Name}}\" existe déjà : utilise edit, ou import --force pour le remplacer"
+template.error:force:
+  other: "\"{{.Name}}\" existe : ajoute --force pour le modifier ou le supprimer"
+template.prompt:reopen:
+  other: "[R]ouvrir l'éditeur, [Q]uitter sans enregistrer ? "

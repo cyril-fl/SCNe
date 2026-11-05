@@ -1,0 +1,25 @@
+## New character: uncomment the fields you fill in, then save and close the editor.
+## Close the editor without saving to cancel.
+
+## Name, e.g. "Goblin". Must be unique.
+# name: ""
+# description: ""
+## Rarity, e.g. F, E, D, C, B, A, S.
+# rarity: E
+# variety: character_card
+## Any class name; a missing class is added when the game loads.
+# class: ""
+## A race name from the races file, e.g. "race.human".
+# race: race.human
+# stats:
+#   health: 10
+#   physical: 10
+#   mental: 10
+#   stamina: 10
+#   social: 10
+# equipment:
+# inventory:
+# wallet:
+#   gold: 0
+#   silver: 0
+#   copper: 0
