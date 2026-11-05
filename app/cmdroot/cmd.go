@@ -19,6 +19,8 @@ func PersistentPreRunECmdRoot(cobra *cobra.Command, args []string) error {
 	inittheme.Process(config.GetConfig().Theme).Run()
 
 	if _, ok := cobra.Annotations[annotations.NODB]; ok {
+		// Translations need no database: NODB commands still print localized messages.
+		initI19n.Process(config.GetConfig().I18n, "").Run()
 		return nil
 	}
 
