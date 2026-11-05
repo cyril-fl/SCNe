@@ -7,10 +7,10 @@ template.updated:
 template.deleted:
   other: "{{.Kind}} \"{{.Name}}\" supprimé de {{.Path}}"
 template.cancelled:
-  other: "Rien n'a été enregistré"
+  other: "Annulé : rien n'a été enregistré"
 template.error:exists:
   other: "{{.Kind}} \"{{.Name}}\" existe déjà : utilise edit, ou import --force pour le remplacer"
 template.error:force:
   other: "\"{{.Name}}\" existe : ajoute --force pour le modifier ou le supprimer"
-template.prompt:reopen:
-  other: "[R]ouvrir l'éditeur, [Q]uitter sans enregistrer ? "
+template.error:draft:
+  other: "{{.Error}}\nBrouillon gardé : {{.Path}}\nCorrige-le puis : {{.Command}}"

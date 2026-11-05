@@ -1,20 +1,16 @@
 package cmdtemplate
 
 import (
-	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"slices"
-	"strings"
 
 	"scne/app/shared/services/editor"
 	"scne/app/shared/services/i19n"
 	"scne/app/shared/services/logs"
 	"scne/app/shared/services/strictyaml"
-	"scne/app/shared/services/style"
 
 	"charm.land/lipgloss/v2"
 	"github.com/spf13/cobra"
@@ -44,13 +40,13 @@ func RunECmdAdd(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	data, name, err := editUntilValid(template, func(data []byte) (string, error) {
+	data, name, err := editOnce(template, func(data []byte) (string, error) {
 		name, err := k.Validate(data)
 		if err != nil {
 			return "", err
 		}
 		return name, ensureNew(k, name)
-	})
+	}, retryCommand(cmd, k, false))
 	if err != nil || data == nil {
 		return err
 	}
@@ -144,13 +140,13 @@ func RunECmdEdit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	edited, newName, err := editUntilValid(data, func(data []byte) (string, error) {
+	edited, newName, err := editOnce(data, func(data []byte) (string, error) {
 		newName, err := k.Validate(data)
 		if err != nil || newName == name {
 			return newName, err
 		}
 		return newName, ensureNew(k, newName)
-	})
+	}, retryCommand(cmd, k, true))
 	if err != nil || edited == nil {
 		return err
 	}
@@ -196,6 +192,15 @@ func selectedKind(cmd *cobra.Command) (kind, error) {
 	return kind{}, errors.New("missing template type flag")
 }
 
+// retryCommand returns the import command that saves a fixed draft of k.
+func retryCommand(cmd *cobra.Command, k kind, force bool) string {
+	command := cmd.Root().Name() + " import --" + k.Name
+	if force {
+		command += " --force"
+	}
+	return command
+}
+
 // get returns the entry name, or a not found error naming it.
 func get(k kind, name string) ([]byte, error) {
 	data, err := k.store().Get(name)
@@ -225,77 +230,49 @@ func ensureForced(cmd *cobra.Command, name string) error {
 	return logs.Error("template.error:force", map[string]any{"Name": identifier(name)})
 }
 
-// errorPrefix marks the error lines editUntilValid adds on top of the file.
-const errorPrefix = "# ! "
-
-// editUntilValid opens data in the editor until check accepts it, showing the error
-// on top of the file. It returns nil data when the user closes the editor without a
-// change, or leaves only comments.
-func editUntilValid(data []byte, check func([]byte) (string, error)) ([]byte, string, error) {
+// editOnce opens data in the editor once and returns the edited YAML once check accepts it.
+// It returns nil data when the user closes the editor without a change, or leaves only
+// comments. On an invalid file, the draft is kept and the error tells how to import it
+// with retry, an import command without the path.
+func editOnce(data []byte, check func([]byte) (string, error), retry string) ([]byte, string, error) {
 	file, err := os.CreateTemp("", "scne-*.yaml")
 	if err != nil {
 		return nil, "", err
 	}
 	path := file.Name()
 	file.Close()
-	defer os.Remove(path)
 
-	for {
-		if err := os.WriteFile(path, data, 0o600); err != nil {
-			return nil, "", err
-		}
-		if err := editor.Open(path); err != nil {
-			return nil, "", err
-		}
-
-		edited, err := os.ReadFile(path)
-		if err != nil {
-			return nil, "", err
-		}
-		unchanged := bytes.Equal(edited, data)
-		edited = withoutErrorLines(edited)
-
-		name, err := check(edited)
-		if unchanged || errors.Is(err, strictyaml.ErrEmpty) {
-			lipgloss.Println(i19n.Localize("template.cancelled"))
-			return nil, "", nil
-		}
-		if err == nil {
-			return edited, name, nil
-		}
-
-		lipgloss.Println(style.Error().Render(err.Error()))
-		if !askReopen(os.Stdin, os.Stdout) {
-			lipgloss.Println(i19n.Localize("template.cancelled"))
-			return nil, "", nil
-		}
-		data = append(errorLines(err), edited...)
+	if err := os.WriteFile(path, data, 0o600); err != nil {
+		os.Remove(path)
+		return nil, "", err
 	}
-}
-
-// askReopen asks whether to reopen the editor; anything but "q" reopens it, a closed input quits.
-func askReopen(in io.Reader, out io.Writer) bool {
-	fmt.Fprint(out, i19n.Localize("template.prompt:reopen"))
-
-	answer, err := bufio.NewReader(in).ReadString('\n')
-	if err != nil && answer == "" {
-		return false
+	if err := editor.Open(path); err != nil {
+		os.Remove(path)
+		return nil, "", err
 	}
-	return !strings.EqualFold(strings.TrimSpace(answer), "q")
-}
 
-func errorLines(err error) []byte {
-	var buffer bytes.Buffer
-	for _, line := range strings.Split(err.Error(), "\n") {
-		buffer.WriteString(errorPrefix + line + "\n")
+	edited, err := os.ReadFile(path)
+	if err != nil {
+		os.Remove(path)
+		return nil, "", err
 	}
-	return buffer.Bytes()
-}
 
-func withoutErrorLines(data []byte) []byte {
-	lines := strings.SplitAfter(string(data), "\n")
-	lines = slices.DeleteFunc(lines, func(line string) bool { return strings.HasPrefix(line, errorPrefix) })
-	return []byte(strings.Join(lines, ""))
+	name, err := check(edited)
+	if bytes.Equal(edited, data) || errors.Is(err, strictyaml.ErrEmpty) {
+		os.Remove(path)
+		lipgloss.Println(i19n.Localize("template.cancelled"))
+		return nil, "", nil
+	}
+	if err != nil {
+		return nil, "", logs.Error("template.error:draft", map[string]any{
+			"Error":   identifier(err.Error()),
+			"Path":    identifier(path),
+			"Command": identifier(retry + " " + path),
+		})
+	}
+
+	os.Remove(path)
+	return edited, name, nil
 }
 
 // readEntries returns each entry of the YAML file at path: the items of a list, or the file itself.

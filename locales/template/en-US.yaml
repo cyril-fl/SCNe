@@ -7,10 +7,10 @@ template.updated:
 template.deleted:
   other: "{{.Kind}} \"{{.Name}}\" deleted from {{.Path}}"
 template.cancelled:
-  other: "Nothing was saved"
+  other: "Cancelled: nothing was saved"
 template.error:exists:
   other: "{{.Kind}} \"{{.Name}}\" already exists: use edit, or import --force to replace it"
 template.error:force:
   other: "\"{{.Name}}\" exists: add --force to change or delete it"
-template.prompt:reopen:
-  other: "[R]eopen the editor, [Q]uit without saving? "
+template.error:draft:
+  other: "{{.Error}}\nDraft kept: {{.Path}}\nFix it, then run: {{.Command}}"

@@ -2,7 +2,6 @@ package cmdtemplate
 
 import (
 	"errors"
-	"io"
 	"os"
 	"path/filepath"
 	"slices"
@@ -106,22 +105,5 @@ func TestReadEntriesSplitsLists(t *testing.T) {
 	}
 	if entries, err := readEntries(single); err != nil || len(entries) != 1 {
 		t.Fatalf("readEntries(single) = %q, %v", entries, err)
-	}
-}
-
-func TestErrorLinesAreRemovedBeforeValidation(t *testing.T) {
-	data := append(errorLines(errors.New("bad\nworse")), []byte("# kept\nname: a\n")...)
-
-	if got := string(withoutErrorLines(data)); got != "# kept\nname: a\n" {
-		t.Fatalf("withoutErrorLines() = %q", got)
-	}
-}
-
-func TestAskReopenQuitsOnlyOnQ(t *testing.T) {
-	tests := map[string]bool{"\n": true, "r\n": true, "q\n": false, "Q\n": false, "": false}
-	for input, want := range tests {
-		if got := askReopen(strings.NewReader(input), io.Discard); got != want {
-			t.Errorf("askReopen(%q) = %v, want %v", input, got, want)
-		}
 	}
 }
