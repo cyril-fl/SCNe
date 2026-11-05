@@ -128,6 +128,19 @@ func (s *Stats) RemoveModifiers(mods []Modifier) {
 	}
 }
 
+// ValidateModifiers fails on the first modifier whose stat is not configured.
+func ValidateModifiers(mods []Modifier) error {
+	for _, mod := range mods {
+		if !mod.Stat.Validate() {
+			return logs.Error("error.invalid", map[string]any{
+				"Subject": "stat",
+				"Value":   mod.Stat,
+			})
+		}
+	}
+	return nil
+}
+
 // Validate reports whether s is a configured stat.
 func (s Stat) Validate() bool {
 	return slices.Contains(List(), s)

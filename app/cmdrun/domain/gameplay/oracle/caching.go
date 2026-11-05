@@ -83,15 +83,24 @@ func loadFromFile(fileAddress string) (yamlConfig, error) {
 		return yamlConfig{}, logs.RawError("load oracle file %s: %w", fileAddress, loader.GetErr())
 	}
 
-	if params.Dice <= 0 {
-		return yamlConfig{}, fmt.Errorf("oracle %s has an invalid dice count", params.Name)
-	}
-
-	if len(params.Intervals) == 0 {
-		return yamlConfig{}, fmt.Errorf("oracle %s has no intervals", params.Name)
+	if err := check(*params); err != nil {
+		return yamlConfig{}, err
 	}
 
 	return *params, nil
+}
+
+// check rejects an oracle without dice or intervals.
+func check(config yamlConfig) error {
+	if config.Dice <= 0 {
+		return fmt.Errorf("oracle %s has an invalid dice count", config.Name)
+	}
+
+	if len(config.Intervals) == 0 {
+		return fmt.Errorf("oracle %s has no intervals", config.Name)
+	}
+
+	return nil
 }
 
 // - Oracle - //
