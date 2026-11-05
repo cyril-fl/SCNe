@@ -11,13 +11,6 @@ stats:
   stamina: 10
   social: 10
 equipment:
-  helmet: 
-  chestplate:
-  gauntlets:
-  greaves:
-  boots:
-  rightHand:
-  leftHand:
 inventory: 
 wallet:
   gold: 20
