@@ -3,7 +3,6 @@ package cmdconfig
 import (
 	"io"
 	"os"
-	"slices"
 	"strings"
 	"testing"
 
@@ -12,24 +11,6 @@ import (
 	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
 	"github.com/spf13/cobra"
 )
-
-func TestEditorPrefersVisualThenEditorThenVi(t *testing.T) {
-	t.Setenv("VISUAL", "code --wait")
-	t.Setenv("EDITOR", "nano")
-	if got := editor(); !slices.Equal(got, []string{"code", "--wait"}) {
-		t.Fatalf("editor() = %v, want VISUAL split", got)
-	}
-
-	t.Setenv("VISUAL", "")
-	if got := editor(); !slices.Equal(got, []string{"nano"}) {
-		t.Fatalf("editor() = %v, want EDITOR", got)
-	}
-
-	t.Setenv("EDITOR", "")
-	if got := editor(); !slices.Equal(got, []string{"vi"}) {
-		t.Fatalf("editor() = %v, want vi", got)
-	}
-}
 
 func TestRunECmdConfigPrintsEachFormat(t *testing.T) {
 	if got := runConfig(t); !strings.HasPrefix(got, "name: ") {

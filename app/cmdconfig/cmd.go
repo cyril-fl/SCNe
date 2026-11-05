@@ -2,10 +2,9 @@ package cmdconfig
 
 import (
 	"os"
-	"os/exec"
+	"scne/app/shared/services/editor"
 	"scne/app/shared/services/style"
 	"scne/config"
-	"strings"
 
 	"charm.land/lipgloss/v2"
 	plumcliutilsargs "github.com/cyril-fl/plum/cli/utils/args"
@@ -58,23 +57,9 @@ func RunECmdConfigEdit(cobra *cobra.Command, args []string) error {
 		return err
 	}
 
-	command := append(editor(), path)
-	cmd := exec.Command(command[0], command[1:]...)
-	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
-	if err := cmd.Run(); err != nil {
+	if err := editor.Open(path); err != nil {
 		return err
 	}
 
 	return config.Check()
-}
-
-// editor returns $VISUAL, then $EDITOR, then vi, split so "code --wait" works.
-func editor() []string {
-	for _, name := range []string{"VISUAL", "EDITOR"} {
-		if fields := strings.Fields(os.Getenv(name)); len(fields) > 0 {
-			return fields
-		}
-	}
-
-	return []string{"vi"}
 }
