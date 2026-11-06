@@ -67,6 +67,13 @@ func (m *model) handleRoll(stat stats.Stat) tea.Cmd {
 
 // Helpers
 
+// selectLastOpponent reloads the opponents and targets the last one, so a new enemy shows its stats.
+func (m *model) selectLastOpponent() {
+	m.refresh()
+	l := m.opponents.GetList()
+	l.Select(len(l.Items()) - 1)
+}
+
 func (m *model) getTarget() *characters.Character {
 	if item, ok := m.opponents.GetList().SelectedItem().(models.Item[*characters.Character]); ok {
 		return item.Value()

@@ -40,6 +40,11 @@ func (s *GameSession) StartCombat(opponents []*characters.Character) {
 	s.State.Opponents = opponents
 }
 
+// AddOpponent adds opponent to the current combat.
+func (s *GameSession) AddOpponent(opponent *characters.Character) {
+	s.State.Opponents = append(s.State.Opponents, opponent)
+}
+
 // EndCombat clears the opponents.
 func (s *GameSession) EndCombat() {
 	s.State.Opponents = nil

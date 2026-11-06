@@ -27,9 +27,15 @@ type model struct {
 	state      statemachine.ViewState[state]
 	menu       *navigation.Navigation
 	combatMenu *navigation.Navigation
+	combat     inputCapturer
 	session    *session.GameSession
 	save       func() error
 	size       size.Size
+}
+
+// inputCapturer is the combat page, which takes the input while a plugin form is open.
+type inputCapturer interface {
+	CapturesInput() bool
 }
 
 type UiParams struct {
@@ -54,6 +60,7 @@ func NewModel(params UiParams) *model {
 			Static:     []navigation.SectionInterface{menumetadata.NewSection(params.Session), combatpage.GetTargetSection()},
 			Scrollable: makeCombatPanelPart(combatpage.GetOpponentSection(), combatpage.GetOracleSection()),
 		}),
+		combat:  combatpage,
 		session: params.Session,
 		save:    params.OnSave,
 	}
@@ -67,6 +74,8 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// Read before the update: the key that closes a combat form must not reach the panel either.
+	isCombatCapturing := m.state.Current() == COMBAT_SECTION && m.combat.CapturesInput()
 	statecmd := m.state.Update(msg)
 
 	_, ok := msg.(form.Close)
@@ -81,7 +90,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var menucmd tea.Cmd
-	if menumsg, ok := toMenuMsg(msg); ok && (isChatSection || isCombatSection || isCloseForm) {
+	if menumsg, ok := toMenuMsg(msg); ok && !isCombatCapturing && (isChatSection || isCombatSection || isCloseForm) {
 		menucmd = menu.HandleUpdate(menumsg)
 	}
 

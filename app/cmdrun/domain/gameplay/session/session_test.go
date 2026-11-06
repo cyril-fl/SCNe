@@ -5,6 +5,7 @@ import (
 
 	"scne/app/cmdrun/domain/card/attributes/rarity"
 	"scne/app/cmdrun/domain/card/attributes/variety"
+	"scne/app/cmdrun/domain/card/characters"
 	"scne/app/cmdrun/domain/card/locations"
 	"scne/app/cmdrun/domain/gameplay/codex"
 	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
@@ -85,3 +86,15 @@ func TestGameSessionDiscoverLocationInitializesCodexTable(t *testing.T) {
 type noopLogRegistry struct{}
 
 func (noopLogRegistry) Register(*logs.Log) error { return nil }
+
+func TestGameSessionAddOpponentAppends(t *testing.T) {
+	first, second := &characters.Character{}, &characters.Character{}
+	gameSession := NewGameSession(id.New(), &SessionState{})
+	gameSession.StartCombat([]*characters.Character{first})
+
+	gameSession.AddOpponent(second)
+
+	if len(gameSession.State.Opponents) != 2 || gameSession.State.Opponents[1] != second {
+		t.Fatalf("opponents = %v, want first then second", gameSession.State.Opponents)
+	}
+}

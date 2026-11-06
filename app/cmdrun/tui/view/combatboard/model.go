@@ -21,6 +21,7 @@ type model struct {
 	oracles   *navigation.FocusableSection
 	target    *navigation.Section
 	buffer    []string
+	plugins   []plugin
 }
 
 type UiParams struct {
@@ -48,6 +49,7 @@ func NewModel(params UiParams) *model {
 	}
 
 	m.chat = m.makeChat()
+	m.plugins = []plugin{newEnemyPlugin(params.Session, m.selectLastOpponent)}
 	m.target = navigation.NewSection(navigation.TemplateSection{
 		ID:      "target",
 		Content: m.getTargetInfo,
@@ -75,13 +77,22 @@ func (m *model) GetOracleSection() *navigation.FocusableSection {
 
 // Methods
 
-// Update rolls the selected oracle on alt+N, merges and leaves on esc, and forwards other messages to the combat chat.
+// Update gives msg only to a plugin showing a view; otherwise it rolls the
+// selected oracle on alt+N, merges and leaves on esc, forwards other messages
+// to the combat chat, then to every plugin.
 func (m *model) Update(msg tea.Msg) tea.Cmd {
+	if active := m.activePlugin(); active != nil {
+		return active.HandleUpdate(msg)
+	}
+
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
-		return m.handleKeyPress(msg)
+		cmd = m.handleKeyPress(msg)
+	default:
+		cmd = m.chat.Update(msg)
 	}
-	return m.chat.Update(msg)
+	return tea.Batch(cmd, m.updatePlugins(msg))
 }
 
 // Amend adds content to the combat chat.

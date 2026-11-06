@@ -6,6 +6,10 @@ import (
 
 	"scne/app/cmdrun/domain/card/attributes/stats"
 	"scne/app/cmdrun/domain/card/characters"
+	"scne/app/cmdrun/domain/card/characters/classes"
+	"scne/app/cmdrun/domain/card/characters/races"
+	"scne/app/cmdrun/domain/gameplay/codex"
+	codexform "scne/app/cmdrun/domain/gameplay/codex/form"
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/types/size"
 	"scne/app/shared/components/chat"
@@ -105,5 +109,57 @@ func TestOracleSectionFooterShowsStatShortcuts(t *testing.T) {
 	footer := strings.Join(m.GetOracleSection().GetFooter(), " ")
 	if !strings.Contains(footer, "⌥2") {
 		t.Fatalf("oracle footer = %q, want the stat shortcuts", footer)
+	}
+}
+
+var ctrlN = tea.KeyPressMsg{Code: 'n', Mod: tea.ModCtrl}
+
+func TestCtrlNOpensEnemyFormAndEscKeepsCombat(t *testing.T) {
+	var merged []string
+	m, gameSession := newTestModel(&merged)
+	chatView := m.chat.GetView()
+
+	m.Update(ctrlN)
+	if !m.CapturesInput() || m.GetView() == chatView {
+		t.Fatal("ctrl+n did not open the enemy form")
+	}
+
+	m.Update(tea.KeyPressMsg{Code: tea.KeyEscape})
+	if m.CapturesInput() {
+		t.Fatal("esc did not close the enemy form")
+	}
+	if gameSession.State.Opponents == nil || len(merged) != 0 {
+		t.Fatal("esc on the enemy form left the combat")
+	}
+}
+
+func TestEnemyFormSubmitAddsOpponentAndCodexEntry(t *testing.T) {
+	classList, raceList := classes.List(), races.List()
+	if len(classList) == 0 || len(raceList) == 0 {
+		t.Skip("no class or race in the loaded config")
+	}
+
+	var merged []string
+	m, gameSession := newTestModel(&merged)
+	gameSession.State.Codex = codex.New()
+	enemy := m.plugins[0].(*newEnemy)
+
+	m.Update(ctrlN)
+	enemy.form = codexform.GetNpcForm(map[string]string{
+		"name":        "npc.test",
+		"description": "description",
+		"class":       classList[0].GetName(),
+		"race":        raceList[0].GetID(),
+	})
+	m.Update(form.Validate{})
+
+	if m.CapturesInput() {
+		t.Fatal("the enemy form stayed open after a valid submit")
+	}
+	if len(gameSession.State.Opponents) != 2 || len(gameSession.State.Codex.Npcs.Entries) != 1 {
+		t.Fatalf("opponents = %d, codex npcs = %d; want 2 and 1", len(gameSession.State.Opponents), len(gameSession.State.Codex.Npcs.Entries))
+	}
+	if m.getTarget() != gameSession.State.Opponents[1] {
+		t.Fatal("the new enemy is not the target")
 	}
 }
