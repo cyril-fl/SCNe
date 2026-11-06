@@ -32,6 +32,19 @@ func TestJournalAddEntry(t *testing.T) {
 	}
 }
 
+func TestJournalRemoveLast(t *testing.T) {
+	journal := NewJournal(nil)
+	journal.RemoveLast()
+
+	journal.AddEntry("gm", "first")
+	journal.AddEntry("gm", "second")
+	journal.RemoveLast()
+
+	if len(journal.Entries) != 1 || journal.Entries[0].Message != "first" {
+		t.Fatalf("Entries = %v, want only first", journal.Entries)
+	}
+}
+
 func setTranslator(t *testing.T, messages ...*i18n.Message) {
 	t.Helper()
 	bundle := i18n.NewBundle(language.English)

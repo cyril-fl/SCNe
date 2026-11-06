@@ -30,23 +30,41 @@ type Chat struct {
 	primitive.Notifier
 	cache
 
-	author   string
-	view     viewport.Model
-	form     *form.Form
-	size     size.Size
-	register func(author, message string)
+	author     string
+	view       viewport.Model
+	form       *form.Form
+	size       size.Size
+	register   func(author, message string)
+	unregister func()
 }
 
 type cache struct {
 	history []string
-	session []string
+	entries primitive.History[entry] // this session
 }
 
-// Template configures a Chat; Register is called for each sent message.
+type entryKind int
+
+const (
+	systemEntry entryKind = iota
+	playerEntry
+)
+
+// entry is a session message; only player entries can be undone.
+type entry struct {
+	kind    entryKind
+	author  string // registered again on redo
+	message string
+	line    string
+}
+
+// Template configures a Chat; Register is called for each sent message and
+// Unregister removes the last registered one when it is undone.
 type Template struct {
-	Author   string
-	History  []string
-	Register func(author, message string)
+	Author     string
+	History    []string
+	Register   func(author, message string)
+	Unregister func()
 }
 
 // New returns a chat with a focused message input.
@@ -54,11 +72,11 @@ func New(params Template) *Chat {
 	return &Chat{
 		Notifier: primitive.NewNotifier(),
 
-		author:   params.Author,
-		form:     makeForm(),
-		history:  params.History,
-		session:  []string{},
-		register: params.Register,
+		author:     params.Author,
+		form:       makeForm(),
+		history:    params.History,
+		register:   params.Register,
+		unregister: params.Unregister,
 	}
 }
 
@@ -80,6 +98,8 @@ func (c *Chat) GetView() string {
 func (m Chat) GetFooter() []string {
 	return []string{
 		shortcut.SEND.String(),
+		shortcut.UNDO.String(),
+		shortcut.REDO.String(),
 	}
 }
 
@@ -91,8 +111,9 @@ func (c *Chat) SetSize(size size.Size) {
 
 // Methods
 
-// Update sends the message on form.Validate, shows save and roll notifications,
-// and forwards other messages to the input.
+// Update sends the message on form.Validate, undoes or redoes player messages
+// on ctrl+z / ctrl+y, shows save and roll notifications, and forwards other
+// messages to the input.
 func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case form.NextField, form.PreviousField:
@@ -113,6 +134,14 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	// 		return c.handleCursorBlink(msg)
 
 	case tea.KeyMsg:
+		switch plumtypes.Key(msg.String()) {
+		case plumtypes.SHORT_CTRL_Z:
+			c.undo()
+			return nil
+		case plumtypes.SHORT_CTRL_Y:
+			c.redo()
+			return nil
+		}
 		return c.handleInput(msg)
 	default:
 		// paste and cursor blink messages must reach the input
@@ -120,9 +149,10 @@ func (c *Chat) Update(msg tea.Msg) tea.Cmd {
 	}
 }
 
-// Amend registers content as a message from the chat author; empty content is ignored.
+// Amend registers content as a system entry under the chat author, so undo
+// stops on it; empty content is ignored.
 func (c *Chat) Amend(content string) {
-	amendChat(c, content)
+	amendChat(c, content, systemEntry)
 }
 
 func (c *Chat) makeViewport() string {
@@ -133,7 +163,7 @@ func (c *Chat) makeViewport() string {
 		style.Accent().Render(makeWelcomeMessage(c)),
 
 		lipgloss.NewStyle().
-			Render(strings.Join(c.session, "\n")),
+			Render(strings.Join(sessionLines(c), "\n")),
 	}
 
 	for _, r := range row {
@@ -191,7 +221,7 @@ func makeForm() *form.Form {
 }
 
 func makeWelcomeMessage(m *Chat) string {
-	if len(m.session) == 0 {
+	if len(m.entries.Passed()) == 0 {
 		return i19n.Localize("chat.msg:welcome")
 	}
 
@@ -242,7 +272,7 @@ func initHistory(gameSession *session.GameSession) []string {
 	return raw
 }
 
-func amendChat(c *Chat, message string) {
+func amendChat(c *Chat, message string, kind entryKind) {
 	if message == "" {
 		return
 	}
@@ -253,14 +283,42 @@ func amendChat(c *Chat, message string) {
 
 	if isRoll(message) {
 		c.register("", message)
-		c.session = append(c.session, styleRoll(message, lipgloss.NewStyle()))
+		c.entries.Push(entry{kind: systemEntry, message: message, line: styleRoll(message, lipgloss.NewStyle())})
 		return
 	}
 
 	c.register(c.author, message)
 
 	authorstyle := style.Accent().Render(campaign.DisplayAuthor(c.author) + ": ")
-	c.session = append(c.session, authorstyle+message)
+	c.entries.Push(entry{kind: kind, author: c.author, message: message, line: authorstyle + message})
+}
+
+func sessionLines(c *Chat) []string {
+	passed := c.entries.Passed()
+	lines := make([]string, 0, len(passed))
+	for _, e := range passed {
+		lines = append(lines, e.line)
+	}
+	return lines
+}
+
+// undo removes the last player entry; a system entry stops it so rolls cannot
+// be undone and rerolled.
+func (c *Chat) undo() {
+	if _, ok := c.entries.Undo(isPlayer); ok && c.unregister != nil {
+		c.unregister()
+	}
+}
+
+// redo registers the last undone entry again.
+func (c *Chat) redo() {
+	if e, ok := c.entries.Redo(); ok {
+		c.register(e.author, e.message)
+	}
+}
+
+func isPlayer(e entry) bool {
+	return e.kind == playerEntry
 }
 
 // func (c *Chat) handleCursorBlink(msg cursor.BlinkMsg) tea.Cmd {

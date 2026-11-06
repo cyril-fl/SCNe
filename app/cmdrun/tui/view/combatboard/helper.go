@@ -87,6 +87,11 @@ func (m *model) makeChat() *chat.Chat {
 		Register: func(_, message string) {
 			m.buffer = append(m.buffer, message)
 		},
+		Unregister: func() {
+			if len(m.buffer) > 0 {
+				m.buffer = m.buffer[:len(m.buffer)-1]
+			}
+		},
 	})
 }
 

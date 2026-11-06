@@ -28,6 +28,10 @@ new:
   other: "new"
 edit:
   other: "edit"
+undo:
+  other: "undo"
+redo:
+  other: "redo"
 
 # Options
 accept:

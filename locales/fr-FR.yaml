@@ -28,6 +28,10 @@ new:
   other: "nouveau"
 edit:
   other: "modifier"
+undo:
+  other: "annuler"
+redo:
+  other: "rétablir"
 
 # Options
 accept:

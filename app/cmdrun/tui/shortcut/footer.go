@@ -27,6 +27,10 @@ var (
 		Command: CtrlEnter,
 		Label:   "open",
 	})
+	REDO = NewShortcut(Template{
+		Command: CtrlY,
+		Label:   "redo",
+	})
 	QUIT = NewShortcut(Template{
 		Command: CtrlQ,
 		Label:   "quit",
@@ -50,5 +54,9 @@ var (
 	THROW = NewShortcut(Template{
 		Command: CtrlEnter,
 		Label:   "roll",
+	})
+	UNDO = NewShortcut(Template{
+		Command: CtrlZ,
+		Label:   "undo",
 	})
 )

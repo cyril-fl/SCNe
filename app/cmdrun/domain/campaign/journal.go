@@ -53,6 +53,13 @@ func (j *Journal) AddEntry(author, message string) *Entry {
 	return entry
 }
 
+// RemoveLast drops the last entry; it does nothing on an empty journal.
+func (j *Journal) RemoveLast() {
+	if len(j.Entries) > 0 {
+		j.Entries = j.Entries[:len(j.Entries)-1]
+	}
+}
+
 // String formats the entry as a gameboard journal line, without author when it has none.
 func (e *Entry) String() string {
 	date := e.Timestamp.Format(i19n.Localize("journal.date:format")) + " - "

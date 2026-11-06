@@ -14,6 +14,8 @@ const (
 	CtrlS      Command = "^S"
 	CtrlN      Command = "^N"
 	CtrlE      Command = "^E"
+	CtrlY      Command = "^Y"
+	CtrlZ      Command = "^Z"
 	ShiftEnter Command = "⇧↳"
 	CtrlEnter  Command = "^↳"
 	Enter      Command = "↳"

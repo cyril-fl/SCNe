@@ -135,6 +135,9 @@ func makeChat(gameSession *session.GameSession) *chat.Chat {
 		Register: func(author, message string) {
 			gameSession.GetAdventureJournal().AddEntry(author, message)
 		},
+		Unregister: func() {
+			gameSession.GetAdventureJournal().RemoveLast()
+		},
 	})
 }
 

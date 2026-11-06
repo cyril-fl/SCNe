@@ -34,8 +34,8 @@ func TestChatSubmitRegistersMessage(t *testing.T) {
 	if author != "Ada" || message != "hi" {
 		t.Fatalf("Register received %q, %q; want Ada, hi", author, message)
 	}
-	if len(c.session) != 1 || !strings.Contains(c.session[0], "hi") {
-		t.Fatalf("session = %v, want the submitted message", c.session)
+	if len(c.entries.Passed()) != 1 || !strings.Contains(c.entries.Passed()[0].line, "hi") {
+		t.Fatalf("passed = %v, want the submitted message", c.entries.Passed())
 	}
 	if got := c.form.GetFieldValue("message"); got != "" {
 		t.Fatalf("message after submit = %q, want empty", got)
@@ -48,7 +48,7 @@ func TestChatSubmitIgnoresEmptyMessage(t *testing.T) {
 
 	c.Update(form.Validate{})
 
-	if called || len(c.session) != 0 {
+	if called || len(c.entries.Passed()) != 0 {
 		t.Fatal("empty message was registered")
 	}
 }
@@ -107,7 +107,80 @@ func TestChatAmendRegistersRollWithoutAuthor(t *testing.T) {
 	if author != "" {
 		t.Fatalf("Register author = %q, want empty for a roll", author)
 	}
-	if got := ansi.Strip(c.session[0]); got != "d20 → 14" {
+	if got := ansi.Strip(c.entries.Passed()[0].line); got != "d20 → 14" {
 		t.Fatalf("session line = %q, want the roll without author", got)
+	}
+}
+
+func send(c *Chat, text string) {
+	for _, r := range text {
+		c.Update(tea.KeyPressMsg{Code: r, Text: string(r)})
+	}
+	c.Update(form.Validate{})
+}
+
+var (
+	ctrlZ = tea.KeyPressMsg{Code: 'z', Mod: tea.ModCtrl}
+	ctrlY = tea.KeyPressMsg{Code: 'y', Mod: tea.ModCtrl}
+)
+
+func TestChatUndoRedoPlayerMessage(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	var journal []string
+	c := New(Template{
+		Author:     "Ada",
+		Register:   func(_, m string) { journal = append(journal, m) },
+		Unregister: func() { journal = journal[:len(journal)-1] },
+	})
+
+	send(c, "a")
+	send(c, "b")
+	c.Update(ctrlZ)
+	c.Update(ctrlZ)
+	if len(c.entries.Passed()) != 0 || len(journal) != 0 {
+		t.Fatalf("after undo passed = %v, journal = %v, want both empty", c.entries.Passed(), journal)
+	}
+
+	c.Update(ctrlY)
+	if len(c.entries.Passed()) != 1 || c.entries.Passed()[0].message != "a" || strings.Join(journal, ",") != "a" {
+		t.Fatalf("after redo passed = %v, journal = %v, want a", c.entries.Passed(), journal)
+	}
+}
+
+func TestChatUndoStopsOnSystemEntry(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	unregistered := 0
+	c := New(Template{
+		Author:     "Ada",
+		Register:   func(string, string) {},
+		Unregister: func() { unregistered++ },
+	})
+
+	send(c, "a")
+	c.Amend("d20 → 14")
+	c.Update(ctrlZ)
+
+	if len(c.entries.Passed()) != 2 || unregistered != 0 {
+		t.Fatalf("undo went past the roll: passed = %v, unregistered = %d", c.entries.Passed(), unregistered)
+	}
+}
+
+func TestChatNewEntryDumpsFuture(t *testing.T) {
+	logs.Init(testLogRegistrar{})
+	t.Cleanup(func() { logs.Init(nil) })
+
+	c := New(Template{Author: "Ada", Register: func(string, string) {}, Unregister: func() {}})
+
+	send(c, "a")
+	c.Update(ctrlZ)
+	send(c, "b")
+	c.Update(ctrlY)
+
+	if len(c.entries.Passed()) != 1 || c.entries.Passed()[0].message != "b" {
+		t.Fatalf("passed = %v, want only b after redo with an empty future", c.entries.Passed())
 	}
 }
