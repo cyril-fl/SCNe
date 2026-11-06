@@ -7,7 +7,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.7
 	charm.land/lipgloss/v2 v2.0.6
 	github.com/charmbracelet/x/ansi v0.11.8
-	github.com/cyril-fl/plum v0.0.0-20261020212115-b9d75ca4256c
+	github.com/cyril-fl/plum v0.1.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
@@ -81,7 +81,5 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/term v0.46.0 // indirect
 )
-
-replace github.com/cyril-fl/plum => /Users/cyrilflambard/Devloppement/go/plum
 
 tool github.com/evilmartians/lefthook/v2
