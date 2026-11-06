@@ -19,6 +19,8 @@ error.invalid:already_exists:
   other: "\"{{.Subject}}\" already exists: {{.Value}}"
 error.invalid:transition:
   other: "Transition not allowed"
+error.invalid:funds:
+  other: "Not enough money: {{.Cost}} copper needed, {{.Total}} available"
 
 # Not found
 error.not_found:
