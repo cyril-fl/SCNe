@@ -35,7 +35,7 @@ type action struct {
 func NewForm(gameSession *session.GameSession) *form.Form {
 	return form.New(
 		field.SelectField(field.SelectTemplate[action]{Template: field.Template[action]{ID: "action", Label: "field.inventory", Required: true}, Options: makeOptions(gameSession.State.Player)}),
-	).Focus()
+	).DisableAutoSubmit().Focus()
 }
 
 // Submit applies the chosen action to the player and reports it in the chat.

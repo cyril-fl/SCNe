@@ -28,7 +28,7 @@ func newPickupPage(gameSession *session.GameSession) *actionPage {
 			return form.New(
 				field.SelectField(field.SelectTemplate[id.ID]{Template: field.Template[id.ID]{ID: "object", Label: "field.object", Required: true}, Options: getObjectOptions(gameSession)}),
 				field.TextField(field.TextTemplate[string]{Template: field.Template[string]{ID: "quantity", Label: "field.quantity", Defaultvalue: "1", Validator: validatePositive, Required: true}}),
-			).Focus()
+			).DisableAutoSubmit().Focus()
 		},
 		Submit: func(values *form.Form) tea.Cmd {
 			entryID, _ := values.GetFieldValue("object").(id.ID)
@@ -51,7 +51,7 @@ func newWalletPage(gameSession *session.GameSession) *actionPage {
 				coinField("gold"),
 				coinField("silver"),
 				coinField("copper"),
-			).Focus()
+			).DisableAutoSubmit().Focus()
 		},
 		Submit: func(values *form.Form) tea.Cmd {
 			return report(applyWallet(gameSession, values.GetValuesAsMappedString()))

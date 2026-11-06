@@ -9,8 +9,11 @@ import (
 	"scne/app/cmdrun/domain/card/objects"
 	"scne/app/cmdrun/domain/card/objects/equipment"
 	"scne/app/cmdrun/domain/gameplay/session"
+	"scne/app/shared/components/form"
 	"scne/app/shared/messages"
 	"scne/app/shared/services/logs"
+
+	tea "charm.land/bubbletea/v2"
 )
 
 type testLogRegistrar struct{}
@@ -90,5 +93,30 @@ func TestSubmitReportsResult(t *testing.T) {
 	}
 	if gameSession.State.Player.Inventory.Count("heal") != 1 {
 		t.Fatal("Submit with the first option did not drink a potion")
+	}
+}
+
+// A misclick past the last option must not apply an action: only ctrl+enter validates.
+func TestFormDoesNotAutoSubmit(t *testing.T) {
+	gameSession := session.NewGameSession([16]byte{}, &session.SessionState{Player: newPlayer(t)})
+	f := NewForm(gameSession)
+
+	for range 10 {
+		for _, key := range []tea.KeyPressMsg{{Code: tea.KeyDown}, {Code: tea.KeyTab}, {Code: tea.KeyEnter}} {
+			// Feed the produced messages back, as the bubbletea loop does.
+			var msg tea.Msg = key
+			for range 3 {
+				_, cmd := f.Update(msg)
+				if cmd == nil {
+					break
+				}
+				if msg = cmd(); msg == nil {
+					break
+				}
+				if _, ok := msg.(form.Validate); ok {
+					t.Fatalf("%v led to form.Validate", key)
+				}
+			}
+		}
 	}
 }
