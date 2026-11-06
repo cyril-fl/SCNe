@@ -37,6 +37,24 @@ func (set *Equipment) AddGear(gear Gear) {
 	}
 }
 
+// Equip puts gear in its slot and returns the gear it replaces, if any.
+func (set *Equipment) Equip(gear Gear) (Gear, bool) {
+	previous, had := set.Unequip(gear.Slot)
+	set.List = append(set.List, gear)
+	return previous, had
+}
+
+// Unequip removes and returns the gear in s, if any.
+func (set *Equipment) Unequip(s slot.Slot) (Gear, bool) {
+	for i, gear := range set.List {
+		if gear.Slot == s {
+			set.List = append(set.List[:i], set.List[i+1:]...)
+			return gear, true
+		}
+	}
+	return Gear{}, false
+}
+
 // Gears returns the equipped gears.
 func (set *Equipment) Gears() []Gear {
 	return set.List
