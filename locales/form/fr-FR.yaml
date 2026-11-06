@@ -35,5 +35,25 @@ field.location:
   other: "lieu"
 field.inventory:
   other: "action"
+field.slot:
+  other: "emplacement"
+field.effect:
+  other: "effet"
+field.effect_value:
+  other: "valeur de l'effet"
+slot.helmet:
+  other: "casque"
+slot.chestplate:
+  other: "plastron"
+slot.gauntlets:
+  other: "gantelets"
+slot.greaves:
+  other: "jambières"
+slot.boots:
+  other: "bottes"
+slot.right_hand:
+  other: "main droite"
+slot.left_hand:
+  other: "main gauche"
 field.none:
   other: "Aucune"

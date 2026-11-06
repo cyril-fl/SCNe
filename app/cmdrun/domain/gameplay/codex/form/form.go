@@ -5,6 +5,7 @@ import (
 	"scne/app/cmdrun/domain/card/attributes/objectcategory"
 	"scne/app/cmdrun/domain/card/attributes/priority"
 	"scne/app/cmdrun/domain/card/attributes/rank"
+	"scne/app/cmdrun/domain/card/attributes/slot"
 	"scne/app/cmdrun/domain/card/attributes/stats"
 	"scne/app/cmdrun/domain/card/characters/classes"
 	"scne/app/cmdrun/domain/card/characters/races"
@@ -112,6 +113,9 @@ func GetObjectForm(values map[string]string) *form.Form {
 		field.TextField(field.TextTemplate[string]{ID: "name", Label: "field.name", Defaultvalue: values["name"], Validator: nil, Required: true}),
 		field.TextField(field.TextTemplate[string]{ID: "description", Label: "field.description", Defaultvalue: values["description"], Validator: nil, Required: true}),
 		field.SelectField(field.SelectTemplate[string]{ID: "category", Label: "field.category", Defaultvalue: values["category"], Options: categoryItems, Validator: nil, Required: true}),
+		field.SelectField(field.SelectTemplate[string]{ID: "slot", Label: "field.slot", Defaultvalue: values["slot"], Options: getFormSlotOptions()}),
+		field.SelectField(field.SelectTemplate[string]{ID: "effect_stat", Label: "field.effect", Defaultvalue: values["effect_stat"], Options: getFormEffectOptions()}),
+		field.TextField(field.TextTemplate[string]{ID: "effect_value", Label: "field.effect_value", Defaultvalue: values["effect_value"], Validator: validateStat}),
 	).Focus()
 }
 
@@ -208,6 +212,23 @@ func validateStat(value string) error {
 		})
 	}
 	return nil
+}
+
+// getFormSlotOptions lists "none" first: an object without slot is not a gear.
+func getFormSlotOptions() []models.Item[string] {
+	items := []models.Item[string]{models.NewItem(i19n.Localize("field.none"), "", "")}
+	for _, value := range slot.List() {
+		items = append(items, models.NewItem(i19n.Localize("slot."+value.String()), "", value.String()))
+	}
+	return items
+}
+
+func getFormEffectOptions() []models.Item[string] {
+	items := []models.Item[string]{models.NewItem(i19n.Localize("field.none"), "", "")}
+	for _, value := range stats.List() {
+		items = append(items, models.NewItem(i19n.Localize("stat."+value.String()), "", value.String()))
+	}
+	return items
 }
 
 func getFormRaceOptions() []models.Item[string] {

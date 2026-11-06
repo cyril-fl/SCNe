@@ -5,12 +5,15 @@ import (
 	"os"
 	"scne/app/cmdrun/domain/card/attributes/objectcategory"
 	"scne/app/cmdrun/domain/card/attributes/rarity"
+	"scne/app/cmdrun/domain/card/attributes/slot"
+	"scne/app/cmdrun/domain/card/attributes/stats"
 	"scne/app/cmdrun/domain/card/attributes/variety"
 	"scne/app/cmdrun/domain/card/objects"
 	"scne/app/cmdrun/types/id"
 	"scne/app/shared/services/i19n"
 	"scne/app/shared/services/logs"
 	"slices"
+	"strconv"
 	"time"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
@@ -30,6 +33,8 @@ type objectentry struct {
 	ID        id.ID           `bson:"id"`
 	Timestamp time.Time       `bson:"timestamp"`
 	Object    *objects.Object `bson:"object"`
+	// Slot makes the object a gear; empty for a plain object.
+	Slot slot.Slot `bson:"slot"`
 }
 
 var tableobject = "codex.objects"
@@ -53,6 +58,7 @@ func (tb *ObjectsTable) AddFromMap(values map[string]string) error {
 	}
 
 	tb.Add(object)
+	tb.Entries[len(tb.Entries)-1].Slot = slot.Slot(values["slot"])
 
 	logs.SilentSuccess("codex.entry:added", map[string]any{
 		"Table": tableobject,
@@ -79,6 +85,7 @@ func (tb *ObjectsTable) objectFromMap(values map[string]string) (*objects.Object
 		Rarity:      rarity.Default(),
 		Variety:     variety.AssertWithDefault(values["variety"]),
 		Category:    objectcategory.AssertWithDefault(values["category"]),
+		Effects:     effectsFromMap(values),
 	})
 
 	if err != nil {
@@ -110,12 +117,18 @@ func (tb *ObjectsTable) FormEntries() []Entry {
 		}
 
 		name, description := entry.Object.GetName(), entry.Object.GetDescription()
-
-		entries = append(entries, newEntry(entry.ID, name, description, map[string]string{
+		values := map[string]string{
 			"name":        name,
 			"description": description,
 			"category":    entry.Object.Category.String(),
-		}, false))
+			"slot":        entry.Slot.String(),
+		}
+		if effects := entry.Object.Effects; len(effects) > 0 {
+			values["effect_stat"] = effects[0].Modifier.Stat.String()
+			values["effect_value"] = strconv.Itoa(effects[0].Modifier.Value)
+		}
+
+		entries = append(entries, newEntry(entry.ID, name, description, values, false))
 	}
 	return entries
 }
@@ -136,7 +149,27 @@ func (tb *ObjectsTable) editFromMap(index int, values map[string]string) error {
 	}
 
 	tb.Entries[index].Object = object
+	tb.Entries[index].Slot = slot.Slot(values["slot"])
 	return nil
+}
+
+// Find returns the object of the entry entryID and its slot, empty for a plain object.
+func (tb *ObjectsTable) Find(entryID id.ID) (objects.Object, slot.Slot, bool) {
+	for _, entry := range tb.Entries {
+		if entry.ID == entryID && entry.Object != nil {
+			return *entry.Object, entry.Slot, true
+		}
+	}
+	return objects.Object{}, "", false
+}
+
+// effectsFromMap reads the optional effect: a stat and its value.
+func effectsFromMap(values map[string]string) []stats.Effect {
+	value, err := strconv.Atoi(values["effect_value"])
+	if values["effect_stat"] == "" || err != nil || value == 0 {
+		return nil
+	}
+	return []stats.Effect{{Modifier: stats.Modifier{Stat: stats.Stat(values["effect_stat"]), Value: value}}}
 }
 
 func (tb *ObjectsTable) assertEntry(entry map[string]string) {
@@ -153,6 +186,18 @@ func (tb *ObjectsTable) assertEntry(entry map[string]string) {
 		tb.SetErr(logs.Error("error.required", map[string]any{
 			"Subject":  "item",
 			"Property": "property.description",
+		}))
+	}
+	if s := entry["slot"]; s != "" && !slot.Assert(s) {
+		tb.SetErr(logs.Error("error.invalid", map[string]any{
+			"Subject": "slot",
+			"Value":   s,
+		}))
+	}
+	if s := entry["effect_stat"]; s != "" && !stats.Stat(s).Validate() {
+		tb.SetErr(logs.Error("error.invalid", map[string]any{
+			"Subject": "stat",
+			"Value":   s,
 		}))
 	}
 	/*
