@@ -142,7 +142,7 @@ func TestEnemyFormSubmitAddsOpponentAndCodexEntry(t *testing.T) {
 	var merged []string
 	m, gameSession := newTestModel(&merged)
 	gameSession.State.Codex = codex.New()
-	enemy := m.plugins[0].(*newEnemy)
+	enemy := m.plugins[0].(*formPlugin)
 
 	m.Update(ctrlN)
 	enemy.form = codexform.GetNpcForm(map[string]string{
@@ -161,5 +161,15 @@ func TestEnemyFormSubmitAddsOpponentAndCodexEntry(t *testing.T) {
 	}
 	if m.getTarget() != gameSession.State.Opponents[1] {
 		t.Fatal("the new enemy is not the target")
+	}
+}
+
+func TestCtrlOOpensInventoryForm(t *testing.T) {
+	var merged []string
+	m, _ := newTestModel(&merged)
+
+	m.Update(tea.KeyPressMsg{Code: 'o', Mod: tea.ModCtrl})
+	if !m.CapturesInput() {
+		t.Fatal("ctrl+o did not open the inventory form")
 	}
 }

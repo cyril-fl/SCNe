@@ -3,6 +3,7 @@ package combatboard
 import (
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/tui/view/menuinventory"
 	"scne/app/cmdrun/types/size"
 	"scne/app/shared/components/form"
 	"scne/app/shared/messages"
@@ -13,35 +14,65 @@ import (
 	plumtypes "github.com/cyril-fl/plum/types"
 )
 
-// newEnemy opens the codex NPC form on ctrl+n; the saved NPC joins the codex and the combat.
-type newEnemy struct {
-	session *session.GameSession
-	form    *form.Form
-	size    size.Size
-	onAdd   func()
+// formPlugin opens a form on key and runs submit once the form is valid.
+type formPlugin struct {
+	key      plumtypes.Key
+	shortcut shortcut.Shortcut
+	newForm  func() *form.Form
+	submit   func(values *form.Form) tea.Cmd
+
+	form *form.Form
+	size size.Size
 }
 
-func newEnemyPlugin(gameSession *session.GameSession, onAdd func()) *newEnemy {
-	return &newEnemy{session: gameSession, onAdd: onAdd}
+// newEnemyPlugin opens the codex NPC form on ctrl+n; the saved NPC joins the codex and the combat.
+func newEnemyPlugin(gameSession *session.GameSession, onAdd func()) *formPlugin {
+	return &formPlugin{
+		key:      plumtypes.SHORT_CTRL_N,
+		shortcut: shortcut.NEW,
+		newForm:  func() *form.Form { return codexform.GetNpcForm(map[string]string{}) },
+		submit: func(values *form.Form) tea.Cmd {
+			// The codex rolls the stats.
+			npcs := gameSession.State.Codex.Npcs
+			if err := npcs.AddFromMap(values.GetValuesAsMappedString()); err != nil {
+				return messages.Fail(err)
+			}
+			gameSession.AddOpponent(npcs.Entries[len(npcs.Entries)-1].Character)
+			onAdd()
+			return nil
+		},
+	}
+}
+
+// newInventoryPlugin opens the inventory form on ctrl+o.
+func newInventoryPlugin(gameSession *session.GameSession) *formPlugin {
+	return &formPlugin{
+		key:      plumtypes.SHORT_CTRL_O,
+		shortcut: shortcut.INVENTORY,
+		newForm:  func() *form.Form { return menuinventory.NewForm(gameSession) },
+		submit: func(values *form.Form) tea.Cmd {
+			return menuinventory.Submit(gameSession, values)
+		},
+	}
 }
 
 // Getters & Setters
 
-func (p *newEnemy) GetView() string {
+func (p *formPlugin) GetView() string {
 	if p.form == nil {
 		return ""
 	}
 	return p.form.View().Content
 }
 
-func (p *newEnemy) GetFooter() []string {
+func (p *formPlugin) GetFooter() []string {
 	if p.form == nil {
-		return []string{shortcut.NEW.String()}
+		return []string{p.shortcut.String()}
 	}
 	return []string{shortcut.SAVEFORM.String(), shortcut.LEAVE.String()}
 }
 
-func (p *newEnemy) SetSize(s size.Size) {
+func (p *formPlugin) SetSize(s size.Size) {
 	p.size = s
 	if p.form != nil {
 		p.form.SetWidth(s.GetWidth()).SetHeight(s.GetHeight())
@@ -50,10 +81,10 @@ func (p *newEnemy) SetSize(s size.Size) {
 
 // Methods
 
-func (p *newEnemy) HandleUpdate(msg tea.Msg) tea.Cmd {
+func (p *formPlugin) HandleUpdate(msg tea.Msg) tea.Cmd {
 	if p.form == nil {
-		if key, ok := msg.(tea.KeyPressMsg); ok && plumtypes.Key(key.String()) == plumtypes.SHORT_CTRL_N {
-			p.form = codexform.GetNpcForm(map[string]string{})
+		if key, ok := msg.(tea.KeyPressMsg); ok && plumtypes.Key(key.String()) == p.key {
+			p.form = p.newForm()
 			p.SetSize(p.size)
 		}
 		return nil
@@ -61,7 +92,7 @@ func (p *newEnemy) HandleUpdate(msg tea.Msg) tea.Cmd {
 
 	switch msg := msg.(type) {
 	case form.Validate:
-		return p.submit()
+		return p.handleValidate()
 	case tea.KeyPressMsg:
 		switch plumtypes.Key(msg.String()) {
 		case plumtypes.KEY_ESC:
@@ -76,20 +107,14 @@ func (p *newEnemy) HandleUpdate(msg tea.Msg) tea.Cmd {
 	return cmd
 }
 
-// submit saves the NPC in the codex, where its stats are rolled, and adds it to the combat.
-func (p *newEnemy) submit() tea.Cmd {
+// handleValidate keeps the form open on errors and closes it after submit.
+func (p *formPlugin) handleValidate() tea.Cmd {
 	p.form.Submit()
 	if p.form.HasErr() {
 		return messages.Fail(p.form.GetErr())
 	}
 
-	npcs := p.session.State.Codex.Npcs
-	if err := npcs.AddFromMap(p.form.GetValuesAsMappedString()); err != nil {
-		return messages.Fail(err)
-	}
-
-	p.session.AddOpponent(npcs.Entries[len(npcs.Entries)-1].Character)
+	cmd := p.submit(p.form)
 	p.form = nil
-	p.onAdd()
-	return nil
+	return cmd
 }

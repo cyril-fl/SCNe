@@ -49,7 +49,10 @@ func NewModel(params UiParams) *model {
 	}
 
 	m.chat = m.makeChat()
-	m.plugins = []plugin{newEnemyPlugin(params.Session, m.selectLastOpponent)}
+	m.plugins = []plugin{
+		newEnemyPlugin(params.Session, m.selectLastOpponent),
+		newInventoryPlugin(params.Session),
+	}
 	m.target = navigation.NewSection(navigation.TemplateSection{
 		ID:      "target",
 		Content: m.getTargetInfo,

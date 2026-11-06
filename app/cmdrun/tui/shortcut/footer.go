@@ -11,6 +11,10 @@ var (
 		Command: CtrlE,
 		Label:   "edit",
 	})
+	INVENTORY = NewShortcut(Template{
+		Command: CtrlO,
+		Label:   "action.inventory",
+	})
 	LEAVE = NewShortcut(Template{
 		Command: Esc,
 		Label:   "leave",
