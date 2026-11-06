@@ -40,6 +40,18 @@ field.effect:
   other: "effect"
 field.effect_value:
   other: "effect value"
+field.object:
+  other: "object"
+field.quantity:
+  other: "quantity"
+field.operation:
+  other: "operation"
+field.gold:
+  other: "gold"
+field.silver:
+  other: "silver"
+field.copper:
+  other: "copper"
 slot.helmet:
   other: "helmet"
 slot.chestplate:

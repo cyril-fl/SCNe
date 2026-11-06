@@ -98,6 +98,20 @@ action.travel:
   other: "voyager"
 action.inventory:
   other: "inventaire"
+action.pickup:
+  other: "ramasser"
+action.wallet:
+  other: "bourse"
+inventory.msg:picked:
+  other: "Vous obtenez {{.Qty}} × {{.Item}}."
+wallet.earn:
+  other: "gagner"
+wallet.spend:
+  other: "dépenser"
+wallet.msg:earned:
+  other: "Vous gagnez {{.Copper}} pc. Bourse : {{.Gold}} po · {{.Silver}} pa · {{.Rest}} pc."
+wallet.msg:spent:
+  other: "Vous dépensez {{.Copper}} pc. Bourse : {{.Gold}} po · {{.Silver}} pa · {{.Rest}} pc."
 inventory.option:consume:
   other: "Boire : {{.Item}} (×{{.Qty}})"
 inventory.option:equip:

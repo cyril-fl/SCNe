@@ -121,3 +121,16 @@ func TestConsume(t *testing.T) {
 		t.Fatal("Consume(missing) must fail")
 	}
 }
+
+func TestPickSendsGearsToBag(t *testing.T) {
+	c := &Character{}
+	object := objects.Object{}
+	object.Name = "thing"
+
+	c.Pick(object, "", 2)
+	c.Pick(object, "helmet", 2)
+
+	if c.Inventory.Count("thing") != 2 || len(c.Gears) != 2 || c.Gears[0].Slot != "helmet" {
+		t.Fatalf("inventory = %d, bag = %v; want 2 objects and 2 helmets", c.Inventory.Count("thing"), c.Gears)
+	}
+}

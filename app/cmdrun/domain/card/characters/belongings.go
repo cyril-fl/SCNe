@@ -6,6 +6,7 @@ import (
 	"scne/app/cmdrun/domain/card/attributes/slot"
 	"scne/app/cmdrun/domain/card/attributes/stats"
 	"scne/app/cmdrun/domain/card/objects"
+	"scne/app/cmdrun/domain/card/objects/equipment"
 	"scne/app/shared/services/logs"
 )
 
@@ -95,6 +96,17 @@ func (character *Character) Unequip(s slot.Slot) bool {
 		character.Gears = append(character.Gears, gear)
 	}
 	return had
+}
+
+// Pick adds qty copies of object: to the gear bag when s is a slot, to the inventory otherwise.
+func (character *Character) Pick(object objects.Object, s slot.Slot, qty int) {
+	if s == "" {
+		character.Inventory.Add(object, qty)
+		return
+	}
+	for range qty {
+		character.Gears = append(character.Gears, equipment.Gear{Object: object, Slot: s})
+	}
 }
 
 // Consume uses one object named name: positive effects heal their stat,

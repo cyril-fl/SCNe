@@ -22,6 +22,10 @@ travel:
   other: "voyager"
 use:
   other: "utiliser"
+pickup:
+  other: "ramasser"
+wallet:apply:
+  other: "valider"
 fight:
   other: "combattre"
 leave:

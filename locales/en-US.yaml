@@ -22,6 +22,10 @@ travel:
   other: "travel"
 use:
   other: "use"
+pickup:
+  other: "pick up"
+wallet:apply:
+  other: "apply"
 fight:
   other: "fight"
 leave:
