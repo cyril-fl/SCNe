@@ -22,8 +22,12 @@ type Character struct {
 	Stats stats.Stats
 
 	Equipment equipment.Equipment
-	Inventory []objects.Object
+	Gears     []equipment.Gear // carried, not equipped
+	Inventory objects.Inventory
 	Wallet    wallet.Wallet
+
+	// Lost is what each stat lost (damage taken, stamina spent): the stats are maximums.
+	Lost stats.Stats
 
 	/*
 		LOW Ajouter des "effet" au personnage, ce ne serait pas des effet comme une arme qui fais x ou y mais plus des stats comme un empoissenememnt ex lier a une potion au autre

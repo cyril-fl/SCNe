@@ -56,6 +56,7 @@ func TestSectionRendersCharacterSheet(t *testing.T) {
 		"Lieu     Taverne",
 		"Bourse   12 po · 5 pa · 3 pc",
 		"Stats",
+		"10/10", // stats.List()[0] is health, shown as current/max
 	} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("view does not contain %q:\n%s", want, view)

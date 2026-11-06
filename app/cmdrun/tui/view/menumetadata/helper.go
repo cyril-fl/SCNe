@@ -84,7 +84,7 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 			content.WriteString("\n")
 		}
 		label := plumtransform.Capitalize(i19n.Localize("stat." + string(stat)))
-		fmt.Fprintf(content, "%-10s%2d", label, player.Stats[stat])
+		fmt.Fprintf(content, "%-10s%5s", label, player.FormatStat(stat))
 	}
 }
 

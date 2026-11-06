@@ -147,7 +147,7 @@ func (m *model) getTargetInfo() string {
 
 	for _, stat := range stats.List() {
 		label := plumtransform.Capitalize(i19n.Localize("stat." + stat.String()))
-		fmt.Fprintf(&content, "%-10s %d\n", label, target.Stats[stat])
+		fmt.Fprintf(&content, "%-10s %s\n", label, target.FormatStat(stat))
 	}
 
 	return strings.TrimRight(content.String(), "\n")
