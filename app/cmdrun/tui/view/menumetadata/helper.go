@@ -65,7 +65,7 @@ func GetWalletInfo(content *strings.Builder, gameSession *session.GameSession) {
 	}))
 }
 
-// GetStatInfo writes the player stats to content, two per line.
+// GetStatInfo writes the player stats to content, one per line.
 func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 	content.WriteString("\n")
 	content.WriteString(plumtransform.Capitalize(i19n.Localize("stats")))
@@ -77,14 +77,13 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 		return
 	}
 
+	// One stat per line: two "current/max" values overflow the panel, and a wrapped line pushes the whole screen up.
 	for i, stat := range stats.List() {
-		if i%2 == 1 {
-			content.WriteString("   ")
-		} else if i > 0 {
+		if i > 0 {
 			content.WriteString("\n")
 		}
 		label := plumtransform.Capitalize(i19n.Localize("stat." + string(stat)))
-		fmt.Fprintf(content, "%-10s%5s", label, player.FormatStat(stat))
+		fmt.Fprintf(content, "%-10s%s", label, player.FormatStat(stat))
 	}
 }
 
