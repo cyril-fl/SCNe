@@ -33,5 +33,7 @@ field.opponent:
   other: "adversaire"
 field.location:
   other: "lieu"
+field.inventory:
+  other: "action"
 field.none:
   other: "Aucune"

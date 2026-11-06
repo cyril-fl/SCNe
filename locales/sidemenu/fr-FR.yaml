@@ -96,6 +96,20 @@ action.fight:
   other: "combattre"
 action.travel:
   other: "voyager"
+action.inventory:
+  other: "inventaire"
+inventory.option:consume:
+  other: "Boire : {{.Item}} (×{{.Qty}})"
+inventory.option:equip:
+  other: "Équiper : {{.Item}}"
+inventory.option:unequip:
+  other: "Retirer : {{.Item}}"
+inventory.msg:consumed:
+  other: "Vous utilisez {{.Item}}."
+inventory.msg:equipped:
+  other: "Vous équipez {{.Item}}."
+inventory.msg:unequipped:
+  other: "Vous retirez {{.Item}}."
 opponents:
   other: "adversaires"
 target:

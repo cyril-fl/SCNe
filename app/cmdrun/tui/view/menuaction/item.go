@@ -15,5 +15,6 @@ func makeActionList() []*actionMenuItem {
 	return []*actionMenuItem{
 		{id: FIGHT_PAGE},
 		{id: TRAVEL_PAGE},
+		{id: INVENTORY_PAGE},
 	}
 }

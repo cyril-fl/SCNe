@@ -9,6 +9,7 @@ import (
 	"scne/app/cmdrun/domain/gameplay/portal"
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/tui/shortcut"
+	"scne/app/cmdrun/tui/view/menuinventory"
 	"scne/app/cmdrun/types/id"
 	"scne/app/shared/components/form"
 	"scne/app/shared/components/form/field"
@@ -21,8 +22,9 @@ import (
 )
 
 const (
-	FIGHT_PAGE  = "action.fight"
-	TRAVEL_PAGE = "action.travel"
+	FIGHT_PAGE     = "action.fight"
+	TRAVEL_PAGE    = "action.travel"
+	INVENTORY_PAGE = "action.inventory"
 	// COMBAT_PAGE is the combat chat opened by the fight page.
 	COMBAT_PAGE = "action.combat"
 )
@@ -85,8 +87,9 @@ func (m *actionMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 // NewFormPages creates the action pages owned by the gameboard state machine.
 func NewFormPages(gameSession *session.GameSession) map[string]*actionPage {
 	return map[string]*actionPage{
-		FIGHT_PAGE:  newFightPage(gameSession),
-		TRAVEL_PAGE: newTravelPage(gameSession),
+		FIGHT_PAGE:     newFightPage(gameSession),
+		TRAVEL_PAGE:    newTravelPage(gameSession),
+		INVENTORY_PAGE: newInventoryPage(gameSession),
 	}
 }
 
@@ -128,6 +131,17 @@ func newTravelPage(gameSession *session.GameSession) *actionPage {
 			entryID := values.GetFieldValue("location").(id.ID)
 			portal.Travel(gameSession, entryID)
 			return nil
+		},
+	})
+}
+
+// newInventoryPage drinks, equips or takes off what the player chooses.
+func newInventoryPage(gameSession *session.GameSession) *actionPage {
+	return newPage(PageTemplate{
+		Label:   "use",
+		NewForm: func() *form.Form { return menuinventory.NewForm(gameSession) },
+		Submit: func(values *form.Form) tea.Cmd {
+			return menuinventory.Submit(gameSession, values)
 		},
 	})
 }

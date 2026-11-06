@@ -20,6 +20,8 @@ navigate:
   other: "navigate"
 travel:
   other: "travel"
+use:
+  other: "use"
 fight:
   other: "fight"
 leave:

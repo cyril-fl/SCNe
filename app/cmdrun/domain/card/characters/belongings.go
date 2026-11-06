@@ -5,6 +5,7 @@ import (
 
 	"scne/app/cmdrun/domain/card/attributes/slot"
 	"scne/app/cmdrun/domain/card/attributes/stats"
+	"scne/app/cmdrun/domain/card/objects"
 	"scne/app/shared/services/logs"
 )
 
@@ -12,6 +13,11 @@ import (
 const consumableCategory = "potion"
 
 // Getters & Setters
+
+// IsConsumable reports whether object can be consumed.
+func IsConsumable(object objects.Object) bool {
+	return object.Category.String() == consumableCategory
+}
 
 // EffectiveStats returns the stats with the effects of the equipped gears; Stats is left untouched.
 func (character *Character) EffectiveStats() stats.Stats {
@@ -109,7 +115,7 @@ func (character *Character) Consume(name string) error {
 	}
 
 	object := character.Inventory[index]
-	if object.Category.String() != consumableCategory {
+	if !IsConsumable(object) {
 		return logs.Error("error.invalid", map[string]any{
 			"Subject": "category",
 			"Value":   object.Category,
