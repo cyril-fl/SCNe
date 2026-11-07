@@ -7,6 +7,7 @@ import (
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/shared/components/navigation"
 	"scne/app/shared/services/i19n"
+	"scne/app/shared/services/style"
 	"strings"
 
 	plumtransform "github.com/cyril-fl/plum/utils/transform"
@@ -83,7 +84,12 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 			content.WriteString("\n")
 		}
 		label := plumtransform.Capitalize(i19n.Localize("stat." + string(stat)))
-		fmt.Fprintf(content, "%-10s%s", label, player.FormatStat(stat))
+		value := player.FormatStat(stat)
+		// Only a cue: what 0 means is the player's call.
+		if player.IsDepleted(stat) {
+			value = style.Error().Render(value)
+		}
+		fmt.Fprintf(content, "%-10s%s", label, value)
 	}
 }
 

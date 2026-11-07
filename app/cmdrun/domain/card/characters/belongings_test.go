@@ -134,3 +134,19 @@ func TestPickSendsGearsToBag(t *testing.T) {
 		t.Fatalf("inventory = %d, bag = %v; want 2 objects and 2 helmets", c.Inventory.Count("thing"), c.Gears)
 	}
 }
+
+func TestIsDepleted(t *testing.T) {
+	requireStats(t)
+	c := &Character{Stats: stats.Stats{health: 5, social: 0}}
+
+	if c.IsDepleted(health) {
+		t.Fatal("full health reported depleted")
+	}
+	c.Damage(health, 5)
+	if !c.IsDepleted(health) {
+		t.Fatal("health at 0 not reported depleted")
+	}
+	if c.IsDepleted(social) {
+		t.Fatal("a stat that is not a resource is never depleted")
+	}
+}

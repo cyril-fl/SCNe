@@ -43,18 +43,24 @@ func (character *Character) Current(stat stats.Stat) int {
 // FormatStat returns the effective stat, as "current/max" for health and stamina.
 func (character *Character) FormatStat(stat stats.Stat) string {
 	value := character.EffectiveStats()[stat]
-	if !isResource(stat) {
+	if !IsResource(stat) {
 		return strconv.Itoa(value)
 	}
 	return strconv.Itoa(character.Current(stat)) + "/" + strconv.Itoa(value)
 }
 
+// IsResource reports whether stat has a current value below its maximum (health, stamina).
 // shortcut: resources are recognized by name, add a "resource" flag in stats.yaml if other stats need a current value.
-func isResource(stat stats.Stat) bool {
+func IsResource(stat stats.Stat) bool {
 	return stat == "health" || stat == "stamina"
 }
 
 // Methods
+
+// IsDepleted reports whether the resource stat is at 0.
+func (character *Character) IsDepleted(stat stats.Stat) bool {
+	return IsResource(stat) && character.Current(stat) == 0
+}
 
 // Damage lowers stat by n, down to 0.
 func (character *Character) Damage(stat stats.Stat, n int) {
