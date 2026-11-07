@@ -23,6 +23,7 @@ func NewSection(gameSession *session.GameSession) *navigation.Section {
 			GetLocationInfo(&content, gameSession)
 			GetWalletInfo(&content, gameSession)
 			GetStatInfo(&content, gameSession)
+			GetConditionInfo(&content, gameSession)
 
 			return strings.TrimRight(content.String(), "\n")
 		},
@@ -90,6 +91,20 @@ func GetStatInfo(content *strings.Builder, gameSession *session.GameSession) {
 			value = style.Error().Render(value)
 		}
 		fmt.Fprintf(content, "%-10s%s", label, value)
+	}
+}
+
+// GetConditionInfo writes the player conditions to content, one per line, when there are any.
+func GetConditionInfo(content *strings.Builder, gameSession *session.GameSession) {
+	player := getState(gameSession).Player
+	if player == nil || len(player.Conditions) == 0 {
+		return
+	}
+
+	content.WriteString("\n\n")
+	content.WriteString(plumtransform.Capitalize(i19n.Localize("conditions")))
+	for _, condition := range player.Conditions {
+		content.WriteString("\n- " + condition)
 	}
 }
 

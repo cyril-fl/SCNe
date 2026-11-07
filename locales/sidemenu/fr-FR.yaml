@@ -104,6 +104,14 @@ action.wallet:
   other: "bourse"
 action.vitals:
   other: "santé"
+action.conditions:
+  other: "états"
+conditions:
+  other: "états"
+conditions.msg:added:
+  other: "État : {{.Condition}}."
+conditions.msg:removed:
+  other: "Fin de l'état : {{.Condition}}."
 vitals.lose:
   other: "perdre"
 vitals.recover:

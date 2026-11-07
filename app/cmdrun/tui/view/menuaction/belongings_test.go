@@ -67,3 +67,12 @@ func TestValidators(t *testing.T) {
 		t.Fatal("validateCoins must accept empty and counts of at least 0")
 	}
 }
+
+func TestValidateConditionFitsThePanel(t *testing.T) {
+	if validateCondition("bras cassé") != nil {
+		t.Fatal("a short condition must be valid")
+	}
+	if validateCondition("   ") == nil || validateCondition("une très longue blessure au bras") == nil {
+		t.Fatal("blank or too long conditions must be invalid")
+	}
+}

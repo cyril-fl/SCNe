@@ -57,6 +57,8 @@ field.stat:
   other: "stat"
 field.amount:
   other: "montant"
+field.condition:
+  other: "état (le retaper le retire)"
 slot.helmet:
   other: "casque"
 slot.chestplate:

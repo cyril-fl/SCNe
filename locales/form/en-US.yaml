@@ -56,6 +56,8 @@ field.stat:
   other: "stat"
 field.amount:
   other: "amount"
+field.condition:
+  other: "condition (type it again to remove it)"
 slot.helmet:
   other: "helmet"
 slot.chestplate:

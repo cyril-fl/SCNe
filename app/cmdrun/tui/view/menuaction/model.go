@@ -22,12 +22,13 @@ import (
 )
 
 const (
-	FIGHT_PAGE     = "action.fight"
-	TRAVEL_PAGE    = "action.travel"
-	INVENTORY_PAGE = "action.inventory"
-	PICKUP_PAGE    = "action.pickup"
-	WALLET_PAGE    = "action.wallet"
-	VITALS_PAGE    = "action.vitals"
+	FIGHT_PAGE      = "action.fight"
+	TRAVEL_PAGE     = "action.travel"
+	INVENTORY_PAGE  = "action.inventory"
+	PICKUP_PAGE     = "action.pickup"
+	WALLET_PAGE     = "action.wallet"
+	VITALS_PAGE     = "action.vitals"
+	CONDITIONS_PAGE = "action.conditions"
 	// COMBAT_PAGE is the combat chat opened by the fight page.
 	COMBAT_PAGE = "action.combat"
 )
@@ -90,12 +91,13 @@ func (m *actionMenu) HandleUpdate(msg tea.Msg) tea.Cmd {
 // NewFormPages creates the action pages owned by the gameboard state machine.
 func NewFormPages(gameSession *session.GameSession) map[string]*actionPage {
 	return map[string]*actionPage{
-		FIGHT_PAGE:     newFightPage(gameSession),
-		TRAVEL_PAGE:    newTravelPage(gameSession),
-		INVENTORY_PAGE: newInventoryPage(gameSession),
-		PICKUP_PAGE:    newPickupPage(gameSession),
-		WALLET_PAGE:    newWalletPage(gameSession),
-		VITALS_PAGE:    newVitalsPage(gameSession),
+		FIGHT_PAGE:      newFightPage(gameSession),
+		TRAVEL_PAGE:     newTravelPage(gameSession),
+		INVENTORY_PAGE:  newInventoryPage(gameSession),
+		PICKUP_PAGE:     newPickupPage(gameSession),
+		WALLET_PAGE:     newWalletPage(gameSession),
+		VITALS_PAGE:     newVitalsPage(gameSession),
+		CONDITIONS_PAGE: newConditionsPage(gameSession),
 	}
 }
 

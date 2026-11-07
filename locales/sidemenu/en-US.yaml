@@ -104,6 +104,14 @@ action.wallet:
   other: "wallet"
 action.vitals:
   other: "health"
+action.conditions:
+  other: "conditions"
+conditions:
+  other: "conditions"
+conditions.msg:added:
+  other: "Condition: {{.Condition}}."
+conditions.msg:removed:
+  other: "Condition over: {{.Condition}}."
 vitals.lose:
   other: "lose"
 vitals.recover:

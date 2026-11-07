@@ -2,6 +2,8 @@ package menuaction
 
 import (
 	"strconv"
+	"strings"
+	"unicode/utf8"
 
 	"scne/app/cmdrun/domain/gameplay/session"
 	"scne/app/cmdrun/types/id"
@@ -59,6 +61,35 @@ func newWalletPage(gameSession *session.GameSession) *actionPage {
 	})
 }
 
+// newConditionsPage adds a free condition to the player, or removes it when already there.
+func newConditionsPage(gameSession *session.GameSession) *actionPage {
+	return newPage(PageTemplate{
+		Label: "wallet:apply",
+		NewForm: func() *form.Form {
+			return form.New(
+				field.TextField(field.TextTemplate[string]{Template: field.Template[string]{ID: "condition", Label: "field.condition", Validator: validateCondition, Required: true}}),
+			).DisableAutoSubmit().Focus()
+		},
+		Submit: func(values *form.Form) tea.Cmd {
+			return report(toggleCondition(gameSession, values.GetValuesAsMappedString()["condition"]))
+		},
+	})
+}
+
+// toggleCondition adds or removes condition on the player and returns the chat line.
+func toggleCondition(gameSession *session.GameSession, condition string) (string, error) {
+	player := gameSession.State.Player
+	if player == nil {
+		return "", logs.Error("error.not_found", map[string]any{"Subject": "player"})
+	}
+
+	key := "conditions.msg:removed"
+	if player.ToggleCondition(condition) {
+		key = "conditions.msg:added"
+	}
+	return i19n.Localize(key, map[string]any{"Condition": strings.TrimSpace(condition)}), nil
+}
+
 // pickup gives qty of the codex object entryID to the player and returns the chat line.
 func pickup(gameSession *session.GameSession, entryID id.ID, qty int) (string, error) {
 	player := gameSession.State.Player
@@ -108,6 +139,16 @@ func coins(value string) int {
 func validateCoins(value string) error {
 	if n, err := strconv.Atoi(value); value != "" && (err != nil || n < 0) {
 		return logs.Error("error.invalid", map[string]any{"Subject": "coins", "Value": value})
+	}
+	return nil
+}
+
+// maxConditionLength keeps a condition on one line of the side panel: a wrapped line pushes the whole screen up.
+const maxConditionLength = 20
+
+func validateCondition(value string) error {
+	if n := utf8.RuneCountInString(strings.TrimSpace(value)); n == 0 || n > maxConditionLength {
+		return logs.Error("error.invalid", map[string]any{"Subject": "condition", "Value": value})
 	}
 	return nil
 }

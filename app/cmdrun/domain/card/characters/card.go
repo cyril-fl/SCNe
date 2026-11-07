@@ -29,10 +29,8 @@ type Character struct {
 	// Lost is what each stat lost (damage taken, stamina spent): the stats are maximums.
 	Lost stats.Stats
 
-	/*
-		LOW Ajouter des "effet" au personnage, ce ne serait pas des effet comme une arme qui fais x ou y mais plus des stats comme un empoissenememnt ex lier a une potion au autre
-		ce serais aussi utiliser dans le formulaire de creation de perso pour simulier les effet d'un equipment qu'on a pas ecrit piece par piece.
-	*/
+	// Conditions are free notes ("poisoned", "broken arm"): no rule reads them.
+	Conditions []string
 }
 
 // Template configures a Character.
