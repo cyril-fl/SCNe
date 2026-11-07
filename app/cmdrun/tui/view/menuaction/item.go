@@ -18,5 +18,6 @@ func makeActionList() []*actionMenuItem {
 		{id: INVENTORY_PAGE},
 		{id: PICKUP_PAGE},
 		{id: WALLET_PAGE},
+		{id: VITALS_PAGE},
 	}
 }

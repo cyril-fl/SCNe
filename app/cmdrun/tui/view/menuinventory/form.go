@@ -1,4 +1,4 @@
-// Package menuinventory builds the inventory form shared by the action menu and the combat.
+// Package menuinventory builds the player forms (inventory, health) shared by the action menu and the combat.
 package menuinventory
 
 import (

@@ -56,6 +56,18 @@ func newInventoryPlugin(gameSession *session.GameSession) *formPlugin {
 	}
 }
 
+// newVitalsPlugin opens the health form on ctrl+d, to note damage taken or healing.
+func newVitalsPlugin(gameSession *session.GameSession) *formPlugin {
+	return &formPlugin{
+		key:      plumtypes.SHORT_CTRL_D,
+		shortcut: shortcut.VITALS,
+		newForm:  menuinventory.NewVitalsForm,
+		submit: func(values *form.Form) tea.Cmd {
+			return menuinventory.SubmitVitals(gameSession, values)
+		},
+	}
+}
+
 // Getters & Setters
 
 func (p *formPlugin) GetView() string {

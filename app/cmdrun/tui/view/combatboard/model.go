@@ -52,6 +52,7 @@ func NewModel(params UiParams) *model {
 	m.plugins = []plugin{
 		newEnemyPlugin(params.Session, m.selectLastOpponent),
 		newInventoryPlugin(params.Session),
+		newVitalsPlugin(params.Session),
 	}
 	m.target = navigation.NewSection(navigation.TemplateSection{
 		ID:      "target",

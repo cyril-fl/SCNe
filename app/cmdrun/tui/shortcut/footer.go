@@ -55,6 +55,10 @@ var (
 		Command: Enter,
 		Label:   "send",
 	})
+	VITALS = NewShortcut(Template{
+		Command: CtrlD,
+		Label:   "action.vitals",
+	})
 	THROW = NewShortcut(Template{
 		Command: CtrlEnter,
 		Label:   "roll",

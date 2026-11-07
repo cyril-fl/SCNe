@@ -173,3 +173,13 @@ func TestCtrlOOpensInventoryForm(t *testing.T) {
 		t.Fatal("ctrl+o did not open the inventory form")
 	}
 }
+
+func TestCtrlDOpensVitalsForm(t *testing.T) {
+	var merged []string
+	m, _ := newTestModel(&merged)
+
+	m.Update(tea.KeyPressMsg{Code: 'd', Mod: tea.ModCtrl})
+	if !m.CapturesInput() {
+		t.Fatal("ctrl+d did not open the health form")
+	}
+}

@@ -13,6 +13,7 @@ const (
 	CtrlQ      Command = "^Q"
 	CtrlS      Command = "^S"
 	CtrlN      Command = "^N"
+	CtrlD      Command = "^D"
 	CtrlE      Command = "^E"
 	CtrlO      Command = "^O"
 	CtrlY      Command = "^Y"

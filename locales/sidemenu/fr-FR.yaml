@@ -102,6 +102,16 @@ action.pickup:
   other: "ramasser"
 action.wallet:
   other: "bourse"
+action.vitals:
+  other: "santé"
+vitals.lose:
+  other: "perdre"
+vitals.recover:
+  other: "récupérer"
+vitals.msg:lost:
+  other: "{{.Stat}} : -{{.Amount}} ({{.Value}})."
+vitals.msg:recovered:
+  other: "{{.Stat}} : +{{.Amount}} ({{.Value}})."
 inventory.msg:picked:
   other: "Vous obtenez {{.Qty}} × {{.Item}}."
 wallet.earn:

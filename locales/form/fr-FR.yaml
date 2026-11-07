@@ -53,6 +53,10 @@ field.silver:
   other: "argent"
 field.copper:
   other: "cuivre"
+field.stat:
+  other: "stat"
+field.amount:
+  other: "montant"
 slot.helmet:
   other: "casque"
 slot.chestplate:

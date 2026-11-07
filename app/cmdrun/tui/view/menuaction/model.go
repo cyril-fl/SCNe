@@ -27,6 +27,7 @@ const (
 	INVENTORY_PAGE = "action.inventory"
 	PICKUP_PAGE    = "action.pickup"
 	WALLET_PAGE    = "action.wallet"
+	VITALS_PAGE    = "action.vitals"
 	// COMBAT_PAGE is the combat chat opened by the fight page.
 	COMBAT_PAGE = "action.combat"
 )
@@ -94,6 +95,7 @@ func NewFormPages(gameSession *session.GameSession) map[string]*actionPage {
 		INVENTORY_PAGE: newInventoryPage(gameSession),
 		PICKUP_PAGE:    newPickupPage(gameSession),
 		WALLET_PAGE:    newWalletPage(gameSession),
+		VITALS_PAGE:    newVitalsPage(gameSession),
 	}
 }
 
@@ -146,6 +148,17 @@ func newInventoryPage(gameSession *session.GameSession) *actionPage {
 		NewForm: func() *form.Form { return menuinventory.NewForm(gameSession) },
 		Submit: func(values *form.Form) tea.Cmd {
 			return menuinventory.Submit(gameSession, values)
+		},
+	})
+}
+
+// newVitalsPage loses or recovers health or stamina by the amount the player chooses.
+func newVitalsPage(gameSession *session.GameSession) *actionPage {
+	return newPage(PageTemplate{
+		Label:   "wallet:apply",
+		NewForm: menuinventory.NewVitalsForm,
+		Submit: func(values *form.Form) tea.Cmd {
+			return menuinventory.SubmitVitals(gameSession, values)
 		},
 	})
 }
