@@ -106,12 +106,18 @@ action.vitals:
   other: "health"
 action.conditions:
   other: "conditions"
+action.undo:
+  other: "undo"
 conditions:
   other: "conditions"
 conditions.msg:added:
   other: "Condition: {{.Condition}}."
 conditions.msg:removed:
   other: "Condition over: {{.Condition}}."
+undo.msg:done:
+  other: "Undone: {{.Action}}"
+undo.none:
+  other: "Nothing to undo"
 vitals.lose:
   other: "lose"
 vitals.recover:

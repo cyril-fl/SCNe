@@ -29,6 +29,7 @@ const (
 	WALLET_PAGE     = "action.wallet"
 	VITALS_PAGE     = "action.vitals"
 	CONDITIONS_PAGE = "action.conditions"
+	UNDO_PAGE       = "action.undo"
 	// COMBAT_PAGE is the combat chat opened by the fight page.
 	COMBAT_PAGE = "action.combat"
 )
@@ -98,6 +99,7 @@ func NewFormPages(gameSession *session.GameSession) map[string]*actionPage {
 		WALLET_PAGE:     newWalletPage(gameSession),
 		VITALS_PAGE:     newVitalsPage(gameSession),
 		CONDITIONS_PAGE: newConditionsPage(gameSession),
+		UNDO_PAGE:       newUndoPage(gameSession),
 	}
 }
 

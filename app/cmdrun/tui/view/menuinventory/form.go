@@ -50,7 +50,7 @@ func Submit(gameSession *session.GameSession, values *form.Form) tea.Cmd {
 		}))
 	}
 
-	result, err := apply(player, chosen)
+	result, err := gameSession.Track(func() (string, error) { return apply(player, chosen) })
 	if err != nil {
 		return messages.Fail(err)
 	}

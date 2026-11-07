@@ -1,6 +1,7 @@
 package session
 
 import (
+	"errors"
 	"testing"
 
 	"scne/app/cmdrun/domain/card/attributes/rarity"
@@ -96,5 +97,26 @@ func TestGameSessionAddOpponentAppends(t *testing.T) {
 
 	if len(gameSession.State.Opponents) != 2 || gameSession.State.Opponents[1] != second {
 		t.Fatalf("opponents = %v, want first then second", gameSession.State.Opponents)
+	}
+}
+
+func TestTrackKeepsSuccessfulActionsForUndoLast(t *testing.T) {
+	player := &characters.Character{}
+	gameSession := NewGameSession(id.New(), &SessionState{Player: player})
+
+	_, _ = gameSession.Track(func() (string, error) {
+		player.ToggleCondition("poisoned")
+		return "poisoned", nil
+	})
+	_, _ = gameSession.Track(func() (string, error) { return "failed", errors.New("failed") })
+
+	if label, ok := gameSession.LastChange(); !ok || label != "poisoned" {
+		t.Fatalf("last change = %q %v, want the successful action", label, ok)
+	}
+	if label, ok := gameSession.UndoLast(); !ok || label != "poisoned" || len(player.Conditions) != 0 {
+		t.Fatalf("undo = %q %v, conditions = %v", label, ok, player.Conditions)
+	}
+	if _, ok := gameSession.UndoLast(); ok {
+		t.Fatal("nothing left to undo, want false")
 	}
 }

@@ -59,6 +59,8 @@ field.amount:
   other: "montant"
 field.condition:
   other: "état (le retaper le retire)"
+field.change:
+  other: "dernière action"
 slot.helmet:
   other: "casque"
 slot.chestplate:

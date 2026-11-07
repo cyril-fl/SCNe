@@ -35,7 +35,7 @@ func newPickupPage(gameSession *session.GameSession) *actionPage {
 		Submit: func(values *form.Form) tea.Cmd {
 			entryID, _ := values.GetFieldValue("object").(id.ID)
 			qty, _ := strconv.Atoi(values.GetValuesAsMappedString()["quantity"])
-			return report(pickup(gameSession, entryID, qty))
+			return report(gameSession.Track(func() (string, error) { return pickup(gameSession, entryID, qty) }))
 		},
 	})
 }
@@ -56,7 +56,9 @@ func newWalletPage(gameSession *session.GameSession) *actionPage {
 			).DisableAutoSubmit().Focus()
 		},
 		Submit: func(values *form.Form) tea.Cmd {
-			return report(applyWallet(gameSession, values.GetValuesAsMappedString()))
+			return report(gameSession.Track(func() (string, error) {
+				return applyWallet(gameSession, values.GetValuesAsMappedString())
+			}))
 		},
 	})
 }
@@ -71,7 +73,33 @@ func newConditionsPage(gameSession *session.GameSession) *actionPage {
 			).DisableAutoSubmit().Focus()
 		},
 		Submit: func(values *form.Form) tea.Cmd {
-			return report(toggleCondition(gameSession, values.GetValuesAsMappedString()["condition"]))
+			return report(gameSession.Track(func() (string, error) {
+				return toggleCondition(gameSession, values.GetValuesAsMappedString()["condition"])
+			}))
+		},
+	})
+}
+
+// newUndoPage shows the last player action and puts the player back as before it on submit; with nothing to undo it only closes.
+func newUndoPage(gameSession *session.GameSession) *actionPage {
+	return newPage(PageTemplate{
+		Label: "undo",
+		NewForm: func() *form.Form {
+			label, ok := gameSession.LastChange()
+			if !ok {
+				label = i19n.Localize("undo.none")
+			}
+			options := []models.Item[string]{models.NewItem(label, "", label)}
+			return form.New(
+				field.SelectField(field.SelectTemplate[string]{Template: field.Template[string]{ID: "change", Label: "field.change"}, Options: options}),
+			).DisableAutoSubmit().Focus()
+		},
+		Submit: func(*form.Form) tea.Cmd {
+			label, ok := gameSession.UndoLast()
+			if !ok {
+				return nil
+			}
+			return report(i19n.Localize("undo.msg:done", map[string]any{"Action": label}), nil)
 		},
 	})
 }

@@ -58,6 +58,8 @@ field.amount:
   other: "amount"
 field.condition:
   other: "condition (type it again to remove it)"
+field.change:
+  other: "last action"
 slot.helmet:
   other: "helmet"
 slot.chestplate:

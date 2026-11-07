@@ -7,12 +7,15 @@ import (
 	codextable "scne/app/cmdrun/domain/gameplay/codex/table"
 	"scne/app/cmdrun/types/id"
 	"scne/app/shared/services/logs"
+	"scne/app/shared/types/primitive"
 )
 
 // GameSession is the in-memory aggregate for an active campaign.
 type GameSession struct {
 	CampaignID id.ID
 	State      *SessionState
+
+	changes primitive.History[change] // this run only, not saved
 }
 
 // NewGameSession returns a session for campaignID.
@@ -103,4 +106,45 @@ func (s *GameSession) ExportCampaign() *campaign.Campaign {
 		CurrentLocation: s.State.CurrentLocation,
 		TimeHistory:     append(s.State.TimeHistory, s.State.Stopwatch.GetHistory()...),
 	}
+}
+
+// change is a tracked player action and the player state before it.
+type change struct {
+	label  string
+	before characters.Snapshot
+}
+
+// Track runs apply, and keeps the player state from before it so UndoLast can put it back.
+// A failed apply is not kept. apply returns the chat line of the action.
+func (s *GameSession) Track(apply func() (string, error)) (string, error) {
+	player := s.State.Player
+	if player == nil {
+		return apply()
+	}
+
+	before := player.Snapshot()
+	label, err := apply()
+	if err == nil {
+		s.changes.Push(change{label: label, before: before})
+	}
+	return label, err
+}
+
+// LastChange returns the chat line of the action UndoLast would undo.
+func (s *GameSession) LastChange() (string, bool) {
+	passed := s.changes.Passed()
+	if len(passed) == 0 {
+		return "", false
+	}
+	return passed[len(passed)-1].label, true
+}
+
+// UndoLast puts the player back as before the last tracked action and returns its chat line.
+func (s *GameSession) UndoLast() (string, bool) {
+	last, ok := s.changes.Undo(func(change) bool { return true })
+	if !ok || s.State.Player == nil {
+		return "", false
+	}
+	s.State.Player.Restore(last.before)
+	return last.label, true
 }

@@ -43,7 +43,9 @@ func NewVitalsForm() *form.Form {
 
 // SubmitVitals applies the form to the player and reports the new value in the chat.
 func SubmitVitals(gameSession *session.GameSession, values *form.Form) tea.Cmd {
-	result, err := applyVitals(gameSession.State.Player, values.GetValuesAsMappedString())
+	result, err := gameSession.Track(func() (string, error) {
+		return applyVitals(gameSession.State.Player, values.GetValuesAsMappedString())
+	})
 	if err != nil {
 		return messages.Fail(err)
 	}

@@ -106,12 +106,18 @@ action.vitals:
   other: "santé"
 action.conditions:
   other: "états"
+action.undo:
+  other: "annuler"
 conditions:
   other: "états"
 conditions.msg:added:
   other: "État : {{.Condition}}."
 conditions.msg:removed:
   other: "Fin de l'état : {{.Condition}}."
+undo.msg:done:
+  other: "Annulé : {{.Action}}"
+undo.none:
+  other: "Rien à annuler"
 vitals.lose:
   other: "perdre"
 vitals.recover:
